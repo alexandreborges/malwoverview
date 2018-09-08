@@ -78,7 +78,7 @@ This tool was tested on a Kali Linux 2018 system. Therefore, it will be necessar
 
 To use the malwoverview, execute the command as shown below:
 
-      $ python malwoverview -d <directory> -b 0|1 
+      $ python malwoverview.py -d <directory> -b 0|1 
       
   where: 
   
