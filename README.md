@@ -20,7 +20,7 @@ version 1.0
 
 # ABOUT
 
-Malwoverview is a simple tool to make an initial and quick triage on a directory containing malware samples.  
+Malwoverview.py is a simple tool to make an initial and quick triage on a directory containing malware samples.  
 
 This tool aims to : 
 
@@ -38,7 +38,7 @@ This tool aims to :
 3. Determining whether the malware samples contain overlay.
 4. Determining the .text section entropy. 
 
-Malwoverview only examines PE/PE+ files, skipping everything else.  
+Malwoverview.py only examines PE/PE+ files, skipping everything else.  
 
 
 # REQUERIMENTS
@@ -65,10 +65,11 @@ This tool was tested on a Kali Linux 2018 system. Therefore, it will be necessar
       As there are serious problems about existing two versions of python-magic package, my recommendation is to install it
       from github (second procedure above) and copy the magic.py file to the SAME directory of malwoverview tool. 
       
-3. Pefile and colorama packages: 
+3. Pefile, colorama and optparse packages: 
 
        $ pip install pefile
        $ pip install colorama
+       $ pip install optparse
       
       
 # Usage
