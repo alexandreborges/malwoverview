@@ -27,7 +27,7 @@ Malwoverview.py is a simple tool to make an initial and quick triage on a direct
 
 This tool aims to : 
 
-1. Determining similar executable malware samples (PE/PE+) through the import table (imphash) and group them by different color. 
+1. Determining similar executable malware samples (PE/PE+) according to the import table (imphash) and group them by different colors (pay attention to the second column from output). 
 2. Determining whether executable malware samples are packed or not packed according to the following rules:
       
       
