@@ -27,11 +27,13 @@ This tool aims to :
 1. Determining similar executable malware samples (PE/PE+) through the import table (imphash) and group them by different color. 
 2. Determining whether executable malware samples are packed or not packed according to the following rules:
       
-      2a. Two or more sections with Entropy > 7.0 or < 1.0 ==> Packed.
+      
+            2a. Two or more sections with Entropy > 7.0 or < 1.0 ==> Packed.
 
-      2b. One one section with Entropy > 7.0 or two sections with SizeOfRawData ==> Likely packed.
+            2b. One one section with Entropy > 7.0 or two sections with SizeOfRawData ==> Likely packed.
 
-      2c. None section with Entropy > 7.0 or SizeOfRawData ==> not packed.
+            2c. None section with Entropy > 7.0 or SizeOfRawData ==> not packed.
+      
       
 3. Determining whether the malware samples contain overlay.
 4. Determining the .text section entropy. 
