@@ -87,4 +87,6 @@ To use the malwoverview, execute the command as shown below:
   
         *ATENTION: if the directory contains many malware samples, so malwoverview.py could take some time. :)
   
+# NEXT VERSIONS
 
+The version 1.1 will include checking against the Virus Total. :)
