@@ -73,9 +73,13 @@ This tool was tested on a Kali Linux 2018 system. Therefore, it will be necessar
 
 To use the malwoverview, execute the command as shown below:
 
-      $ python malwoverview <directory>
+      $ python malwoverview -d <directory> -b 0|1 
       
-  where <directory> is the folder containing malwares. 
-      
-      
+  where: 
+  
+  <directory> is the folder containing malwares. 
+  (optional) -b 1 forces light gray backgound (for black terminals).
+  
+  *ATENTION: if the directory contains many malware samples, so malwoverview.py could take some time. :)
+  
 
