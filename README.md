@@ -23,7 +23,7 @@ version 1.0
 
 # ABOUT
 
-Malwoverview.py is a simple tool to make an initial and quick triage on a directory containing malware samples (not zipped).  
+Malwoverview.py is a simple tool to perform an initial and quick triage on a directory containing malware samples (not zipped).  
 
 This tool aims to : 
 
