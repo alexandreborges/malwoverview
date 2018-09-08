@@ -38,7 +38,7 @@ This tool aims to :
 3. Determining whether the malware samples contain overlay.
 4. Determining the .text section entropy. 
 
-Malwoverview is a tool that should be used against only PE/PE+ files.  
+Malwoverview only examines PE/PE+ files, skipping everything else.  
 
 
 # REQUERIMENTS
