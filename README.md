@@ -85,6 +85,6 @@ To use the malwoverview, execute the command as shown below:
   <directory> is the folder containing malwares. 
   (optional) -b 1 forces light gray backgound (for black terminals).
   
-  *ATENTION: if the directory contains many malware samples, so malwoverview.py could take some time. :)
+        *ATENTION: if the directory contains many malware samples, so malwoverview.py could take some time. :)
   
 
