@@ -74,7 +74,7 @@ This tool was tested on a Kali Linux 2018 system. Therefore, it will be necessar
        $ pip install colorama
       
       
-# Usage
+# USAGE
 
 To use the malwoverview, execute the command as shown below:
 
