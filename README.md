@@ -28,20 +28,20 @@ This tool was tested on a Kali Linux 2018 system. Therefore, it will be necessar
 
 1. Python version 2.7.x. 
 
-            $ apt-get install python
+       $ apt-get install python
             
 2. Python-magic.  
 
       To install python-magic package you can execute the following command:
       
-            $ pip install python-magic
+       $ pip install python-magic
       
       Or compiling it from the github repository:
       
-            $ git clone https://github.com/ahupp/python-magic
-            $ cd python-magic/
-            $ python setup.py build
-            $ python setup.py install
+       $ git clone https://github.com/ahupp/python-magic
+       $ cd python-magic/
+       $ python setup.py build
+       $ python setup.py install
       
       As there are serious problems about existing two versions of python-magic package, my recommendation is to install it
       from github (second procedure above) and copy the magic.py file to the SAME directory of malwoverview tool. 
