@@ -17,6 +17,7 @@ version 1.0
 
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
+![Alt text](malwoverview.jpg?raw=true "Title")
 
 # ABOUT
 
