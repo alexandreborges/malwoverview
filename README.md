@@ -65,11 +65,10 @@ This tool was tested on a Kali Linux 2018 system. Therefore, it will be necessar
       As there are serious problems about existing two versions of python-magic package, my recommendation is to install it
       from github (second procedure above) and copy the magic.py file to the SAME directory of malwoverview tool. 
       
-3. Pefile, colorama and optparse packages: 
+3. Pefile and colorama packages: 
 
        $ pip install pefile
        $ pip install colorama
-       $ pip install optparse
       
       
 # Usage
