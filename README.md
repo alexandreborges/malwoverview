@@ -42,7 +42,7 @@ This tool aims to :
 4. Determining the .text section entropy. 
 
 
-      Malwoverview.py only examines PE/PE+ files, skipping everything else.  
+            Malwoverview.py only examines PE/PE+ files, skipping everything else.  
 
 
 
