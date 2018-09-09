@@ -3,7 +3,7 @@
 ![Alt text](malwoverview1_1.jpg?raw=true "Title")
 
 
-version 1.1 (Gaps in the VT output are because I am using public VT API key, which allows only 4 searches per second).  
+version 1.1 (Gaps in the VT output at photo above are because I am using public VT API key, which allows only 4 searches per second).  
 
 
       Copyright (C)  2018 Alexandre Borges <ab at blackstormsecurity dot com>
