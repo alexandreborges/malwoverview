@@ -2,7 +2,7 @@
 
 ![Alt text](malwoverview.jpg?raw=true "Title")
 
-version 1.0 
+version 1.1 
 
 
       Copyright (C)  2018 Alexandre Borges <ab at blackstormsecurity dot com>
@@ -72,21 +72,28 @@ This tool was tested on a Kali Linux 2018 system. Therefore, it will be necessar
 
        $ pip install pefile
        $ pip install colorama
+       $ pip install simple-json
+       $ pip install requests
+       
       
       
 # USAGE
 
 To use the malwoverview, execute the command as shown below:
 
-      $ python malwoverview.py -d <directory> -b 0|1 
+      $ python malwoverview.py -d <directory> -b 0|1 -v 0|1
       
   where: 
   
         <directory> is the folder containing malware samples. 
         (optional) -b 1 forces light gray backgound (for black terminals).
+        (optional) -v 1 queries Virus Total database for positives and totals.
+        
+        If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API.
+        
   
         *ATENTION: if the directory contains many malware samples, so malwoverview.py could take some time. :)
   
 # NEXT VERSIONS
 
-Next versions will include checking against the Virus Total and detecting the type of packing. :)
+Next versions will include checking detecting the type of packing. :)
