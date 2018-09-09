@@ -1,0 +1,5 @@
+pefile==2018.8.8
+python-magic==0.4.15
+colorama==0.3.9
+simplejson==3.15.0
+requests==2.7.0
