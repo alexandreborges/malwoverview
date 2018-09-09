@@ -96,4 +96,4 @@ To use the malwoverview, execute the command as shown below:
   
 # NEXT VERSIONS
 
-Next versions will include checking detecting the type of packing. :)
+Next version will include detection of the packing's type. :)
