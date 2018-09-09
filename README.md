@@ -41,7 +41,9 @@ This tool aims to :
 3. Determining whether the malware samples contain overlay.
 4. Determining the .text section entropy. 
 
-Malwoverview.py only examines PE/PE+ files, skipping everything else.  
+
+      Malwoverview.py only examines PE/PE+ files, skipping everything else.  
+
 
 
 # REQUERIMENTS
