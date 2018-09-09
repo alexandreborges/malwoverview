@@ -45,6 +45,7 @@ This tool aims to :
 
             Malwoverview.py only examines PE/PE+ files, skipping everything else.  
 
+5. Checking each malware sample against Virus Total. 
 
 
 # REQUERIMENTS
