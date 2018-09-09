@@ -93,7 +93,8 @@ To use the malwoverview, execute the command as shown below:
         (optional) -b 1 forces light gray backgound (for black terminals).
         (optional) -v 1 queries Virus Total database for positives and totals.
         
-        If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. Remember that public VT API only allows 4 searches per second (as shown at the image above).
+        If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. 
+        Remember that public VT API only allows 4 searches per second (as shown at the image above).
         
   
         *ATENTION: if the directory contains many malware samples, so malwoverview.py could take some time. :)
