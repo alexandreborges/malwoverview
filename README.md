@@ -3,7 +3,7 @@
 ![Alt text](malwoverview1_1.jpg?raw=true "Title")
 
 
-version 1.1 (Gaps in the VT output at photo above are because I am using public VT API key, which allows only 4 searches per second).  
+version 1.1 (Gaps in the VT output at image above are because public VT API key, which allows only 4 searches per second).  
 
 
       Copyright (C)  2018 Alexandre Borges <ab at blackstormsecurity dot com>
@@ -92,7 +92,7 @@ To use the malwoverview, execute the command as shown below:
         (optional) -b 1 forces light gray backgound (for black terminals).
         (optional) -v 1 queries Virus Total database for positives and totals.
         
-        If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API.
+        If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. Remember that public VT API only allows 4 searches per second (as shown at the image above).
         
   
         *ATENTION: if the directory contains many malware samples, so malwoverview.py could take some time. :)
