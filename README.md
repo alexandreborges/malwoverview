@@ -3,7 +3,7 @@
 ![Alt text](malwoverview1_1.jpg?raw=true "Title")
 
 
-version 1.2c (Gaps in the VT output at image above are because public VT API key, which allows only 4 searches per second).  
+(Gaps in the VT output at image above are because public VT API key, which allows only 4 searches per second).  
 
 
 
@@ -28,6 +28,7 @@ version 1.2c (Gaps in the VT output at image above are because public VT API key
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
+# Current Version 1.2-d 
 
 # ABOUT
 
