@@ -2,7 +2,10 @@
 
 ![Alt text](malwoverview1_1.jpg?raw=true "Title")
 
+
 version 1.2a (Gaps in the VT output at image above are because public VT API key, which allows only 4 searches per second).  
+
+
 
 ![Alt text](malwoverview1_2a.jpg?raw=true "Title")
 ![Alt text](malwoverview1_2b.jpg?raw=true "Title")
