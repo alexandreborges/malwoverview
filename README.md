@@ -96,12 +96,12 @@ To use the malwoverview, execute the command as shown below:
       
   where: 
   
-        <directory> is the folder containing malware samples. 
-        <fullpath>  specifies the full path to a file
-        (optional)  -b 1 forces light gray background (for black terminals).
+        <directory> -d is the folder containing malware samples. 
+        <fullpath>  -f specifies the full path to a file. Shows general information about the file (any filetype).
+        (optional)  -b 1 forces light gray background (for black terminals). It does not work with -f option.
         (optional)  -x 1 extracts overlay (it is used with -f option).
-        (optional)  -v 1 queries Virus Total database for positives and totals.
-        (optional)  -s 1 shows antivirus reports from the main players (it is used with -f option)
+        (optional)  -v 1 queries Virus Total database for positives and totals (any filetype).
+        (optional)  -s 1 shows antivirus reports from the main players. This option is used with -f option (any filetype). 
         
         If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. 
         Remember that public VT API only allows 4 searches per second (as shown at the image above).
@@ -109,6 +109,33 @@ To use the malwoverview, execute the command as shown below:
   
         *ATENTION: if the directory contains many malware samples, so malwoverview.py could take some time. :)
   
-# NEXT VERSIONS
+# HISTORY
 
-Next version will include detection of the packing's type. :)
+Version 1.2: 
+
+      This version includes:
+
+            * evaluates a single file (any filetype)
+            * shows PE sessions.
+            * shows imported functions.
+            * shows exported function.
+            * extracts overlay.
+            * shows AV report from the main players. (any filetype)
+
+version 1.1: 
+
+      This version:
+
+            * Adds the VT checking feature.
+
+
+version 1.0:
+
+      Malwoverview is a tool to perform a first triage of malware samples in a directory and group them according to their import functions (imphash) using colors. This version:
+
+            * Shows the imphash information classified by color. 
+            * Checks whether malware samples are packed.  
+            * Checks whether malware samples have overlay. 
+            * Shows the entropy of the malware samples. 
+
+
