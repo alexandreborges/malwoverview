@@ -8,7 +8,7 @@ version 1.2c (Gaps in the VT output at image above are because public VT API key
 
 
 ![Alt text](malwoverview1_2a.jpg?raw=true "Title")
-![Alt text](malwoverview1_2b.jpg?raw=true "Title")
+![Alt text](malwoverview1_2b1.jpg?raw=true "Title")
 
 
 
