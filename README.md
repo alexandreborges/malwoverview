@@ -3,7 +3,7 @@
 ![Alt text](malwoverview1_1.jpg?raw=true "Title")
 
 
-version 1.1 (Gaps in the VT output at image above are because public VT API key, which allows only 4 searches per second).  
+version 1.2 (Gaps in the VT output at image above are because public VT API key, which allows only 4 searches per second).  
 
 
       Copyright (C)  2018 Alexandre Borges <ab at blackstormsecurity dot com>
@@ -85,13 +85,16 @@ This tool was tested on a Kali Linux 2018 system. Therefore, it will be necessar
 
 To use the malwoverview, execute the command as shown below:
 
-      $ python malwoverview.py -d <directory> -b 0|1 -v 0|1
+      $ python malwoverview.py -d <directory> -f <fullpath> -b <0|1> -v <0|1> -s <0|1> -x <0|1>
       
   where: 
   
         <directory> is the folder containing malware samples. 
-        (optional) -b 1 forces light gray backgound (for black terminals).
-        (optional) -v 1 queries Virus Total database for positives and totals.
+        <fullpath>  specifies the full path to a file
+        (optional)  -b 1 forces light gray background (for black terminals).
+        (optional)  -x 1 extracts overlay (it is used with -f option).
+        (optional)  -v 1 queries Virus Total database for positives and totals.
+        (optional)  -s 1 shows antivirus reports from the main players (it is used with -f option)
         
         If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. 
         Remember that public VT API only allows 4 searches per second (as shown at the image above).
