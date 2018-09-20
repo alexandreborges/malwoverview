@@ -28,7 +28,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version 1.2-d 
+# Current Version 1.2.4
 
 # ABOUT
 
