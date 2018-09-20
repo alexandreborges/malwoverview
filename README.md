@@ -1,7 +1,8 @@
 # Malwoverview.py
 
 ![Alt text](malwoverview1_1.jpg?raw=true "Title")
-
+![Alt text](malwoverview1_2.jpg?raw=true "Title")
+![Alt text](malwoverview1_2b.jpg?raw=true "Title")
 
 version 1.2 (Gaps in the VT output at image above are because public VT API key, which allows only 4 searches per second).  
 
