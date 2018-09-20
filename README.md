@@ -131,7 +131,8 @@ version 1.1:
 
 version 1.0:
 
-      Malwoverview is a tool to perform a first triage of malware samples in a directory and group them according to their import functions (imphash) using colors. This version:
+      Malwoverview is a tool to perform a first triage of malware samples in a directory and group them according 
+      to their import functions (imphash) using colors. This version:
 
             * Shows the imphash information classified by color. 
             * Checks whether malware samples are packed.  
