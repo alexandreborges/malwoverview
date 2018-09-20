@@ -123,14 +123,14 @@ Version 1.2:
             * extracts overlay.
             * shows AV report from the main players. (any filetype)
 
-version 1.1: 
+Version 1.1: 
 
       This version:
 
             * Adds the VT checking feature.
 
 
-version 1.0:
+Version 1.0:
 
       Malwoverview is a tool to perform a first triage of malware samples in a directory and group them according 
       to their import functions (imphash) using colors. This version:
