@@ -28,7 +28,9 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 1.2.4
+# Current Version: 1.2.4 
+
+## Important point: Malwoverview does NOT submit samples to VT. It submits only hashes to respect Non-Disclosure-Agreements. 
 
 # ABOUT
 
