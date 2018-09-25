@@ -30,7 +30,7 @@
 
 # Current Version: 1.2.4 
 
-## Important aspect:  Malwoverview does NOT submit samples to VT. It submits only hashes to respect Non-Disclosure Agreements (NDAs)
+## Important aspect:  Malwoverview does NOT submit samples to VT. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs).
 
 # ABOUT
 
