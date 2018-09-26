@@ -28,7 +28,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 1.2.4 
+# Current Version: 1.3.
 
 ## Important aspect:  Malwoverview does NOT submit samples to VT. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs).
 
@@ -95,7 +95,7 @@ This tool was tested on a Kali Linux 2018 system. Therefore, it will be necessar
 
 To use the malwoverview, execute the command as shown below:
 
-      $ python malwoverview.py -d <directory> -f <fullpath> -b <0|1> -v <0|1> -s <0|1> -x <0|1>
+      $ python malwoverview -d <directory> -f <fullpath> -b <0|1> -v <0|1> -p <0|1> -s <0|1> -x <0|1>
       
   where: 
   
@@ -105,15 +105,27 @@ To use the malwoverview, execute the command as shown below:
         (optional)  -x 1 extracts overlay (it is used with -f option).
         (optional)  -v 1 queries Virus Total database for positives and totals (any filetype).
         (optional)  -s 1 shows antivirus reports from the main players. This option is used with -f option (any filetype). 
+        (optional)  -p 1 Use this option if you have a public Virus Total API. It allows getting a complete evaluation on a set of
+                       malware samples. However, for each four malware samples there is a delay of 1 minute.
+
         
         If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. 
-        Remember that public VT API only allows 4 searches per second (as shown at the image above).
+        
+        Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore, if you 
+        are willing to wait some minutes, so you can use the -p option, which forces a one minute wait every 4 malware samples, but 
+        allows obtaining a complete evaluation of the repository.
         
   
         *ATENTION: if the directory contains many malware samples, so malwoverview.py could take some time. :)
   
 # HISTORY
 
+Version 1.3: 
+
+      This version:
+
+            * Adds the -p option for public Virus Total API.
+            
 Version 1.2: 
 
       This version includes:
