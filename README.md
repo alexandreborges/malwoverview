@@ -106,8 +106,8 @@ To use the malwoverview, execute the command as shown below:
         (optional)  -x 1 extracts overlay (it is used with -f option).
         (optional)  -v 1 queries Virus Total database for positives and totals (any filetype).
         (optional)  -s 1 shows antivirus reports from the main players. This option is used with -f option (any filetype). 
-        (optional)  -p 1 Use this option if you have a public Virus Total API. It allows getting a complete evaluation on a set of
-                       malware samples. However, for each four malware samples there is a delay of 1 minute.
+        (optional)  -p 1 use this option if you have a public Virus Total API. It forces a one minute wait every 4 malware 
+                         samples, but allows obtaining a complete evaluation of the malware repository..
 
         
         If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. 
