@@ -113,8 +113,8 @@ To use the malwoverview, execute the command as shown below:
         If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. 
         
         Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore, if you 
-        are willing to wait some minutes, so you can use the -p option, which forces a one minute wait every 4 malware samples, but 
-        allows obtaining a complete evaluation of the repository.
+        are willing to wait some minutes, so you can use the -p option, which forces a one minute wait every 4 malware 
+        samples, but allows obtaining a complete evaluation of the repository.
         
   
         *ATENTION: if the directory contains many malware samples, so malwoverview.py could take some time. :)
