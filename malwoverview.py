@@ -15,7 +15,7 @@
 # See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Malwoverview.py: version 1.3
+# Malwoverview.py: version 1.4
 
 import os
 import sys
@@ -28,11 +28,16 @@ import requests
 import hashlib
 import json
 import time
+from requests.auth import HTTPBasicAuth
 
 #VTAPI = '<----ENTER YOUR API HERE and UNCOMMENT THE LINE---->'
+#HAAPI = '<----ENTER YOUR API HERE and UNCOMMENT THE LINE---->'
+#HASECRET = '<----ENTER YOUR SECRET HERE and UNCOMMENT THE LINE---->'
 
+haurl = 'https://www.hybrid-analysis.com'
 url = 'https://www.virustotal.com/vtapi/v2/file/report'
 param = 'params'
+user_agent = {'Falcon Sandbox'}
 
 from colorama import Fore, Back, Style
 
@@ -99,7 +104,6 @@ def listexports(fname):
         mype2.parse_data_directories(directories=[pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_EXPORT']])
         for exptab in mype2.DIRECTORY_ENTRY_EXPORT.symbols:
             x = hex(mype2.OPTIONAL_HEADER.ImageBase + exptab.address), exptab.name
-            #x = exptab.ordinal, exptab.name
             E.append(x)
     return E
 
@@ -123,7 +127,83 @@ def listsections(fname):
         print ("Sections: %8s" % filter(lambda k: '\x00' not in k, str(sect.Name))), 
         print ("%4.2f" % sect.get_entropy())
 
+def impext(targetfile):
+    
+    print (Fore.BLACK + "\nImported Functions".ljust(40))
+    print (110*'-').ljust(110) 
+    IR = []
+    IR = sorted(listimports(targetfile),key=keysort)
+    dic={ }
+    dic = dict(IR)
+    d = iter(dic.items())
+    IX = []
+    for key,value in sorted(d, key=keysort):
+        IX.append(str(value)) 
+    Y = iter(IX)
+            
+    for i in Y:
+        if i is None:
+            break
 
+        while (i == 'None'):
+            i = next(Y, None)
+
+        if i is None:
+                break
+        print (Fore.CYAN + "%-40s" % i),
+        w = next(Y, None)
+        if w is None:
+            break
+        if (w == 'None'):
+            w = next(Y, None)
+        if w is None:
+            break
+        print (Fore.GREEN + "%-40s" % w),
+        t = next(Y, None)
+        if t is None:
+            break
+        if (t == 'None'):
+            t = next(Y, None)
+        if t is None:
+            break
+        print (Fore.MAGENTA + "%-40s" % t)
+           
+    print (Fore.BLACK + "\n\nExported Functions".ljust(40))
+    print (110*'-').ljust(110) 
+    ER = []
+    ER = sorted(listexports(targetfile),key=keysort)
+    dic2={ }
+    dic2 = dict(ER)
+    d2 = iter(dic2.items())
+    EX = []
+    for key, value in sorted(d2, key=keysort):
+        EX.append(str(value))
+    Y2 = iter(EX)
+    for i in Y2:
+        if i is None:
+            break
+        while (i == 'None'):
+            i = next(Y2, None)
+        if i is None:
+            break
+        print (Fore.YELLOW + "%-40s" % i),
+        w = next(Y2, None)
+        if w is None:
+            break
+        if (w == 'None'):
+            w = next(Y2, None)
+        if w is None:
+            break
+        print (Fore.GREEN + "%-40s" % w),
+        t = next(Y2, None)
+        if t is None:
+            break
+        if (t == 'None'):
+            t = next(Y2, None)
+        if t is None:
+            break
+        print (Fore.BLUE + "%-40s" % t)
+                
 def vtcheck(fname, url, param): 
 
     pos = ''
@@ -169,7 +249,7 @@ def vtshow(fname, url, param):
             return final 
 
         if ('Avast' in vttext['scans']):
-            print Fore.RED + "Avast:".ljust(13),vttext['scans']['Avast']['result']
+            print Fore.GREEN + "Avast:".ljust(13),vttext['scans']['Avast']['result']
     
         if ('Avira' in vttext['scans']):
             print "Avira:".ljust(13),vttext['scans']['Avira']['result']
@@ -214,7 +294,172 @@ def vtshow(fname, url, param):
             print "Zone-Alarm:".ljust(13),vttext['scans']['Zone-Alarm']['result']
 
     except ValueError:
-        print(Fore.RED + "Error while connecting to Virus Total\n")
+        print(Fore.RED + "Error while connecting to Virus Total!\n")
+
+def hashow(fname): 
+
+    hatext = ''
+    haresponse = ''
+    final = ''
+   
+    try:
+      
+        resource = sha256hash(fname)
+        requestsession = requests.Session( )
+        requestsession.headers.update({'User-Agent':user_agent})
+        requestsession.auth = HTTPBasicAuth(HAAPI,HASECRET)
+        finalurl = '/'.join([haurl,'api/scan', resource])
+        haresponse = requestsession.get(url=finalurl)
+        hatext = json.loads(haresponse.text)
+
+        rc = str(hatext['response'])
+        if (rc == "[]"):
+            final = 'Malware sample was not found in Hybrid-Analysis repository.'
+            print (Fore.RED + "\n" + final + "\n")
+            return final
+
+        if 'environmentDescription' in (hatext['response'][0]):
+            envdesc = str(hatext['response'][0]['environmentDescription'])
+        else:
+            envdesc = '' 
+
+        if 'type' in hatext['response'][0]:
+            maltype = str(hatext['response'][0]['type'])
+        else:
+            maltype = ''
+
+        if 'verdict' in hatext['response'][0]:
+            verdict = str(hatext['response'][0]['verdict'])
+        else:
+            verdict = ''
+
+        if 'threatlevel' in hatext['response'][0]:
+            threatlevel = str(hatext['response'][0]['threatlevel'])
+        else:
+            threatlevel = ''
+
+        if 'threatscore' in hatext['response'][0]:
+            threatscore = str(hatext['response'][0]['threatscore'])
+        else:
+            threatscore = ''
+
+        if 'avdetect' in hatext['response'][0]:
+            avdetect = str(hatext['response'][0]['avdetect'])
+        else:
+            avdetect = ''
+
+        if 'total_signatures' in hatext['response'][0]:
+            totalsignatures = str(hatext['response'][0]['total_signatures'])
+        else:
+            totalsignatures = ''
+       
+        if 'submitname' in hatext['response'][0]:
+            submitname = unicode(hatext['response'][0]['submitname'])
+        else:
+            submitname = ''
+       
+        if 'analysis_start_time' in hatext['response'][0]:
+            analysistime = str(hatext['response'][0]['analysis_start_time'])
+        else:
+            analysistime = ''
+
+        if 'size' in hatext['response'][0]:
+            malsize = str(hatext['response'][0]['size'])
+        else:
+            malsize = ''
+
+        if 'total_processes' in hatext['response'][0]:
+            totalprocesses = str(hatext['response'][0]['total_processes'])
+        else:
+            totalprocess = ''
+
+        if 'total_network_connections' in hatext['response'][0]:
+            networkconnections =  str(hatext['response'][0]['total_network_connections'])
+        else:
+            networkconnection = ''
+
+        if 'domains' in hatext['response'][0]:
+            domains = (hatext['response'][0]['domains'])
+        else:
+            domains = ''
+
+        if 'hosts' in hatext['response'][0]:
+            hosts = (hatext['response'][0]['hosts'])
+        else:
+            hosts = ''
+
+        if 'compromised_hosts' in hatext['response'][0]:
+            compromised_hosts = (hatext['response'][0]['compromised_hosts'])
+        else:
+            compromised_hosts = ''
+
+        if 'vxfamily' in hatext['response'][0]:
+            vxfamily = str(hatext['response'][0]['vxfamily'])
+        else:
+            vxfamily = ''
+
+        if 'type_short' in (hatext['response'][0]):
+            typeshort = (hatext['response'][0]['type_short'])
+        else:
+            typeshort = ''
+
+        if 'classification_tags' in hatext['response'][0]:
+            classification = (hatext['response'][0]['classification_tags'])
+        else:
+            classification = ''
+       
+        print (Fore.BLACK + "\nHybrid-Analysis Summary Report:") 
+        print (70*'-').ljust(70) 
+        print (Fore.RED)
+        print "Environment:".ljust(20),envdesc
+        print "File Type:".ljust(20),maltype
+        print "Verdict:".ljust(20),verdict
+        print "Threat Level:".ljust(20),threatlevel
+        print "Threat Score:".ljust(20),threatscore + '/100' 
+        print "AV Detect".ljust(20),avdetect + '%'
+        print "Total Signatures:".ljust(20),totalsignatures
+
+        print (Fore.CYAN)
+        print "Submit Name:".ljust(20),submitname
+        print "Analysis Time:".ljust(20),analysistime
+        print "File Size:".ljust(20),malsize
+        print "Total Processes:".ljust(20),totalprocesses
+        print "Network Connections:".ljust(20),networkconnections
+        
+        print "\nDomains:"
+        for i in domains:
+            print "".ljust(20), i
+       
+        print "\nHosts:"
+        for i in hosts:
+            print "".ljust(20), i
+       
+        print "\nCompromised Hosts:"
+        for i in compromised_hosts:
+            print "".ljust(20), i
+        
+        print (Fore.MAGENTA)
+
+        print "Vx Family:".ljust(20),vxfamily 
+        print "File Type Short:    ",
+        for i in typeshort:
+            print i,
+        
+        print "\nClassification Tags:",
+        for i in classification:
+            print  i, 
+       
+        print "\n"
+
+        rc = (hatext['response'])
+        if (rc == 0):
+            final = 'Not Found'
+        return final 
+
+    
+    except ValueError as e:
+        print e
+        print(Fore.RED + "Error while connecting to Hybrid-Analysis!\n")
 
 def overextract(fname):
     
@@ -272,14 +517,18 @@ if __name__ == "__main__":
     ovrly = 0
     showreport = 0
     gt = 0
+    ie = 0
+    ha = 0
 
-    parser = optparse.OptionParser("malwoverview "+"-d <directory> -f <fullpath> -b <0|1> -v <0|1> -p <0|1> -s <0|1> -x <0|1>")
+    parser = optparse.OptionParser("malwoverview "+"-d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1>")
     parser.add_option('-d', dest='direct',type='string',help='specify directory containing malware samples.')
     parser.add_option('-f', dest='fpname',type='string',default = '', help='specify a full path to a file. Shows general information about the file (any filetype)')
     parser.add_option('-b', dest='backg', type='int',default = 0, help='(optional) force light gray background (for black terminals). It does not work with -f option.')
+    parser.add_option('-i', dest='impsexts', type='int',default = 0, help='(optional) show imports and exports (it is used with -f option).')
     parser.add_option('-x', dest='over', type='int',default = 0, help='(optional) extract overlay (it is used with -f option).')
     parser.add_option('-s', dest='showvt', type='int',default = 0, help='(optional) show antivirus reports from the main players. This option is used with the -f option (any filetype).')
     parser.add_option('-v', dest='virustotal', type='int',default = 0, help='(optional) query Virus Total database for positives and totals.Thus, you need to edit the malwoverview.py and insert your VT API.')
+    parser.add_option('-a', dest='hybridanalysis', type='int',default = 0, help='(optional) query Hybrid Analysis database for general report.Thus, you need to edit the malwoverview.py and insert your HA API and secret.')
     parser.add_option('-p', dest='pubkey', type='int',default = 0, help='(optional) use this option if you have a public Virus Total API. It forces a one minute wait every 4 malware samples, but allows obtaining a complete evaluation of the malware repository.')
     (options, args) = parser.parse_args()
     
@@ -291,6 +540,8 @@ if __name__ == "__main__":
     ovrly = options.over
     showreport = options.showvt
     gt = options.pubkey
+    ie = options.impsexts
+    ha = options.hybridanalysis
 
     if os.path.isfile(ffpname) == True:
         fprovided = 1
@@ -301,6 +552,22 @@ if __name__ == "__main__":
         print parser.usage
         exit(0)
     elif ovrly == 1:
+        if fprovided == 0:
+            print parser.usage
+            exit(0)
+
+    if (options.impsexts) not in optval:
+        print parser.usage
+        exit(0)
+    elif ie == 1:
+        if fprovided == 0:
+            print parser.usage
+            exit(0)
+
+    if (options.hybridanalysis) not in optval:
+        print parser.usage
+        exit(0)
+    elif ie == 1:
         if fprovided == 0:
             print parser.usage
             exit(0)
@@ -368,81 +635,12 @@ if __name__ == "__main__":
                 print (40*'-').ljust(40)
                 vtshow(targetfile,url,param)
 
-            print (Fore.BLACK + "\nImported Functions".ljust(40))
-            print (110*'-').ljust(110) 
-            IR = []
-            IR = sorted(listimports(targetfile),key=keysort)
-            dic={ }
-            dic = dict(IR)
-            d = iter(dic.items())
-            IX = []
-            for key,value in sorted(d, key=keysort):
-                IX.append(str(value)) 
-            Y = iter(IX)
+            if (ha == 1):
+               hashow(targetfile) 
             
-            for i in Y:
-                if i is None:
-                    break
-
-                while (i == 'None'):
-                    i = next(Y, None)
-
-                if i is None:
-                    break
-                print (Fore.CYAN + "%-40s" % i),
-                w = next(Y, None)
-                if w is None:
-                    break
-                if (w == 'None'):
-                    w = next(Y, None)
-                if w is None:
-                    break
-                print (Fore.GREEN + "%-40s" % w),
-                t = next(Y, None)
-                if t is None:
-                    break
-                if (t == 'None'):
-                    t = next(Y, None)
-                if t is None:
-                    break
-                print (Fore.MAGENTA + "%-40s" % t)
-           
-            print (Fore.BLACK + "\n\nExported Functions".ljust(40))
-            print (110*'-').ljust(110) 
-            ER = []
-            ER = sorted(listexports(targetfile),key=keysort)
-            dic2={ }
-            dic2 = dict(ER)
-            d2 = iter(dic2.items())
-            EX = []
-            for key, value in sorted(d2, key=keysort):
-                EX.append(str(value))
-            Y2 = iter(EX)
-            for i in Y2:
-                if i is None:
-                    break
-                while (i == 'None'):
-                    i = next(Y2, None)
-                if i is None:
-                    break
-                print (Fore.YELLOW + "%-40s" % i),
-                w = next(Y2, None)
-                if w is None:
-                    break
-                if (w == 'None'):
-                    w = next(Y2, None)
-                if w is None:
-                    break
-                print (Fore.GREEN + "%-40s" % w),
-                t = next(Y2, None)
-                if t is None:
-                    break
-                if (t == 'None'):
-                    t = next(Y2, None)
-                if t is None:
-                    break
-                print (Fore.BLUE + "%-40s" % t)
-
+            if (ie == 1):
+                impext(targetfile)
+            
             print (Fore.BLACK + "")
 
             if (ovrly == 1):
@@ -465,6 +663,8 @@ if __name__ == "__main__":
                 print(Fore.BLACK + "\nMain Antivirus Reports:")
                 print (40*'-').ljust(40)
                 vtshow(targetfile,url,param)
+            if (ha == 1):
+                hashow(targetfile)
             exit(0)
 
     directory = repo
