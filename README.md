@@ -29,7 +29,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 1.3
+# Current Version: 1.4
 
 ## Important aspect:  Malwoverview does NOT submit samples to VT. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs).
 
@@ -96,15 +96,18 @@ This tool was tested on a Kali Linux 2018 system. Therefore, it will be necessar
 
 To use the malwoverview, execute the command as shown below:
 
-      $ python malwoverview -d <directory> -f <fullpath> -b <0|1> -v <0|1> -p <0|1> -s <0|1> -x <0|1>
+      $ python malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1>
       
   where: 
   
         <directory> -d is the folder containing malware samples. 
         <fullpath>  -f specifies the full path to a file. Shows general information about the file (any filetype).
         (optional)  -b 1 forces light gray background (for black terminals). It does not work with -f option.
+        (optional)  -i 1 show imports and exports (it is used with -f option).
         (optional)  -x 1 extracts overlay (it is used with -f option).
         (optional)  -v 1 queries Virus Total database for positives and totals (any filetype).
+        (optional)  -a 1 (optional) query Hybrid Analysis database for general report.Thus, you need to edit the malwoverview.py and
+                     insert your HA API and respective secret.
         (optional)  -s 1 shows antivirus reports from the main players. This option is used with -f option (any filetype). 
         (optional)  -p 1 use this option if you have a public Virus Total API. It forces a one minute wait every 4 malware 
                          samples, but allows obtaining a complete evaluation of the malware repository..
@@ -121,6 +124,14 @@ To use the malwoverview, execute the command as shown below:
   
 # HISTORY
 
+Version 1.4: 
+
+      This version:
+
+            * Adds the -a option for getting the Hybrid Analysis summary report.
+            * Adds the -i option for listing imported and exported functions. Therefore, imported/exported function report was 
+              decoupled for a separated option.  
+                  
 Version 1.3: 
 
       This version:
