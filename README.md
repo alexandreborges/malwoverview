@@ -130,8 +130,8 @@ Version 1.4:
       This version:
 
             * Adds the -a option for getting the Hybrid Analysis summary report.
-            * Adds the -i option for listing imported and exported functions. Therefore, imported/exported function report was 
-              decoupled for a separated option.  
+            * Adds the -i option for listing imported and exported functions. Therefore, imported/exported function 
+              report was decoupled for a separated option.  
                   
 Version 1.3: 
 
