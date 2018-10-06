@@ -11,9 +11,9 @@
 ![Alt text](malwoverview1_2b1.jpg?raw=true "Title")
 ![Alt text](malwoverview1_3a.jpg?raw=true "Title")
 ![Alt text](malwoverview1_4d.jpg?raw=true "Title")
-![Alt text](malwoverview1_4_5_a.png?raw=true "Title")
-![Alt text](malwoverview1_4_5_b.png?raw=true "Title")
-![Alt text](malwoverview1_4_5c_.png?raw=true "Title")
+![Alt text](malwoverview1_4_5_a.jpg?raw=true "Title")
+![Alt text](malwoverview1_4_5_b.jpg?raw=true "Title")
+![Alt text](malwoverview1_4_5c_.jpg?raw=true "Title")
 
 
 
