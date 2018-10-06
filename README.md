@@ -127,7 +127,7 @@ This tool was tested on a Kali Linux 2018 system and Windows 10. Therefore, it w
 
 ## Virus Total and Hybrid-Analysis.
 
-You must edit the malwoverview.py and insert your APIs and secret to use Virus Total and Hybrid-Analysis checking:
+You must edit the malwoverview.py and insert your APIs and secret to enable Virus Total and Hybrid-Analysis checking:
 
 VT: 
 
