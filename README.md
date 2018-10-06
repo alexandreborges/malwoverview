@@ -123,7 +123,7 @@ This tool was tested on a Kali Linux 2018 system and Windows 10. Therefore, it w
 
 5. Install the python-magic DLLs by executing the following command:
 
-      C:\> pip install python-magic-bin==0.4.14 
+       C:\> pip install python-magic-bin==0.4.14 
        
        
 # USAGE
