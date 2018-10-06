@@ -124,7 +124,19 @@ This tool was tested on a Kali Linux 2018 system and Windows 10. Therefore, it w
 5. Install the python-magic DLLs by executing the following command:
 
        C:\> pip install python-magic-bin==0.4.14 
-       
+
+## Virus Total and Hybrid-Analysis.
+
+You must edit the malwoverview.py and insert your APIs and secret to use Virus Total and Hybrid-Analysis checking:
+
+VT: 
+
+      VTAPI = '<----ENTER YOUR API HERE and UNCOMMENT THE LINE---->'
+
+Hybrid-Analysis: 
+
+      HAAPI = '<----ENTER YOUR API HERE and UNCOMMENT THE LINE---->'    
+      HASECRET = '<----ENTER YOUR SECRET HERE and UNCOMMENT THE LINE---->'
        
 # USAGE
 
