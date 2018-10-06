@@ -29,7 +29,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 1.4
+# Current Version: 1.4.5
 
 ## Important aspect:  Malwoverview does NOT submit samples to VT. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs).
 
@@ -61,7 +61,9 @@ This tool aims to :
 
 # REQUERIMENTS
 
-This tool was tested on a Kali Linux 2018 system. Therefore, it will be necessary to install:
+This tool was tested on a Kali Linux 2018 system and Windows 10. Therefore, it will be necessary to install:
+
+## Kali Linux
 
 1. Python version 2.7.x. 
 
@@ -89,20 +91,49 @@ This tool was tested on a Kali Linux 2018 system. Therefore, it will be necessar
        $ pip install colorama
        $ pip install simple-json
        $ pip install requests
+
+## Windows
+
+1. Install the Python version 2.7.x. from https://www.python.org/downloads/windows/ 
+
+2. Python-magic.  
+
+      To install python-magic package you can execute the following command:
+      
+       C:\> pip install python-magic
+      
+      Or compiling it from the github repository:
+      
+       C:\> git clone https://github.com/ahupp/python-magic
+       C:\> cd python-magic/
+       C:\> python setup.py build
+       C:\> python setup.py install
+      
+3. Pefile and colorama packages: 
+
+       C:\> pip install pefile
+       C:\> pip install colorama
+       C:\> pip install simple-json
+       C:\> pip install requests
        
-      
-      
+4. (IMPORTANT) Remove the magic.py file from malwoverview directory.
+
+5. Install the python-magic DLLs by executing the following command:
+
+      C:\> pip install python-magic-bin==0.4.14 
+       
+       
 # USAGE
 
 To use the malwoverview, execute the command as shown below:
 
-      $ python malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1>
+      $ python malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1> -w <0|1>
       
   where: 
   
         <directory> -d is the folder containing malware samples. 
         <fullpath>  -f specifies the full path to a file. Shows general information about the file (any filetype).
-        (optional)  -b 1 forces light gray background (for black terminals). It does not work with -f option.
+        (optional)  -b 1 (optional) adapts the output colors to black window.
         (optional)  -i 1 show imports and exports (it is used with -f option).
         (optional)  -x 1 extracts overlay (it is used with -f option).
         (optional)  -v 1 queries Virus Total database for positives and totals (any filetype).
@@ -111,7 +142,8 @@ To use the malwoverview, execute the command as shown below:
         (optional)  -s 1 shows antivirus reports from the main players. This option is used with 
                          -f option (any filetype). 
         (optional)  -p 1 use this option if you have a public Virus Total API. It forces a one minute wait 
-                         every 4 malware samples, but allows obtaining a complete evaluation of the malware repository..
+                         every 4 malware samples, but allows obtaining a complete evaluation of the malware repository.
+        (optional)  -w 1 used when the OS is Microsoft Windows.
 
         
         If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. 
@@ -124,6 +156,13 @@ To use the malwoverview, execute the command as shown below:
         *ATENTION: if the directory contains many malware samples, so malwoverview.py could take some time. :)
   
 # HISTORY
+
+Version 1.4.5
+
+      This versiom:
+      
+            * Adds the -w option to use malwoverview in Windows systems.
+            * Improves and fixes colors when using -b option with black window.  
 
 Version 1.4: 
 
