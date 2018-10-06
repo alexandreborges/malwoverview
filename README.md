@@ -130,7 +130,8 @@ This tool was tested on a Kali Linux 2018 system and Windows 10. Therefore, it w
 
 To use the malwoverview, execute the command as shown below:
 
-      $ python malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1> -w <0|1>
+      $ python malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> 
+        -s <0|1> -x <0|1> -w <0|1>
       
   where: 
   
