@@ -173,9 +173,15 @@ To use the malwoverview, execute the command as shown below:
   
 # HISTORY
 
-Version 1.4.5
+Version 1.4.5.1:
 
-      This versiom:
+This version:
+
+            * Includes one small fix. 
+            
+Version 1.4.5:
+
+      This version:
       
             * Adds the -w option to use malwoverview in Windows systems.
             * Improves and fixes colors when using -b option with black window.  
