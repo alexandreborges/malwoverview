@@ -32,7 +32,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 1.4.5
+# Current Version: 1.4.5.1
 
 ## Important aspect:  Malwoverview does NOT submit samples to VT. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs).
 
