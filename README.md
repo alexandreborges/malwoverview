@@ -32,7 +32,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 1.4.5.1
+# Current Version: 1.4.5.2
 
 ## Important aspect:  Malwoverview does NOT submit samples to VT. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs).
 
@@ -172,6 +172,12 @@ To use the malwoverview, execute the command as shown below:
         *ATENTION: if the directory contains many malware samples, so malwoverview.py could take some time. :)
   
 # HISTORY
+
+Version 1.4.5.1:
+
+This version:
+
+            * Includes two small fixes.
 
 Version 1.4.5.1:
 
