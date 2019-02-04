@@ -190,7 +190,8 @@ Version 1.5.0:
       
             * Includes the -u option to check URLs against Virus Total and associated engines. 
             * Includes the -H option to find existing reports on Virus Total and Hybrid Analysis through the hash.
-            * Includes the -V option to submit a file to Virus Total. Additionally, the report is shown afer few minutes.
+            * Includes the -V option to submit a file to Virus Total. Additionally, the report is shown afer few 
+              minutes.
             * Includes two small fixes. 
 
 Version 1.4.5.1:
