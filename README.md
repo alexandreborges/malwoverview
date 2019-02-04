@@ -14,10 +14,12 @@
 ![Alt text](malwoverview_145a.jpg?raw=true "Title")
 ![Alt text](malwoverview_145b.jpg?raw=true "Title")
 ![Alt text](malwoverview_145c.jpg?raw=true "Title")
+![Alt text](malwoverview1_5_a.jpg?raw=true "Title")
+![Alt text](malwoverview1_5_b.jpg?raw=true "Title")
+![Alt text](malwoverview1_5_c.jpg?raw=true "Title")
 
 
-
-      Copyright (C)  2018 Alexandre Borges <ab at blackstormsecurity dot com>
+      Copyright (C)  2018-2019 Alexandre Borges <ab at blackstormsecurity dot com>
 
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
@@ -32,9 +34,9 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 1.4.5.2
+# Current Version: 1.5.0
 
-## Important aspect:  Malwoverview does NOT submit samples to VT. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs).
+## Important aspect:  Malwoverview does NOT submit samples to VT by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (upcase), so Malwoverview SUBMIT your sample to Virus Total. 
 
 # ABOUT
 
@@ -94,6 +96,7 @@ This tool was tested on a Kali Linux 2018 system and Windows 10. Therefore, it w
        $ pip install colorama
        $ pip install simple-json
        $ pip install requests
+       $ pip install validators
 
 ## Windows
 
@@ -118,6 +121,7 @@ This tool was tested on a Kali Linux 2018 system and Windows 10. Therefore, it w
        C:\> pip install colorama
        C:\> pip install simple-json
        C:\> pip install requests
+       C:\> pip install validators
        
 4. (IMPORTANT) Remove the magic.py file from malwoverview directory.
 
@@ -142,9 +146,8 @@ Hybrid-Analysis:
 
 To use the malwoverview, execute the command as shown below:
 
-      $ python malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1>
-                            -w <0|1>
-      
+      $ malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H            <hash file> -V <filename>
+
   where: 
   
         <directory> -d is the folder containing malware samples. 
@@ -160,8 +163,13 @@ To use the malwoverview, execute the command as shown below:
         (optional)  -p 1 use this option if you have a public Virus Total API. It forces a one minute wait 
                          every 4 malware samples, but allows obtaining a complete evaluation of the malware repository.
         (optional)  -w 1 used when the OS is Microsoft Windows.
+                    -u <url> SUBMIT a URL to the Virus Total scanning.
+                    -H <filehash> hash to be checked on Virus Total and Hybrid Analysis.
+                    -V <file name> SUBMIT a FILE(up to 32MB) to Virus Total scanning and read the report. 
+                        Attention: use forward slash to specify the target file even on Windows systems. Furthermore, the
+                        minimum waiting time is set up in 90 seconds because the Virus Total queue. If an error occurs, 
+                        so wait few minutes and try to access the report by using -f option.
 
-        
         If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. 
         
         Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore, if you 
@@ -169,13 +177,22 @@ To use the malwoverview, execute the command as shown below:
         samples, but allows obtaining a complete evaluation of the repository.
         
   
-        *ATENTION: if the directory contains many malware samples, so malwoverview.py could take some time. :)
+        *ATENTION: if the directory contains many malware samples while using -d option, so malwoverview.py could take some time. :)
   
 # HISTORY
 
+Version 1.5.0:
+
+      This version: 
+      
+            * Includes the -u option to check URLs against Virus Total and associated engines. 
+            * Includes the -H option to find existing reports on Virus Total and Hybrid Analysis through the hash.
+            * Includes the -V option to submit a file to Virus Total. Additionally, the report is shown afer few minutes.
+            * Includes two small fixes. 
+
 Version 1.4.5.1:
 
-This version:
+      This version:
 
             * Includes two small fixes.
 
