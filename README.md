@@ -147,7 +147,8 @@ Hybrid-Analysis:
 
 To use the malwoverview, execute the command as shown below:
 
-      $ malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H            <hash file> -V <filename>
+      $ malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1>
+        -w <|1> -u <url> -H <hash file> -V <filename>
 
   where: 
   
@@ -178,7 +179,8 @@ To use the malwoverview, execute the command as shown below:
         samples, but allows obtaining a complete evaluation of the repository.
         
   
-        *ATENTION: if the directory contains many malware samples while using -d option, so malwoverview.py could take some time. :)
+        *ATENTION: if the directory contains many malware samples while using -d option, so malwoverview.py could take 
+         some time. :)
   
 # HISTORY
 
