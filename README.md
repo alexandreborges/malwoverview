@@ -195,7 +195,7 @@ Version 1.5.0:
               minutes.
             * Includes two small fixes. 
 
-Version 1.4.5.1:
+Version 1.4.5.2:
 
       This version:
 
@@ -203,7 +203,7 @@ Version 1.4.5.1:
 
 Version 1.4.5.1:
 
-This version:
+      This version:
 
             * Includes one small fix. 
             
