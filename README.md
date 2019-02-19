@@ -187,7 +187,9 @@ To use the malwoverview, execute the command as shown below:
 
 Version 1.5.1:
 
-      This version: Small change to fix format issue in -d option. 
+      This version: 
+      
+            * Small change to fix format issue in -d option. 
       
 Version 1.5.0:
 
