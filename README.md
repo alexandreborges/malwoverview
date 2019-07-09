@@ -166,13 +166,13 @@ To use the malwoverview, execute the command as shown below:
         (optional)  -p 1 use this option if you have a public Virus Total API. It forces a one minute wait 
                          every 4 malware samples, but allows obtaining a complete evaluation of the malware repository.
         (optional)  -w 1 used when the OS is Microsoft Windows.
-                    -u <url> SUBMIT a URL to the Virus Total scanning.
-                    -H <filehash> hash to be checked on Virus Total and Hybrid Analysis.
-                    -V <file name> SUBMIT a FILE(up to 32MB) to Virus Total scanning and read the report. 
+        (optional)  -u <url> SUBMIT a URL to the Virus Total scanning.
+        (optional)  -H <filehash> hash to be checked on Virus Total and Hybrid Analysis.
+        (optional)  -V <file name> SUBMIT a FILE(up to 32MB) to Virus Total scanning and read the report. 
                         Attention: use forward slash to specify the target file even on Windows systems. Furthermore, 
                         the minimum waiting time is set up in 90 seconds because the Virus Total queue. If an error 
                         occurs, so wait few minutes and try to access the report by using -f option.
-                    -D DOWNLOAD (optional) Download the sample from Hybrid Analysis. Option -H must be specified.
+        (optional)  -D 1 (optional) Download the sample from Hybrid Analysis. Option -H must be specified.
 
         If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. 
         
