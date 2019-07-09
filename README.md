@@ -193,10 +193,10 @@ Version 1.6.0:
 
       This version: 
       
-            * Using Hybrid Analysis API version 2.4.0. 
-            * Certificate information has been included in the Hybrid Analysis report. 
-            * MITRE information has been included in the Hybrid Analysis report. 
-            * It was included an option to download samples from Hybrid Analysis. 
+            * It is using the Hybrid Analysis API version 2.4.0.
+            * Includes certificate information in the Hybrid Analysis report. 
+            * Includes MITRE information in the Hybrid Analysis report. 
+            * Includes an option to download samples from Hybrid Analysis. 
             
 Version 1.5.1:
 
