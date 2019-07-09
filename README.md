@@ -35,7 +35,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 1.5.0
+# Current Version: 1.6.0
 
 ## Important aspect:  Malwoverview does NOT submit samples to VT by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total in this case. 
 
@@ -172,6 +172,7 @@ To use the malwoverview, execute the command as shown below:
                         Attention: use forward slash to specify the target file even on Windows systems. Furthermore, 
                         the minimum waiting time is set up in 90 seconds because the Virus Total queue. If an error 
                         occurs, so wait few minutes and try to access the report by using -f option.
+                    -D DOWNLOAD (optional) Download the sample from Hybrid Analysis. Option -H must be specified.
 
         If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. 
         
@@ -185,6 +186,15 @@ To use the malwoverview, execute the command as shown below:
   
 # HISTORY
 
+Version 1.6.0:
+
+      This version: 
+      
+            * Using Hybrid Analysis API version 2.4.0. 
+            * Certificate information has been included in the Hybrid Analysis report. 
+            * MITRE information has been included in the Hybrid Analysis report. 
+            * It was included an option to download samples from Hybrid Analysis. 
+            
 Version 1.5.1:
 
       This version: 
