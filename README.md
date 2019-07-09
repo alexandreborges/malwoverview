@@ -14,10 +14,13 @@
 ![Alt text](malwoverview_145a.jpg?raw=true "Title")
 ![Alt text](malwoverview_145b.jpg?raw=true "Title")
 ![Alt text](malwoverview_145c.jpg?raw=true "Title")
-![Alt text](malwoverview1_5.jpg?raw=true "Title")
 ![Alt text](malwoverview1_5_a.jpg?raw=true "Title")
 ![Alt text](malwoverview1_5_b.jpg?raw=true "Title")
 ![Alt text](malwoverview1_5_c.jpg?raw=true "Title")
+![Alt text](malw16_a.JPG?raw=true "Title")
+![Alt text](malw16_b.JPG?raw=true "Title")
+![Alt text](malw16_c.JPG?raw=true "Title")
+![Alt text](malw16_d.JPG?raw=true "Title")
 
 
       Copyright (C)  2018-2019 Alexandre Borges <ab at blackstormsecurity dot com>
