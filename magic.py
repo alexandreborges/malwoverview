@@ -19,7 +19,6 @@ Usage:
 
 import sys
 import glob
-import ctypes
 import ctypes.util
 import threading
 

@@ -20,20 +20,37 @@
 import os
 import sys
 import re
-import pefile
-import peutils
 import magic
 import optparse
-import requests
 import hashlib
 import json
 import time
-import validators
-from requests.auth import HTTPBasicAuth
-from colorama import init, Fore, Back, Style
+
+try:
+    import pefile
+
+except:
+    sys.exit("[!] Install the pefile library: pip install pefile")
+
+try:
+    import requests
+
+except:
+    sys.exit("[!] Install the requests library: pip install requests")
+
+try:
+    import validators
+
+except:
+    sys.exit("[!] Install the validators library: pip install validators")
+
+try:
+    from colorama import init, Fore, Back, Style
+
+except:
+    sys.exit("[!] Install the colorama library: pip install colorama")
 
 #VTAPI = '<----ENTER YOUR API HERE and UNCOMMENT THE LINE---->'
-
 #HAAPI = '<----ENTER YOUR API HERE and UNCOMMENT THE LINE---->'
 #HASECRET = '<----ENTER YOUR SECRET HERE and UNCOMMENT THE LINE---->'
 
