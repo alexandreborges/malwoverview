@@ -145,7 +145,6 @@ VT:
 Hybrid-Analysis: 
 
       HAAPI = '<----ENTER YOUR API HERE and UNCOMMENT THE LINE---->'    
-      HASECRET = '<----ENTER YOUR SECRET HERE and UNCOMMENT THE LINE---->'
        
 # USAGE
 
