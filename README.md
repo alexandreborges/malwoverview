@@ -193,7 +193,7 @@ Version 1.6.2:
       This version: 
       
             * Includes small fixes.
-            * For the Hybrid Analysis API v. 2.40 is not longer necessary to include the API Secret.  
+            * For the Hybrid Analysis API version 2.40 is not longer necessary to include the API Secret.  
             
 Version 1.6.1:
 
