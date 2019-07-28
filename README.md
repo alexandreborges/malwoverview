@@ -38,7 +38,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 1.6.2
+# Current Version: 1.6.3
 
 ## Important note:  Malwoverview does NOT submit samples to VT by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total in this case. 
 
@@ -188,6 +188,13 @@ To use the malwoverview, execute the command as shown below:
   
 # HISTORY
 
+Version 1.6.3:
+
+      This version: 
+      
+            * Includes creation of new functions aiming 1.7.0 version.
+            * Includes new exception handling blocks.
+            
 Version 1.6.2:
 
       This version: 
