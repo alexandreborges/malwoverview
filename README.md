@@ -38,7 +38,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 1.6.3
+# Current Version: 1.7.0
 
 ## Important note:  Malwoverview does NOT submit samples to VT by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total in this case. 
 
@@ -150,31 +150,57 @@ Hybrid-Analysis:
 
 To use the malwoverview, execute the command as shown below:
 
-      $ malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1>
-        -w <|1> -u <url> -H <hash file> -V <filename>
+      $ Usage: malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3> -A <filename> -g <job_id> -r <domain>
 
   where: 
   
-        <directory> -d is the folder containing malware samples. 
-        <fullpath>  -f specifies the full path to a file. Shows general information about the file (any filetype).
-        (optional)  -b 1 (optional) adapts the output colors to black window.
-        (optional)  -i 1 show imports and exports (it is used with -f option).
-        (optional)  -x 1 extracts overlay (it is used with -f option).
-        (optional)  -v 1 queries Virus Total database for positives and totals (any filetype).
-        (optional)  -a 1 (optional) query Hybrid Analysis database for general report.Thus, you need to edit the 
-                          malwoverview.py and insert your HA API and respective secret.
-        (optional)  -s 1 shows antivirus reports from the main players. This option is used with 
-                         -f option (any filetype). 
-        (optional)  -p 1 use this option if you have a public Virus Total API. It forces a one minute wait 
-                         every 4 malware samples, but allows obtaining a complete evaluation of the malware repository.
-        (optional)  -w 1 used when the OS is Microsoft Windows.
-        (optional)  -u <url> SUBMIT a URL to the Virus Total scanning.
-        (optional)  -H <filehash> hash to be checked on Virus Total and Hybrid Analysis.
-        (optional)  -V <file name> SUBMIT a FILE(up to 32MB) to Virus Total scanning and read the report. 
-                        Attention: use forward slash to specify the target file even on Windows systems. Furthermore, 
-                        the minimum waiting time is set up in 90 seconds because the Virus Total queue. If an error 
-                        occurs, so wait few minutes and try to access the report by using -f option.
-        (optional)  -D 1 (optional) Download the sample from Hybrid Analysis. Option -H must be specified.
+      -h, --help     show this help message and exit
+      -d DIRECT      specify directory containing malware samples.
+      -f FPNAME      specify a full path to a file. Shows general information
+                     about the file (any filetype)
+      -b BACKG       (optional) adapts the output colors to black window.
+      -i IMPSEXTS    (optional) show imports and exports (it is used with -f
+                     option).
+      -x OVER        (optional) extract overlay (it is used with -f option).
+      -s SHOWVT      (optional) show antivirus reports from the main players.
+                     This option is used with the -f option (any filetype).
+      -v VIRUSTOTAL  (optional) query Virus Total database for positives and
+                     totals.Thus, you need to edit the malwoverview.py and
+                     insert your VT API.
+      -a HYBRIDANALYSIS  (optional) query Hybrid Analysis database for general
+                     report.Thus, you need to edit the malwoverview.py and
+                     insert your HA API and secret.
+      -p PUBKEY      (optional) use this option if you have a public Virus
+                     Total API. It forces a one minute wait every 4 malware
+                     samples, but allows obtaining a complete evaluation of
+                     the malware repository.
+      -w WIN         (optional) used when the OS is Microsoft Windows.
+      -u URLX        SUBMIT a URL for the Virus Total scanning.
+      -r DOMAINX     GET a domain's report from Virus Total.
+      -H FILEHASH    Hash to be checked on Virus Total and Hybrid Analysis.
+                     For the Hybrid Analysis report you must use it together
+                     -e option.
+      -V FILENAMEVT  SUBMIT a FILE(up to 32MB) to Virus Total scanning and
+                     read the report. Attention: use forward slash to specify
+                     the target file even on Windows systems. Furthermore, the
+                     minimum waiting time is set up in 90 seconds because the
+                     Virus Total queue. If an error occurs, so wait few
+                     minutes and try to access the report by using -f option.
+      -A FILENAMEHA  SUBMIT a FILE(up to 32MB) to be scanned by Hybrid
+                     Analysis engine. Use the -e option to specify the best
+                     environment to run the suspicious file.
+      -g REPORTHA    Check the report's status of submitted samples to Hybrid
+                     Analysis engine by providing the job ID. Possible
+                     returned status values are: IN_QUEUE, SUCCESS, ERROR,
+                     IN_PROGRESS and PARTIAL_SUCCESS.
+      -D DOWNLOAD    (optional) Download the sample from Hybrid Analysis.
+                     Option -H must be specified.
+      -e SYSENVIRON  (optional) This option specified the used environment to
+                     be used to test the samlple on Hybrid Analysis: <0>
+                     Windows 32-bits; <1> Windows 64-bits; <2> Android; <3>
+                     Linux 64-bits environment. This option is used together
+                     either -H option or the -A option.
+
 
         If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. 
         
@@ -183,11 +209,24 @@ To use the malwoverview, execute the command as shown below:
         samples, but allows obtaining a complete evaluation of the repository.
         
   
-        *ATENTION: if the directory contains many malware samples while using -d option, so malwoverview.py could 
+        * ATTENTION: if the directory contains many malware samples while using -d option, so malwoverview.py could 
          take some time. :)
+         
+        ** ATTENTION 2: The public Hybrid Analysis API enforces a quota of submission per day!
   
 # HISTORY
 
+Version 1.7.0:
+
+      This version: 
+      
+            * Includes -A option for submmiting a sample to Hybrid Analysis
+            * Includes -g option for checking the status a submission of a sample to Hybrid Analysis.
+            * Includes -e option for specifying the testing environment on the Hybrid Analysis.
+            * Includes -r option for getting a complete domain report from Virus Total.
+            * Modifies the -H options to work together the -e option.
+            * Modifies several other parts of the tool to prepare it to version 1.8.0
+            
 Version 1.6.3:
 
       This version: 
