@@ -23,8 +23,8 @@
 ![Alt text](pictures/malw16_d.JPG?raw=true "Title")
 ![Alt text](pictures/malw17_C.JPG?raw=true "Title")
 ![Alt text](pictures/malw17_D.JPG?raw=true "Title")
-![Alt text](pictures/malw17_E.JPG?raw=true "Title")
 ![Alt text](pictures/malw17_F.JPG?raw=true "Title")
+![Alt text](pictures/malw17_E.JPG?raw=true "Title")
 
       Copyright (C)  2018-2019 Alexandre Borges <ab at blackstormsecurity dot com>
 
