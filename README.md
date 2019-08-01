@@ -153,7 +153,9 @@ Hybrid-Analysis:
 
 To use the malwoverview, execute the command as shown below:
 
-      $ Usage: malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3> -A <filename> -g <job_id> -r <domain>
+      $ Usage: malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> 
+      -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3> -A <filename> -g <job_id> 
+      -r <domain>
 
   where: 
   
@@ -207,9 +209,9 @@ To use the malwoverview, execute the command as shown below:
 
         If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. 
         
-        Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore, if you 
-        are willing to wait some minutes, so you can use the -p option, which forces a one minute wait every 4 malware 
-        samples, but allows obtaining a complete evaluation of the repository.
+        Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore, 
+        if you are willing to wait some minutes, so you can use the -p option, which forces a one minute wait 
+        every 4 malware samples, but allows obtaining a complete evaluation of the repository.
         
   
         * ATTENTION: if the directory contains many malware samples while using -d option, so malwoverview.py could 
@@ -299,8 +301,8 @@ Version 1.4:
       This version:
 
             * Adds the -a option for getting the Hybrid Analysis summary report.
-            * Adds the -i option for listing imported and exported functions. Therefore, imported/exported function 
-              report was decoupled for a separated option.  
+            * Adds the -i option for listing imported and exported functions. Therefore, imported/exported
+              function report was decoupled for a separated option.  
                   
 Version 1.3: 
 
@@ -328,8 +330,8 @@ Version 1.1:
 
 Version 1.0:
 
-      Malwoverview is a tool to perform a first triage of malware samples in a directory and group them according 
-      to their import functions (imphash) using colors. This version:
+      Malwoverview is a tool to perform a first triage of malware samples in a directory and group them 
+      according to their import functions (imphash) using colors. This version:
 
             * Shows the imphash information classified by color. 
             * Checks whether malware samples are packed.  
