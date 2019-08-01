@@ -43,7 +43,7 @@
 
 # Current Version: 1.7.0
 
-## Important note:  Malwoverview does NOT submit samples to VT by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total in this case. 
+## Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase) or "-A" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total or Hybrid Analysis, respectively. 
 
 
 # ABOUT
