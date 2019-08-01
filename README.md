@@ -228,7 +228,7 @@ Version 1.7.0:
             * Includes -e option for specifying the testing environment on the Hybrid Analysis.
             * Includes -r option for getting a complete domain report from Virus Total.
             * Modifies the -H options to work together the -e option.
-            * Modifies several other parts of the tool to prepare it to version 1.8.0
+            * Modifies several functions of the tool to prepare it for version 1.8.0
             
 Version 1.6.3:
 
