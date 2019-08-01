@@ -21,8 +21,6 @@
 ![Alt text](malw16_b.JPG?raw=true "Title")
 ![Alt text](malw16_c.JPG?raw=true "Title")
 ![Alt text](malw16_d.JPG?raw=true "Title")
-![Alt text](pictures/malw17_A.JPG?raw=true "Title")
-![Alt text](pictures/malw17_B.JPG?raw=true "Title")
 ![Alt text](pictures/malw17_C.JPG?raw=true "Title")
 ![Alt text](pictures/malw17_D.JPG?raw=true "Title")
 ![Alt text](pictures/malw17_E.JPG?raw=true "Title")
