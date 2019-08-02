@@ -229,7 +229,7 @@ Version 1.7.0:
             * Includes -g option for checking the status a submission of a sample to Hybrid Analysis.
             * Includes -e option for specifying the testing environment on the Hybrid Analysis.
             * Includes -r option for getting a complete domain report from Virus Total.
-            * Modifies the -H options to work together the -e option.
+            * Modifies the -H options for working together the -e option.
             * Modifies several functions of the tool to prepare it for version 1.8.0
             
 Version 1.6.3:
