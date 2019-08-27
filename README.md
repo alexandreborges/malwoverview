@@ -24,7 +24,7 @@
 ![Alt text](pictures/malw17_C.JPG?raw=true "Title")
 ![Alt text](pictures/malw17_D.JPG?raw=true "Title")
 ![Alt text](pictures/malw17_F.JPG?raw=true "Title")
-![Alt text](pictures/malw17_E.JPG?raw=true "Title")
+![Alt text](pictures/malw17_G.JPG?raw=true "Title")
 
       Copyright (C)  2018-2019 Alexandre Borges <ab at blackstormsecurity dot com>
 
@@ -41,7 +41,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 1.7.0
+# Current Version: 1.7.1
 
 ## Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase) or "-A" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total or Hybrid Analysis, respectively. 
 
@@ -154,7 +154,7 @@ Hybrid-Analysis:
 To use the malwoverview, execute the command as shown below:
 
       $ Usage: malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> 
-      -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3> -A <filename> -g <job_id> 
+      -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> 
       -r <domain>
 
   where: 
@@ -202,9 +202,11 @@ To use the malwoverview, execute the command as shown below:
                      Option -H must be specified.
       -e SYSENVIRON  (optional) This option specified the used environment to
                      be used to test the samlple on Hybrid Analysis: <0>
-                     Windows 32-bits; <1> Windows 64-bits; <2> Android; <3>
-                     Linux 64-bits environment. This option is used together
-                     either -H option or the -A option.
+                     Windows 32-bits; <1> Windows 32-bits (with HWP Support);
+                     <2> Windows 64-bits; <3> Android; <4> Linux 64-bits
+                     environment. This option is used together either -H
+                     option or the -A option.
+
 
 
         If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. 
@@ -221,6 +223,14 @@ To use the malwoverview, execute the command as shown below:
   
 # HISTORY
 
+Version 1.7.1:
+
+      This version: 
+      
+            * Fix a problem related to options -A and -H options.
+            * Includes a new Hybrid Analysis environment to the -e option (Windows 32-bist with HWP support).
+            * Updates the Malwoverview to support Hybrid Analysis 2.5.0 API.
+            
 Version 1.7.0:
 
       This version: 
