@@ -227,7 +227,7 @@ Version 1.7.1:
 
       This version: 
       
-            * Fix a problem related to options -A and -H options.
+            * Relevant fix of a problem related to options -A and -H options.
             * Includes a new Hybrid Analysis environment to the -e option (Windows 32-bist with HWP support).
             * Updates the Malwoverview to support Hybrid Analysis 2.5.0 API.
             
