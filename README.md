@@ -202,8 +202,8 @@ To use the malwoverview, execute the command as shown below:
                      Option -H must be specified.
       -e SYSENVIRON  (optional) This option specified the used environment to
                      be used to test the samlple on Hybrid Analysis: <0>
-                     Windows 32-bits; <1> Windows 32-bits (with HWP Support);
-                     <2> Windows 64-bits; <3> Android; <4> Linux 64-bits
+                     Windows 7 32-bits; <1> Windows 7 32-bits (with HWP Support);
+                     <2> Windows 7 64-bits; <3> Android; <4> Linux 64-bits
                      environment. This option is used together either -H
                      option or the -A option.
 
