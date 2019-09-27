@@ -227,7 +227,7 @@ Version 1.7.2:
 
       This version: 
       
-            * A small fix related to -g option was included. 
+            * A small fix related to -g option has been included. 
             
 Version 1.7.1:
 
