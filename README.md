@@ -237,10 +237,10 @@ Version 1.7.3:
 
       This version: 
       
-            * Malwoverview adapted to version 2.6.0 API of Hybrid Analysis. 
-            * -A option fixed according to new version (2.6.0) of Hybrid Analysis.  
-            * -e option included to work to work together -a option.
-            * help information modified. 
+            * Malwoverview has been adapted to version 2.6.0 API of Hybrid Analysis.
+            * -A option has been fixed according to new version (2.6.0) of Hybrid Analysis.
+            * -a option has been modified to work together with  -e option.
+            * help information has been modified. 
             
 Version 1.7.2:
 
