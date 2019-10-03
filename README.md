@@ -41,7 +41,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 1.7.2
+# Current Version: 1.7.3
 
 ## Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase) or "-A" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total or Hybrid Analysis, respectively. 
 
@@ -153,12 +153,18 @@ Hybrid-Analysis:
 
 To use the malwoverview, execute the command as shown below:
 
-      $ Usage: malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> 
-      -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> 
-      -r <domain>
+     Usage: malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> 
+     -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> 
+     -r <domain>
 
   where: 
   
+     Usage: malwoverview -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> 
+     -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> 
+     -r <domain>
+
+Options:
+
       -h, --help     show this help message and exit
       -d DIRECT      specify directory containing malware samples.
       -f FPNAME      specify a full path to a file. Shows general information
@@ -173,8 +179,11 @@ To use the malwoverview, execute the command as shown below:
                      totals.Thus, you need to edit the malwoverview.py and
                      insert your VT API.
       -a HYBRIDANALYSIS  (optional) query Hybrid Analysis database for general
-                     report.Thus, you need to edit the malwoverview.py and
-                     insert your HA API and secret.
+                     report. Use the -e option to specify which environment
+                     are looking for the associate report because the sample
+                     can have been submitted to a different environment that
+                     you are looking for. Thus, you need to edit the
+                     malwoverview.py and insert your HA API and secret.
       -p PUBKEY      (optional) use this option if you have a public Virus
                      Total API. It forces a one minute wait every 4 malware
                      samples, but allows obtaining a complete evaluation of
@@ -202,11 +211,10 @@ To use the malwoverview, execute the command as shown below:
                      Option -H must be specified.
       -e SYSENVIRON  (optional) This option specified the used environment to
                      be used to test the samlple on Hybrid Analysis: <0>
-                     Windows 7 32-bits; <1> Windows 7 32-bits (with HWP Support);
-                     <2> Windows 7 64-bits; <3> Android; <4> Linux 64-bits
-                     environment. This option is used together either -H
-                     option or the -A option.
-
+                     Windows 7 32-bits; <1> Windows 7 32-bits (with HWP
+                     Support); <2> Windows 7 64-bits; <3> Android; <4> Linux
+                     64-bits environment. This option is used together either
+                     -H option or the -A option or -a option.
 
 
         If you use Virus Total option, so it is necessary to edit the malwoverview.py and insert your VT API. 
@@ -223,6 +231,15 @@ To use the malwoverview, execute the command as shown below:
   
 # HISTORY
 
+Version 1.7.3:
+
+      This version: 
+      
+            * Malwoverview adapted to version 2.6.0 API of Hybrid Analysis. 
+            * -A option fixed according to new version (2.6.0) of Hybrid Analysis.  
+            * -e option included to work to work together -a option.
+            * help information modified. 
+            
 Version 1.7.2:
 
       This version: 
