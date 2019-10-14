@@ -1049,11 +1049,10 @@ def hafilecheck(filenameha):
                 print (Fore.BLACK + "\n")
 
         else:
+            print (Fore.RED + "\nAn error occured while sending the file!")
             if (bkg == 1):
-                print (Fore.RED + "\nAn error occured while sendng the file!")
                 print (Fore.WHITE + "\n")
             else:
-                print (Fore.RED + "\nAn error occured while sending the file!")
                 print (Fore.BLACK + "\n")
 
 
