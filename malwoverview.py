@@ -868,17 +868,17 @@ def hashow(filehash):
             classification = (hatext['tags'])
         else:
             classification = ''
-	
-	if 'certificates' in hatext:
-		certificates = hatext['certificates']
-	else:
-		certificates = ''
+    
+        if 'certificates' in hatext:
+            certificates = hatext['certificates']
+        else:
+            certificates = ''
 
-	if 'mitre_attcks' in hatext:
-		mitre = hatext['mitre_attcks']
-	else:
-		mitre = ''
-	  
+        if 'mitre_attcks' in hatext:
+            mitre = hatext['mitre_attcks']
+        else:
+            mitre = ''
+          
         if (bkg == 1):
             print (Fore.WHITE)
         else:
@@ -933,37 +933,37 @@ def hashow(filehash):
         for i in classification:
             print  i, 
        
-	if (bkg == 1):
+    if (bkg == 1):
             print (Fore.CYAN)
         else:
             print (Fore.BLUE)
-			
-	print "\nCertificates:\n",
-	for i in certificates:
-		print "".ljust(20),
-		print("owner: %s" % i['owner'])
-		print "".ljust(20),
-		print("issuer: %s" % i['issuer'])
-		print "".ljust(20),
-		print("valid_from: %s" % i['valid_from'])
-		print "".ljust(20),
-		print("valid_until: %s\n" % i['valid_until'])
+            
+    print "\nCertificates:\n",
+    for i in certificates:
+        print "".ljust(20),
+        print("owner: %s" % i['owner'])
+        print "".ljust(20),
+        print("issuer: %s" % i['issuer'])
+        print "".ljust(20),
+        print("valid_from: %s" % i['valid_from'])
+        print "".ljust(20),
+        print("valid_until: %s\n" % i['valid_until'])
 
-	if (bkg == 1):
+    if (bkg == 1):
             print (Fore.GREEN)
         else:
             print (Fore.MAGENTA)
 
         print "\nMITRE Attacks:\n",
         for i in mitre:
-		print "".ljust(20),
-		print("tactic: %s" % i['tactic'])
-		print "".ljust(20),
-		print("technique: %s" % i['technique'])
-		print "".ljust(20),
-		print("attck_id: %s" % i['attck_id'])
-		print "".ljust(20),
-		print("attck_id_wiki: %s\n" % i['attck_id_wiki'])
+        print "".ljust(20),
+        print("tactic: %s" % i['tactic'])
+        print "".ljust(20),
+        print("technique: %s" % i['technique'])
+        print "".ljust(20),
+        print("attck_id: %s" % i['attck_id'])
+        print "".ljust(20),
+        print("attck_id_wiki: %s\n" % i['attck_id_wiki'])
 
         rc = (hatext)
         if (rc == 0):
@@ -1143,7 +1143,7 @@ def downhash(filehash):
             open(resource + '.gz', 'wb').write(haresponse.content)
             final = 'SAMPLE SAVED!'
 
-	    if (bkg == 1):
+        if (bkg == 1):
                 print (Fore.WHITE)
             else:
                 print (Fore.BLACK)
