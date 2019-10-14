@@ -612,30 +612,19 @@ def vtdomaincheck(mydomain, param):
                             for y in range(len(vttext['undetected_urls'][i])):
                                 if (bkg == 0):
                                     print (Fore.CYAN + "".ljust(28)),
-                                    if (y == 0):
-                                        print ("url:       "), 
-                                    if (y == 1):
-                                        print ("sha256:    "), 
-                                    if (y == 2):
-                                        print ("positives: "), 
-                                    if (y == 3):
-                                        print ("total:     "), 
-                                    if (y == 4):
-                                        print ("date:      "), 
-                                    print ("%s" % (vttext['undetected_urls'][i][y]))
                                 else:
                                     print (Fore.GREEN + "".ljust(28)),
-                                    if (y == 0):
-                                        print ("url:       "), 
-                                    if (y == 1):
-                                        print ("sha256:    "), 
-                                    if (y == 2):
-                                        print ("positives: "), 
-                                    if (y == 3):
-                                        print ("total:     "), 
-                                    if (y == 4):
-                                        print ("date:      "), 
-                                    print ("%s" % (vttext['undetected_urls'][i][y]))
+                                if (y == 0):
+                                    print ("url:       "), 
+                                if (y == 1):
+                                    print ("sha256:    "), 
+                                if (y == 2):
+                                    print ("positives: "), 
+                                if (y == 3):
+                                    print ("total:     "), 
+                                if (y == 4):
+                                    print ("date:      "), 
+                                print ("%s" % (vttext['undetected_urls'][i][y]))
                             print "\n"
                     except KeyError as e:
                         pass
