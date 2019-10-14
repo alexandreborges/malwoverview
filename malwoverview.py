@@ -1097,11 +1097,10 @@ def checkreportha(jobid):
                 print ("%s" % str(hatext['state']))  
                 print (Fore.BLACK + "\n")
         else:
+            print (Fore.RED + "\nThere isn't any report associated to this job ID, unfortunately.")
             if (bkg == 1):
-                print (Fore.RED + "\nThere isn't any report associated to this job ID, unfortunately.")
                 print (Fore.WHITE + "\n")
             else:
-                print (Fore.RED + "\nThere isn't any report associated to ths job ID, unfortunately")
                 print (Fore.BLACK + "\n")
 
     except ValueError as e:
