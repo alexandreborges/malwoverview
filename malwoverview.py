@@ -933,7 +933,7 @@ def hashow(filehash):
         for i in classification:
             print  i, 
        
-    if (bkg == 1):
+        if (bkg == 1):
             print (Fore.CYAN)
         else:
             print (Fore.BLUE)
@@ -949,7 +949,7 @@ def hashow(filehash):
         print "".ljust(20),
         print("valid_until: %s\n" % i['valid_until'])
 
-    if (bkg == 1):
+        if (bkg == 1):
             print (Fore.GREEN)
         else:
             print (Fore.MAGENTA)
@@ -1141,7 +1141,7 @@ def downhash(filehash):
             open(resource + '.gz', 'wb').write(haresponse.content)
             final = 'SAMPLE SAVED!'
 
-        if (bkg == 1):
+            if (bkg == 1):
                 print (Fore.WHITE)
             else:
                 print (Fore.BLACK)
