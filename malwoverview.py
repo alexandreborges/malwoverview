@@ -321,54 +321,33 @@ def vturlcheck(myurl, param):
 
                 if (bkg == 1): 
                     print Fore.WHITE + "URL DETAILED REPORT"
-                    print "-"*20,"\n"
-
-                    print Fore.CYAN + "AlienVault: ".ljust(17),Fore.YELLOW + vttext['scans']['AlienVault']['result']
-                    print Fore.CYAN + "Avira: ".ljust(17),Fore.YELLOW + vttext['scans']['Avira']['result']
-                    print Fore.CYAN + "BitDefender: ".ljust(17),Fore.YELLOW + vttext['scans']['BitDefender']['result']
-                    print Fore.CYAN + "CyRadar: ".ljust(17),Fore.YELLOW + vttext['scans']['CyRadar']['result']
-                    print Fore.CYAN + "ESET: ".ljust(17),Fore.YELLOW + vttext['scans']['ESET']['result']
-                    print Fore.CYAN + "Forcepoint: ".ljust(17),Fore.YELLOW + vttext['scans']['Forcepoint ThreatSeeker']['result']
-                    print Fore.CYAN + "Fortinet: ".ljust(17),Fore.YELLOW + vttext['scans']['Fortinet']['result']
-                    print Fore.CYAN + "G-Data: ".ljust(17),Fore.YELLOW + vttext['scans']['G-Data']['result']
-                    print Fore.CYAN + "Google: ".ljust(17),Fore.YELLOW + vttext['scans']['Google Safebrowsing']['result']
-                    print Fore.CYAN + "Kaspersky: ".ljust(17),Fore.YELLOW + vttext['scans']['Kaspersky']['result']
-                    print Fore.CYAN + "Malc0de: ".ljust(17),Fore.YELLOW + vttext['scans']['Malc0de Database']['result']
-                    print Fore.CYAN + "MalwarePatrol: ".ljust(17),Fore.YELLOW + vttext['scans']['MalwarePatrol']['result']
-                    print Fore.CYAN + "OpenPhish: ".ljust(17),Fore.YELLOW + vttext['scans']['OpenPhish']['result']
-                    print Fore.CYAN + "PhishLabs: ".ljust(17),Fore.YELLOW + vttext['scans']['PhishLabs']['result']
-                    print Fore.CYAN + "Phishtank: ".ljust(17),Fore.YELLOW + vttext['scans']['Phishtank']['result']
-                    print Fore.CYAN + "Sophos: ".ljust(17),Fore.YELLOW + vttext['scans']['Sophos']['result']
-                    print Fore.CYAN + "Trustwave: ".ljust(17),Fore.YELLOW + vttext['scans']['Trustwave']['result']
-                    print Fore.CYAN + "VX Vault: ".ljust(17),Fore.YELLOW + vttext['scans']['VX Vault']['result']
-                    print Fore.CYAN + "ZeroCERT: ".ljust(17),Fore.YELLOW + vttext['scans']['ZeroCERT']['result']
-                    print("\n") 
-                    exit(0)
-
+                    fore_color = Fore.YELLOW
                 else: 
                     print Fore.BLACK + "URL DETAILED REPORT"
-                    print "-"*20,"\n"
-                    print Fore.CYAN + "AlienVault: ".ljust(17),Fore.RED + vttext['scans']['AlienVault']['result']
-                    print Fore.CYAN + "Avira: ".ljust(17),Fore.RED + vttext['scans']['Avira']['result']
-                    print Fore.CYAN + "BitDefender: ".ljust(17),Fore.RED + vttext['scans']['BitDefender']['result']
-                    print Fore.CYAN + "CyRadar: ".ljust(17),Fore.RED + vttext['scans']['CyRadar']['result']
-                    print Fore.CYAN + "ESET: ".ljust(17),Fore.RED + vttext['scans']['ESET']['result']
-                    print Fore.CYAN + "Forcepoint: ".ljust(17),Fore.RED + vttext['scans']['Forcepoint ThreatSeeker']['result']
-                    print Fore.CYAN + "Fortinet: ".ljust(17),Fore.RED + vttext['scans']['Fortinet']['result']
-                    print Fore.CYAN + "G-Data: ".ljust(17),Fore.RED + vttext['scans']['G-Data']['result']
-                    print Fore.CYAN + "Google: ".ljust(17),Fore.RED + vttext['scans']['Google Safebrowsing']['result']
-                    print Fore.CYAN + "Kaspersky: ".ljust(17),Fore.RED + vttext['scans']['Kaspersky']['result']
-                    print Fore.CYAN + "Malc0de: ".ljust(17),Fore.RED + vttext['scans']['Malc0de Database']['result']
-                    print Fore.CYAN + "MalwarePatrol: ".ljust(17),Fore.RED + vttext['scans']['MalwarePatrol']['result']
-                    print Fore.CYAN + "OpenPhish: ".ljust(17),Fore.RED + vttext['scans']['OpenPhish']['result']
-                    print Fore.CYAN + "PhishLabs: ".ljust(17),Fore.RED + vttext['scans']['PhishLabs']['result']
-                    print Fore.CYAN + "Phishtank: ".ljust(17),Fore.RED + vttext['scans']['Phishtank']['result']
-                    print Fore.CYAN + "Sophos: ".ljust(17),Fore.RED + vttext['scans']['Sophos']['result']
-                    print Fore.CYAN + "Trustwave: ".ljust(17),Fore.RED + vttext['scans']['Trustwave']['result']
-                    print Fore.CYAN + "VX Vault: ".ljust(17),Fore.RED + vttext['scans']['VX Vault']['result']
-                    print Fore.CYAN + "ZeroCERT: ".ljust(17),Fore.RED + vttext['scans']['ZeroCERT']['result']
-                    print("n") 
-                    exit(0)
+                    fore_color = Fore.RED
+                print "-"*20,"\n"
+
+                print Fore.CYAN + "AlienVault: ".ljust(17),fore_color + vttext['scans']['AlienVault']['result']
+                print Fore.CYAN + "Avira: ".ljust(17),fore_color + vttext['scans']['Avira']['result']
+                print Fore.CYAN + "BitDefender: ".ljust(17),fore_color + vttext['scans']['BitDefender']['result']
+                print Fore.CYAN + "CyRadar: ".ljust(17),fore_color + vttext['scans']['CyRadar']['result']
+                print Fore.CYAN + "ESET: ".ljust(17),fore_color + vttext['scans']['ESET']['result']
+                print Fore.CYAN + "Forcepoint: ".ljust(17),fore_color + vttext['scans']['Forcepoint ThreatSeeker']['result']
+                print Fore.CYAN + "Fortinet: ".ljust(17),fore_color + vttext['scans']['Fortinet']['result']
+                print Fore.CYAN + "G-Data: ".ljust(17),fore_color + vttext['scans']['G-Data']['result']
+                print Fore.CYAN + "Google: ".ljust(17),fore_color + vttext['scans']['Google Safebrowsing']['result']
+                print Fore.CYAN + "Kaspersky: ".ljust(17),fore_color + vttext['scans']['Kaspersky']['result']
+                print Fore.CYAN + "Malc0de: ".ljust(17),fore_color + vttext['scans']['Malc0de Database']['result']
+                print Fore.CYAN + "MalwarePatrol: ".ljust(17),fore_color + vttext['scans']['MalwarePatrol']['result']
+                print Fore.CYAN + "OpenPhish: ".ljust(17),fore_color + vttext['scans']['OpenPhish']['result']
+                print Fore.CYAN + "PhishLabs: ".ljust(17),fore_color + vttext['scans']['PhishLabs']['result']
+                print Fore.CYAN + "Phishtank: ".ljust(17),fore_color + vttext['scans']['Phishtank']['result']
+                print Fore.CYAN + "Sophos: ".ljust(17),fore_color + vttext['scans']['Sophos']['result']
+                print Fore.CYAN + "Trustwave: ".ljust(17),fore_color + vttext['scans']['Trustwave']['result']
+                print Fore.CYAN + "VX Vault: ".ljust(17),fore_color + vttext['scans']['VX Vault']['result']
+                print Fore.CYAN + "ZeroCERT: ".ljust(17),fore_color + vttext['scans']['ZeroCERT']['result']
+                print("\n") 
+                exit(0)
 
             except ValueError:
                 print Fore.RED + "Error while connecting to Virus Total!\n"
