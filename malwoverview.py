@@ -938,16 +938,16 @@ def hashow(filehash):
         else:
             print (Fore.BLUE)
             
-    print "\nCertificates:\n",
-    for i in certificates:
-        print "".ljust(20),
-        print("owner: %s" % i['owner'])
-        print "".ljust(20),
-        print("issuer: %s" % i['issuer'])
-        print "".ljust(20),
-        print("valid_from: %s" % i['valid_from'])
-        print "".ljust(20),
-        print("valid_until: %s\n" % i['valid_until'])
+        print "\nCertificates:\n",
+        for i in certificates:
+            print "".ljust(20),
+            print("owner: %s" % i['owner'])
+            print "".ljust(20),
+            print("issuer: %s" % i['issuer'])
+            print "".ljust(20),
+            print("valid_from: %s" % i['valid_from'])
+            print "".ljust(20),
+            print("valid_until: %s\n" % i['valid_until'])
 
         if (bkg == 1):
             print (Fore.GREEN)
@@ -956,14 +956,14 @@ def hashow(filehash):
 
         print "\nMITRE Attacks:\n",
         for i in mitre:
-        print "".ljust(20),
-        print("tactic: %s" % i['tactic'])
-        print "".ljust(20),
-        print("technique: %s" % i['technique'])
-        print "".ljust(20),
-        print("attck_id: %s" % i['attck_id'])
-        print "".ljust(20),
-        print("attck_id_wiki: %s\n" % i['attck_id_wiki'])
+            print "".ljust(20),
+            print("tactic: %s" % i['tactic'])
+            print "".ljust(20),
+            print("technique: %s" % i['technique'])
+            print "".ljust(20),
+            print("attck_id: %s" % i['attck_id'])
+            print "".ljust(20),
+            print("attck_id_wiki: %s\n" % i['attck_id_wiki'])
 
         rc = (hatext)
         if (rc == 0):
