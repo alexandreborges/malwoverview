@@ -733,47 +733,13 @@ def vtshow(filehash, url, param):
         if ('Avast' in vttext['scans']):
             print Fore.RED + "Avast:".ljust(13),vttext['scans']['Avast']['result']
     
-        if ('Avira' in vttext['scans']):
-            print "Avira:".ljust(13),vttext['scans']['Avira']['result']
+        engines = ['Avira', 'BitDefender', 'ESET-NOD32', 'F-Secure', 'Fortinet', 'Kaspersky',
+                   'MalwareBytes', 'McAfee', 'Microsoft', 'Panda', 'Sophos', 'Symantec', 'TrendMicro', 'Zone-Alarm']
+        for engine in engines:
+            if (engine in vttext['scans']):
+                name_column = engine + ":"
+                print name_column.ljust(13),vttext['scans'][engine]['result']
 
-        if ('BitDefender' in vttext['scans']):
-            print "BitDefender:".ljust(13),vttext['scans']['BitDefender']['result']
-
-        if ('ESET-NOD32' in vttext['scans']):
-            print "ESET-NOD32:".ljust(13),vttext['scans']['ESET-NOD32']['result']
-    
-        if ('F-Secure' in vttext['scans']):
-            print "F-Secure:".ljust(13),vttext['scans']['F-Secure']['result']
-         
-        if ('Fortinet' in vttext['scans']):
-            print "Fortinet:".ljust(13),vttext['scans']['Fortinet']['result']
-
-        if ("Kaspersky" in vttext['scans']):
-            print "Kaspersky:".ljust(13),vttext['scans']['Kaspersky']['result']
-
-        if ("MalwareBytes" in vttext['scans']):
-            print "MalwareBytes:".ljust(13),vttext['scans']['MalwareBytes']['result']
-
-        if ("McAfee" in vttext['scans']):
-            print "McAfee:".ljust(13),vttext['scans']['McAfee']['result']
-
-        if ("Microsoft" in vttext['scans']):
-            print "Microsoft:".ljust(13),vttext['scans']['Microsoft']['result']
-
-        if ("Panda" in vttext['scans']):
-            print "Panda:".ljust(13),vttext['scans']['Panda']['result']
-
-        if ("Sophos" in vttext['scans']):
-            print "Sophos:".ljust(13),vttext['scans']['Sophos']['result']
-
-        if ("Symantec" in vttext['scans']):
-            print "Symantec:".ljust(13),vttext['scans']['Symantec']['result']
-
-        if ("TrendMicro" in vttext['scans']):
-            print "TrendMicro:".ljust(13),vttext['scans']['TrendMicro']['result']
-
-        if ("Zone-Alarm" in vttext['scans']):
-            print "Zone-Alarm:".ljust(13),vttext['scans']['Zone-Alarm']['result']
 
     except ValueError:
         print(Fore.RED + "Error while connecting to Virus Total!\n")
