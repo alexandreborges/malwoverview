@@ -43,7 +43,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 1.7.4
+# Current Version: 1.7.5
 
 ## Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase) or "-A" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total or Hybrid Analysis, respectively. 
 
@@ -233,11 +233,11 @@ Options:
   
 # HISTORY
 
-Version 1.7.4:
+Version 1.7.5:
 
       This version: 
       
-            * It has been fixed a problem related to sample submission to Hybrid Analysis on Windows operating system.
+            * It has been fixed a problem related to sample submission to Hybrid Analysis on Windows operating system. Additionally,                   file name handling has been also fixed. 
             
 Version 1.7.3:
 
