@@ -237,7 +237,8 @@ Version 1.7.5:
 
       This version: 
       
-            * It has been fixed a problem related to sample submission to Hybrid Analysis on Windows operating system. Additionally,                   file name handling has been also fixed. 
+            * It has been fixed a problem related to sample submission to Hybrid Analysis on Windows operating 
+              system. Additionally, file name handling has been also fixed. 
             
 Version 1.7.3:
 
