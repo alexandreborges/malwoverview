@@ -20,7 +20,6 @@
 ![Alt text](pictures/picture_15.JPG?raw=true "Title")
 ![Alt text](pictures/picture_16.JPG?raw=true "Title")
 ![Alt text](pictures/picture_17.JPG?raw=true "Title")
-![Alt text](pictures/picture_17.JPG?raw=true "Title")
 ![Alt text](pictures/picture_18.JPG?raw=true "Title")
 ![Alt text](pictures/picture_19.JPG?raw=true "Title")
 ![Alt text](pictures/picture_20.JPG?raw=true "Title")
