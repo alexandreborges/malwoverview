@@ -63,7 +63,8 @@
 
 # ABOUT
 
-Malwoverview.py is a simple tool to perform an initial and quick triage of malware samples, URLs and hashes. Additionally, Malwoverview is able to show some threat intelligence information.   
+Malwoverview.py is a simple tool to perform an initial and quick triage of malware samples, URLs and hashes. 
+Additionally, Malwoverview is able to show some threat intelligence information.   
 
 This tool aims to : 
 
@@ -188,10 +189,11 @@ To use the malwoverview, execute the command as shown below:
 
       root@ubuntu19:~/malwoverview# python3.7 malwoverview.py  | more
 
-      usage: python malwoverview.py -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1>
-      -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> -r <domain>
-      -t <0|1> -Q <0|1> -l <0|1> -n <1|2|3|4|5|6> -m <hash> -M <0|1> -L <0|1> -c <0|1> -U <url> -S <url> -z <tags> 
-      -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> -N <url> -R <executable_file>
+      usage: python malwoverview.py -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> 
+      -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> 
+      -A <filename> -g <job_id> -r <domain> -t <0|1> -Q <0|1> -l <0|1> -n <1|2|3|4|5|6> -m <hash> -M <0|1> 
+      -L <0|1> -c <0|1> -U <url> -S <url> -z <tags> -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> 
+      -N <url> -R <executable_file>
 
 Options:
 
@@ -362,19 +364,23 @@ Options:
                               Polyswarm engine.
 
 
-        If you use Virus Total, Hybrid Analysis, Malshare, URLHaus or Polyswarm options, so it is necessary to edit the configmalw.py file and insert your APIs. 
+        If you use Virus Total, Hybrid Analysis, Malshare, URLHaus or Polyswarm options, so it is necessary 
+        to edit the configmalw.py file and insert your APIs. 
         
         Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore, 
         if you are willing to wait some minutes, so you can use the -p option, which forces a one minute wait 
         every 4 malware samples, but allows obtaining a complete evaluation of the repository.
         
   
-        * ATTENTION 1: if the directory contains many malware samples while using -d option, so malwoverview.py could 
-         take some time. Nonetheless, you can use the new -t option (multithreading) to speed-up things. :)
+        * ATTENTION 1: if the directory contains many malware samples while using -d option, so malwoverview.py 
+                       could take some time. Nonetheless, you can use the new -t option (multithreading) to speed-up
+                       things. :)
          
         ** ATTENTION 2: All engines enforces quota of submission and/or verification per day and/or month. Take care!
         
-        *** ATTENTION 3: Some options searching on Hybrid Analysis strongly depend of the "-e" option, which specifies the environment.                          Therefore, to check an Android sample (for example) it is necessary to use the right environment (-e 3 --                                Android).
+        *** ATTENTION 3: Some options searching on Hybrid Analysis strongly depend of the "-e" option, which specifies 
+                         the environment. Therefore, to check an Android sample (for example) it is necessary to use 
+                         the right environment (-e 3 for Android).
         
         **** ATTENTION 4: When you execute Malwoverview on Windows systems, you MUST to specify the "-w 1" option. 
 
@@ -426,7 +432,8 @@ Version 2.0.0:
 
       This version:
       
-            * Introduces a completely ported version of Malwoverview to Python 3.x (it does not work in Python 2.7.x anymore!)
+            * Introduces a completely ported version of Malwoverview to Python 3.x (it does not work in 
+              Python 2.7.x anymore!)
             * Fixes several bugs related to IAT/EAT listing. 
             * Fixes several bugs related to colors. 
             * Introduces multi-threading to some options. 
