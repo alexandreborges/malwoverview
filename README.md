@@ -67,7 +67,8 @@ Malwoverview.py is a simple tool to perform an initial and quick triage of malwa
 
 This tool aims to : 
 
-1. Determine similar executable malware samples (PE/PE+) according to the import table (imphash) and group them by different colors (pay attention to the second column from output). Thus, colors matter!
+1. Determine similar executable malware samples (PE/PE+) according to the import table (imphash) and group 
+   them by different colors (pay attention to the second column from output). Thus, colors matter!
 2. Show hash information on Virus Total, Hybrid Analysis, Malshare, Polyswarm and URLhaus engines. 
 3. Determining whether the malware samples contain overlay and, if you want, extract it. 
 4. Check suspect files on Virus Total, Hybrid Analysis and Polyswarm.
