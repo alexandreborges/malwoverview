@@ -109,8 +109,12 @@ This tool was tested on Ubuntu, Kali Linux 2019, Windows 8.1 and 10. Therefore, 
       As there are serious problems about existing two versions of python-magic package, my recommendation is to install it
       from github (second procedure above) and copy the magic.py file to the SAME directory of malwoverview tool. 
       
-3. Pefile and colorama packages: 
+3. Install several Python packages: 
 
+       $ pip3.7 install -r requirements.txt
+       
+       OR
+       
        $ pip3.7 install pefile
        $ pip3.7 install colorama
        $ pip3.7 install simplejson
@@ -138,8 +142,12 @@ This tool was tested on Ubuntu, Kali Linux 2019, Windows 8.1 and 10. Therefore, 
        C:\> python3.7 setup.py build
        C:\> python3.7 setup.py install
       
-3. Pefile and colorama packages: 
-
+3. Install several Python packages: 
+      
+       C:\> pip3.7 install -r requirements.txt
+       
+       OR: 
+       
        C:\> pip3.7 install pefile
        C:\> pip3.7 install colorama
        C:\> pip3.7 install simplejson
