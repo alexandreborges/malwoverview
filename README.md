@@ -373,14 +373,15 @@ Options:
         
   
         * ATTENTION 1: if the directory contains many malware samples while using -d option, so malwoverview.py 
-                       could take some time. Nonetheless, you can use the new -t option (multithreading) to speed-up
-                       things. :)
+                       could take some time. Nonetheless, you can use the new -t option (multithreading) to 
+                       speed-up things. :)
          
-        ** ATTENTION 2: All engines enforces quota of submission and/or verification per day and/or month. Take care!
+        ** ATTENTION 2: All engines enforces quota of submission and/or verification per day and/or month. 
+                        Take care!
         
-        *** ATTENTION 3: Some options searching on Hybrid Analysis strongly depend of the "-e" option, which specifies 
-                         the environment. Therefore, to check an Android sample (for example) it is necessary to use 
-                         the right environment (-e 3 for Android).
+        *** ATTENTION 3: Some options searching on Hybrid Analysis strongly depend of the "-e" option, which 
+                         specifies the environment. Therefore, to check an Android sample (for example) it is 
+                         necessary to use the right environment (-e 3 for Android).
         
         **** ATTENTION 4: When you execute Malwoverview on Windows systems, you MUST to specify the "-w 1" option. 
 
