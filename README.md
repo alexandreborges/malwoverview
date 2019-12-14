@@ -9,7 +9,6 @@
 ![Alt text](pictures/picture_5.JPG?raw=true "Title")
 ![Alt text](pictures/picture_6.JPG?raw=true "Title")
 ![Alt text](pictures/picture_7.JPG?raw=true "Title")
-![Alt text](pictures/picture_7.JPG?raw=true "Title")
 ![Alt text](pictures/picture_8.JPG?raw=true "Title")
 ![Alt text](pictures/picture_9.JPG?raw=true "Title")
 ![Alt text](pictures/picture_10.JPG?raw=true "Title")
