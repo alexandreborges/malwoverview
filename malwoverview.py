@@ -1318,10 +1318,10 @@ def polyhashsearch(poly):
         if (filenames == ''):
             if (sha256 == ''):
                 if(bkg == 1):
-                    print(mycolors.foreground.lightred + "This sample could be found on Polyswarm!\n" + mycolors.reset)
+                    print(mycolors.foreground.lightred + "This sample could not be found on Polyswarm!\n" + mycolors.reset)
                     exit(1)
                 else:
-                    print(mycolors.foreground.red + "This sample could be found on Polyswarm!\n" + mycolors.reset)
+                    print(mycolors.foreground.red + "This sample could not be found on Polyswarm!\n" + mycolors.reset)
                     exit(1)
         for j in filenames:
             print(mycolors.foreground.lightgreen + "\nFilenames: \t%s" % j, end=' ')
