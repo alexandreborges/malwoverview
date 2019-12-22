@@ -1292,6 +1292,8 @@ def polyurlcheck(poly):
 
 def polyhashsearch(poly):
 
+    filenames = ''
+    sha256 = ''
     results = polyswarm.search(poly)
     print(mycolors.reset)
     print("POLYSWARM.IO RESULTS")
@@ -1313,6 +1315,14 @@ def polyhashsearch(poly):
                     else:
                         print(mycolors.foreground.cyan + "%s" % i)
     if (bkg == 1):
+        if (filenames == ''):
+            if (sha256 == ''):
+                if(bkg == 1):
+                    print(mycolors.foreground.lightred + "This sample could be found on Polyswarm!\n" + mycolors.reset)
+                    exit(1)
+                else:
+                    print(mycolors.foreground.red + "This sample could be found on Polyswarm!\n" + mycolors.reset)
+                    exit(1)
         for j in filenames:
             print(mycolors.foreground.lightgreen + "\nFilenames: \t%s" % j, end=' ')
         print(mycolors.foreground.lightgreen + "\nSHA256: \t%s" % sha256)

@@ -440,6 +440,7 @@ Version 2.0.1:
       This version:
       
             * Fixes a problem related to searching by hash on Malshare (-m option). 
+            * Fixes a problem related to searching by hash on Polyswarm (-O option). 
 
 Version 2.0.0:
 
