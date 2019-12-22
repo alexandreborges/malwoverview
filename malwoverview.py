@@ -15,7 +15,7 @@
 # See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Malwoverview.py: version 2.0
+# Malwoverview.py: version 2.0.1
 
 import os
 import sys
@@ -2193,6 +2193,14 @@ def malsharehashsearch(filehash):
         requestsession2.headers.update({'accept': 'application/json'})
         finalurl2 = ''.join([urlmalshare, MALSHAREAPI, '&action=search&query=', resource])
         malresponse2 = requestsession2.get(url=finalurl2)
+        if (malresponse2.text == ''):
+            if(bkg == 1):
+               print(mycolors.foreground.lightred + "This sample couldn't be found on Malshare.\n" + mycolors.reset) 
+               exit(1)
+            else:
+               print(mycolors.foreground.red + "This sample couldn't be found on Malshare.\n" + mycolors.reset) 
+               exit(1)
+
         maltext2 = json.loads(malresponse2.text)
 
         if (bool(maltext2)):
