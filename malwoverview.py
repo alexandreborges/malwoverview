@@ -15,7 +15,7 @@
 # See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Malwoverview.py: version 2.0.1
+# Malwoverview.py: version 2.0.5
 
 import os
 import sys
@@ -44,7 +44,7 @@ from datetime import datetime
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2020, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "2.0"
+__version__ = "2.0.5"
 __email__ = "ab at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -62,8 +62,6 @@ hausb = 'https://urlhaus-api.abuse.ch/v1/urls/recent/'
 hausp = 'https://urlhaus-api.abuse.ch/v1/payloads/recent/'
 hausph = 'https://urlhaus-api.abuse.ch/v1/payload/'
 hausd = 'https://urlhaus-api.abuse.ch/v1/download/'
-
-polyswarm = PolyswarmAPI(key=POLYAPI)
 
 F = []
 H = []
@@ -101,11 +99,15 @@ class mycolors:
         orange='\033[43m'
         red='\033[41m'
 
+if ((not VTAPI) and (not HAAPI) and (not MALSHAREAPI) and (not HAUSSUBMITAPI) and (not POLYAPI)):
+    print(mycolors.foreground.lightred + "\nBefore using Malwoverview, you MUST register the Virus Total, Hybrid-Analysis, Malshare, URLhaus and Polyswarm APIs in the configmalw.py file.\n\nAdditionally, if you are running Malwoverview in Windows systems, so you should not forget to delete the magic.py file from the same Windows directory.\n" + mycolors.reset)
+    exit(1)
+
+polyswarm = PolyswarmAPI(key=POLYAPI)
 
 def ftype(filename):
     type = magic.from_file(filename)
     return type
-
 
 def packed(pe):
     try:
@@ -1215,6 +1217,13 @@ def polymetasearch(poly):
 
 
 def polyfile(poly):
+
+    sha256 = '' 
+    filetype = ''
+    extended = ''
+    m = ''
+    firstseen = ''
+    score = 0
 
     results = polyswarm.scan(poly)
     myhash = sha256hash(poly)
@@ -3186,7 +3195,7 @@ if __name__ == "__main__":
     urlhausbatch = 0
     hauspayloadbatch = 0
     haushash = ''
-    hausdownloadpayload = '' 
+    hausdownloadpayload = ''
     malsharetype = 1
     malsharedownload = 0
     malsharesources = 0 

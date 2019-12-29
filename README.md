@@ -54,7 +54,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 2.0.1
+# Current Version: 2.0.5
 
 ## Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), "-A" (uppercase) or "-P" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total, Hybrid Analysis and Polyswarm, respectively. 
 
@@ -76,14 +76,30 @@ This tool aims to :
 7. Submit malware samples to VirusTotal, Hybrid Analysis and Polyswarm.
 8. List last suspected URLs from Malshare and URLHaus.
 9. List last payloads from URLHaus. 
-10.Search for specific payloads on the Malshare.
+10. Search for specific payloads on the Malshare.
 11. Search for similar payloads (PE32/PE32+) on Polyswarm engine.
 12. Classify all files in a directory searching information on Virus Total and Hybrid Analysis. 
 13. Make reports about a suspect domain. 
 
 # REQUERIMENTS
 
-This tool was tested on Ubuntu, Kali Linux 2019, Windows 8.1 and 10. Therefore, it will be necessary to install:
+This tool has been tested on Ubuntu, Kali Linux 2019, Windows 8.1 and 10. Malwoverview can be installed by executing the following command:
+
+        $ pip3.7 install malwoverview              (Linux)
+        $ python -m pip install malwoverviewwin    (Windows)
+
+In Linux systems, add the /usr/local/bin to the PATH environment variable.
+
+Additionally, insert your APIs in the malwconf.py file in /usr/local/lib/python3.x/dist-packages/malwoverview/conf directory (Linux) or C:\Python37\Lib\site-packages\malwoverviewwin\conf directory (Windows).
+
+In Windows systems, when the package is installed using pip, it is not necessary to specify "-w 1" anymore.
+
+To check the installation, execute:
+
+       (Linux) malwoverview --help
+       (Windows) malwoverview.py --help
+
+If you want to perform the manual steps, so few steps will be necessary:
 
 ## Kali Linux
 
@@ -434,6 +450,14 @@ Options:
  
  
 # HISTORY
+
+Version 2.0.5:
+
+      This version:
+      
+            * Introduces installation by using: pip3.7 install malwoverview (Linux) or python -m pip install malwoverviewwin (Windows) 
+            * Fixes small problems related to Polyswarm usage. 
+            * Changes the help to verify whether the APIs were inserted in configmalw.py file. 
 
 Version 2.0.1:
 

@@ -1,8 +1,8 @@
-pefile==2019.4.18
-python-magic==0.4.15
-colorama==0.4.3
-simplejson==3.17.0
-requests==2.22.0
-validators==0.14.1
-geocoder==1.38.1
-polyswarm-api==1.1.1
+pefile>=2019.4.18
+python-magic>=0.4.15
+colorama>=0.4.3
+simplejson>=3.17.0
+requests>=2.22.0
+validators>=0.14.1
+geocoder>=1.38.1
+polyswarm-api>=1.1.1
