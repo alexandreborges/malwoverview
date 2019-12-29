@@ -456,7 +456,7 @@ Version 2.0.5:
       This version:
       
             * Introduces installation by using: pip3.7 install malwoverview (Linux) or 
-	      python -m pip install malwoverviewwin (Windows) 
+              python -m pip install malwoverviewwin (Windows) 
             * Fixes small problems related to Polyswarm usage. 
             * Changes the help to verify whether the APIs were inserted in configmalw.py file. 
 
