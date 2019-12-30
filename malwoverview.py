@@ -15,7 +15,7 @@
 # See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Malwoverview.py: version 2.0.7
+# Malwoverview.py: version 2.0.8
 
 import os
 import sys
@@ -44,7 +44,7 @@ from datetime import datetime
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2020, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "2.0.7"
+__version__ = "2.0.8"
 __email__ = "ab at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -99,11 +99,12 @@ class mycolors:
         orange='\033[43m'
         red='\033[41m'
 
-if ((not VTAPI) and (not HAAPI) and (not MALSHAREAPI) and (not HAUSSUBMITAPI) and (not POLYAPI)):
-    print(mycolors.foreground.lightred + "\nBefore using Malwoverview, you MUST register the Virus Total, Hybrid-Analysis, Malshare, URLhaus and Polyswarm APIs in the configmalw.py file.\n\nAdditionally, if you are running Malwoverview in Windows systems, so you should not forget to delete the magic.py file from the same Windows directory.\n" + mycolors.reset)
+if ((not VTAPI) and (not HAAPI)):
+    print(mycolors.foreground.lightred + "\nBefore using Malwoverview, you must add the Virus Total and Hybrid-Analysis APIs, at least, in the configmalw.py file. Nonetheless, it is also recommended to register Malshare, URLhaus and Polyswarm APIs for having access to all available options.\n\nAdditionally, if you are running Malwoverview in Windows systems, so you should not forget to delete the magic.py file from the same Windows directory.\n" + mycolors.reset)
     exit(1)
 
-polyswarm = PolyswarmAPI(key=POLYAPI)
+if (POLYAPI):
+    polyswarm = PolyswarmAPI(key=POLYAPI)
 
 def ftype(filename):
     type = magic.from_file(filename)
@@ -1264,7 +1265,8 @@ def polyfile(poly):
         print(mycolors.foreground.pink + "First seen: \t%s" % firstseen)
         for m in countries:
             print(mycolors.foreground.pink + "Countries: \t%s" % m, end=' ') 
-        print(mycolors.foreground.yellow + "\nPolyscore: \t%f" % score)
+        if (score is not None):
+            print(mycolors.foreground.yellow + "\nPolyscore: \t%f" % score)
     else:
         for j in filenames:
             print(mycolors.foreground.cyan + "\nFilenames: \t%s" % j, end=' ')
@@ -1274,7 +1276,8 @@ def polyfile(poly):
         print(mycolors.foreground.blue + "First seen: \t%s" % firstseen)
         for m in countries:
             print(mycolors.foreground.blue + "Countries: \t%s" % m, end=' ') 
-        print(mycolors.foreground.red + "\nPolyscore: \t%f" % score)
+        if (score is not None):
+            print(mycolors.foreground.red + "\nPolyscore: \t%f" % score)
 
     print(mycolors.reset)
 
