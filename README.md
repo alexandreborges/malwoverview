@@ -99,6 +99,13 @@ To check the installation, execute:
        (Linux) malwoverview --help
        (Windows) malwoverview.py --help
 
+Further information is available on: 
+
+(Linux) https://pypi.org/project/malwoverview/
+(Windows) https://pypi.org/project/malwoverviewwin/
+
+(Github) https://github.com/alexandreborges/malwoverview
+
 If you want to perform the manual steps, so few steps will be necessary:
 
 ## Kali Linux
