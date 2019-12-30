@@ -99,6 +99,19 @@ To check the installation, execute:
        (Linux) malwoverview --help
        (Windows) malwoverview.py --help
 
+If you are installing the Malwoverview into a Python virtual environment, so you should follow the step-by-step procedure below: 
+
+       mkdir mytest
+       python3.7 -m venv mytest/
+       source mytest/bin/activate
+       cd mytest/
+       pip3.7 -q install malwoverview
+       cd bin
+       pip3.7 show malwoverview
+       ls ../lib/python3.7/site-packages/malwoverview/conf/
+       cp /malwoverview/configmalw.py ../lib/python3.7/site-packages/malwoverview/conf/
+       malwoverview
+
 Further information is available on: 
 
        (Linux) https://pypi.org/project/malwoverview/
