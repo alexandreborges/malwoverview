@@ -54,7 +54,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 2.0.8
+# Current Version: 2.0.8.1
 
 ## Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), "-A" (uppercase) or "-P" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total, Hybrid Analysis and Polyswarm, respectively. 
 
@@ -470,7 +470,7 @@ Options:
  
 # HISTORY
 
-Version 2.0.8:
+Version 2.0.8.1:
 
       This version:
       
