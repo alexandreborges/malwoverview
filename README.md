@@ -54,7 +54,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 2.0.5
+# Current Version: 2.0.7
 
 ## Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), "-A" (uppercase) or "-P" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total, Hybrid Analysis and Polyswarm, respectively. 
 
@@ -451,12 +451,12 @@ Options:
  
 # HISTORY
 
-Version 2.0.5:
+Version 2.0.7:
 
       This version:
       
             * Introduces installation by using: pip3.7 install malwoverview (Linux) or 
-              python -m pip install malwoverviewwin (Windows) 
+              python -m pip install malwoverviewwin (Windows). 
             * Fixes small problems related to Polyswarm usage. 
             * Changes the help to verify whether the APIs were inserted in configmalw.py file. 
 

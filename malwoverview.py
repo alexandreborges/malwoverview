@@ -15,7 +15,7 @@
 # See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Malwoverview.py: version 2.0.5
+# Malwoverview.py: version 2.0.7
 
 import os
 import sys
@@ -44,7 +44,7 @@ from datetime import datetime
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2020, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "2.0.5"
+__version__ = "2.0.7"
 __email__ = "ab at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
