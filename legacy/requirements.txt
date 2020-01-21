@@ -3,4 +3,4 @@ python-magic==0.4.15
 colorama==0.4.1
 simplejson==3.15.0
 requests==2.21.0
-validators==0.12.4
+validators==0.12.6
