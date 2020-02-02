@@ -1,4 +1,4 @@
-
+<img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/alexandreborges/malwoverview/total?label=Downloads&logo=Downloads&logoColor=Orange&style=plastic">
 
 # Malwoverview.py
 
