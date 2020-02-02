@@ -1,4 +1,4 @@
-[![<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview">](https://github.com/alexandreborges/malwoverview/releases/tag/2.0.8.1)]
+[![Release][<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview">]
 
 # Malwoverview.py
 
