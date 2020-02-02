@@ -1,4 +1,4 @@
-[<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=plastic">](https://github.com/alexandreborges/malwoverview/releases)
+[<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=plastic">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE)
 
 # Malwoverview.py
 
