@@ -1,6 +1,8 @@
 # Malwoverview.py
 
-[<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=plastic">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE)
+[<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=plastic">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=social">](https://github.com/alexandreborges/malwoverview/stargazers)
+
 
 (Gaps in the VT output at image above are because public VT API key, which allows only 4 searches per minute).  
 
