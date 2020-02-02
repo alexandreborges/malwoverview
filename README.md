@@ -1,3 +1,5 @@
+https://img.shields.io/github/downloads/alexandreborges/malwoverview/total?color=Orange&style=plastic
+
 # Malwoverview.py
 
 (Gaps in the VT output at image above are because public VT API key, which allows only 4 searches per minute).  
