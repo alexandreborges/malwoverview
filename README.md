@@ -1,4 +1,4 @@
-[![Downloads](https://img.shields.io/github/downloads/alexandreborges/malwoverview/total?color=Orange&style=plastic)]
+
 
 # Malwoverview.py
 
