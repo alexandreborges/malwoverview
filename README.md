@@ -1,7 +1,4 @@
-<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview">
-<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview">
-<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview">
-<img alt="Twitter URL" src="https://img.shields.io/twitter/url?logo=Twitter&style=social&url=https%3A%2F%2Ftwitter.com%2Fale_sp_brazil">
+<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview"> <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview"> <img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview"> <img alt="Twitter URL" src="https://img.shields.io/twitter/url?logo=Twitter&style=social&url=https%3A%2F%2Ftwitter.com%2Fale_sp_brazil">
 
 # Malwoverview.py
 
