@@ -15,7 +15,7 @@
 # See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Malwoverview.py: version 2.0.8.1
+# Malwoverview.py: version 2.1
 
 import os
 import sys
@@ -44,7 +44,7 @@ from datetime import datetime
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2020, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "2.0.8.1"
+__version__ = "2.1"
 __email__ = "ab at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -1074,7 +1074,6 @@ def hashow(filehash):
         print("Threat Score:".ljust(20),threatscore + '/100') 
         print("AV Detect".ljust(20),avdetect + '%')
         print("Total Signatures:".ljust(20),totalsignatures)
-
         if (bkg == 1):
             print((mycolors.foreground.yellow))
         else:
@@ -1278,7 +1277,6 @@ def polyfile(poly):
             print(mycolors.foreground.blue + "Countries: \t%s" % m, end=' ') 
         if (score is not None):
             print(mycolors.foreground.red + "\nPolyscore: \t%f" % score)
-
     print(mycolors.reset)
 
 
@@ -1343,7 +1341,8 @@ def polyhashsearch(poly):
         print(mycolors.foreground.pink + "First seen: \t%s" % firstseen)
         for m in countries:
             print(mycolors.foreground.pink + "Countries: \t%s" % m, end=' ') 
-        print(mycolors.foreground.yellow + "\nPolyscore: \t%f" % score)
+        if (score is not None):
+            print(mycolors.foreground.yellow + "\nPolyscore: \t%f" % score)
     else:
         for j in filenames:
             print(mycolors.foreground.green + "\nFilenames: \t%s" % j, end=' ')
@@ -1353,10 +1352,9 @@ def polyhashsearch(poly):
         print(mycolors.foreground.blue + "First seen: \t%s" % firstseen)
         for m in countries:
             print(mycolors.foreground.blue + "Countries: \t%s" % m, end=' ') 
-        print(mycolors.foreground.red + "\nPolyscore: \t%f" % score)
-
+        if (score is not None):
+            print(mycolors.foreground.red + "\nPolyscore: \t%f" % score)
     print(mycolors.reset)
-
 
 def hafilecheck(filenameha):
 
@@ -2034,7 +2032,7 @@ class quickVTThread(threading.Thread):
         vtfinal = vtcheck(myhashdir, url, param)
 
         if (bkg == 1):
-            print((mycolors.foreground.lightcyan +  "%-68s" % key1), end=' ')
+            print((mycolors.foreground.pink +  "%-68s" % key1), end=' ')
             print((mycolors.reset + "|" + mycolors.foreground.lightred + "%8s" % vtfinal + mycolors.reset))
         else:
             print((mycolors.foreground.cyan + "%-68s" % key1), end=' ')
@@ -2059,21 +2057,32 @@ class quickHAThread(threading.Thread):
             print((mycolors.foreground.lightcyan + "%-70s" % key1), end=' ')
             print((mycolors.foreground.yellow + "%9s" % final), end='')
             print((mycolors.foreground.lightred + "%11s" % verdict), end='')
-            print((mycolors.foreground.pink + "%6s%%" % avdetect), end='')
+            if(avdetect == 'None'):
+                print((mycolors.foreground.pink + "%7s" % avdetect), end='')
+            else:
+                print((mycolors.foreground.pink + "%6s%%" % avdetect), end='')
             print((mycolors.foreground.yellow + "%7s" % totalsignatures), end='')
-            print((mycolors.foreground.lightred + "%8s/100" % threatscore), end='')
+            if(threatscore == 'None'):
+                print((mycolors.foreground.lightred + "%12s" % threatscore), end='')
+            else:
+                print((mycolors.foreground.lightred + "%8s/100" % threatscore), end='')
             print((mycolors.foreground.lightgreen + "%6s" % totalprocesses), end='')
             print((mycolors.foreground.lightgreen + "%6s" % networkconnections + mycolors.reset))
         else:
             print((mycolors.foreground.lightcyan + "%-70s" % key1), end=' ')
             print((mycolors.foreground.cyan + "%9s" % final), end='')
             print((mycolors.foreground.red + "%11s" % verdict), end='')
-            print((mycolors.foreground.purple + "%6s%%" % avdetect), end='')
+            if (avdetect == 'None'):
+                print((mycolors.foreground.purple + "%7s" % avdetect), end='')
+            else:
+                print((mycolors.foreground.purple + "%6s%%" % avdetect), end='')
             print((mycolors.foreground.green + "%7s" % totalsignatures), end='')
-            print((mycolors.foreground.red + "%8s/100" % threatscore), end='')
+            if(threatscore == 'None'):
+                print((mycolors.foreground.red + "%12s" % threatscore), end='')
+            else:
+                print((mycolors.foreground.red + "%8s/100" % threatscore), end='')
             print((mycolors.foreground.blue + "%6s" % totalprocesses), end='')
             print((mycolors.foreground.blue + "%6s" % networkconnections + mycolors.reset))
-
 
 def dirwork(d):
 
