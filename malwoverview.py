@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3.7
 
 # Copyright (C)  2018-2020 Alexandre Borges <ab@blackstormsecurity.com>
 #
