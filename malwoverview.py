@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Copyright (C)  2018-2020 Alexandre Borges <ab@blackstormsecurity.com>
+# Copyright (C)  2018-2020 Alexandre Borges <alexandreborges@blackstormsecurity.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 # See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Malwoverview.py: version 2.1
+# Malwoverview.py: version 2.1.5
 
 import os
 import sys
@@ -44,7 +44,7 @@ from datetime import datetime
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2020, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "2.1"
+__version__ = "2.1.5"
 __email__ = "ab at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -536,7 +536,7 @@ def vtdomaincheck(mydomain, param):
             if (bkg == 0):
                 print(mycolors.foreground.blue + "Detected Referrer Samples:  ".ljust(17))
             else:
-                print(mycolors.foreground.lightcyan + "Detected Referrer Samples: ".ljust(17))
+                print(mycolors.foreground.pink + "Detected Referrer Samples: ".ljust(17))
 
             if 'detected_referrer_samples' in vttext:
                 if (bool(vttext['detected_referrer_samples'])):
@@ -561,7 +561,7 @@ def vtdomaincheck(mydomain, param):
             if (bkg == 0):
                 print(mycolors.foreground.red + "\nWhois Timestamp:  ".ljust(17))
             else:
-                print(mycolors.foreground.lightred + "\nWhois Timestamp: ".ljust(17))
+                print(mycolors.foreground.yellow + "\nWhois Timestamp: ".ljust(17))
 
             if 'whois_timestamp' in vttext:
                 if (bool(vttext['whois_timestamp'])):
@@ -600,7 +600,7 @@ def vtdomaincheck(mydomain, param):
             if (bkg == 0):
                 print(mycolors.foreground.purple + "\nDetected Downloaded Samples:  ".ljust(17))
             else:
-                print(mycolors.foreground.yellow + "\nDetected Downloaded Samples: ".ljust(17))
+                print(mycolors.foreground.orange + "\nDetected Downloaded Samples: ".ljust(17))
 
             if 'detected_downloaded_samples' in vttext:
                 if (bool(vttext['detected_downloaded_samples'])):
@@ -1566,7 +1566,7 @@ def overextract(fname):
     with open(fname + ".overlay", "wb") as t:
         t.write(r[offset:])
     if (bkg == 1):
-        print((mycolors.foreground.lightred + "\nOverlay extracted: %s.overlay\n"  % fname))
+        print((mycolors.foreground.lightgreen + "\nOverlay extracted: %s.overlay\n"  % fname))
     else:
         print((mycolors.foreground.red + "\nOverlay extracted: %s.overlay\n"  % fname))
     print(mycolors.reset)
@@ -2032,8 +2032,8 @@ class quickVTThread(threading.Thread):
         vtfinal = vtcheck(myhashdir, url, param)
 
         if (bkg == 1):
-            print((mycolors.foreground.pink +  "%-68s" % key1), end=' ')
-            print((mycolors.reset + "|" + mycolors.foreground.lightred + "%8s" % vtfinal + mycolors.reset))
+            print((mycolors.foreground.orange +  "%-68s" % key1), end=' ')
+            print((mycolors.reset + "|" + mycolors.foreground.lightgreen + "%8s" % vtfinal + mycolors.reset))
         else:
             print((mycolors.foreground.cyan + "%-68s" % key1), end=' ')
             print((mycolors.reset + "|" + mycolors.foreground.red + "%8s" % vtfinal + mycolors.reset))
@@ -2054,8 +2054,8 @@ class quickHAThread(threading.Thread):
         (final, verdict, avdetect, totalsignatures, threatscore, totalprocesses, networkconnections) =  quickhashow(myhashdir)
 
         if (bkg == 1):
-            print((mycolors.foreground.lightcyan + "%-70s" % key1), end=' ')
-            print((mycolors.foreground.yellow + "%9s" % final), end='')
+            print((mycolors.foreground.orange + "%-70s" % key1), end=' ')
+            print((mycolors.foreground.lightcyan + "%9s" % final), end='')
             print((mycolors.foreground.lightred + "%11s" % verdict), end='')
             if(avdetect == 'None'):
                 print((mycolors.foreground.pink + "%7s" % avdetect), end='')
@@ -2526,13 +2526,19 @@ def urlhauscheck(urlx, haus):
         if 'blacklists' in haustext:
             blacks = haustext.get('blacklists')
             if(bkg == 1):
-                print(mycolors.foreground.lightred + "Google(gsb): \t" + blacks['gsb'])
-                print(mycolors.foreground.lightred + "Surbl: \t\t" + blacks['surbl'])
-                print(mycolors.foreground.lightred + "Spamhaus DBL:   " + blacks['spamhaus_dbl'])
+                if 'gsb' in (blacks):
+                    print(mycolors.foreground.lightred + "Google(gsb): \t" + blacks['gsb'])
+                if 'surbl' in (blacks):
+                    print(mycolors.foreground.lightred + "Surbl: \t\t" + blacks['surbl'])
+                if 'spamhaus_dbl' in (blacks):
+                    print(mycolors.foreground.lightred + "Spamhaus DBL:   " + blacks['spamhaus_dbl'])
             else:
-                print(mycolors.foreground.red + "Google(gsb): \t" + blacks['gsb'])
-                print(mycolors.foreground.red + "Surbl: \t\t" + blacks['surbl'])
-                print(mycolors.foreground.red + "Spamhaus DBL:   " + blacks['spamhaus_dbl'])
+                if 'gsb' in (blacks):
+                    print(mycolors.foreground.red + "Google(gsb): \t" + blacks['gsb'])
+                if 'surbl' in (blacks):
+                    print(mycolors.foreground.red + "Surbl: \t\t" + blacks['surbl'])
+                if 'spamhaus_dbl' in (blacks):
+                    print(mycolors.foreground.red + "Spamhaus DBL:   " + blacks['spamhaus_dbl'])
         else:
             if(bkg == 1):
                 print(mycolors.foreground.lightred + "Google(gsb): \t")

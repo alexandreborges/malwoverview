@@ -1,48 +1,48 @@
 # Malwoverview.py
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/2.1) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/2.1.5) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
 
 (Gaps in the VT output at image above are because public VT API key, which allows only 4 searches per minute).  
 
 ![Alt text](pictures/picture_1.jpg?raw=true "Title")
-![Alt text](pictures/picture_2.JPG?raw=true "Title")
-![Alt text](pictures/picture_3.JPG?raw=true "Title")
-![Alt text](pictures/picture_4.JPG?raw=true "Title")
-![Alt text](pictures/picture_5.JPG?raw=true "Title")
-![Alt text](pictures/picture_6.JPG?raw=true "Title")
-![Alt text](pictures/picture_7.JPG?raw=true "Title")
-![Alt text](pictures/picture_8.JPG?raw=true "Title")
-![Alt text](pictures/picture_9.JPG?raw=true "Title")
-![Alt text](pictures/picture_10.JPG?raw=true "Title")
-![Alt text](pictures/picture_11.JPG?raw=true "Title")
-![Alt text](pictures/picture_12.JPG?raw=true "Title")
-![Alt text](pictures/picture_13.JPG?raw=true "Title")
-![Alt text](pictures/picture_14.JPG?raw=true "Title")
-![Alt text](pictures/picture_15.JPG?raw=true "Title")
-![Alt text](pictures/picture_16.JPG?raw=true "Title")
-![Alt text](pictures/picture_17.JPG?raw=true "Title")
-![Alt text](pictures/picture_18.JPG?raw=true "Title")
-![Alt text](pictures/picture_19.JPG?raw=true "Title")
-![Alt text](pictures/picture_20.JPG?raw=true "Title")
-![Alt text](pictures/picture_21.JPG?raw=true "Title")
-![Alt text](pictures/picture_22.JPG?raw=true "Title")
-![Alt text](pictures/picture_23.JPG?raw=true "Title")
-![Alt text](pictures/picture_24.JPG?raw=true "Title")
-![Alt text](pictures/picture_25.JPG?raw=true "Title")
-![Alt text](pictures/picture_26.JPG?raw=true "Title")
-![Alt text](pictures/picture_27.JPG?raw=true "Title")
-![Alt text](pictures/picture_28.JPG?raw=true "Title")
-![Alt text](pictures/picture_29.JPG?raw=true "Title")
-![Alt text](pictures/picture_30.JPG?raw=true "Title")
-![Alt text](pictures/picture_31.JPG?raw=true "Title")
-![Alt text](pictures/picture_32.JPG?raw=true "Title")
-![Alt text](pictures/picture_33.JPG?raw=true "Title")
-![Alt text](pictures/picture_34.JPG?raw=true "Title")
-![Alt text](pictures/picture_35.JPG?raw=true "Title")
-![Alt text](pictures/picture_36.JPG?raw=true "Title")
+![Alt text](pictures/picture_2.jpg?raw=true "Title")
+![Alt text](pictures/picture_3.jpg?raw=true "Title")
+![Alt text](pictures/picture_4.jpg?raw=true "Title")
+![Alt text](pictures/picture_5.jpg?raw=true "Title")
+![Alt text](pictures/picture_6.jpg?raw=true "Title")
+![Alt text](pictures/picture_7.jpg?raw=true "Title")
+![Alt text](pictures/picture_8.jpg?raw=true "Title")
+![Alt text](pictures/picture_9.jpg?raw=true "Title")
+![Alt text](pictures/picture_10.jpg?raw=true "Title")
+![Alt text](pictures/picture_11.jpg?raw=true "Title")
+![Alt text](pictures/picture_12.jpg?raw=true "Title")
+![Alt text](pictures/picture_13.jpg?raw=true "Title")
+![Alt text](pictures/picture_14.jpg?raw=true "Title")
+![Alt text](pictures/picture_15.jpg?raw=true "Title")
+![Alt text](pictures/picture_16.jpg?raw=true "Title")
+![Alt text](pictures/picture_17.jpg?raw=true "Title")
+![Alt text](pictures/picture_18.jpg?raw=true "Title")
+![Alt text](pictures/picture_19.jpg?raw=true "Title")
+![Alt text](pictures/picture_20.jpg?raw=true "Title")
+![Alt text](pictures/picture_21.jpg?raw=true "Title")
+![Alt text](pictures/picture_22.jpg?raw=true "Title")
+![Alt text](pictures/picture_23.jpg?raw=true "Title")
+![Alt text](pictures/picture_24.jpg?raw=true "Title")
+![Alt text](pictures/picture_25.jpg?raw=true "Title")
+![Alt text](pictures/picture_26.jpg?raw=true "Title")
+![Alt text](pictures/picture_27.jpg?raw=true "Title")
+![Alt text](pictures/picture_28.jpg?raw=true "Title")
+![Alt text](pictures/picture_29.jpg?raw=true "Title")
+![Alt text](pictures/picture_30.jpg?raw=true "Title")
+![Alt text](pictures/picture_31.jpg?raw=true "Title")
+![Alt text](pictures/picture_32.jpg?raw=true "Title")
+![Alt text](pictures/picture_33.jpg?raw=true "Title")
+![Alt text](pictures/picture_34.jpg?raw=true "Title")
+![Alt text](pictures/picture_35.jpg?raw=true "Title")
+![Alt text](pictures/picture_36.jpg?raw=true "Title")
 
-      Copyright (C)  2018-2020 Alexandre Borges <ab at blackstormsecurity dot com>
+      Copyright (C)  2018-2020 Alexandre Borges <alexandreborges at blackstormsecurity dot com>
 
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
@@ -57,7 +57,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 2.1
+# Current Version: 2.1.5
 
 ## Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), "-A" (uppercase) or "-P" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total, Hybrid Analysis and Polyswarm, respectively. 
 
@@ -456,8 +456,6 @@ Options:
       root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -l 1 -n 3
       root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -m <hash>
       root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -m <hash> -M 1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -L 1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -L 1 -c 1
       root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -B 1
       root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -U <URL>
       root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -K 1
@@ -472,6 +470,15 @@ Options:
  
  
 # HISTORY
+
+Version 2.1.5:
+
+      This version:
+      
+            * Fixes several issues about colors in outputs. 
+            * Removes the -L option from Malshare (unfortunately, Malshare doesn't provide an 
+              URL list anymore.. 
+            * Introduces some verification lines in the URLHaus command. 
 
 Version 2.1:
 
