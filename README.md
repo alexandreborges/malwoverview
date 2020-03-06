@@ -1,6 +1,6 @@
 # Malwoverview.py
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/2.1.5) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/2.1.6) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
 
 (Gaps in the VT output at image above are because public VT API key, which allows only 4 searches per minute).  
@@ -57,7 +57,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 2.1.5
+# Current Version: 2.1.6
 
 ## Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), "-A" (uppercase) or "-P" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total, Hybrid Analysis and Polyswarm, respectively. 
 
@@ -86,7 +86,7 @@ This tool aims to :
 
 # REQUERIMENTS
 
-This tool has been tested on Ubuntu, Kali Linux 2019, Windows 8.1 and 10. Malwoverview can be installed by executing the following command:
+This tool has been tested on Ubuntu, Kali Linux 2020, Windows 8.1 and 10. Malwoverview can be installed by executing the following command:
 
         $ pip3.7 install malwoverview              (Linux)
         $ python -m pip install malwoverviewwin    (Windows)
@@ -236,7 +236,7 @@ To use the malwoverview, execute the command as shown below:
       usage: python malwoverview.py -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> 
       -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> 
       -A <filename> -g <job_id> -r <domain> -t <0|1> -Q <0|1> -l <0|1> -n <1|2|3|4|5|6> -m <hash> -M <0|1> 
-      -L <0|1> -c <0|1> -U <url> -S <url> -z <tags> -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> 
+      -U <url> -S <url> -z <tags> -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> 
       -N <url> -R <executable_file>
 
 Options:
@@ -356,17 +356,6 @@ Options:
         -M MALSHARE_DOWNLOAD, --malsharedownload MALSHARE_DOWNLOAD
                               Downloads the sample from Malshare. This option must
                               be specified with -m option.
-        -L MALSHARE_LAST_200, --last200 MALSHARE_LAST_200
-                              Downloads a list with 200 last URLs (limited to 95
-                              characters in order to keep the format) pointing to
-                              malware samples from Malshare.
-        -c SHOW_LOCATION, --location SHOW_LOCATION
-                              (optional) Shows the origin (location: city) of a URL.
-                              This option is optionally specified with the -L
-                              option. Attention: there's a limit for the geolocation
-                              service, so don't abuse this option. Anyway, if you
-                              reach your daily limit, so you could use a VPN
-                              service... ;)
         -B URL_HAUS_BATCH, --haus_batch URL_HAUS_BATCH
                               Retrieves a list of recent URLs (last 3 days, limited
                               to 1000 entries) from URLHaus website.
@@ -467,17 +456,18 @@ Options:
       root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -P sample1
       root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -R /root/malware/windows/sample1
 
- 
- 
+
+
 # HISTORY
 
-Version 2.1.5:
+Version 2.1.6:
 
       This version:
       
             * Fixes several issues about colors in outputs. 
             * Removes the -L option from Malshare (unfortunately, Malshare doesn't provide an 
               URL list anymore.. 
+            * Removes the -c option.
             * Introduces some verification lines in the URLHaus command. 
 
 Version 2.1:
