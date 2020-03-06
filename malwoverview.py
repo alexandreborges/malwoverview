@@ -15,7 +15,7 @@
 # See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Malwoverview.py: version 2.1.8
+# Malwoverview.py: version 2.1.9
 
 import os
 import sys
@@ -44,7 +44,7 @@ from datetime import datetime
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2020, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "2.1.8"
+__version__ = "2.1.9"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -100,7 +100,7 @@ class mycolors:
         red='\033[41m'
 
 if ((not VTAPI) and (not HAAPI)):
-    print(mycolors.foreground.lightred + "\nBefore using Malwoverview, you must add the Virus Total and Hybrid-Analysis APIs, at least, in the configmalw.py file:\n\n*Linux:'/usr/local/lib/python3.x/dist-packages/malwoverview/conf' \n\n**Windows:'C:\<Python directory>\Lib\site-packages\malwoverviewwin\conf' \n\nNonetheless, it is also recommended to register Malshare, URLhaus and Polyswarm APIs for having access to all available options.Additionally, if you are running Malwoverview in Windows systems, so you should not forget to delete the magic.py file from the same Windows directory.\n" + mycolors.reset)
+    print(mycolors.foreground.lightred + "\nBefore using Malwoverview, you must add the Virus Total and Hybrid-Analysis APIs, at least, in the configmalw.py file:\n\n\t*Linux:'/usr/local/lib/python3.x/dist-packages/malwoverview/conf' \n\n\t**Windows:'C:\<Python directory>\Lib\site-packages\malwoverviewwin\conf' \n\nNonetheless, it is also recommended to register Malshare, URLhaus and Polyswarm APIs for having access to all available options.Additionally, if you are running Malwoverview in Windows systems, so you should not forget to delete the magic.py file from the same Windows directory.\n" + mycolors.reset)
     exit(1)
 
 if (POLYAPI):
