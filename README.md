@@ -466,7 +466,7 @@ Version 2.1.9.1:
       
             * Fixes several issues about colors in outputs. 
             * Removes the -L option from Malshare (unfortunately, Malshare doesn't provide an 
-              URL list anymore.. 
+              URL list anymore). 
             * Removes the -c option.
             * Introduces some verification lines in the URLHaus command. 
 
