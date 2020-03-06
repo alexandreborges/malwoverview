@@ -15,7 +15,7 @@
 # See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Malwoverview.py: version 2.1.6
+# Malwoverview.py: version 2.1.7
 
 import os
 import sys
@@ -44,7 +44,7 @@ from datetime import datetime
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2020, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "2.1.6"
+__version__ = "2.1.7"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -3292,8 +3292,6 @@ if __name__ == "__main__":
     malhash = args.malsharehash
     maltype = args.malsharetype
     maldownload = args.malsharedownload
-    malsources = args.malsharesources
-    mallocation = args.malsharelocation
     hausfinalurl2 = args.urlhaussubmit
     hausfinalurl = args.urlhausquery
     hausbatch = args.urlhausbatch
@@ -3360,7 +3358,7 @@ if __name__ == "__main__":
             print(mycolors.reset)
             exit(0)
 
-    if ((not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not fileha) and (not repoha) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (not args.urlhausquery) and (not args.urlhaussubmit) and (malsources == 0) and (hausbatch == 0) and (hauspayloads == 0) and (not args.haushash) and (not args.hausdownloadpayload) and (not args.polyswarmscan) and (not args.polyswarmurl) and (not args.polyswarmhash) and (not args.polyswarmmeta)):
+    if ((not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not fileha) and (not repoha) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (not args.urlhausquery) and (not args.urlhaussubmit) and (hausbatch == 0) and (hauspayloads == 0) and (not args.haushash) and (not args.hausdownloadpayload) and (not args.polyswarmscan) and (not args.polyswarmurl) and (not args.polyswarmhash) and (not args.polyswarmmeta)):
         parser.print_help()
         print(mycolors.reset)
         exit(0)
