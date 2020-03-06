@@ -2348,69 +2348,6 @@ def malsharelastlist(typex):
     return
 
 
-def malsourceslist():
-
-    maltext4 = ''
-    malresponse4 = ''
-    finalurl4 = ''
-
-    try:
-        if(mallocation == 1):
-
-            print("\n")
-            print((mycolors.reset + "Source".center(100)), end='')
-            print((mycolors.reset + "Location".center(28)), end='')
-            print("\n" + (126*'-').center(59))
-            print((mycolors.reset))
-        else:
-            
-            print("\n")
-            print((mycolors.reset + "Source".center(100)), end='')
-            print("\n" + (100*'-').center(59))
-            print((mycolors.reset))
-
-        requestsession4 = requests.Session( )
-        requestsession4.headers.update({'accept': 'application/json'})
-        finalurl4 = ''.join([urlmalshare, MALSHAREAPI, '&action=getsources'])
-        malresponse4 = requestsession4.get(url=finalurl4)
-        maltext4 = json.loads(malresponse4.text)
-
-        if (bool(maltext4)):
-            try:
-                for i in range(0,200):
-                    if(mallocation == 1):
-                        urltemp = maltext4[i]
-                        if (len(urltemp) < 96):
-                            if (validators.url(urltemp)) == True:
-                                if (windows == 1):
-                                    thread = LocationThread(maltext4[i])
-                                    thread.start()
-                                    thread.join()
-                                else:
-                                    thread = LocationThread(maltext4[i])
-                                    thread.start()
-                    else:
-                        if(len(maltext4[i]) < 96):
-                            if (bkg == 1):
-                                print((mycolors.reset + "URL: " + mycolors.foreground.lightgreen + "%-100s" % maltext4[i] + mycolors.reset))
-                            else:
-                                print((mycolors.reset + "URL: " + mycolors.foreground.blue ,  "%-100s" % maltext4[i] + mycolors.reset))
-
-            except KeyError as e:
-                pass
-
-            except (BrokenPipeError, IOError, TypeError):
-                print(mycolors.reset , file=sys.stderr)
-                exit(1)
-
-    except ValueError as e:
-        print(e)
-        if (bkg == 1):
-            print((mycolors.foreground.lightred + "Error while connecting to Malshare.com!\n" + mycolors.reset))
-        else:
-            print((mycolors.foreground.red + "Error while connecting to Malshare.com!\n" + mycolors.reset))
-
-
 def urlhauscheck(urlx, haus):
 
     haustext = ''
@@ -3216,8 +3153,6 @@ if __name__ == "__main__":
     hausdownloadpayload = ''
     malsharetype = 1
     malsharedownload = 0
-    malsharesources = 0 
-    malsharelocation = 0 
     filecheckpoly = 0
     polycheck = 0
     polyswarmscan = ''
@@ -3408,12 +3343,6 @@ if __name__ == "__main__":
         print(mycolors.reset)
         sys.exit(0)
 
-    if (args.malsharelocation == 1):
-            if(args.malsharesources == 0):
-                parser.print_help()
-                print(mycolors.reset)
-                sys.exit(0)
-
     if (args.virustotal) not in optval:
         parser.print_help()
         print(mycolors.reset)
@@ -3446,21 +3375,20 @@ if __name__ == "__main__":
                             if (not repoha):
                                 if (not domaintemp):
                                     if (args.malsharelist == 0):
-                                        if (not args.malsharesources):
-                                            if (not args.malsharehash):
-                                                if (not args.urlhausquery):
-                                                    if (not args.urlhaussubmit):
-                                                        if (args.urlhausbatch == 0):
-                                                            if (args.hauspayloadbatch == 0):
-                                                                if (not args.haushash):
-                                                                    if (not args.hausdownloadpayload):
-                                                                        if (not args.polyswarmscan):
-                                                                            if (not args.polyswarmurl):
-                                                                                if (not args.polyswarmhash):
-                                                                                    if (not args.polyswarmmeta):
-                                                                                        parser.print_help()
-                                                                                        print(mycolors.reset)
-                                                                                        exit(0)
+                                        if (not args.malsharehash):
+                                            if (not args.urlhausquery):
+                                                if (not args.urlhaussubmit):
+                                                    if (args.urlhausbatch == 0):
+                                                        if (args.hauspayloadbatch == 0):
+                                                            if (not args.haushash):
+                                                                if (not args.hausdownloadpayload):
+                                                                    if (not args.polyswarmscan):
+                                                                        if (not args.polyswarmurl):
+                                                                            if (not args.polyswarmhash):
+                                                                                if (not args.polyswarmmeta):
+                                                                                    parser.print_help()
+                                                                                    print(mycolors.reset)
+                                                                                    exit(0)
     if (urltemp):
         if (validators.url(urltemp)) == True:
             urlcheck = 1
@@ -3595,11 +3523,6 @@ if __name__ == "__main__":
 
     if (domaincheck == 1):
         vtdomaincheck(domaintemp,param)
-        print(mycolors.reset)
-        exit(0)
-
-    if (malsources == 1):
-        malsourceslist()
         print(mycolors.reset)
         exit(0)
 
