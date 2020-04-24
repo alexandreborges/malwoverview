@@ -1,7 +1,8 @@
 # Malwoverview.py
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/2.1.9.1) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE)
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/2.5.0) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
+[<img alt="PayPal" src="https://img.shields.io/badge/Donate-Paypal-brightgreen?style=for-the-badge&logo=appveyor">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M8F458EZH8UZE&source=url)
 
 (Gaps in the VT output at image above are because public VT API key, which allows only 4 searches per minute).  
 
@@ -41,6 +42,11 @@
 ![Alt text](pictures/picture_34.jpg?raw=true "Title")
 ![Alt text](pictures/picture_35.jpg?raw=true "Title")
 ![Alt text](pictures/picture_36.jpg?raw=true "Title")
+![Alt text](pictures/picture_37.jpg?raw=true "Title")
+![Alt text](pictures/picture_38.jpg?raw=true "Title")
+![Alt text](pictures/picture_39.jpg?raw=true "Title")
+![Alt text](pictures/picture_40.jpg?raw=true "Title")
+![Alt text](pictures/picture_41.jpg?raw=true "Title")
 
       Copyright (C)  2018-2020 Alexandre Borges <alexandreborges at blackstormsecurity dot com>
 
@@ -57,7 +63,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 2.1.9.1
+# Current Version: 2.5.0
 
 ## Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), "-A" (uppercase) or "-P" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total, Hybrid Analysis and Polyswarm, respectively. 
 
@@ -77,19 +83,21 @@ This tool aims to :
 5. Check URLs on Virus Total, Malshare, Polyswarm and URLhaus engines. 
 6. Download malware samples from Hybrid Analysis, Malshare and HausURL engines.
 7. Submit malware samples to VirusTotal, Hybrid Analysis and Polyswarm.
-8. List last suspected URLs from Malshare and URLHaus.
+8. List last suspected URLs from URLHaus.
 9. List last payloads from URLHaus. 
 10. Search for specific payloads on the Malshare.
 11. Search for similar payloads (PE32/PE32+) on Polyswarm engine.
 12. Classify all files in a directory searching information on Virus Total and Hybrid Analysis. 
 13. Make reports about a suspect domain. 
+14. Check APK packages directly from Android devices against Hybrid Analysis and Virus Total. 
+15. Submit APK packages directly from Android devices to Hybrid Analysis and Virus Total. 
 
 # REQUERIMENTS
 
 This tool has been tested on Ubuntu, Kali Linux 2020, Windows 8.1 and 10. Malwoverview can be installed by executing the following command:
 
-        $ pip3.7 install malwoverview              (Linux)
-        $ python -m pip install malwoverviewwin    (Windows)
+        $ pip3.8 install malwoverview              (Linux)
+        $ python.exe -m pip install malwoverviewwin    (Windows)
 
 In Linux systems, add the /usr/local/bin to the PATH environment variable.
 
@@ -105,14 +113,14 @@ To check the installation, execute:
 If you are installing the Malwoverview into a Python virtual environment, so you should follow the step-by-step procedure below: 
 
        $ mkdir mytest
-       $ python3.7 -m venv mytest/
+       $ python3.8 -m venv mytest/
        $ source mytest/bin/activate
        $ cd mytest/
-       $ pip3.7 -q install malwoverview
+       $ pip3.8 -q install malwoverview
        $ cd bin
-       $ pip3.7 show malwoverview
-       $ ls ../lib/python3.7/site-packages/malwoverview/conf/
-       $ cp /malwoverview/configmalw.py ../lib/python3.7/site-packages/malwoverview/conf/
+       $ pip3.8 show malwoverview
+       $ ls ../lib/python3.8/site-packages/malwoverview/conf/
+       $ cp /malwoverview/configmalw.py ../lib/python3.8/site-packages/malwoverview/conf/
        $ malwoverview
 
 Further information is available on: 
@@ -125,85 +133,102 @@ If you want to perform the manual steps, so few steps will be necessary:
 
 ## Kali Linux
 
-1. Python version 3.7 or later (Only Python 3.x !!! It does NOT work using Python 2.7) 
+1. Python version 3.8 or later (Only Python 3.x !!! It does NOT work using Python 2.7) 
 
-       $ apt-get install python3.7  (for example)
+       $ apt-get install python3.8  (for example)
             
 2. Python-magic.  
 
       To install python-magic package you can execute the following command:
       
-       $ pip3.7 install python-magic
+       $ pip3.8 install python-magic
       
       Or compiling it from the github repository:
       
        $ git clone https://github.com/ahupp/python-magic
        $ cd python-magic/
-       $ python3.7 setup.py build
-       $ python3.7 setup.py install
+       $ python3.8 setup.py build
+       $ python3.8 setup.py install
       
       As there are serious problems about existing two versions of python-magic package, my recommendation is to install it
       from github (second procedure above) and copy the magic.py file to the SAME directory of malwoverview tool. 
       
 3. Install several Python packages: 
 
-       $ pip3.7 install -r requirements.txt
+       $ pip3.8 install -r requirements.txt
        
        OR
        
-       $ pip3.7 install pefile
-       $ pip3.7 install colorama
-       $ pip3.7 install simplejson
-       $ pip3.7 install python-magic
-       $ pip3.7 install requests
-       $ pip3.7 install validators
-       $ pip3.7 install geocoder
-       $ pip3.7 install polyswarm-api
+       $ pip3.8 install pefile
+       $ pip3.8 install colorama
+       $ pip3.8 install simplejson
+       $ pip3.8 install python-magic
+       $ pip3.8 install requests
+       $ pip3.8 install validators
+       $ pip3.8 install geocoder
+       $ pip3.8 install polyswarm-api
        
+4. To check an Android mobile you need to install the "adb" program by executing the following command:
+
+       # apt get install adb
+
+   PS: before trying Android's options, check:
+       
+       * If the adb program is listed in the PATH environment variable.
+       * If the system has authorized access to the device by using "adb devices -l"
 
 ## Windows
 
-1. Install the Python version 3.7.x or later from https://www.python.org/downloads/windows/ 
+1. Install the Python version 3.8.x or later from https://www.python.org/downloads/windows/ 
 
 2. Python-magic.  
 
       To install python-magic package you can execute the following command:
       
-       C:\> pip3.7 install python-magic
+       C:\> pip3.8 install python-magic
       
       Or compiling it from the github repository:
       
        C:\> git clone https://github.com/ahupp/python-magic
        C:\> cd python-magic/
-       C:\> python3.7 setup.py build
-       C:\> python3.7 setup.py install
+       C:\> python3.8 setup.py build
+       C:\> python3.8 setup.py install
       
 3. Install several Python packages: 
       
-       C:\> pip3.7 install -r requirements.txt
+       C:\> pip3.8 install -r requirements.txt
        
        OR: 
        
-       C:\> pip3.7 install pefile
-       C:\> pip3.7 install colorama
-       C:\> pip3.7 install simplejson
-       C:\> pip3.7 install python-magic
-       C:\> pip3.7 install requests
-       C:\> pip3.7 install validators
-       C:\> pip3.7 install geocoder
-       C:\> pip3.7 install polyswarm-api
-       C:\> pip3.7 install python-magic-bin==0.4.14
+       C:\> pip3.8 install pefile
+       C:\> pip3.8 install colorama
+       C:\> pip3.8 install simplejson
+       C:\> pip3.8 install python-magic
+       C:\> pip3.8 install requests
+       C:\> pip3.8 install validators
+       C:\> pip3.8 install geocoder
+       C:\> pip3.8 install polyswarm-api
+       C:\> pip3.8 install python-magic-bin==0.4.14
        
 4. (IMPORTANT) Remove the magic.py file from malwoverview directory.
 
 5. (VERY IMPORTANT) Install the python-magic DLLs by executing the following command:
 
-       C:\> pip3.7 install python-magic-bin==0.4.14 
+       C:\> pip3.8 install python-magic-bin==0.4.14 
 
+6. To check an Android mobile you need to install the "adb" program by:
+
+       * Downloading and installing the Android Studio from: https://developer.android.com/studio#downloads  (Recommended)
+       * Downloading it from https://dl.google.com/android/repository/platform-tools-latest-windows.zip
+   
+   PS: before trying Android's options, check:
+       
+       * If the adb program is listed in the PATH environment variable.
+       * If the system has authorized access to the device by using "adb devices -l"
 
 ## Virus Total, Hybrid-Analysis, Malshare, URLHaus and Polyswarm engines
 
-You must edit the configmalw.py file and insert your APIs to enable all engines. Pay attention: the APIs are not registered within malwoverview.py anymore!
+You must edit the configmalw.py file (Linux: /usr/local/lib/python3.x/dist-packages/malwoverview/conf directory ; Windows: C:\<Python installation directory>\Lib\malwoverview directory) and insert your APIs to enable all engines. Pay attention: the APIs are not registered within malwoverview.py anymore!
 
       VT: 
 
@@ -231,13 +256,13 @@ You must edit the configmalw.py file and insert your APIs to enable all engines.
 
 To use the malwoverview, execute the command as shown below:
 
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py  | more
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py  | more
 
-      usage: python malwoverview.py -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> 
-      -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> 
-      -A <filename> -g <job_id> -r <domain> -t <0|1> -Q <0|1> -l <0|1> -n <1|2|3|4|5|6> -m <hash> -M <0|1> 
-      -U <url> -S <url> -z <tags> -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> 
-      -N <url> -R <executable_file>
+      usage: python malwoverview.py -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1>
+      -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4>
+      -A <filename> -g <job_id> -r <domain> -t <0|1> -Q <0|1> -l <0|1> -n <1|2|3|4|5|6> -m <hash> -M <0|1>
+      -U <url> -S <url> -z <tags> -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> -N <url> -R <PE file> 
+      -y <0|1> -Y <file name> -Z <0|1> -X <0|1> -Y <file name> -T <file name>
 
 Options:
 
@@ -395,16 +420,41 @@ Options:
                               Performs a complementary search for similar PE
                               executables through meta-information using the
                               Polyswarm engine.
-
+        -y ANDROID_HA, --androidha ANDROID_HA
+                              Check all third-party APK packages from the USB-connected Android
+                              device against Hybrid Analysis using multithreads. The
+                              Android device does not need be rooted and you need
+                              have adb in your PATH environment variable.
+        -Y ANDROID_SEND_HA, --androidsendha ANDROID_SEND_HA
+                              Send an third-party APK packages from your USB-connected Android 
+                              device to Hybrid Analysis. The Android device does not
+                              need be rooted and you need have adb in your PATH
+                              environment variable.
+        -T ANDROID_SEND_VT, --androidsendvt ANDROID_SEND_VT
+                              Send an third-party APK packages from your USB-connected Android
+                              device to Virus Total. The Android device does not need
+                              be rooted and you need have adb in your PATH environment
+                              variable.
+        -Z ANDROID_VT, --androidvt ANDROID_VT
+                              Check all third-party APK packages from the USB-connected Android 
+                              device against VirusTotal using Public API (slower because
+                              of 60 seconds delay for each 4 hashes). The Android device
+                              does not need be rooted and you need have adb in your PATH
+                              environment variable.
+        -X ANDROID_VT, --androidvtt ANDROID_VT
+                              Check all third-party APK packages from the USB-connected Android 
+                              device against VirusTotal using multithreads (only for
+                              Private Virus API). The Android device does not need
+                              be rooted and you need have adb in your PATH environment variable.
 
         If you use Virus Total, Hybrid Analysis, Malshare, URLHaus or Polyswarm options, so it is necessary 
         to edit the configmalw.py file and insert your APIs. 
-        
+
         Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore, 
         if you are willing to wait some minutes, so you can use the -p option, which forces a one minute wait 
         every 4 malware samples, but allows obtaining a complete evaluation of the repository.
-        
-  
+
+
         * ATTENTION 1: if the directory contains many malware samples while using -d option, so malwoverview.py 
                        could take some time. Nonetheless, you can use the new -t option (multithreading) to 
                        speed-up things. :)
@@ -421,44 +471,65 @@ Options:
 
 ## Examples:
 
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -d /root/malware/misc/
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -d /root/malware/misc/ -t 1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -d /root/malware/misc/ -t 1 -v 1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -d /root/malware/misc/ -v 1 -p 1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -d /root/malware/misc/ -Q 1 -v 1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -d /root/malware/misc/ -Q 1 -a 1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -d /root/malware/android/ -Q 1 -a 1 -e 3
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -d /root/malware/linux/ -Q 1 -a 1 -e 4
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -f /root/malware/misc/sample1 -v 1 -s 1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -f /root/malware/misc/sample1 -i 1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -f /root/malware/misc/sample1 -v 1 -s 1 -x 1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -u <url>
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -r <domain>
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -H <hash> -e 2
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -H <hash> -e 1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -V /root/malware/android/sample.apk
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -A /root/malware/windows/sample1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -A /root/malware/android/sample.apk -e 3
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -g <job_id>
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -l 1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -l 1 -n 2
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -l 1 -n 3
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -m <hash>
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -m <hash> -M 1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -B 1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -U <URL>
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -K 1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -j <hash>
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -J <hash>
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -S <URL> -z SpelevoEK exe psixbot
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -O <hash>
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -N <URL>
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -P sample1
-      root@ubuntu19:~/malwoverview# python3.7 malwoverview.py -R /root/malware/windows/sample1
-
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -d /root/malware/misc/
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -d /root/malware/misc/ -t 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -d /root/malware/misc/ -t 1 -v 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -d /root/malware/misc/ -v 1 -p 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -d /root/malware/misc/ -Q 1 -v 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -d /root/malware/misc/ -Q 1 -a 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -d /root/malware/android/ -Q 1 -a 1 -e 3
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -d /root/malware/linux/ -Q 1 -a 1 -e 4
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -f /root/malware/misc/sample1 -v 1 -s 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -f /root/malware/misc/sample1 -i 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -f /root/malware/misc/sample1 -v 1 -s 1 -x 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -u <url>
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -r <domain>
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -H <hash> -e 2
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -H <hash> -e 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -V /root/malware/android/sample.apk
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -A /root/malware/windows/sample1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -A /root/malware/android/sample.apk -e 3
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -g <job_id>
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -l 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -l 1 -n 2
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -l 1 -n 3
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -m <hash>
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -m <hash> -M 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -B 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -U <URL>
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -K 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -j <hash>
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -J <hash>
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -S <URL> -z SpelevoEK exe psixbot
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -O <hash>
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -N <URL>
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -P sample1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -R /root/malware/windows/sample1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -y 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -Y skype
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -Z 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -X 1
+      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py -T twitter 
 
 
 # HISTORY
+
+Version 2.5.0:
+
+      This version:
+      
+            * Introduces the following options:
+                  * -y to check all third-party APKs from an Android device against 
+                       the Hybrid Analysis. 
+                  * -Y to send a third-party APKs from an Android device to the Hybrid
+                       Analysis. 
+                  * -Z to check all third-party APKs from an Android device against 
+                       the Virus Total. 
+                  * -X to check all third-party APKs from an Android device against the
+                       Virus Total (it is necessary private API). 
+                  * -T to send a third-party APK from an Android device to Virus Total. 
+            * Fixes several issues related to color in command outputs.  
+            * Adds the filename identification in the report while sending a sample to Virus Total.
 
 Version 2.1.9.1:
 
@@ -482,7 +553,7 @@ Version 2.0.8.1:
 
       This version:
       
-            * Introduces installation using: pip3.7 install malwoverview (Linux) or 
+            * Introduces installation using: pip3.8 install malwoverview (Linux) or 
               python -m pip install malwoverviewwin (Windows). 
             * Fixes small problems related to Polyswarm usage. 
             * Changes the help to verify whether the APIs were inserted into configmalw.py file. 

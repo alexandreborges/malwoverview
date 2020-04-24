@@ -15,7 +15,7 @@
 # See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Malwoverview.py: version 2.1.9.1
+# Malwoverview.py: version 2.5.0
 
 import os
 import sys
@@ -33,18 +33,20 @@ import geocoder
 import threading
 import socket
 import urllib3
+import subprocess
 from polyswarm_api.api import PolyswarmAPI
 from configmalw import *
 from urllib.parse import urlparse
 from colorama import init, Fore, Back, Style
 from datetime import datetime
+from urllib.parse import urlencode, quote_plus
 
 # On Windows systems, it is necessary to install python-magic-bin: pip install python-magic-bin
 
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2020, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "2.1.9.1"
+__version__ = "2.5.0"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -796,6 +798,7 @@ def vtfilecheck(filename, urlfilevtcheck, param):
             print("-"*25,"\n")
 
             if (bkg == 0):
+                print(mycolors.foreground.green + "Filename: ".ljust(17),os.path.basename(filename))
                 print(mycolors.foreground.blue + "Status: ".ljust(17),vttext['verbose_msg'])
                 print(mycolors.foreground.blue + "Resource: ".ljust(17),vttext['resource'])
                 print(mycolors.foreground.blue + "Scan ID: ".ljust(17),vttext['scan_id'])
@@ -804,6 +807,7 @@ def vtfilecheck(filename, urlfilevtcheck, param):
                 print(mycolors.foreground.red + "Result VT: ".ljust(17), end=' ')
 
             else:
+                print(mycolors.foreground.yellow + "Filename: ".ljust(17),os.path.basename(filename))
                 print(mycolors.foreground.lightgreen + "Status: ".ljust(17),vttext['verbose_msg'])
                 print(mycolors.foreground.lightgreen + "Resource: ".ljust(17),vttext['resource'])
                 print(mycolors.foreground.lightgreen + "Scan ID: ".ljust(17),vttext['scan_id'])
@@ -1356,6 +1360,7 @@ def polyhashsearch(poly):
             print(mycolors.foreground.red + "\nPolyscore: \t%f" % score)
     print(mycolors.reset)
 
+
 def hafilecheck(filenameha):
 
     hatext = ''
@@ -1608,6 +1613,7 @@ def generalstatus(key):
     G.append(result)
     return G
 
+
 def hashchecking( ):
 
     print ("\n")
@@ -1630,6 +1636,7 @@ def hashchecking( ):
          downhash(hashtemp)
     print(mycolors.reset)
     exit(0)
+
 
 def filechecking(ffpname2):
     GS = []
@@ -2084,6 +2091,7 @@ class quickHAThread(threading.Thread):
             print((mycolors.foreground.blue + "%6s" % totalprocesses), end='')
             print((mycolors.foreground.blue + "%6s" % networkconnections + mycolors.reset))
 
+
 def dirwork(d):
 
     x = d
@@ -2146,6 +2154,7 @@ def dirquick(d):
             else:
                 thread = quickVTThread(key)
                 thread.start()
+
 
 def malsharedown(filehash):
 
@@ -3064,6 +3073,375 @@ def urlhauspost(urlx, haus, mytags):
         print(mycolors.reset)
 
 
+def quickhashowAndroid(filehash):
+
+    hatext = ''
+    haresponse = ''
+    final = 'Yes'
+    verdict = '-'
+    avdetect = '0'
+    totalsignatures = '-'
+    threatscore = '-'
+    totalprocesses = '-'
+    networkconnections = '-'
+
+    try:
+
+        resource = filehash
+        requestsession = requests.Session( )
+        requestsession.headers.update({'user-agent': user_agent})
+        requestsession.headers.update({'api-key': HAAPI})
+        requestsession.headers.update({'content-type': 'application/x-www-form-urlencoded'})
+        finalurl = '/'.join([haurl,'report', 'summary'])
+        resource1 = resource + ":200"
+        datahash = {
+                'hashes[0]': resource1
+                }
+
+        haresponse = requestsession.post(url=finalurl, data = datahash)
+        hatext = json.loads(haresponse.text)
+
+        rc = str(hatext)
+
+        if 'message' in rc:
+            final = 'Not Found'
+            return (final, verdict, avdetect, totalsignatures, threatscore, totalprocesses, networkconnections)
+
+        if 'verdict' in hatext[0]:
+            verdict = str(hatext[0]['verdict'])
+        else:
+            verdict = ''
+
+        if 'threat_score' in hatext[0]:
+            threatscore = str(hatext[0]['threat_score'])
+        else:
+            threatscore = ''
+
+        if 'av_detect' in hatext[0]:
+            avdetect = str(hatext[0]['av_detect'])
+        else:
+            avdetect = ''
+
+        if 'total_signatures' in hatext[0]:
+            totalsignatures = str(hatext[0]['total_signatures'])
+        else:
+            totalsignatures = ''
+
+        if 'total_processes' in hatext[0]:
+            totalprocesses = str(hatext[0]['total_processes'])
+        else:
+            totalprocesses = ''
+
+        if 'total_network_connections' in hatext[0]:
+            networkconnections =  str(hatext[0]['total_network_connections'])
+        else:
+            networkconnections = ''
+
+        return (final, verdict, avdetect, totalsignatures, threatscore, totalprocesses, networkconnections)
+
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "Error while connecting to Hybrid-Analysis!\n"))
+        else:
+            print((mycolors.foreground.red + "Error while connecting to Hybrid-Analysis!\n"))
+        print(mycolors.reset)
+
+
+class androidVTThread(threading.Thread):
+
+    def __init__(self, key, package):
+
+        threading.Thread.__init__(self)
+        self.key = key
+        self.package = package
+
+    def run(self):
+
+        key1 = self.key
+        package1 = self.package
+
+        myhash = key1
+        vtfinal = vtcheck(myhash, url, param)
+    
+        if (bkg == 1):
+            print((mycolors.foreground.orange +  "%-50s" % package1), end=' ')
+            print((mycolors.foreground.lightcyan +  "%-32s" % key1), end=' ')
+            print((mycolors.reset + mycolors.foreground.lightgreen + "%8s" % vtfinal + mycolors.reset))
+        else:
+            print((mycolors.foreground.green + "%-08s" % package), end=' ')
+            print((mycolors.foreground.cyan + "%-32s" % key1), end=' ')
+            print((mycolors.reset + mycolors.foreground.red + "%8s" % vtfinal + mycolors.reset))
+
+
+class quickHAAndroidThread(threading.Thread):
+
+    def __init__(self, key, package):
+
+        threading.Thread.__init__(self)
+        self.key = key
+        self.package = package
+
+    def run(self):
+
+        key1 = self.key
+        package1 = self.package
+
+        myhash = key1
+        (final, verdict, avdetect, totalsignatures, threatscore, totalprocesses, networkconnections) =  quickhashowAndroid(myhash)
+
+        if (bkg == 1):
+            print((mycolors.foreground.lightgreen + "%-50s" % package1), end=' ')
+            print((mycolors.foreground.yellow + "%-34s" % key1), end=' ')
+            print((mycolors.foreground.lightcyan + "%9s" % final), end='')
+            if (verdict == "malicious"):
+                print((mycolors.foreground.lightred + "%20s" % verdict), end='')
+            else:
+                print((mycolors.foreground.yellow + "%20s" % verdict), end='')
+            if(avdetect == 'None'):
+                print((mycolors.foreground.lightcyan + "%7s" % avdetect), end='')
+            else:
+                print((mycolors.foreground.lightcyan + "%6s%%" % avdetect), end='')
+            print((mycolors.foreground.orange + "%7s" % totalsignatures), end='')
+            if(threatscore == 'None'):
+                print((mycolors.foreground.lightred + "%12s" % threatscore), end='')
+            else:
+                print((mycolors.foreground.lightred + "%8s/100" % threatscore), end='')
+            print((mycolors.foreground.lightgreen + "%6s" % totalprocesses), end='')
+            print((mycolors.foreground.lightgreen + "%6s" % networkconnections + mycolors.reset))
+        else:
+            print((mycolors.foreground.lightcyan + "%-50s" % key1), end=' ')
+            print((mycolors.foreground.green + "%-34s" % key1), end=' ')
+            print((mycolors.foreground.cyan + "%9s" % final), end='')
+            if (verdict == "malicious"):
+                print((mycolors.foreground.red + "%20s" % verdict), end='')
+            else:
+                print((mycolors.foreground.green + "%20s" % verdict), end='')
+            if (avdetect == 'None'):
+                print((mycolors.foreground.purple + "%7s" % avdetect), end='')
+            else:
+                print((mycolors.foreground.purple + "%6s%%" % avdetect), end='')
+            print((mycolors.foreground.green + "%7s" % totalsignatures), end='')
+            if(threatscore == 'None'):
+                print((mycolors.foreground.red + "%12s" % threatscore), end='')
+            else:
+                print((mycolors.foreground.red + "%8s/100" % threatscore), end='')
+            print((mycolors.foreground.blue + "%6s" % totalprocesses), end='')
+            print((mycolors.foreground.blue + "%6s" % networkconnections + mycolors.reset))
+
+
+def checkandroidha(key, package):
+
+    if (windows == 1):
+        thread = quickHAAndroidThread(key, package)
+        thread.start()
+        thread.join()
+    else:
+        thread = quickHAAndroidThread(key, package)
+        thread.start()
+
+
+def checkandroidvt(key, package):
+
+    key1 = key
+    vtfinal = vtcheck(key1, url, param)
+    if (bkg == 1):
+        print((mycolors.foreground.orange +  "%-50s" % package), end=' ')
+        print((mycolors.foreground.lightcyan +  "%-32s" % key1), end=' ')
+        print((mycolors.reset + mycolors.foreground.lightgreen + "%8s" % vtfinal + mycolors.reset))
+    else:
+        print((mycolors.foreground.green + "%-08s" % package), end=' ')
+        print((mycolors.foreground.cyan + "%-32s" % key1), end=' ')
+        print((mycolors.reset + mycolors.foreground.red + "%8s" % vtfinal + mycolors.reset))
+
+
+def checkandroidvtx(key, package):
+
+    if (windows == 1):
+        thread = androidVTThread(key, package)
+        thread.start()
+        thread.join()
+    else:
+        thread = androidVTThread(key, package)
+        thread.start()
+
+
+def checkandroid(engine):
+
+    adb_comm = "adb"
+    results = list()
+    results2 = list()
+    final1 = list()
+    final2 = list()
+
+    localengine = engine
+    tm1 = 0
+
+    myconn = subprocess.run([adb_comm, "shell", "pm", "list", "packages", "-f", "-3"], capture_output=True)
+    myconn2 = myconn.stdout.decode()
+
+    try:
+        for i in myconn2.split('\n'):
+            for j in i.split('base.apk='):
+                if 'package' in j:
+                    key, value = j.split('package:')
+                    key2, value2 = value.split('/data/app/')
+                    results.append(value2[:-3])
+                    valuetmp = value + "base.apk"
+                    results2.append(valuetmp)
+
+    except AttributeError:
+        pass
+
+    try:
+        for h in results2:
+            myconn3 = subprocess.run([adb_comm, "shell", "md5sum", h], text=True, capture_output=True)
+            x = myconn3.stdout.split(" ")[0]
+            final1.append(x)
+
+    except AttributeError:
+        pass
+
+    try:
+        for n in results:
+            final2.append(n)
+
+    except AttributeError:
+        pass
+
+    zipAndroid = zip(final2, final1)
+    dictAndroid = dict(zipAndroid)
+
+    if(engine == 1):
+
+        print(mycolors.reset + "\n")
+        print("Package".center(50) + "Hash".center(34) + "Found?".center(12) + "Verdict".center(23) + "AVdet".center(6) + "Sigs".center(5) + "Score".center(14) + "Procs".center(6) + "Conns".center(6))
+        print((160*'-').center(80))
+        for key, value in dictAndroid.items():
+            checkandroidha(value, key)
+
+    if(engine == 2):
+        print(mycolors.reset + "\n")
+        print("Package".center(50) +  "Hash".center(36) + "Virus Total".center(12))
+        print((100*'-').center(50))
+        for key, value in dictAndroid.items():
+            tm1 = tm1 + 1
+            if tm1 % 4 == 0:
+                time.sleep(61)
+            checkandroidvt(value, key)
+
+    if(engine == 3):
+        print(mycolors.reset + "\n")
+        print("Package".center(50) +  "Hash".center(36) + "Virus Total".center(12))
+        print((100*'-').center(50))
+        for key, value in dictAndroid.items():
+            checkandroidvtx(value, key)
+
+def sendandroidha(package):
+
+    adb_comm = "adb"
+    results = list()
+    results2 = list()
+    final1 = list()
+    final2 = list()
+    newname= ''
+
+    myconn = subprocess.run([adb_comm, "shell", "pm", "list", "packages", "-f", "-3"], capture_output=True)
+    myconn2 = myconn.stdout.decode()
+
+    try:
+        for i in myconn2.split('\n'):
+            for j in i.split('base.apk='):
+                if 'package' in j:
+                    key, value = j.split('package:')
+                    key2, value2 = value.split('/data/app/')
+                    results.append(value2)
+                    valuetmp = value + "base.apk"
+                    results2.append(valuetmp)
+
+    except AttributeError:
+        pass
+
+    try:
+        for j in results2:
+            if (package in j):
+                myconn3 = subprocess.run([adb_comm, "pull", j], capture_output=True)
+                newname = j[10:-9]
+
+    except AttributeError:
+        pass
+
+    try:
+        targetfile = newname + ".apk"
+        os.rename(r'base.apk',targetfile)
+        hafilecheck(targetfile)
+    
+    except FileNotFoundError:
+        
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nFile not found on device!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nFile not found on device!\n"))
+        exit(1)
+
+    finally:
+        if (targetfile != ".apk"):
+            os.remove(targetfile)
+
+
+def sendandroidvt(package):
+
+    adb_comm = "adb"
+    results = list()
+    results2 = list()
+    final1 = list()
+    final2 = list()
+    newname= ''
+
+    myconn = subprocess.run([adb_comm, "shell", "pm", "list", "packages", "-f", "-3"], capture_output=True)
+    myconn2 = myconn.stdout.decode()
+
+    try:
+        for i in myconn2.split('\n'):
+            for j in i.split('base.apk='):
+                if 'package' in j:
+                    key, value = j.split('package:')
+                    key2, value2 = value.split('/data/app/')
+                    results.append(value2)
+                    valuetmp = value + "base.apk"
+                    results2.append(valuetmp)
+
+    except AttributeError:
+        pass
+
+    try:
+        for j in results2:
+            if (package in j):
+                myconn3 = subprocess.run([adb_comm, "pull", j], capture_output=True)
+                newname = j[10:-9]
+
+    except AttributeError:
+        pass
+
+    try:
+        targetfile = newname + ".apk"
+        os.rename(r'base.apk',targetfile)
+        vtfilecheck(targetfile, urlfilevtcheck, param)
+
+    except FileNotFoundError:
+        
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nFile not found on device!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nFile not found on device!\n"))
+        print(mycolors.reset)
+        exit(1)
+
+    finally:
+        if (targetfile != ".apk"):
+            os.remove(targetfile)
+
+
 def dirchecking(repo2):
 
     directory = repo2
@@ -3159,8 +3537,14 @@ if __name__ == "__main__":
     polyswarmurl = ''
     polyswarmhash = ''
     polyswarmmeta = ''
+    androidha = 0
+    androidsendha = ''  
+    androidsendvt = ''  
+    androidvt = 0  
+    androidvtt = 0  
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a malware triage tool written by Alexandre Borges.", usage= "python malwoverview.py -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -Q <0|1> -l <0|1> -n <1|2|3|4|5|6> -m <hash> -M <0|1> -U <url> -S <url> -z <tags> -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> -N <url> -R <PE file>")
+
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a malware triage tool written by Alexandre Borges.", usage= "python malwoverview.py -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -Q <0|1> -l <0|1> -n <1|2|3|4|5|6> -m <hash> -M <0|1> -U <url> -S <url> -z <tags> -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> -N <url> -R <PE file> -y <0|1> -Y <file name> -Z <0|1> -X <0|1> -Y <file name> -T <file name>")
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='specify directory containing malware samples.')
     parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a file. Shows general information about the file (any filetype)')
     parser.add_argument('-b', '--background', dest='backg', type=int,default = 1, metavar = "BACKGROUND", help='(optional) Adapts the output colors to a white terminal. The default is black terminal')
@@ -3196,6 +3580,11 @@ if __name__ == "__main__":
     parser.add_argument('-N', '--polyswarm_url', dest='polyswarmurl', type=str, metavar = "POLYSWARMURL", help='Performs a URL scan using the Polyswarm engine.')
     parser.add_argument('-O', '--polyswarm_hash', dest='polyswarmhash', type=str, metavar = "POLYSWARMHASH", help='Performs a hash scan using the Polyswarm engine.')
     parser.add_argument('-R', '--polyswarm_meta', dest='polyswarmmeta', type=str, metavar = "POLYSWARMMETA", help='Performs a complementary search for similar PE executables through meta-information using the Polyswarm engine.')
+    parser.add_argument('-y', '--androidha', dest='androidha', type=int, default = 0, metavar = "ANDROID_HA", help='Check all third-party APK packages from the USB-connected Android device against Hybrid Analysis using multithreads. The Android device does not need be rooted and you need have adb in your PATH environment variable.')
+    parser.add_argument('-Y', '--androidsendha', dest='androidsendha', type=str, metavar = "ANDROID_SEND_HA", help='Send an third-party APK packages from your USB-connected Android device to Hybrid Analysis. The Android device does not need be rooted and you need have adb in your PATH environment variable.')
+    parser.add_argument('-T', '--androidsendvt', dest='androidsendvt', type=str, metavar = "ANDROID_SEND_VT", help='Send an third-party APK packages from your USB-connected Android device to Virus Total. The Android device does not need be rooted and you need have adb in your PATH environment variable.')
+    parser.add_argument('-Z', '--androidvt', dest='androidvt', type=int, default = 0, metavar = "ANDROID_VT", help='Check all third-party APK packages from the USB-connected Android device against VirusTotal using Public API (slower because of 60 seconds delay for each 4 hashes). The Android device does not need be rooted and you need have adb in your PATH environment variable.')
+    parser.add_argument('-X', '--androidvtt', dest='androidvtt', type=int, default = 0, metavar = "ANDROID_VT", help='Check all third-party APK packages from the USB-connected Android device against VirusTotal using multithreads (only for Private Virus API). The Android device does not need be rooted and you need have adb in your PATH environment variable.')
 
 
     args = parser.parse_args()
@@ -3238,6 +3627,11 @@ if __name__ == "__main__":
     polyurl = args.polyswarmurl
     polyhash = args.polyswarmhash
     polymeta = args.polyswarmmeta
+    androidx = args.androidha
+    androidsendhax = args.androidsendha
+    androidsendvtx = args.androidsendvt
+    androidvtx = args.androidvt
+    androidvttx = args.androidvtt
 
     if (os.path.isfile(ffpname)):
         fprovided = 1
@@ -3292,8 +3686,23 @@ if __name__ == "__main__":
             parser.print_help()
             print(mycolors.reset)
             exit(0)
+    
+    if (args.androidha) not in optval:
+        parser.print_help()
+        print(mycolors.reset)
+        exit(0)
+    
+    if (args.androidvt) not in optval:
+        parser.print_help()
+        print(mycolors.reset)
+        exit(0)
 
-    if ((not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not fileha) and (not repoha) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (not args.urlhausquery) and (not args.urlhaussubmit) and (hausbatch == 0) and (hauspayloads == 0) and (not args.haushash) and (not args.hausdownloadpayload) and (not args.polyswarmscan) and (not args.polyswarmurl) and (not args.polyswarmhash) and (not args.polyswarmmeta)):
+    if (args.androidvtt) not in optval:
+        parser.print_help()
+        print(mycolors.reset)
+        exit(0)
+
+    if ((not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not fileha) and (not repoha) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (not args.urlhausquery) and (not args.urlhaussubmit) and (hausbatch == 0) and (hauspayloads == 0) and (not args.haushash) and (not args.hausdownloadpayload) and (not args.polyswarmscan) and (not args.polyswarmurl) and (not args.polyswarmhash) and (not args.polyswarmmeta) and (androidx == 0) and (not androidsendhax) and (androidvtx == 0) and (androidvttx == 0) and (not androidsendvtx)):
         parser.print_help()
         print(mycolors.reset)
         exit(0)
@@ -3386,9 +3795,14 @@ if __name__ == "__main__":
                                                                         if (not args.polyswarmurl):
                                                                             if (not args.polyswarmhash):
                                                                                 if (not args.polyswarmmeta):
-                                                                                    parser.print_help()
-                                                                                    print(mycolors.reset)
-                                                                                    exit(0)
+                                                                                    if (args.androidha == 0):
+                                                                                        if (not args.androidsendha):
+                                                                                            if (args.androidvt == 0):
+                                                                                                if (args.androidvtt == 0):
+                                                                                                    if (not args.androidsendvt):
+                                                                                                        parser.print_help()
+                                                                                                        print(mycolors.reset)
+                                                                                                        exit(0)
     if (urltemp):
         if (validators.url(urltemp)) == True:
             urlcheck = 1
@@ -3540,6 +3954,17 @@ if __name__ == "__main__":
         polyfile(polyscan)
         print(mycolors.reset)
         exit(0)
+    
+    if (androidsendhax):
+        xx = 3
+        sendandroidha(androidsendhax)
+        print(mycolors.reset)
+        exit(0)
+
+    if (androidsendvtx):
+        sendandroidvt(androidsendvtx)
+        print(mycolors.reset)
+        exit(0)
 
     if (polymeta):
         polymetasearch(polymeta)
@@ -3575,6 +4000,24 @@ if __name__ == "__main__":
                 hashcheck = 1
         if (hashcheck == 1):
             malsharehashsearch(malhash)
+        print(mycolors.reset)
+        exit(0)
+
+    if (androidx):
+        engine = 1
+        checkandroid(engine)
+        print(mycolors.reset)
+        exit(0)
+
+    if (androidvtx):
+        engine = 2
+        checkandroid(engine)
+        print(mycolors.reset)
+        exit(0)
+    
+    if (androidvttx):
+        engine = 3
+        checkandroid(engine)
         print(mycolors.reset)
         exit(0)
 
