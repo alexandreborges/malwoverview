@@ -97,7 +97,7 @@ This tool aims to :
 This tool has been tested on Ubuntu, Kali Linux 2020, Windows 8.1 and 10. Malwoverview can be installed by executing the following command:
 
         $ pip3.8 install malwoverview              (Linux)
-        $ python.exe -m pip install malwoverviewwin    (Windows)
+        C:\> python.exe -m pip install malwoverviewwin    (Windows)
 
 In Linux systems, add the /usr/local/bin to the PATH environment variable.
 
