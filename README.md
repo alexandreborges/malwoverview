@@ -233,7 +233,7 @@ If you want to perform the manual steps, so few steps will be necessary:
 
 6. To check an Android mobile you need to install the "adb" program by:
 
-       * Downloading and installing the Android Studio from: https://developer.android.com/studio#downloads  (Recommended)
+       * Downloading and installing the Android Studio from: https://developer.android.com/studio#downloads (Recommended)
        * Downloading it from https://dl.google.com/android/repository/platform-tools-latest-windows.zip
    
    PS: before trying Android's options, check:
@@ -299,14 +299,17 @@ Malwoverview is a malware triage tool written by Alexandre Borges.
       -s SHOW_VT_REPORT, --vtreport SHOW_VT_REPORT
                         Shows antivirus reports from the main players. This option is used with the -f option (any filetype).
       -v VIRUSTOTAL, --virustotal VIRUSTOTAL
-                        Queries the Virus Total database for positives and totals.Thus, you need to edit the configmalw.py and insert your VT API.
+                        Queries the Virus Total database for positives and totals.Thus, you need to edit the configmalw.py 
+                        and insert your VT API.
       -a HYBRID_ANALYSIS, --hybrid HYBRID_ANALYSIS
-                        Queries the Hybrid Analysis database for general report. Use the -e option to specify which environment are looking for the associate report because the
-                        sample can have been submitted to a different environment that you are looking for. Thus, you need to edit the configmalw.py and insert your HA API and
-                        secret.
+                        Queries the Hybrid Analysis database for general report. Use the -e option to specify which 
+                        environment are looking for the associate report because the sample can have been submitted to a 
+                        different environment that you are looking for. Thus, you need to edit the configmalw.py i
+                        and insert your HA API and secret.
       -p USE_VT_PUB_KEY, --vtpub USE_VT_PUB_KEY
-                        (optional) You should use this option if you have a public Virus Total API. It forces a one minute wait every 4 malware samples, but allows obtaining a
-                        complete evaluation of the malware repository.
+                        (optional) You should use this option if you have a public Virus Total API. It forces a one 
+                        minute wait every 4 malware samples, but allows obtaining a complete evaluation of the 
+                        malware repository.
       -w RUN_ON_WINDOWS, --windows RUN_ON_WINDOWS
                         This option is used when the OS is Microsoft Windows.
       -u URL_VT, --vturl URL_VT
@@ -316,62 +319,81 @@ Malwoverview is a malware triage tool written by Alexandre Borges.
       -r URL_DOMAIN, --urldomain URL_DOMAIN
                         GETS a domain's report from Virus Total.
       -H FILE_HASH, --hash FILE_HASH
-                        Specifies the hash to be checked on Virus Total and Hybrid Analysis. For the Hybrid Analysis report you must use it together -e option.
+                        Specifies the hash to be checked on Virus Total and Hybrid Analysis. For the Hybrid Analysis
+                        report you must use it together -e option.
       -V FILENAME_VT, --vtsubmit FILENAME_VT
-                        SUBMITS a FILE(up to 32MB) to Virus Total scanning and read the report. Attention: use forward slash to specify the target file even on Windows systems.
-                        Furthermore, the minimum waiting time is set up in 90 seconds because the Virus Total queue. If an error occurs, so wait few minutes and try to access the
-                        report by using -f option.
+                        SUBMITS a FILE(up to 32MB) to Virus Total scanning and read the report. Attention: use forward 
+                        slash to specify the target file even on Windows systems. Furthermore, the minimum waiting time
+                        is set up in 90 seconds because the Virus Total queue. If an error occurs, so wait few minutes 
+                        and try to access the report by using -f option.
       -A SUBMIT_HA, --submitha SUBMIT_HA
-                        SUBMITS a FILE(up to 32MB) to be scanned by Hybrid Analysis engine. Use the -e option to specify the best environment to run the suspicious file.
+                        SUBMITS a FILE(up to 32MB) to be scanned by Hybrid Analysis engine. Use the -e option to specify
+                        the best environment to run the suspicious file.
       -g HA_STATUS, --hastatus HA_STATUS
-                        Checks the report's status of submitted samples to Hybrid Analysis engine by providing the job ID. Possible returned status values are: IN_QUEUE, SUCCESS,
-                        ERROR, IN_PROGRESS and PARTIAL_SUCCESS.
+                        Checks the report's status of submitted samples to Hybrid Analysis engine by providing the 
+                        job ID. Possible returned status values are: IN_QUEUE, SUCCESS, ERROR, IN_PROGRESS and 
+                        PARTIAL_SUCCESS.
       -D DOWNLOAD, --download DOWNLOAD
                         Downloads the sample from Hybrid Analysis. Option -H must be specified.
       -e HA_ENVIRONMENT, --haenv HA_ENVIRONMENT
-                        This option specifies the used environment to be used to test the samlple on Hybrid Analysis: <0> Windows 7 32-bits; <1> Windows 7 32-bits (with HWP
-                        Support); <2> Windows 7 64-bits; <3> Android; <4> Linux 64-bits environment. This option is used together either -H option or the -A option or -a option.
+                        This option specifies the used environment to be used to test the samlple on Hybrid Analysis:
+                        <0> Windows 7 32-bits; <1> Windows 7 32-bits (with HWP Support); <2> Windows 7 64-bits; 
+                        <3> Android; <4> Linux 64-bits environment. This option is used together either -H option 
+                        or the -A option or -a option.
       -t MULTITHREAD, --thread MULTITHREAD
-                        (optional) This option is used to force multithreads on Linux whether: the -d option is specifed AND you have a PAID Virus Total API or you are NOT checking
-                        the VT while using the -d option. PS1: using this option causes the Imphashes not to be grouped anymore; PS2: it also works on Windows, but there is not gain
-                        in performance.
+                        (optional) This option is used to force multithreads on Linux whether: the -d option is specifed
+                        AND you have a PAID Virus Total API or you are NOT checking the VT while using the -d option.
+                        PS1: using this option causes the Imphashes not to be grouped anymore; PS2: it also works on 
+                        Windows, but there is not gain in performance.
       -Q QUICK_CHECK, --quick QUICK_CHECK
-                        This option should be used with -d option in two scenarios: 1) either including the -v option (Virus Total -- you'll see a complete VT response whether you
-                        have the private API) for a multithread search and reduced output; 2) or including the -a option (Hybrid Analysis) for a multithread search and complete and
-                        amazing output. If you are using the -a option, so -e option can also be used to adjust the output to your sample types. PS1: certainly, if you have a
-                        directory holding many malware samples, so you will want to test this option with -a option; PS2: it also works on Windows, but there is not gain in
-                        performance.
+                        This option should be used with -d option in two scenarios: 1) either including the -v option
+                        (Virus Total -- you'll see a complete VT response whether you have the private API) for a 
+                        multithread search and reduced output; 2) or including the -a option (Hybrid Analysis) for a
+                        multithread search and complete and amazing output. If you are using the -a option, so -e option
+                        can also be used to adjust the output to your sample types. PS1: certainly, if you have a
+                        directory holding many malware samples, so you will want to test this option with -a option; i
+                        PS2: it also works on Windows, but there is not gain in performance.
       -l MALSHARE_HASHES, --malsharelist MALSHARE_HASHES
-                        Show hashes from last 24 hours from Malshare. You need to insert your Malshare API into the configmalw.py file.
+                        Show hashes from last 24 hours from Malshare. You need to insert your Malshare API into the
+                        configmalw.py file.
       -m MALSHARE_HASH_SEARCH, --malsharehash MALSHARE_HASH_SEARCH
-                        Searches for the provided hash on the Malshare repository. You need to insert your Malshare API into the configmalw.py file. PS: sometimes the Malshare
-                        website is unavailable, so should check the website availability if you get some error message.
+                        Searches for the provided hash on the Malshare repository. You need to insert your Malshare API
+                        into the configmalw.py file. PS: sometimes the Malshare website is unavailable, so should check
+                        the website availability if you get some error message.
       -n FILE_TYPE, --filetype FILE_TYPE
-                        Specifies the file type to be listed by -l option. Therefore, it must be used together -l option. Possible values: 1: PE32 (default) ; 2: Dalvik ; 3: ELF ;
-                        4: HTML ; 5: ASCII ; 6: PHP ; 7: Java ; 8: RAR ; 9: Zip ; 10: UTF-8 ; 11: MS-DOS ; 12: data ; 13: PDF ; 14: Composite(OLE).
+                        Specifies the file type to be listed by -l option. Therefore, it must be used together i
+                        -l option. Possible values: 1: PE32 (default) ; 2: Dalvik ; 3: ELF ; 4: HTML ; 5: ASCII ; 
+                        6: PHP ; 7: Java ; 8: RAR ; 9: Zip ; 10: UTF-8 ; 11: MS-DOS ; 12: data ; 13: PDF ; i
+                        14: Composite(OLE).
       -M MALSHARE_DOWNLOAD, --malsharedownload MALSHARE_DOWNLOAD
                         Downloads the sample from Malshare. This option must be specified with -m option.
       -B URL_HAUS_BATCH, --haus_batch URL_HAUS_BATCH
                         Retrieves a list of recent URLs (last 3 days, limited to 1000 entries) from URLHaus website.
       -K HAUS_PAYLOADS, --haus_payloadbatch HAUS_PAYLOADS
-                        Retrieves a list of downloadable links to recent PAYLOADS (last 3 days, limited to 1000 entries) from URLHaus website. Take care: each link take you to
-                        download a passworless zip file containing a malware, so your AV can generate alerts!
+                        Retrieves a list of downloadable links to recent PAYLOADS (last 3 days, limited to 1000 
+                        entries) from URLHaus website. Take care: each link take you to download a passworless zip file
+                        containing a malware, so your AV can generate alerts!
       -U URL_HAUS_QUERY, --haus_query URL_HAUS_QUERY
                         Queries a URL on the URLHaus website.
       -j HAUS_HASH, --haus_hash HAUS_HASH
                         Queries a payload's hash (md5 or sha256) on the URLHaus website.
       -S URL_HAUS_SUB, --haus_submission URL_HAUS_SUB
-                        Submits a URL used to distribute malware (executable, script, document) to the URLHaus website. Pay attention: Any other submission will be ignored/deleted
-                        from URLhaus. You have to register your URLHaus API into the configmalw.py file.
+                        Submits a URL used to distribute malware (executable, script, document) to the URLHaus website.
+                        Pay attention: Any other submission will be ignored/deleted from URLhaus. You have to register
+                        your URLHaus API into the configmalw.py file.
       -z [HAUSTAG [HAUSTAG ...]], --haustag [HAUSTAG [HAUSTAG ...]]
-                        Associates tags (separated by spaces) to the specified URL. Please, only upper case, lower case, '-' and '.' are allowed. This parameter is optional, which
-                        could be used with the -S option.
+                        Associates tags (separated by spaces) to the specified URL. Please, only upper case, lower 
+                        case, '-' and '.' are allowed. This parameter is optional, which could be used with the 
+                        -S option.
       -W [HAUSTAGSEARCH [HAUSTAGSEARCH ...]], --haustagsearch [HAUSTAGSEARCH [HAUSTAGSEARCH ...]]
-                        This option is for searching malicious URLs by tag on URLhaus. Tags are case-senstive and only upper case, lower case, '-' and '.' are allowed.
+                        This option is for searching malicious URLs by tag on URLhaus. Tags are case-senstive and only
+                        upper case, lower case, '-' and '.' are allowed.
       -k [HAUSSIGSEARCH [HAUSSIGSEARCH ...]], --haussigsearch [HAUSSIGSEARCH [HAUSSIGSEARCH ...]]
-                        This option is for searching malicious payload by tag on URLhaus. Tags are case-sensitive and only upper case, lower case, '-' and '.' are allowed.
+                        This option is for searching malicious payload by tag on URLhaus. Tags are case-sensitive and
+                        only upper case, lower case, '-' and '.' are allowed.
       -J HAUS_DOWNLOAD, --haus_download HAUS_DOWNLOAD
-                        Downloads a sample (if it is available) from the URLHaus repository. It is necessary to provide the SHA256 hash.
+                        Downloads a sample (if it is available) from the URLHaus repository. It is necessary to provide
+                        the SHA256 hash.
       -P POLYSWARMFILE, --polyswarm_scan POLYSWARMFILE
                         (Only for Linux) Performs a file scan using the Polyswarm engine.
       -N POLYSWARMURL, --polyswarm_url POLYSWARMURL
@@ -379,26 +401,31 @@ Malwoverview is a malware triage tool written by Alexandre Borges.
       -O POLYSWARMHASH, --polyswarm_hash POLYSWARMHASH
                         (Only for Linux) Performs a hash scan using the Polyswarm engine.
       -R POLYSWARMMETA, --polyswarm_meta POLYSWARMMETA
-                        (Only for Linux) Performs a complementary search for similar PE executables through meta-information or IP addresses using the Polyswarm engine. This 
-                        parameters depends on -G parameters, so check it, please.
+                        (Only for Linux) Performs a complementary search for similar PE executables through 
+                        meta-information or IP addresses using the Polyswarm engine. This parameters depends on 
+                        -G parameters, so check it, please.
       -G METATYPE, --metatype METATYPE
-                        (Only for Linux) This parameter specifies whether the -R option will gather information about the PE executable or IP address using the Polyswarm engine. 
-                        Thus, 0: PE Executable ; 1: IP Address ; 2: Domains ; 3. URL.
+                        (Only for Linux) This parameter specifies whether the -R option will gather information about 
+                        the PE executable or IP address using the Polyswarm engine. Thus, 0: PE Executable ;
+                        1: IP Address ; 2: Domains ; 3. URL.
       -y ANDROID_HA, --androidha ANDROID_HA
-                        Check all third-party APK packages from the USB-connected Android device against Hybrid Analysis using multithreads. The Android device does not need be
-                        rooted and you need have adb in your PATH environment variable.
+                        Check all third-party APK packages from the USB-connected Android device against Hybrid Analysis
+                        using multithreads. The Android device does not need be rooted and you need have adb in your 
+                        PATH environment variable.
       -Y ANDROID_SEND_HA, --androidsendha ANDROID_SEND_HA
-                        Send an third-party APK packages from your USB-connected Android device to Hybrid Analysis. The Android device does not need be rooted and you need have adb
-                        in your PATH environment variable.
+                        Send an third-party APK packages from your USB-connected Android device to Hybrid Analysis. The
+                        Android device does not need be rooted and you need have adb in your PATH environment variable.
       -T ANDROID_SEND_VT, --androidsendvt ANDROID_SEND_VT
-                        Send an third-party APK packages from your USB-connected Android device to Virus Total. The Android device does not need be rooted and you need have adb in
-                        your PATH environment variable.
+                        Send an third-party APK packages from your USB-connected Android device to Virus Total. The 
+                        Android device does not need be rooted and you need have adb in your PATH environment variable.
       -Z ANDROID_VT, --androidvt ANDROID_VT
-                        Check all third-party APK packages from the USB-connected Android device against VirusTotal using Public API (slower because of 60 seconds delay for each 4
-                        hashes). The Android device does not need be rooted and you need have adb in your PATH environment variable.
+                        Check all third-party APK packages from the USB-connected Android device against VirusTotal 
+                        using Public API (slower because of 60 seconds delay for each 4 hashes). The Android device 
+                        does not need be rooted and you need have adb in your PATH environment variable.
       -X ANDROID_VT, --androidvtt ANDROID_VT
-                        Check all third-party APK packages from the USB-connected Android device against VirusTotal using multithreads (only for Private Virus API). The Android
-                        device does not need be rooted and you need have adb in your PATH environment variable.
+                        Check all third-party APK packages from the USB-connected Android device against VirusTotal 
+                        using multithreads (only for Private Virus API). The Android device does not need be rooted and
+                        you need have adb in your PATH environment variable.
 
 
         If you use Virus Total, Hybrid Analysis, Malshare, URLHaus or Polyswarm options, so it is necessary 
@@ -486,7 +513,8 @@ Version 3.0.0:
             * Fixes have been included in payload listing (-K option) from URLhaus.
             * Yara information has been include in the hash report (-m option) from Malshare.
             * Fixes have been included in the -l option. 
-            * New file types have been included in the -n option: Java, Zip, data, RAR, PDF, Composite (OLE), MS_DOS and UTF-8.
+            * New file types have been included in the -n option: Java, Zip, data, RAR, PDF, Composite (OLE), MS_DOS
+              and UTF-8.
             * New -W option, which is used to show URLs related to an user provided tags from URLHaus.
             * New -k option, which is used to show payloads related to a tag from URLHaus
             * New -I option, which is used to show information related to an IP address from Virus Total.
