@@ -15,7 +15,7 @@
 # See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Malwoverview.py: version 2.5.0
+# Malwoverview.py: version 3.0.0
 
 import os
 import sys
@@ -40,13 +40,15 @@ from urllib.parse import urlparse
 from colorama import init, Fore, Back, Style
 from datetime import datetime
 from urllib.parse import urlencode, quote_plus
+from urllib.parse import quote
+from requests.exceptions import RetryError
 
 # On Windows systems, it is necessary to install python-magic-bin: pip install python-magic-bin
 
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2020, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "2.5.0"
+__version__ = "3.0.0"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -54,6 +56,7 @@ url = 'https://www.virustotal.com/vtapi/v2/file/report'
 param = 'params'
 user_agent = 'Falcon Sandbox'
 urlvt = 'https://www.virustotal.com/vtapi/v2/url/scan'
+ipvt = 'https://www.virustotal.com/vtapi/v2/ip-address/report'
 urlvtreport = 'https://www.virustotal.com/vtapi/v2/url/report' 
 urlvtdomain = 'https://www.virustotal.com/vtapi/v2/domain/report'
 urlfilevtcheck = 'https://www.virustotal.com/vtapi/v2/file/scan'
@@ -64,6 +67,8 @@ hausb = 'https://urlhaus-api.abuse.ch/v1/urls/recent/'
 hausp = 'https://urlhaus-api.abuse.ch/v1/payloads/recent/'
 hausph = 'https://urlhaus-api.abuse.ch/v1/payload/'
 hausd = 'https://urlhaus-api.abuse.ch/v1/download/'
+haust = 'https://urlhaus-api.abuse.ch/v1/tag/'
+haussig = 'https://urlhaus-api.abuse.ch/v1/signature/'
 
 F = []
 H = []
@@ -412,50 +417,112 @@ def vturlcheck(myurl, param):
                 print(Fore.WHITE + "URL DETAILED REPORT")
                 print("-"*20,"\n")
 
-                print(mycolors.foreground.lightcyan + "AlienVault: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['AlienVault']['result'])
-                print(mycolors.foreground.lightcyan + "Avira: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Avira']['result'])
-                print(mycolors.foreground.lightcyan + "BitDefender: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['BitDefender']['result'])
-                print(mycolors.foreground.lightcyan + "CyRadar: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['CyRadar']['result'])
-                print(mycolors.foreground.lightcyan + "ESET: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['ESET']['result'])
-                print(mycolors.foreground.lightcyan + "Forcepoint: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Forcepoint ThreatSeeker']['result'])
-                print(mycolors.foreground.lightcyan + "Fortinet: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Fortinet']['result'])
-                print(mycolors.foreground.lightcyan + "G-Data: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['G-Data']['result'])
-                print(mycolors.foreground.lightcyan + "Google: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Google Safebrowsing']['result'])
-                print(mycolors.foreground.lightcyan + "Kaspersky: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Kaspersky']['result'])
-                print(mycolors.foreground.lightcyan + "Malc0de: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Malc0de Database']['result'])
-                print(mycolors.foreground.lightcyan + "MalwarePatrol: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['MalwarePatrol']['result'])
-                print(mycolors.foreground.lightcyan + "OpenPhish: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['OpenPhish']['result'])
-                print(mycolors.foreground.lightcyan + "PhishLabs: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['PhishLabs']['result'])
-                print(mycolors.foreground.lightcyan + "Phishtank: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Phishtank']['result'])
-                print(mycolors.foreground.lightcyan + "Sophos: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Sophos']['result'])
-                print(mycolors.foreground.lightcyan + "Trustwave: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Trustwave']['result'])
-                print(mycolors.foreground.lightcyan + "VX Vault: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['VX Vault']['result'])
-                print(mycolors.foreground.lightcyan + "ZeroCERT: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['ZeroCERT']['result'])
+                if('AlienVault' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "AlienVault: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['AlienVault']['result'])
+                if('Avira' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "Avira: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Avira']['result'])
+                if('BitDefender' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "BitDefender: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['BitDefender']['result'])
+                if('Certego' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "Certego: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Certego']['result'])
+                if('Comodo Valkyrie Verdict' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "Comodo: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Comodo Valkyrie Verdict']['result'])
+                if('CRDF' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "CRDF: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['CRDF']['result'])
+                if('CyRadar' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "CyRadar: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['CyRadar']['result'])
+                if('Emsisoft' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "Emsisoft: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Emsisoft']['result'])
+                if('ESET' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "ESET: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['ESET']['result'])
+                if('Forcepoint ThreatSeeker' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "Forcepoint: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Forcepoint ThreatSeeker']['result'])
+                if('Fortinet' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "Fortinet: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Fortinet']['result'])
+                if('G-Data' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "G-Data: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['G-Data']['result'])
+                if('Google Safebrowsing' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "Google: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Google Safebrowsing']['result'])
+                if('Kaspersky' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "Kaspersky: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Kaspersky']['result'])
+                if('malwares.com URL checker' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "Malwares.com: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['malwares.com URL checker']['result'])
+                if('Malc0de Database' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "Malc0de: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Malc0de Database']['result'])
+                if('MalwarePatrol' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "MalwarePatrol: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['MalwarePatrol']['result'])
+                if('OpenPhish' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "OpenPhish: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['OpenPhish']['result'])
+                if('PhishLabs' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "PhishLabs: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['PhishLabs']['result'])
+                if('Phishtank' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "Phishtank: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Phishtank']['result'])
+                if('Spamhaus' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "Spamhaus: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Spamhaus']['result'])
+                if('Sophos' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "Sophos: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Sophos']['result'])
+                if('Trustwave' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "Trustwave: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Trustwave']['result'])
+                if('VX Vault' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "VX Vault: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['VX Vault']['result'])
+                if('ZeroCERT' in vttext['scans']):
+                    print(mycolors.foreground.lightcyan + "ZeroCERT: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['ZeroCERT']['result'])
                 print(mycolors.reset + "\n")
                 exit(0)
 
             else:
                 print(Fore.BLACK + "URL DETAILED REPORT")
                 print("-"*20,"\n")
-                print(mycolors.foreground.cyan + "AlienVault: ".ljust(17),mycolors.foreground.red + vttext['scans']['AlienVault']['result'])
-                print(mycolors.foreground.cyan + "Avira: ".ljust(17),mycolors.foreground.red + vttext['scans']['Avira']['result'])
-                print(mycolors.foreground.cyan + "BitDefender: ".ljust(17),mycolors.foreground.red + vttext['scans']['BitDefender']['result'])
-                print(mycolors.foreground.cyan + "CyRadar: ".ljust(17),mycolors.foreground.red + vttext['scans']['CyRadar']['result'])
-                print(mycolors.foreground.cyan + "ESET: ".ljust(17),mycolors.foreground.red + vttext['scans']['ESET']['result'])
-                print(mycolors.foreground.cyan + "Forcepoint: ".ljust(17),mycolors.foreground.red + vttext['scans']['Forcepoint ThreatSeeker']['result'])
-                print(mycolors.foreground.cyan + "Fortinet: ".ljust(17),mycolors.foreground.red + vttext['scans']['Fortinet']['result'])
-                print(mycolors.foreground.cyan + "G-Data: ".ljust(17),mycolors.foreground.red + vttext['scans']['G-Data']['result'])
-                print(mycolors.foreground.cyan + "Google: ".ljust(17),mycolors.foreground.red + vttext['scans']['Google Safebrowsing']['result'])
-                print(mycolors.foreground.cyan + "Kaspersky: ".ljust(17),mycolors.foreground.red + vttext['scans']['Kaspersky']['result'])
-                print(mycolors.foreground.cyan + "Malc0de: ".ljust(17),mycolors.foreground.red + vttext['scans']['Malc0de Database']['result'])
-                print(mycolors.foreground.cyan + "MalwarePatrol: ".ljust(17),mycolors.foreground.red + vttext['scans']['MalwarePatrol']['result'])
-                print(mycolors.foreground.cyan + "OpenPhish: ".ljust(17),mycolors.foreground.red + vttext['scans']['OpenPhish']['result'])
-                print(mycolors.foreground.cyan + "PhishLabs: ".ljust(17),mycolors.foreground.red + vttext['scans']['PhishLabs']['result'])
-                print(mycolors.foreground.cyan + "Phishtank: ".ljust(17),mycolors.foreground.red + vttext['scans']['Phishtank']['result'])
-                print(mycolors.foreground.cyan + "Sophos: ".ljust(17),mycolors.foreground.red + vttext['scans']['Sophos']['result'])
-                print(mycolors.foreground.cyan + "Trustwave: ".ljust(17),mycolors.foreground.red + vttext['scans']['Trustwave']['result'])
-                print(mycolors.foreground.cyan + "VX Vault: ".ljust(17),mycolors.foreground.red + vttext['scans']['VX Vault']['result'])
-                print(mycolors.foreground.cyan + "ZeroCERT: ".ljust(17),mycolors.foreground.red + vttext['scans']['ZeroCERT']['result'])
+                if('AlienVault' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "AlienVault: ".ljust(17),mycolors.foreground.red + vttext['scans']['AlienVault']['result'])
+                if('Avira' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "Avira: ".ljust(17),mycolors.foreground.red + vttext['scans']['Avira']['result'])
+                if('BitDefender' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "BitDefender: ".ljust(17),mycolors.foreground.red + vttext['scans']['BitDefender']['result'])
+                if('Certgo' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "Certego: ".ljust(17),mycolors.foreground.red + vttext['scans']['Certego']['result'])
+                if('Comodo Valkyrie Verdict' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "Comodo: ".ljust(17),mycolors.foreground.red + vttext['scans']['Comodo Valkyrie Verdict']['result'])
+                if('CRDF' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "CRDF: ".ljust(17),mycolors.foreground.red + vttext['scans']['CRDF']['result'])
+                if('CyRadar' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "CyRadar: ".ljust(17),mycolors.foreground.red + vttext['scans']['CyRadar']['result'])
+                if('Emsisoft' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "Emsisoft: ".ljust(17),mycolors.foreground.red + vttext['scans']['Emsisoft']['result'])
+                if('ESET' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "ESET: ".ljust(17),mycolors.foreground.red + vttext['scans']['ESET']['result'])
+                if('Forcepoint ThreatSeeker' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "Forcepoint: ".ljust(17),mycolors.foreground.red + vttext['scans']['Forcepoint ThreatSeeker']['result'])
+                if('Fortinet' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "Fortinet: ".ljust(17),mycolors.foreground.red + vttext['scans']['Fortinet']['result'])
+                if('G-Data' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "G-Data: ".ljust(17),mycolors.foreground.red + vttext['scans']['G-Data']['result'])
+                if('Google Safebrowsing' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "Google: ".ljust(17),mycolors.foreground.red + vttext['scans']['Google Safebrowsing']['result'])
+                if('Kaspersky' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "Kaspersky: ".ljust(17),mycolors.foreground.red + vttext['scans']['Kaspersky']['result'])
+                if('malwares.com URL checker' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "Malwares.com: ".ljust(17),mycolors.foreground.red + vttext['scans']['malwares.com URL checker']['result'])
+                if('Malc0de Database' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "Malc0de: ".ljust(17),mycolors.foreground.red + vttext['scans']['Malc0de Database']['result'])
+                if('MalwarePatrol' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "MalwarePatrol: ".ljust(17),mycolors.foreground.red + vttext['scans']['MalwarePatrol']['result'])
+                if('OpenPhish' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "OpenPhish: ".ljust(17),mycolors.foreground.red + vttext['scans']['OpenPhish']['result'])
+                if('PhishLabs' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "PhishLabs: ".ljust(17),mycolors.foreground.red + vttext['scans']['PhishLabs']['result'])
+                if('Phishtank' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "Phishtank: ".ljust(17),mycolors.foreground.red + vttext['scans']['Phishtank']['result'])
+                if('Spamhaus' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "Spamhaus: ".ljust(17),mycolors.foreground.red + vttext['scans']['Spamhaus']['result'])
+                if('Sophos' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "Sophos: ".ljust(17),mycolors.foreground.red + vttext['scans']['Sophos']['result'])
+                if('Truswave' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "Trustwave: ".ljust(17),mycolors.foreground.red + vttext['scans']['Trustwave']['result'])
+                if('VX Vault' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "VX Vault: ".ljust(17),mycolors.foreground.red + vttext['scans']['VX Vault']['result'])
+                if('ZeroCERT' in vttext['scans']):
+                    print(mycolors.foreground.cyan + "ZeroCERT: ".ljust(17),mycolors.foreground.red + vttext['scans']['ZeroCERT']['result'])
                 print(mycolors.reset + "\n")
                 exit(0)
 
@@ -757,6 +824,131 @@ def vtdomaincheck(mydomain, param):
                             print("\n")
                     except KeyError as e:
                         pass
+
+    except ValueError:
+        if(bkg == 1):
+            print((mycolors.foreground.lightred + "Error while connecting to Virus Total!\n"))
+        else:
+            print((mycolors.foreground.red + "Error while connecting to Virus Total!\n"))
+        print(mycolors.reset)
+        exit(3)
+
+
+def ipvtcheck(ipaddress, urlvtip):
+
+    pos = ''
+    total = ''
+    vttext = ''
+    response = ''
+    resource = ''
+    rc = ''
+    vxtext = ''
+
+    try:
+
+        resource = ipaddress
+        params = {'apikey': VTAPI , 'ip': resource}
+        response = requests.get(urlvtip, params=params)
+        vttext = json.loads(response.text)
+
+        rc = (vttext['response_code'])
+        if (rc == 0):
+            final = 'Domain not found.'
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + final)
+            else:
+                print(mycolors.foreground.red + final)
+            print(mycolors.reset)
+            exit(1)
+
+        if (rc == 1):
+
+            print(mycolors.reset)
+            print("\nIP ADDRESS SUMMARY REPORT")
+            print("-"*25,"\n")
+
+            if 'country' in vttext:
+                if (bkg == 0):
+                    print(mycolors.foreground.red + "Country:\t" + vttext['country'] + mycolors.reset, end='\n')
+                else:
+                    print(mycolors.foreground.orange + "Country:\t" + vttext['country'] + mycolors.reset, end='\n')
+            else:
+                if (bkg == 0):
+                    print(mycolors.foreground.red + "Country:\t" + "Not specified" + mycolors.reset, end='\n')
+                else:
+                    print(mycolors.foreground.orange + "Country:\t" + "Not specified" + mycolors.reset, end='\n')
+
+            if 'asn' in vttext:
+                if (bkg == 0):
+                    print(mycolors.foreground.red + "ASN:\t\t%d" % vttext['asn'] + mycolors.reset, end='\n\n')
+                else:
+                    print(mycolors.foreground.orange + "ASN:\t\t%d" % vttext['asn'] + mycolors.reset, end='\n\n')
+            else:
+                if (bkg == 0):
+                    print(mycolors.foreground.red + "ASN:\t\t" + "Not specified" + mycolors.reset, end='\n\n')
+                else:
+                    print(mycolors.foreground.orange + "ASN:\t\t" + "Not specified" + mycolors.reset, end='\n\n')
+
+            print(mycolors.reset + "\nResolutions")
+            print("-" * 11)
+
+            if 'resolutions' in vttext:
+                if (vttext['resolutions']):
+                    for i in vttext['resolutions']:
+                        if (bkg == 0):
+                            print(mycolors.foreground.green + "\nLast Resolved:\t" + i['last_resolved'] + mycolors.reset)
+                            print(mycolors.foreground.green + "Hostname:\t" + i['hostname'] + mycolors.reset)
+                        else:
+                            print(mycolors.foreground.lightgreen + "\nLast Resolved:\t" + i['last_resolved'] + mycolors.reset)
+                            print(mycolors.foreground.lightgreen + "Hostname:\t" + i['hostname'] + mycolors.reset)
+
+            print(mycolors.reset + "\nDetected URLs")
+            print("-" * 13)
+
+            if 'detected_urls' in vttext:
+                for j in vttext['detected_urls']:
+                    if (bkg == 0):
+                        print(mycolors.foreground.cyan + "\nURL:\t\t%s" % j['url'] + mycolors.reset)
+                        print(mycolors.foreground.cyan + "Scan Date:\t%s" % j['scan_date'] + mycolors.reset)
+                        print(mycolors.foreground.cyan + "Positives:\t%d" % j['positives'] + mycolors.reset)
+                        print(mycolors.foreground.cyan + "Total:\t\t%d" % j['total'] + mycolors.reset)
+                    else:
+                        print(mycolors.foreground.lightred + "\nURL:\t\t%s" % j['url'] + mycolors.reset)
+                        print(mycolors.foreground.lightred + "Scan date:\t%s" % j['scan_date'] + mycolors.reset)
+                        print(mycolors.foreground.lightred + "Positives:\t%d" % j['positives'] + mycolors.reset)
+                        print(mycolors.foreground.lightred + "Total:\t\t%d" % j['total'] + mycolors.reset)
+
+            print(mycolors.reset + "\nDetected Downloaded Samples")
+            print("-" * 27)
+
+            if 'detected_downloaded_samples' in vttext:
+                for k in vttext['detected_downloaded_samples']:
+                    if (bkg == 0):
+                        print(mycolors.foreground.red + "\nSHA256:\t\t%s" % k['sha256'] + mycolors.reset)
+                        print(mycolors.foreground.red + "Date:\t\t%s" % k['date'] + mycolors.reset)
+                        print(mycolors.foreground.red + "Positives:\t%d" % k['positives'] + mycolors.reset)
+                        print(mycolors.foreground.red + "Total:\t\t%d" % k['total'] + mycolors.reset)
+                    else:
+                        print(mycolors.foreground.yellow + "\nSHA256:\t\t%s" % k['sha256'] + mycolors.reset)
+                        print(mycolors.foreground.yellow + "Date:\t\t%s" % k['date'] + mycolors.reset)
+                        print(mycolors.foreground.yellow + "Positives:\t%d" % k['positives'] + mycolors.reset)
+                        print(mycolors.foreground.yellow + "Total:\t\t%d" % k['total'] + mycolors.reset)
+
+            print(mycolors.reset + "\nUndetected Downloaded Samples")
+            print("-" * 27)
+
+            if 'undetected_downloaded_samples' in vttext:
+                for m in vttext['undetected_downloaded_samples']:
+                    if (bkg == 0):
+                        print(mycolors.foreground.green + "\nSHA256:\t\t%s" % m['sha256'] + mycolors.reset)
+                        print(mycolors.foreground.green + "Date:\t\t%s" % m['date'] + mycolors.reset)
+                        print(mycolors.foreground.green + "Positives:\t%d" % m['positives'] + mycolors.reset)
+                        print(mycolors.foreground.green + "Total:\t\t%d" % m['total'] + mycolors.reset)
+                    else:
+                        print(mycolors.foreground.lightcyan + "\nSHA256:\t\t%s" % m['sha256'] + mycolors.reset)
+                        print(mycolors.foreground.lightcyan + "Date:\t\t%s" % m['date'] + mycolors.reset)
+                        print(mycolors.foreground.lightcyan + "Positives:\t%d" % m['positives'] + mycolors.reset)
+                        print(mycolors.foreground.lightcyan + "Total:\t\t%d" % m['total'] + mycolors.reset)
 
 
     except ValueError:
@@ -1162,62 +1354,109 @@ def hashow(filehash):
         print(mycolors.reset)
 
 
-def polymetasearch(poly):
+def polymetasearch(poly, metainfo):
 
-    targetfile = poly 
-    mysha256hash=''
-    dname = str(os.path.dirname(targetfile))
-    if os.path.abspath(dname) == False:
-        dname = os.path.abspath('.') + "/" + dname
-    fname = os.path.basename(targetfile)
-    magictype = ftype(targetfile)
+    if (metainfo == 0):
+        targetfile = poly 
+        mysha256hash=''
+        dname = str(os.path.dirname(targetfile))
+        if os.path.abspath(dname) == False:
+            dname = os.path.abspath('.') + "/" + dname
+        fname = os.path.basename(targetfile)
+        magictype = ftype(targetfile)
 
-    try:
+        try:
 
-        if re.match(r'^PE[0-9]{2}|^MS-DOS', magictype):
-            fmype = pefile.PE(targetfile)
-            mymd5hash = md5hash(targetfile)
-            mysha256hash = sha256hash(targetfile)
-            GS = generalstatus(targetfile)
-            fimph = fmype.get_imphash()
-        else:
-            if (bkg == 1):
-                print(mycolors.foreground.lightred + "\nYou didn\'t provided a PE file")
+            if re.match(r'^PE[0-9]{2}|^MS-DOS', magictype):
+                fmype = pefile.PE(targetfile)
+                mymd5hash = md5hash(targetfile)
+                mysha256hash = sha256hash(targetfile)
+                GS = generalstatus(targetfile)
+                fimph = fmype.get_imphash()
             else:
-                print(mycolors.foreground.red + "\nYou didn\'t provided a PE file")
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "\nYou didn\'t provided a PE file")
+                else:
+                    print(mycolors.foreground.red + "\nYou didn\'t provided a PE file")
+                print(mycolors.reset)
+                exit(1)
+
+        except (AttributeError, NameError) as e:
+            if (bkg == 1):
+                print((mycolors.foreground.lightred + "\nThe file %s doesn't respect some PE format rules. Exiting...\n" % targetfile))
+            else:
+                print((mycolors.foreground.red + "\nThe file %s doesn't respect some PE format rules. Exiting...\n" % targetfile))
             print(mycolors.reset)
             exit(1)
-
-    except (AttributeError, NameError) as e:
-        if (bkg == 1):
-            print((mycolors.foreground.lightred + "\nThe file %s doesn't respect some PE format rules. Exiting...\n" % targetfile))
-        else:
-            print((mycolors.foreground.red + "\nThe file %s doesn't respect some PE format rules. Exiting...\n" % targetfile))
-        print(mycolors.reset)
-        exit(1)
 
     print(mycolors.reset)
     print("POLYSWARM.IO RESULTS")
     print('-' * 20, end="\n\n")
-    metaresults = polyswarm.search_by_metadata("pefile.imphash:" + fimph)
-    for meta in metaresults:
-        for x in meta:
-            if (bkg == 1):
-                print(mycolors.reset + "\nSHA256: " +  mycolors.foreground.lightred + "%s" % x.sha256, end=' ') 
-                print(mycolors.reset + "firstseen: " + mycolors.foreground.lightgreen + "%s" % x.first_seen, end=' ')
-                if len(x.detections) > 0:
-                    print(mycolors.reset + "scan: " + mycolors.foreground.yellow + "%s" % len(x.detections) + "/" + "%s malicious" % len(x.last_scan.assertions), end=' ')
-                else:
-                    print(mycolors.reset + "scan: " + mycolors.foreground.pink + "not scanned yet", end=' ')
-            else: 
-                print(mycolors.reset + "\nSHA256: " +  mycolors.foreground.red + "%s" % x.sha256, end=' ') 
-                print(mycolors.reset + "firstseen: " + mycolors.foreground.blue + "%s" % x.first_seen, end=' ')
-                if len(x.detections) > 0:
-                    print(mycolors.reset + "scan: " + mycolors.foreground.green + "%s" % len(x.detections) + "/" + "%s malicious" % len(x.last_scan.assertions), end=' ')
-                else:
-                    print(mycolors.reset + "scan: " + mycolors.foreground.purple + "not scanned yet", end=' ')
 
-    print(mycolors.reset)
+    try:
+
+        if (metainfo == 0):
+            metaresults = polyswarm.search_by_metadata("pefile.imphash:" + fimph)
+            for meta in metaresults:
+                for x in meta:
+                    if (bkg == 1):
+                        print(mycolors.reset + "\nSHA256: " +  mycolors.foreground.lightred + "%s" % x.sha256, end=' ') 
+                        print(mycolors.reset + "firstseen: " + mycolors.foreground.lightgreen + "%s" % x.first_seen, end=' ')
+                        if len(x.detections) > 0:
+                            print(mycolors.reset + "scan: " + mycolors.foreground.yellow + "%s" % len(x.detections) + "/" + "%s malicious" % len(x.last_scan.assertions), end=' ')
+                        else:
+                            print(mycolors.reset + "scan: " + mycolors.foreground.pink + "not scanned yet", end=' ')
+                    else: 
+                        print(mycolors.reset + "\nSHA256: " +  mycolors.foreground.red + "%s" % x.sha256, end=' ') 
+                        print(mycolors.reset + "firstseen: " + mycolors.foreground.blue + "%s" % x.first_seen, end=' ')
+                        if len(x.detections) > 0:
+                            print(mycolors.reset + "scan: " + mycolors.foreground.green + "%s" % len(x.detections) + "/" + "%s malicious" % len(x.last_scan.assertions), end=' ')
+                        else:
+                            print(mycolors.reset + "scan: " + mycolors.foreground.purple + "not scanned yet", end=' ')
+            print(mycolors.reset)
+            exit(0)
+    
+        if (metainfo == 1):
+            metaresults = polyswarm.search_by_metadata("strings.ipv4:" + poly)
+        if (metainfo == 2):
+            metaresults = polyswarm.search_by_metadata("strings.domains:" + poly)
+        if (metainfo == 3):
+            poly = (r'"' + poly + r'"')
+            metaresults = polyswarm.search_by_metadata("strings.urls:" + poly)
+        for meta in metaresults:
+            for y in meta:
+                if (bkg == 1):
+                    print(mycolors.reset + "\nSHA256: " +  mycolors.foreground.lightgreen + "%s" % y.sha256, end=' ') 
+                    print(mycolors.reset + "firstseen: " + mycolors.foreground.lightcyan + "%s" % y.first_seen, end=' ')
+                    if len(y.detections) > 0:
+                        print(mycolors.reset + "scan: " + mycolors.foreground.yellow + "%s" % len(y.detections) + "/" + "%s malicious" % len(y.last_scan.assertions), end=' ')
+                    else:
+                        print(mycolors.reset + "scan: " + mycolors.foreground.pink + "not scanned yet", end=' ')
+                else:
+                    print(mycolors.reset + "\nSHA256: " +  mycolors.foreground.green + "%s" % y.sha256, end=' ') 
+                    print(mycolors.reset + "firstseen: " + mycolors.foreground.cyan + "%s" % y.first_seen, end=' ')
+                    if len(y.detections) > 0:
+                        print(mycolors.reset + "scan: " + mycolors.foreground.red + "%s" % len(y.detections) + "/" + "%s malicious" % len(y.last_scan.assertions), end=' ')
+                    else:
+                        print(mycolors.reset + "scan: " + mycolors.foreground.purple + "not scanned yet", end=' ')
+
+        print(mycolors.reset)
+        
+    except (RetryError) as e:
+            if (bkg == 1):
+                print((mycolors.foreground.lightred + "\nAn error has ocurred during Polyswarm processing. Exiting...\n"))
+            else:
+                print((mycolors.foreground.red + "\nAn error has ocurred during Polyswarm processing. Exiting...\n"))
+            print(mycolors.reset)
+            exit(1)
+    
+    except:
+            if (bkg == 1):
+                print((mycolors.foreground.lightred + "\nAn error has ocurred while connecting to Polyswarm.\n"))
+            else:
+                print((mycolors.foreground.red + "\nAn error has ocurred while connecting to Polyswarm.\n"))
+            print(mycolors.reset)
+            exit(1)
 
 
 def polyfile(poly):
@@ -2242,8 +2481,7 @@ def malsharehashsearch(filehash):
                exit(1)
 
         maltext2 = json.loads(malresponse2.text)
-
-        if (bool(maltext2)):
+        if (maltext2):
             try:
                 if (maltext2.get('sha256')):
                     urltemp = maltext2['source']
@@ -2253,8 +2491,12 @@ def malsharehashsearch(filehash):
                         loc = ''
                     if (bkg == 1):
                         print((mycolors.reset + "sha256: " + mycolors.foreground.yellow + "%s\n" % maltext2['sha256'] + mycolors.reset + "sha1:   " + mycolors.foreground.yellow + "%s\n" % maltext2['sha1'] + mycolors.reset + "md5:    " + mycolors.foreground.yellow + "%s\n" %  maltext2['md5'] + mycolors.reset + "type:   " + mycolors.foreground.lightcyan + "%s\n" % maltext2['type'] + mycolors.reset + "source: " + mycolors.foreground.lightred + "%s\n" % maltext2['source'] + mycolors.reset + "city:   " + mycolors.foreground.lightgreen + "%s" % loc))
+                        for k in maltext2['yarahits']['yara']:
+                            print(mycolors.reset + "Yara Hits: " + mycolors.foreground.lightgreen + str(k))
                     else:
-                        print((mycolors.reset + "sha256: " + mycolors.foreground.green + "%s\n" % maltext2['sha256'] + mycolors.reset + "sha1:   " + mycolors.foreground.green + "%s\n" % maltext2['sha1'] + mycolors.reset + "md5:    " + mycolors.foreground.green +"%s\n" %  maltext2['md5'] + mycolors.reset + "type:   " + mycolors.foreground.cyan + "%s\n" % maltext2['type'] + mycolors.reset + "source: " + mycolors.foreground.red + "%s\n" % maltext2['source'] + mycolors.reset + "city:   " + mycolors.foreground.purple + "%s" % loc))
+                        print((mycolors.reset + "sha256: " + mycolors.foreground.green + "%s\n" % maltext2['sha256'] + mycolors.reset + "sha1:   " + mycolors.foreground.green + "%s\n" % maltext2['sha1'] + mycolors.reset + "md5:    " + mycolors.foreground.green +"%s\n" %  maltext2['md5'] + mycolors.reset + "type:   " + mycolors.foreground.cyan + "%s\n" % maltext2['type'] + mycolors.reset + "source: " + mycolors.foreground.red + "%s\n" % maltext2['source'] + mycolors.reset + "city:   " + mycolors.foreground.blue + "%s" % loc))
+                        for k in maltext2['yarahits']['yara']:
+                            print(mycolors.reset + "Yara Hits: " + mycolors.foreground.purple + str(k))
 
                 if (maldownload == 1):
                     malsharedown(filehash)
@@ -2265,7 +2507,6 @@ def malsharehashsearch(filehash):
             except (BrokenPipeError, IOError):
                 print(mycolors.reset , file=sys.stderr)
                 exit(1)
-
     except ValueError as e:
         print(e)
         if(bkg == 1):
@@ -2312,8 +2553,24 @@ def malsharelastlist(typex):
         filetype = 'HTML'
     elif (maltype == 5):
         filetype = 'ASCII'
-    else:
+    elif (maltype == 6):
         filetype = 'PHP'
+    elif (maltype == 7):
+        filetype = 'Java'
+    elif (maltype == 8):
+        filetype = 'RAR'
+    elif (maltype == 9):
+        filetype = 'Zip'
+    elif (maltype == 10):
+        filetype = 'UTF-8'
+    elif (maltype == 11):
+        filetype = 'MS-DOS'
+    elif (maltype == 12):
+        filetype = 'data'
+    elif (maltype == 13):
+        filetype = 'PDF'
+    else:
+        filetype = 'Composite'
 
     try:
 
@@ -2330,7 +2587,7 @@ def malsharelastlist(typex):
         malresponse = requestsession.get(url=finalurl)
         maltext = json.loads(malresponse.text)
 
-        if (bool(maltext[0])):
+        if ((maltext)):
             try:
                 for i in range(0, len(maltext)):
                     if (maltext[i].get('sha256')):
@@ -2644,7 +2901,7 @@ def haushashsearch(hashx, haus):
             if (bkg == 1):
                 print(mycolors.foreground.lightgreen + 'Is availble?: Not available')
             else:
-                print(mycolors.foreground.green + 'Is available: Not available')
+                print(mycolors.foreground.green + 'Is available?: Not available')
 
         if 'md5_hash' in haustext:
             if haustext.get('md5_hash') is not None:
@@ -2760,18 +3017,18 @@ def haushashsearch(hashx, haus):
                         if(w['url_status'] == ''):
                             print(mycolors.foreground.lightblue + mycolors.reverse + "unknown" + mycolors.reset, end=' ')
                         if w['filename'] is not None:
-                            print(mycolors.foreground.yellow + "%-36s" % w['filename'] + mycolors.reset, end=' ')
+                            print(mycolors.foreground.pink + "%-36s" % w['filename'] + mycolors.reset, end=' ')
                         else:
-                            print(mycolors.foreground.yellow + "%-36s" % "Filename not reported!" + mycolors.reset, end=' ')
+                            print(mycolors.foreground.pink + "%-36s" % "Filename not reported!" + mycolors.reset, end=' ')
                         if (w['url'] is not None):
                             if(validators.url(w['url'])):
                                 print(mycolors.foreground.lightgreen + urltoip((w['url'])).ljust(20) + mycolors.reset, end=' ')
                             else:
                                 print(mycolors.foreground.lightgreen + "Not located".center(20) + mycolors.reset, end=' ')
+                            print(mycolors.foreground.yellow + w['url'] + mycolors.reset)
                         else:
-                                print(mycolors.foreground.lightgreen + "URL not provided".center(20) + mycolors.reset, end=' ')
-                        if w['filename'] is not None:
-                            print(mycolors.foreground.lightblue + w['url'] + mycolors.reset)
+                            print(mycolors.foreground.lightgreen + "Not located".center(20) + mycolors.reset, end=' ')
+                            print(mycolors.foreground.lightgreen + "URL not provided".center(20) + mycolors.reset, end=' ')
 
                     else:
                         if(w['url_status'] == 'online'):
@@ -2784,11 +3041,298 @@ def haushashsearch(hashx, haus):
                             print(mycolors.foreground.pink + "%-36s" % w['filename'] + mycolors.reset, end=' ')
                         else:
                             print(mycolors.foreground.pink + "%-36s" %  "Filename not reported!" + mycolors.reset, end=' ')
-                        if(validators.url(w['url'])) == True:
-                            print(mycolors.foreground.green + (urltoip(w['url'])).ljust(20) + mycolors.reset, end=' ')
+                        if (w['url']):
+                            if(validators.url(w['url'])):
+                                print(mycolors.foreground.green + (urltoip(w['url'])).ljust(20) + mycolors.reset, end=' ')
+                            else:
+                                print(mycolors.foreground.green + "Not located".center(20) + mycolors.reset, end=' ')
+                            print(mycolors.foreground.blue + w['url'] + mycolors.reset)
                         else:
-                            print(mycolors.foreground.green + "Not located".center(20) + mycolors.reset, end=' ')
-                        print(mycolors.foreground.blue + w['url'] + mycolors.reset)
+                            print(mycolors.foreground.lightgreen + "Not located".center(20) + mycolors.reset, end=' ')
+                            print(mycolors.foreground.lightgreen + "URL not provided".center(20) + mycolors.reset, end=' ')
+
+        print(mycolors.reset)
+
+    except (BrokenPipeError, IOError, TypeError):
+        print(mycolors.reset , file=sys.stderr)
+        exit(1)
+
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "Error while connecting to URLhaus!\n"))
+        else:
+            print((mycolors.foreground.lightred + "Error while connecting to URLhaus!\n"))
+        print(mycolors.reset)
+
+
+def haussigsearchroutine(payloadtagx, haus):
+
+    haustext = ''
+    hausresponse = ''
+    finalurl9 = ''
+    params = ''
+
+    try:
+        
+        print("\n")
+        print((mycolors.reset + "URLHaus Report".center(126)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (126*'-').center(59))
+
+        requestsession9 = requests.Session( )
+        requestsession9.headers.update({'accept': 'application/json'})
+        params = {"signature": payloadtagx}
+        hausresponse = requests.post(haus, data=params)
+        haustext = json.loads(hausresponse.text)
+
+        if 'query_status' in haustext:
+            if (bkg == 1):
+                print(mycolors.foreground.lightgreen + "Is available?: \t"  +  haustext.get('query_status').upper())
+            else:
+                print(mycolors.foreground.green + "Is available?: \t"  +  haustext.get('query_status').upper())
+        else:
+            if (bkg == 1):
+                print(mycolors.foreground.lightgreen + 'Is availble?: Not available')
+            else:
+                print(mycolors.foreground.green + 'Is available?: Not available')
+
+        if 'firstseen' in haustext:
+            if haustext.get('firstseen') is not None:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightcyan + "First Seen: \t"  +  haustext.get('firstseen'))
+                else:
+                    print(mycolors.foreground.cyan + "First Seen: \t"  +  haustext.get('firstseen'))
+            else:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightcyan + 'First Seen: ')
+                else:
+                    print(mycolors.foreground.cyan + 'First Seen: ')
+
+        if 'lastseen' in haustext:
+            if haustext.get('lastseen') is not None:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightcyan + "Last Seen: \t"  +  haustext.get('lastseen'))
+                else:
+                    print(mycolors.foreground.cyan + "Last Seen: \t"  +  haustext.get('lastseen'))
+            else:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightcyan + 'Last Seen: ')
+                else:
+                    print(mycolors.foreground.cyan + 'Last Seen: ')
+
+        if 'url_count' in haustext:
+            if haustext.get('url_count') is not None:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "URL count: \t"  +  haustext.get('url_count'))
+                else:
+                    print(mycolors.foreground.red + "URL count: \t"  +  haustext.get('url_count'))
+            else:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + 'URL count: ')
+                else:
+                    print(mycolors.foreground.red + 'URL count: ')
+
+        if 'payload_count' in haustext:
+            if haustext.get('payload_count') is not None:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "Payload count: \t"  +  haustext.get('payload_count'))
+                else:
+                    print(mycolors.foreground.red + "Payload count: \t"  +  haustext.get('payload_count'))
+            else:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + 'Payload count: ')
+                else:
+                    print(mycolors.foreground.red + 'Payload count: ')
+
+        if (bkg == 1):
+            print(mycolors.foreground.orange + "Tag:\t\t%s" %  payloadtagx)
+        else:
+            print(mycolors.foreground.pink + "Tag:\t\t%s" %  payloadtagx)
+
+        if 'urls' in haustext:
+            if ('url_id' in haustext['urls']) is not None:
+                print(mycolors.reset + "\nStatus".center(9) + " " * 2 + "File Type".ljust(10) + " SHA256 Hash".center(64) + " " * 5 + "Virus Total".ljust(14) + ' ' * 2 + "URL to Payload".center(45))
+                print("-" * 170 + "\n")
+                for w in haustext['urls']:
+                    if (bkg == 1):
+                        if(w['url_status'] == 'online'):
+                            print(mycolors.foreground.lightgreen + mycolors.reverse + w['url_status'] + " " + mycolors.reset, end=' ')
+                        if(w['url_status'] == 'offline'):
+                            print(mycolors.foreground.lightred + mycolors.reverse + w['url_status'] + mycolors.reset, end=' ')
+                        if(w['url_status'] == ''):
+                            print(mycolors.foreground.lightblue + mycolors.reverse + "unknown" + mycolors.reset, end=' ')
+                        if w['file_type']:
+                            print(mycolors.foreground.lightcyan + ' ' * 2 + "%-10s" % w['file_type'] + mycolors.reset, end=' ')
+                        else:
+                            print(mycolors.foreground.lightcyan + ' ' * 2 + "%-10s" % "unknown" + mycolors.reset, end=' ')
+                        if w['sha256_hash']:
+                            print(mycolors.foreground.yellow + w['sha256_hash'] + mycolors.reset, end= ' ')
+                        if w['virustotal']:
+                            print(mycolors.foreground.lightgreen + ' ' * 2 + "%-9s" % w['virustotal'].get('result') + mycolors.reset, end= ' ')
+                        else:
+                            print(mycolors.foreground.lightgreen + ' ' * 2 + "%-9s" % "Not Found" + mycolors.reset, end= ' ')
+                        if (w['url']):
+                            print(mycolors.foreground.pink + ' ' * 2 + w['url'] + mycolors.reset)
+                        else:
+                            print(mycolors.foreground.pink + ' ' * 2 + "URL not provided".center(20) + mycolors.reset)
+
+                    else:
+                        if(w['url_status'] == 'online'):
+                            print(mycolors.foreground.green + mycolors.reverse + w['url_status'] + " " + mycolors.reset, end=' ')
+                        if(w['url_status'] == 'offline'):
+                            print(mycolors.foreground.red + mycolors.reverse + w['url_status'] + mycolors.reset, end=' ')
+                        if(w['url_status'] == ''):
+                            print(mycolors.foreground.blue + mycolors.reverse + "unknown" + mycolors.reset, end=' ')
+                        if w['file_type']:
+                            print(mycolors.foreground.purple + ' ' * 2 + "%-10s" % w['file_type'] + mycolors.reset, end=' ')
+                        else:
+                            print(mycolors.foreground.purple + ' ' * 2 + "%-10s" % "unknown" + mycolors.reset, end=' ')
+                        if w['sha256_hash']:
+                            print(mycolors.foreground.red + w['sha256_hash'] + mycolors.reset, end= ' ')
+                        if w['virustotal']:
+                            print(mycolors.foreground.cyan + ' ' * 2 + "%-9s" % w['virustotal'].get('result') + mycolors.reset, end= ' ')
+                        else:
+                            print(mycolors.foreground.cyan + ' ' * 2 + "%-9s" % "Not Found" + mycolors.reset, end= ' ')
+                        if (w['url']):
+                            print(mycolors.foreground.green + ' ' * 2 + w['url'] + mycolors.reset)
+                        else:
+                            print(mycolors.foreground.green + ' ' * 2 + "URL not provided".center(20) + mycolors.reset)
+
+        print(mycolors.reset)
+
+    except (BrokenPipeError, IOError, TypeError):
+        print(mycolors.reset , file=sys.stderr)
+        exit(1)
+
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "Error while connecting to URLhaus!\n"))
+        else:
+            print((mycolors.foreground.lightred + "Error while connecting to URLhaus!\n"))
+        print(mycolors.reset)
+
+
+def haustagsearchroutine(haustag, hausurltag):
+
+    haustext = ''
+    hausresponse = ''
+    params = ''
+
+    try:
+
+        print("\n")
+        print((mycolors.reset + "URLHaus Report".center(126)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (130*'-').center(59))
+
+        params = {"tag": haustag}
+        requestsession9 = requests.Session( )
+        requestsession9.headers.update({'accept': 'application/json'})
+        hausresponse = requests.post(hausurltag, data=params)
+        haustext = json.loads(hausresponse.text)
+
+        if 'query_status' in haustext:
+            if (bkg == 1):
+                print(mycolors.foreground.lightgreen + "Is available?: \t"  +  haustext.get('query_status').upper())
+            else:
+                print(mycolors.foreground.green + "Is available?: \t"  +  haustext.get('query_status').upper())
+        else:
+            if (bkg == 1):
+                print(mycolors.foreground.lightgreen + 'Is availble?: Not available')
+            else:
+                print(mycolors.foreground.green + 'Is available?: Not available')
+
+        if 'firstseen' in haustext:
+            if haustext.get('firstseen') is not None:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightcyan + "First Seen: \t"  +  haustext.get('firstseen'))
+                else:
+                    print(mycolors.foreground.cyan + "First Seen: \t"  +  haustext.get('firstseen'))
+            else:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightcyan + 'First Seen: ')
+                else:
+                    print(mycolors.foreground.cyan + 'First Seen: ')
+
+        if 'lastseen' in haustext:
+            if haustext.get('lastseen') is not None:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightcyan + "Last Seen: \t"  +  haustext.get('lastseen'))
+                else:
+                    print(mycolors.foreground.cyan + "Last Seen: \t"  +  haustext.get('lastseen'))
+            else:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightcyan + 'Last Seen: ')
+                else:
+                    print(mycolors.foreground.cyan + 'Last Seen: ')
+
+        if 'url_count' in haustext:
+            if haustext.get('url_count') is not None:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "URL count: \t"  +  haustext.get('url_count'))
+                else:
+                    print(mycolors.foreground.red + "URL count: \t"  +  haustext.get('url_count'))
+            else:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + 'URL count: \tNot Found')
+                else:
+                    print(mycolors.foreground.red + 'URL count: \tNot Found')
+
+        if (bkg == 1):
+            print(mycolors.foreground.orange + "Tag:\t\t%s" %  haustag)
+        else:
+            print(mycolors.foreground.pink + "Tag:\t\t%s" %  haustag)
+
+
+        if 'urls' in haustext:
+            if ('url_id' in haustext['urls']) is not None:
+                print(mycolors.reset + "\nStatus".center(9) + " " * 6  +  " " * 2 + "Date Added".ljust(22) + " Threat".ljust(17) + " " * 28 + "Associated URL".ljust(80))
+                print("-" * 130 + "\n")
+
+                for w in haustext['urls']:
+                    if (bkg == 1):
+                        if(w['url_status'] == 'online'):
+                            print(mycolors.foreground.lightgreen + mycolors.reverse + w['url_status'] + " " + mycolors.reset, end=' ')
+                        if(w['url_status'] == 'offline'):
+                            print(mycolors.foreground.lightred + mycolors.reverse + w['url_status'] + mycolors.reset, end=' ')
+                        if(w['url_status'] == ''):
+                            print(mycolors.foreground.lightblue + mycolors.reverse + "unknown" + mycolors.reset, end=' ')
+                        if (w['url']):
+                            if (w['dateadded']):
+                                print(mycolors.foreground.lightcyan + " " * 2 + (w['dateadded']).ljust(22) + mycolors.reset, end=' ')
+                            else:
+                                print(mycolors.foreground.lightcyan + " " * 2 + "not provided".center(17) + mycolors.reset, end=' ')
+                            if (w['threat']):
+                                print(mycolors.foreground.pink + (w['threat']).ljust(17) + mycolors.reset, end=' ')
+                            else:
+                                print(mycolors.foreground.pink + "not provided".center(22) + mycolors.reset, end=' ')
+                            if (w['url']):
+                                print(mycolors.foreground.yellow + " " * 2 + (w['url']).ljust(80) + mycolors.reset)
+                            else:
+                                print(mycolors.foreground.yellow + " " * 2 + "URL not provided".center(80) + mycolors.reset)
+
+                    else:
+                        if(w['url_status'] == 'online'):
+                            print(mycolors.foreground.green + mycolors.reverse + w['url_status'] + " " + mycolors.reset, end=' ')
+                        if(w['url_status'] == 'offline'):
+                            print(mycolors.foreground.red + mycolors.reverse + w['url_status'] + mycolors.reset, end=' ')
+                        if(w['url_status'] == ''):
+                            print(mycolors.foreground.cyan +  mycolors.reverse + "unknown" + mycolors.reset, end=' ')
+                        if (w['url']):
+                            if (w['dateadded']):
+                                print(mycolors.foreground.purple + " " * 2 + (w['dateadded']).ljust(22) + mycolors.reset, end=' ')
+                            else:
+                                print(mycolors.foreground.purple + " " * 2 + "not provided".center(17) + mycolors.reset, end=' ')
+                            if (w['threat']):
+                                print(mycolors.foreground.blue + (w['threat']).ljust(17) + mycolors.reset, end=' ')
+                            else:
+                                print(mycolors.foreground.blue + "not provided".center(22) + mycolors.reset, end=' ')
+                            if (w['url']):
+                                print(mycolors.foreground.red + " " * 2 + (w['url']).ljust(80) + mycolors.reset)
+                            else:
+                                print(mycolors.foreground.red + " " * 2 + "URL not provided".center(80) + mycolors.reset, end=' ')
 
         print(mycolors.reset)
 
@@ -3542,9 +4086,13 @@ if __name__ == "__main__":
     androidsendvt = ''  
     androidvt = 0  
     androidvtt = 0  
+    haustagsearch = ''
+    haussigsearch = ''
+    ipaddrvt = ''
+    metatype = 0
 
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a malware triage tool written by Alexandre Borges.", usage= "python malwoverview.py -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -Q <0|1> -l <0|1> -n <1|2|3|4|5|6> -m <hash> -M <0|1> -U <url> -S <url> -z <tags> -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> -N <url> -R <PE file> -y <0|1> -Y <file name> -Z <0|1> -X <0|1> -Y <file name> -T <file name>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a malware triage tool written by Alexandre Borges. The current version is 3.0.0.", usage= "python malwoverview.py -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -Q <0|1> -l <0|1> -n <1-12> -m <hash> -M <0|1> -U <url> -S <url> -z <tags> -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> -N <url> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1> -Y <file name> -Z <0|1> -X <0|1> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> ")
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='specify directory containing malware samples.')
     parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a file. Shows general information about the file (any filetype)')
     parser.add_argument('-b', '--background', dest='backg', type=int,default = 1, metavar = "BACKGROUND", help='(optional) Adapts the output colors to a white terminal. The default is black terminal')
@@ -3556,6 +4104,7 @@ if __name__ == "__main__":
     parser.add_argument('-p', '--vtpub', dest='pubkey', type=int,default = 0, metavar = "USE_VT_PUB_KEY", help='(optional) You should use this option if you have a public Virus Total API. It forces a one minute wait every 4 malware samples, but allows obtaining a complete evaluation of the malware repository.')
     parser.add_argument('-w', '--windows', dest='win', type=int,default = 0, metavar = "RUN_ON_WINDOWS", help='This option is used when the OS is Microsoft Windows.')
     parser.add_argument('-u', '--vturl', dest='urlx', type=str, metavar = "URL_VT", help='SUBMITS a URL for the Virus Total scanning.')
+    parser.add_argument('-I', '--ipaddrvt', dest='ipaddrvt', type=str, metavar = "IP_VT", help='This options checks an IP address on Virus Total.')
     parser.add_argument('-r', '--urldomain', dest='domainx', type=str, metavar = "URL_DOMAIN", help='GETS a domain\'s report from Virus Total.')
     parser.add_argument('-H', '--hash', dest='filehash', type=str, metavar = "FILE_HASH", help='Specifies the hash to be checked on Virus Total and Hybrid Analysis. For the Hybrid Analysis report you must use it together -e option.')
     parser.add_argument('-V', '--vtsubmit', dest='filenamevt', type=str, metavar = "FILENAME_VT", help='SUBMITS a FILE(up to 32MB) to Virus Total scanning and read the report. Attention: use forward slash to specify the target file even on Windows systems. Furthermore, the minimum waiting time is set up in 90 seconds because the Virus Total queue. If an error occurs, so wait few minutes and try to access the report by using -f option.')
@@ -3567,19 +4116,22 @@ if __name__ == "__main__":
     parser.add_argument('-Q', '--quick', dest='quick', type=int,default = 0, metavar = "QUICK_CHECK", help='This option should be used with -d option in two scenarios: 1) either including the -v option (Virus Total -- you\'ll see a complete VT response whether you have the private API) for a multithread search and reduced output; 2) or including the -a option (Hybrid Analysis) for a multithread search and complete and amazing output. If you are using the -a option, so -e option can also be used to adjust the output to your sample types. PS1: certainly, if you have a directory holding many malware samples, so you will want to test this option with -a option; PS2: it also works on Windows, but there is not gain in performance.')
     parser.add_argument('-l', '--malsharelist', dest='malsharelist', type=int,default = 0, metavar = "MALSHARE_HASHES", help='Show hashes from last 24 hours from Malshare. You need to insert your Malshare API into the configmalw.py file.')
     parser.add_argument('-m', '--malsharehash', dest='malsharehash', type=str, metavar = "MALSHARE_HASH_SEARCH", help='Searches for the provided hash on the  Malshare repository. You need to insert your Malshare API into the configmalw.py file. PS: sometimes the Malshare website is unavailable, so should check the website availability if you get some error message.')
-    parser.add_argument('-n', '--filetype', dest='malsharetype', type=int, metavar = "FILE_TYPE", default = 1,  help='Specifies the file type to be listed by -l option. Therefore, it must be used together -l option. Possible values: 1: PE32 (default) ; 2: Dalvik ; 3: ELF ; 4: HTML ; 5: ASCII ; 6: PHP.')
+    parser.add_argument('-n', '--filetype', dest='malsharetype', type=int, metavar = "FILE_TYPE", default = 1,  help='Specifies the file type to be listed by -l option. Therefore, it must be used together -l option. Possible values: 1: PE32 (default) ; 2: Dalvik ; 3: ELF ; 4: HTML ; 5: ASCII ; 6: PHP ; 7: Java ; 8: RAR ; 9: Zip ; 10: UTF-8 ; 11: MS-DOS ; 12: data ; 13: PDF ; 14: Composite(OLE).')
     parser.add_argument('-M', '--malsharedownload', dest='malsharedownload', type=int, default = 0, metavar = "MALSHARE_DOWNLOAD", help='Downloads the sample from Malshare. This option must be specified with -m option.')
     parser.add_argument('-B', '--haus_batch', dest='urlhausbatch', type=int, default = 0, metavar = "URL_HAUS_BATCH", help='Retrieves a list of recent URLs (last 3 days, limited to 1000 entries) from URLHaus website.')
     parser.add_argument('-K', '--haus_payloadbatch', dest='hauspayloadbatch', type=int, default = 0, metavar = "HAUS_PAYLOADS", help='Retrieves a list of downloadable links to recent PAYLOADS (last 3 days, limited to 1000 entries) from URLHaus website. Take care: each link take you to download a passworless zip file containing a malware, so your AV can generate alerts!')
     parser.add_argument('-U', '--haus_query', dest='urlhausquery', type=str, metavar = "URL_HAUS_QUERY", help='Queries a  URL on the URLHaus website.')
     parser.add_argument('-j', '--haus_hash', dest='haushash', type=str, metavar = "HAUS_HASH", help='Queries a payload\'s hash (md5 or sha256) on the URLHaus website.')
     parser.add_argument('-S', '--haus_submission', dest='urlhaussubmit', type=str, metavar = "URL_HAUS_SUB", help='Submits a URL used to distribute malware (executable, script, document) to the URLHaus website. Pay attention: Any other submission will be ignored/deleted from URLhaus. You have to register your URLHaus API into the configmalw.py file.')
-    parser.add_argument('-z', '--haustag', dest='tag', type=str, default='', metavar = "HAUSTAG", nargs = "*", help='Associates tags (separated by spaces) to the specified URL. Please, only upper case, lower case, \'-\' and \'.\' are allowed. This is an optional option, which should be used with the -S option.')
+    parser.add_argument('-z', '--haustag', dest='tag', type=str, default='', metavar = "HAUSTAG", nargs = "*", help='Associates tags (separated by spaces) to the specified URL. Please, only upper case, lower case, \'-\' and \'.\' are allowed. This parameter is optional, which could be used with the -S option.')
+    parser.add_argument('-W', '--haustagsearch', dest='haustagsearch', type=str, default='', metavar = "HAUSTAGSEARCH", nargs = "*", help='This option is for searching malicious URLs by tag on URLhaus. Tags are case-senstive and only upper case, lower case, \'-\' and \'.\' are allowed.')
+    parser.add_argument('-k', '--haussigsearch', dest='haussigsearch', type=str, default='', metavar = "HAUSSIGSEARCH", nargs = "*", help='This option is for searching malicious payload by tag on URLhaus. Tags are case-sensitive and only  upper case, lower case, \'-\' and \'.\' are allowed.')
     parser.add_argument('-J', '--haus_download', dest='hausdownloadpayload', type=str, metavar = "HAUS_DOWNLOAD", help='Downloads a sample (if it is available) from the URLHaus repository. It is necessary to provide the SHA256 hash.')
-    parser.add_argument('-P', '--polyswarm_scan', dest='polyswarmscan', type=str, metavar = "POLYSWARMFILE", help='Performs a file scan using the Polyswarm engine.')
-    parser.add_argument('-N', '--polyswarm_url', dest='polyswarmurl', type=str, metavar = "POLYSWARMURL", help='Performs a URL scan using the Polyswarm engine.')
-    parser.add_argument('-O', '--polyswarm_hash', dest='polyswarmhash', type=str, metavar = "POLYSWARMHASH", help='Performs a hash scan using the Polyswarm engine.')
-    parser.add_argument('-R', '--polyswarm_meta', dest='polyswarmmeta', type=str, metavar = "POLYSWARMMETA", help='Performs a complementary search for similar PE executables through meta-information using the Polyswarm engine.')
+    parser.add_argument('-P', '--polyswarm_scan', dest='polyswarmscan', type=str, metavar = "POLYSWARMFILE", help='(Only for Linux) Performs a file scan using the Polyswarm engine.')
+    parser.add_argument('-N', '--polyswarm_url', dest='polyswarmurl', type=str, metavar = "POLYSWARMURL", help='(Only for Linux) Performs a URL scan using the Polyswarm engine.')
+    parser.add_argument('-O', '--polyswarm_hash', dest='polyswarmhash', type=str, metavar = "POLYSWARMHASH", help='(Only for Linux) Performs a hash scan using the Polyswarm engine.')
+    parser.add_argument('-R', '--polyswarm_meta', dest='polyswarmmeta', type=str, metavar = "POLYSWARMMETA", help='(Only for Linux) Performs a complementary search for similar PE executables through meta-information or IP addresses using the Polyswarm engine. This parameters depends on -G parameters, so check it, please.')
+    parser.add_argument('-G', '--metatype', dest='metatype', type=int, default = 0, metavar = "METATYPE", help='(Only for Linux) This parameter specifies whether the -R option will gather information about the PE executable or IP address using the Polyswarm engine. Thus, 0: PE Executable ; 1: IP Address ; 2: Domains ; 3. URL.')
     parser.add_argument('-y', '--androidha', dest='androidha', type=int, default = 0, metavar = "ANDROID_HA", help='Check all third-party APK packages from the USB-connected Android device against Hybrid Analysis using multithreads. The Android device does not need be rooted and you need have adb in your PATH environment variable.')
     parser.add_argument('-Y', '--androidsendha', dest='androidsendha', type=str, metavar = "ANDROID_SEND_HA", help='Send an third-party APK packages from your USB-connected Android device to Hybrid Analysis. The Android device does not need be rooted and you need have adb in your PATH environment variable.')
     parser.add_argument('-T', '--androidsendvt', dest='androidsendvt', type=str, metavar = "ANDROID_SEND_VT", help='Send an third-party APK packages from your USB-connected Android device to Virus Total. The Android device does not need be rooted and you need have adb in your PATH environment variable.')
@@ -3591,7 +4143,8 @@ if __name__ == "__main__":
 
     optval = [0,1]
     optval2 = [0,1,2,3,4]
-    optval3 = [0,1,2,3,4,5,6]
+    optval3 = [0,1,2,3,4,5,6, 7, 8, 9, 10, 11, 12, 13, 14]
+    optval4 = [0, 1, 2, 3]
     repo = args.direct
     bkg = args.backg
     vt = args.virustotal
@@ -3620,6 +4173,8 @@ if __name__ == "__main__":
     hausfinalurl = args.urlhausquery
     hausbatch = args.urlhausbatch
     haustag = args.tag
+    haustagsearchx = args.haustagsearch
+    haussigsearchx = args.haussigsearch
     hauspayloads = args.hauspayloadbatch
     hauspayloadhash = args.haushash
     hausdownload = args.hausdownloadpayload
@@ -3632,6 +4187,8 @@ if __name__ == "__main__":
     androidsendvtx = args.androidsendvt
     androidvtx = args.androidvt
     androidvttx = args.androidvtt
+    ipaddrvtx = args.ipaddrvt
+    metatypex = args.metatype
 
     if (os.path.isfile(ffpname)):
         fprovided = 1
@@ -3701,8 +4258,13 @@ if __name__ == "__main__":
         parser.print_help()
         print(mycolors.reset)
         exit(0)
+    
+    if (args.metatype) not in optval4:
+        parser.print_help()
+        print(mycolors.reset)
+        exit(0)
 
-    if ((not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not fileha) and (not repoha) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (not args.urlhausquery) and (not args.urlhaussubmit) and (hausbatch == 0) and (hauspayloads == 0) and (not args.haushash) and (not args.hausdownloadpayload) and (not args.polyswarmscan) and (not args.polyswarmurl) and (not args.polyswarmhash) and (not args.polyswarmmeta) and (androidx == 0) and (not androidsendhax) and (androidvtx == 0) and (androidvttx == 0) and (not androidsendvtx)):
+    if ((not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not fileha) and (not repoha) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (not args.urlhausquery) and (not args.urlhaussubmit) and (hausbatch == 0) and (hauspayloads == 0) and (not args.haushash) and (not args.hausdownloadpayload) and (not args.polyswarmscan) and (not args.polyswarmurl) and (not args.polyswarmhash) and (not args.polyswarmmeta) and (androidx == 0) and (not androidsendhax) and (androidvtx == 0) and (androidvttx == 0) and (not androidsendvtx) and (not haustagsearchx) and (not haussigsearchx) and (not ipaddrvtx) and (metatype == 0)):
         parser.print_help()
         print(mycolors.reset)
         exit(0)
@@ -3800,9 +4362,13 @@ if __name__ == "__main__":
                                                                                             if (args.androidvt == 0):
                                                                                                 if (args.androidvtt == 0):
                                                                                                     if (not args.androidsendvt):
-                                                                                                        parser.print_help()
-                                                                                                        print(mycolors.reset)
-                                                                                                        exit(0)
+                                                                                                        if (not args.haustagsearch):
+                                                                                                            if (not args.haussigsearch):
+                                                                                                                if (not args.ipaddrvt):
+                                                                                                                    if (args.metaitype == 0):
+                                                                                                                        parser.print_help()
+                                                                                                                        print(mycolors.reset)
+                                                                                                                        exit(0)
     if (urltemp):
         if (validators.url(urltemp)) == True:
             urlcheck = 1
@@ -3967,7 +4533,7 @@ if __name__ == "__main__":
         exit(0)
 
     if (polymeta):
-        polymetasearch(polymeta)
+        polymetasearch(polymeta, metatypex)
         print(mycolors.reset)
         exit(0)
 
@@ -4027,6 +4593,21 @@ if __name__ == "__main__":
                 hashcheck = 1
         if (hashcheck == 1):
             haushashsearch(hauspayloadhash, hausph)
+        print(mycolors.reset)
+        exit(0)
+
+    if (haustagsearchx):
+        haustagsearchroutine(haustagsearchx, haust)
+        print(mycolors.reset)
+        exit(0)
+
+    if (haussigsearchx):
+        haussigsearchroutine(haussigsearchx, haussig)
+        print(mycolors.reset)
+        exit(0)
+
+    if (ipaddrvtx):
+        ipvtcheck(ipaddrvtx, ipvt)
         print(mycolors.reset)
         exit(0)
 
