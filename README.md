@@ -285,7 +285,7 @@ Malwoverview is a malware triage tool written by Alexandre Borges.
 
       optional arguments:
 
-      -h, --help            show this help message and exit
+      -h, --help        show this help message and exit
       -d DIRECTORY, --directory DIRECTORY
                         specify directory containing malware samples.
       -f FILENAME, --filename FILENAME
@@ -402,10 +402,10 @@ Malwoverview is a malware triage tool written by Alexandre Borges.
                         (Only for Linux) Performs a hash scan using the Polyswarm engine.
       -R POLYSWARMMETA, --polyswarm_meta POLYSWARMMETA
                         (Only for Linux) Performs a complementary search for similar PE executables through 
-                        meta-information or IP addresses using the Polyswarm engine. This parameters depends on 
+                        meta-information or IP addresses using the Polyswarm engine. This parameters depends on
                         -G parameters, so check it, please.
       -G METATYPE, --metatype METATYPE
-                        (Only for Linux) This parameter specifies whether the -R option will gather information about 
+                        (Only for Linux) This parameter specifies whether the -R option will gather information about
                         the PE executable or IP address using the Polyswarm engine. Thus, 0: PE Executable ;
                         1: IP Address ; 2: Domains ; 3. URL.
       -y ANDROID_HA, --androidha ANDROID_HA
@@ -428,16 +428,16 @@ Malwoverview is a malware triage tool written by Alexandre Borges.
                         you need have adb in your PATH environment variable.
 
 
-        If you use Virus Total, Hybrid Analysis, Malshare, URLHaus or Polyswarm options, so it is necessary 
+        If you use Virus Total, Hybrid Analysis, Malshare, URLHaus or Polyswarm options, so it is necessary
         to edit the configmalw.py file and insert your APIs. 
 
-        Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore, 
+        Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore,
         if you are willing to wait some minutes, so you can use the -p option, which forces a one minute wait 
         every 4 malware samples, but allows obtaining a complete evaluation of the repository.
 
 
-        * ATTENTION 1: if the directory contains many malware samples while using -d option, so malwoverview.py 
-                       could take some time. Nonetheless, you can use the new -t option (multithreading) to 
+        * ATTENTION 1: if the directory contains many malware samples while using -d option, so malwoverview.py
+                       could take some time. Nonetheless, you can use the new -t option (multithreading) to
                        speed-up things. :)
          
         ** ATTENTION 2: All engines enforces quota of submission and/or verification per day and/or month. 
@@ -447,7 +447,7 @@ Malwoverview is a malware triage tool written by Alexandre Borges.
                          specifies the environment. Therefore, to check an Android sample (for example) it is 
                          necessary to use the right environment (-e 3 for Android).
         
-        **** ATTENTION 4: When you execute Malwoverview on Windows systems, you MUST to specify the "-w 1" option. 
+        **** ATTENTION 4: When you execute Malwoverview on Windows systems, you MUST to specify the "-w 1" option.
 
 
 ## Examples:
