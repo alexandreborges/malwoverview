@@ -36,6 +36,7 @@ import socket
 import urllib3
 import subprocess
 import configparser
+import platform
 from polyswarm_api.api import PolyswarmAPI
 from urllib.parse import urlparse
 from colorama import init, Fore, Back, Style
@@ -4033,8 +4034,14 @@ def dirchecking(repo2):
         exit(0)
         
 if __name__ == "__main__":
-
-    USER_HOME_DIR = str(Path.home())
+    windows = ''
+    if platform.system() == 'Windows':
+        USER_HOME_DIR = str(Path.home()) + '\\'
+        init(convert = True)
+        windows == 1
+    else:
+        USER_HOME_DIR = str(Path.home()) + '/'
+        windows == 0
     backg = 1
     virustotal = 0
     fprovided = 0
@@ -4088,7 +4095,7 @@ if __name__ == "__main__":
     metatype = 0
 
     parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a malware triage tool written by Alexandre Borges. The current version is 3.1.1.", usage= "malwoverview.py -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -Q <0|1> -l <0|1> -n <1-12> -m <hash> -M <0|1> -U <url> -S <url> -z <tags> -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> -N <url> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1> -Y <file name> -Z <0|1> -X <0|1> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> ")
-    parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '/.malwapi.conf'), help='Use a custom config file to specify API\'s')
+    parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='specify directory containing malware samples.')
     parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a file. Shows general information about the file (any filetype)')
     parser.add_argument('-b', '--background', dest='backg', type=int, default = 1, metavar = "BACKGROUND", help='(optional) Adapts the output colors to a white terminal. The default is black terminal')
@@ -4164,7 +4171,7 @@ if __name__ == "__main__":
     gt = args.pubkey
     ie = args.impsexts
     ha = args.hybridanalysis
-    windows = args.win
+    #windows = args.win
     urltemp = args.urlx
     domaintemp = args.domainx
     hashtemp = args.filehash
