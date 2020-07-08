@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 from setuptools import setup, find_packages
 from pathlib import Path
+import platform
 
-USER_HOME_DIR = str(Path.home())
+if platform.system() == 'Windows':
+    USER_HOME_DIR = str(Path.home()) + '\\'
+else:
+    USER_HOME_DIR = str(Path.home()) + '/'
 
 with open("README.md", encoding='utf8') as readme:
     long_description = readme.read()
@@ -33,9 +37,10 @@ setup(
         "geocoder",
         "polyswarm-api",
         "pathlib",
-        "configparser"
+        "configparser",
+		"python-magic-bin; platform_system == 'Windows'"
     ],
     scripts=['malwoverview/malwoverview.py'],
     package_data={'': ['README.md, LICENSE, .malwapi.conf']},
-    data_files=[(USER_HOME_DIR + '/', ['.malwapi.conf'])],
+    data_files=[(USER_HOME_DIR, ['.malwapi.conf'])],
 )
