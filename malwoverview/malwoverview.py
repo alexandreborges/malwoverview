@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 # Copyright (C)  2018-2020 Alexandre Borges <alexandreborges@blackstormsecurity.com>
 #
@@ -15,7 +15,8 @@
 # See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Malwoverview.py: version 3.0.0
+# Malwoverview.py: version 3.1.1
+# Updated by Corey Forman (https://github.com/digitalsleuth)
 
 import os
 import sys
@@ -34,21 +35,24 @@ import threading
 import socket
 import urllib3
 import subprocess
+import configparser
+import platform
 from polyswarm_api.api import PolyswarmAPI
-from configmalw import *
 from urllib.parse import urlparse
 from colorama import init, Fore, Back, Style
 from datetime import datetime
 from urllib.parse import urlencode, quote_plus
 from urllib.parse import quote
 from requests.exceptions import RetryError
+from pathlib import Path
 
 # On Windows systems, it is necessary to install python-magic-bin: pip install python-magic-bin
 
 __author__ = "Alexandre Borges"
+__updated_by__ = "Corey Forman (https://github.com/digitalsleuth)"
 __copyright__ = "Copyright 2018-2020, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "3.0.0"
+__version__ = "3.1.1"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -57,7 +61,7 @@ param = 'params'
 user_agent = 'Falcon Sandbox'
 urlvt = 'https://www.virustotal.com/vtapi/v2/url/scan'
 ipvt = 'https://www.virustotal.com/vtapi/v2/ip-address/report'
-urlvtreport = 'https://www.virustotal.com/vtapi/v2/url/report' 
+urlvtreport = 'https://www.virustotal.com/vtapi/v2/url/report'
 urlvtdomain = 'https://www.virustotal.com/vtapi/v2/domain/report'
 urlfilevtcheck = 'https://www.virustotal.com/vtapi/v2/file/scan'
 urlmalshare = 'https://malshare.com/api.php?api_key='
@@ -105,13 +109,6 @@ class mycolors:
         green='\033[42m'
         orange='\033[43m'
         red='\033[41m'
-
-if ((not VTAPI) and (not HAAPI)):
-    print(mycolors.foreground.lightred + "\nBefore using Malwoverview, you must add the Virus Total and Hybrid-Analysis APIs, at least, in the configmalw.py file:\n\n\t* Linux:'/usr/local/lib/python3.x/dist-packages/malwoverview/conf' \n\n\t** Windows:'C:\<Python directory>\Lib\site-packages\malwoverviewwin\conf' \n\nNonetheless, it is also recommended to register Malshare, URLhaus and Polyswarm APIs for having access to all available options.Additionally, if you are running Malwoverview in Windows systems, so you should not forget to delete the magic.py file from the same Windows directory.\n" + mycolors.reset)
-    exit(1)
-
-if (POLYAPI):
-    polyswarm = PolyswarmAPI(key=POLYAPI)
 
 def ftype(filename):
     type = magic.from_file(filename)
@@ -2332,7 +2329,6 @@ class quickHAThread(threading.Thread):
 
 
 def dirwork(d):
-
     x = d
     global n
     n = 90
@@ -4027,18 +4023,25 @@ def dirchecking(repo2):
 
     print((mycolors.reset + "\n"))
 
-    if(Q == 1):
-        dirquick(d)
-        exit(0)
 
     print("FileName".center(65) +  "ImpHash(PE32/PE32+) or Type".center(40) + "Packed?".center(9) + "Overlay?".center(10) + ".text_entropy".center(13) + "VT".center(8))
     print((32*'-').center(32) +  (36*'-').center(35) + (11*'-').center(10) + (10*'-').ljust(10) + (13*'-').center(13) + (42*'-').center(22))
 
     dirwork(d)
 
-
+    if(Q == 1):
+        dirquick(d)
+        exit(0)
+        
 if __name__ == "__main__":
-
+    windows = ''
+    if platform.system() == 'Windows':
+        USER_HOME_DIR = str(Path.home()) + '\\'
+        init(convert = True)
+        windows == 1
+    else:
+        USER_HOME_DIR = str(Path.home()) + '/'
+        windows == 0
     backg = 1
     virustotal = 0
     fprovided = 0
@@ -4091,18 +4094,18 @@ if __name__ == "__main__":
     ipaddrvt = ''
     metatype = 0
 
-
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a malware triage tool written by Alexandre Borges. The current version is 3.0.0.", usage= "python malwoverview.py -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -Q <0|1> -l <0|1> -n <1-12> -m <hash> -M <0|1> -U <url> -S <url> -z <tags> -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> -N <url> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1> -Y <file name> -Z <0|1> -X <0|1> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> ")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a malware triage tool written by Alexandre Borges. The current version is 3.1.1.", usage= "malwoverview.py -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -Q <0|1> -l <0|1> -n <1-12> -m <hash> -M <0|1> -U <url> -S <url> -z <tags> -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> -N <url> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1> -Y <file name> -Z <0|1> -X <0|1> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> ")
+    parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='specify directory containing malware samples.')
     parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a file. Shows general information about the file (any filetype)')
-    parser.add_argument('-b', '--background', dest='backg', type=int,default = 1, metavar = "BACKGROUND", help='(optional) Adapts the output colors to a white terminal. The default is black terminal')
-    parser.add_argument('-i', '--iat_eat', dest='impsexts', type=int,default = 0, metavar = "IAT_EAT", help='(optional) Shows imports and exports (it is used with -f option).')
-    parser.add_argument('-x', '--overlay', dest='over', type=int,default = 0, metavar = "OVERLAY", help='(optional) Extracts overlay (it is used with -f option).')
-    parser.add_argument('-s', '--vtreport', dest='showvt', type=int,default = 0, metavar = "SHOW_VT_REPORT", help='Shows antivirus reports from the main players. This option is used with the -f option (any filetype).')
-    parser.add_argument('-v', '--virustotal', dest='virustotal', type=int,default = 0, metavar = "VIRUSTOTAL", help='Queries the Virus Total database for positives and totals.Thus, you need to edit the configmalw.py and insert your VT API.')
-    parser.add_argument('-a', '--hybrid', dest='hybridanalysis', type=int,default = 0, metavar = "HYBRID_ANALYSIS", help='Queries the Hybrid Analysis database for general report. Use the -e option to specify which environment are looking for the associate report because the sample can have been submitted to a different environment that you are looking for. Thus, you need to edit the configmalw.py and insert your HA API and secret.')
-    parser.add_argument('-p', '--vtpub', dest='pubkey', type=int,default = 0, metavar = "USE_VT_PUB_KEY", help='(optional) You should use this option if you have a public Virus Total API. It forces a one minute wait every 4 malware samples, but allows obtaining a complete evaluation of the malware repository.')
-    parser.add_argument('-w', '--windows', dest='win', type=int,default = 0, metavar = "RUN_ON_WINDOWS", help='This option is used when the OS is Microsoft Windows.')
+    parser.add_argument('-b', '--background', dest='backg', type=int, default = 1, metavar = "BACKGROUND", help='(optional) Adapts the output colors to a white terminal. The default is black terminal')
+    parser.add_argument('-i', '--iat_eat', dest='impsexts', type=int, default = 0, metavar = "IAT_EAT", help='(optional) Shows imports and exports (it is used with -f option).')
+    parser.add_argument('-x', '--overlay', dest='over', type=int, default = 0, metavar = "OVERLAY", help='(optional) Extracts overlay (it is used with -f option).')
+    parser.add_argument('-s', '--vtreport', dest='showvt', type=int, default = 0, metavar = "SHOW_VT_REPORT", help='Shows antivirus reports from the main players. This option is used with the -f option (any filetype).')
+    parser.add_argument('-v', '--virustotal', dest='virustotal', type=int, default = 0, metavar = "VIRUSTOTAL", help='Queries the Virus Total database for positives and totals. Thus, you need to edit your config file and insert your VT API.')
+    parser.add_argument('-a', '--hybrid', dest='hybridanalysis', type=int, default = 0, metavar = "HYBRID_ANALYSIS", help='Queries the Hybrid Analysis database for general report. Use the -e option to specify which environment are looking for the associate report because the sample can have been submitted to a different environment that you are looking for. Thus, you need to edit the configmalw.py and insert your HA API and secret.')
+    parser.add_argument('-p', '--vtpub', dest='pubkey', type=int, default = 0, metavar = "USE_VT_PUB_KEY", help='(optional) You should use this option if you have a public Virus Total API. It forces a one minute wait every 4 malware samples, but allows obtaining a complete evaluation of the malware repository.')
+    parser.add_argument('-w', '--windows', dest='win', type=int, default = 0, metavar = "RUN_ON_WINDOWS", help='This option is used when the OS is Microsoft Windows.')
     parser.add_argument('-u', '--vturl', dest='urlx', type=str, metavar = "URL_VT", help='SUBMITS a URL for the Virus Total scanning.')
     parser.add_argument('-I', '--ipaddrvt', dest='ipaddrvt', type=str, metavar = "IP_VT", help='This options checks an IP address on Virus Total.')
     parser.add_argument('-r', '--urldomain', dest='domainx', type=str, metavar = "URL_DOMAIN", help='GETS a domain\'s report from Virus Total.')
@@ -4110,11 +4113,11 @@ if __name__ == "__main__":
     parser.add_argument('-V', '--vtsubmit', dest='filenamevt', type=str, metavar = "FILENAME_VT", help='SUBMITS a FILE(up to 32MB) to Virus Total scanning and read the report. Attention: use forward slash to specify the target file even on Windows systems. Furthermore, the minimum waiting time is set up in 90 seconds because the Virus Total queue. If an error occurs, so wait few minutes and try to access the report by using -f option.')
     parser.add_argument('-A', '--submitha', dest='filenameha', type=str, metavar = "SUBMIT_HA", help='SUBMITS a FILE(up to 32MB) to be scanned by Hybrid Analysis engine. Use the -e option to specify the best environment to run the suspicious file.')
     parser.add_argument('-g', '--hastatus', dest='reportha', type=str, metavar = "HA_STATUS",  help='Checks the report\'s status of submitted samples to Hybrid Analysis engine by providing the job ID. Possible returned status values are: IN_QUEUE, SUCCESS, ERROR, IN_PROGRESS and PARTIAL_SUCCESS.')
-    parser.add_argument('-D', '--download', dest='download', type=int,default = 0, metavar = "DOWNLOAD", help='Downloads the sample from Hybrid Analysis. Option -H must be specified.')
-    parser.add_argument('-e', '--haenv', dest='sysenviron', type=int,default = 0, metavar = "HA_ENVIRONMENT", help='This option specifies the used environment to be used to test the samlple on Hybrid Analysis: <0> Windows 7 32-bits; <1> Windows 7 32-bits (with HWP Support); <2> Windows 7 64-bits; <3> Android; <4> Linux 64-bits environment. This option is used together either -H option or the -A option or -a option.')
-    parser.add_argument('-t', '--thread', dest='multithread', type=int,default = 0, metavar = "MULTITHREAD", help='(optional) This option is used to force multithreads on Linux whether: the -d option is specifed AND you have a PAID Virus Total API or you are NOT checking the VT while using the -d option. PS1: using this option causes the Imphashes not to be grouped anymore; PS2: it also works on Windows, but there is not gain in performance.')
-    parser.add_argument('-Q', '--quick', dest='quick', type=int,default = 0, metavar = "QUICK_CHECK", help='This option should be used with -d option in two scenarios: 1) either including the -v option (Virus Total -- you\'ll see a complete VT response whether you have the private API) for a multithread search and reduced output; 2) or including the -a option (Hybrid Analysis) for a multithread search and complete and amazing output. If you are using the -a option, so -e option can also be used to adjust the output to your sample types. PS1: certainly, if you have a directory holding many malware samples, so you will want to test this option with -a option; PS2: it also works on Windows, but there is not gain in performance.')
-    parser.add_argument('-l', '--malsharelist', dest='malsharelist', type=int,default = 0, metavar = "MALSHARE_HASHES", help='Show hashes from last 24 hours from Malshare. You need to insert your Malshare API into the configmalw.py file.')
+    parser.add_argument('-D', '--download', dest='download', type=int, default = 0, metavar = "DOWNLOAD", help='Downloads the sample from Hybrid Analysis. Option -H must be specified.')
+    parser.add_argument('-e', '--haenv', dest='sysenviron', type=int, default = 0, metavar = "HA_ENVIRONMENT", help='This option specifies the used environment to be used to test the samlple on Hybrid Analysis: <0> Windows 7 32-bits; <1> Windows 7 32-bits (with HWP Support); <2> Windows 7 64-bits; <3> Android; <4> Linux 64-bits environment. This option is used together either -H option or the -A option or -a option.')
+    parser.add_argument('-t', '--thread', dest='multithread', type=int, default = 0, metavar = "MULTITHREAD", help='(optional) This option is used to force multithreads on Linux whether: the -d option is specifed AND you have a PAID Virus Total API or you are NOT checking the VT while using the -d option. PS1: using this option causes the Imphashes not to be grouped anymore; PS2: it also works on Windows, but there is not gain in performance.')
+    parser.add_argument('-Q', '--quick', dest='quick', type=int, default = 0, metavar = "QUICK_CHECK", help='This option should be used with -d option in two scenarios: 1) either including the -v option (Virus Total -- you\'ll see a complete VT response whether you have the private API) for a multithread search and reduced output; 2) or including the -a option (Hybrid Analysis) for a multithread search and complete and amazing output. If you are using the -a option, so -e option can also be used to adjust the output to your sample types. PS1: certainly, if you have a directory holding many malware samples, so you will want to test this option with -a option; PS2: it also works on Windows, but there is not gain in performance.')
+    parser.add_argument('-l', '--malsharelist', dest='malsharelist', type=int, default = 0, metavar = "MALSHARE_HASHES", help='Show hashes from last 24 hours from Malshare. You need to insert your Malshare API into the configmalw.py file.')
     parser.add_argument('-m', '--malsharehash', dest='malsharehash', type=str, metavar = "MALSHARE_HASH_SEARCH", help='Searches for the provided hash on the  Malshare repository. You need to insert your Malshare API into the configmalw.py file. PS: sometimes the Malshare website is unavailable, so should check the website availability if you get some error message.')
     parser.add_argument('-n', '--filetype', dest='malsharetype', type=int, metavar = "FILE_TYPE", default = 1,  help='Specifies the file type to be listed by -l option. Therefore, it must be used together -l option. Possible values: 1: PE32 (default) ; 2: Dalvik ; 3: ELF ; 4: HTML ; 5: ASCII ; 6: PHP ; 7: Java ; 8: RAR ; 9: Zip ; 10: UTF-8 ; 11: MS-DOS ; 12: data ; 13: PDF ; 14: Composite(OLE).')
     parser.add_argument('-M', '--malsharedownload', dest='malsharedownload', type=int, default = 0, metavar = "MALSHARE_DOWNLOAD", help='Downloads the sample from Malshare. This option must be specified with -m option.')
@@ -4138,13 +4141,27 @@ if __name__ == "__main__":
     parser.add_argument('-Z', '--androidvt', dest='androidvt', type=int, default = 0, metavar = "ANDROID_VT", help='Check all third-party APK packages from the USB-connected Android device against VirusTotal using Public API (slower because of 60 seconds delay for each 4 hashes). The Android device does not need be rooted and you need have adb in your PATH environment variable.')
     parser.add_argument('-X', '--androidvtt', dest='androidvtt', type=int, default = 0, metavar = "ANDROID_VT", help='Check all third-party APK packages from the USB-connected Android device against VirusTotal using multithreads (only for Private Virus API). The Android device does not need be rooted and you need have adb in your PATH environment variable.')
 
-
     args = parser.parse_args()
+
+    config_file = configparser.ConfigParser()
+    config_file.read(args.config)
+    VTAPI = config_file['VIRUSTOTAL']['VTAPI']
+    HAAPI = config_file['HYBRID-ANALYSIS']['HAAPI']
+    MALSHAREAPI = config_file['MALSHARE']['MALSHAREAPI']
+    HAUSSUBMITAPI = config_file['HAUSSUBMIT']['HAUSSUBMITAPI']
+    POLYAPI = config_file['POLYSWARM']['POLYAPI']
+
+    if ((not VTAPI) and (not HAAPI)):
+        print(mycolors.foreground.lightred + "\nBefore using Malwoverview, you must add the Virus Total and Hybrid-Analysis APIs, at the very least.\nThese should be added in " + args.config + " or you can specify your own config file using the -c option to specify your own config location. \n\nIt is also recommended to register for an API on Malshare, URLhaus and Polyswarm APIs to have access to all available options.\nAdditionally, if you are running Malwoverview in Windows systems, so you should not forget to delete the magic.py file from the same Windows directory.\n" + mycolors.reset)
+        exit(1)
+
+    if (POLYAPI):
+        polyswarm = PolyswarmAPI(key=POLYAPI)
 
     optval = [0,1]
     optval2 = [0,1,2,3,4]
     optval3 = [0,1,2,3,4,5,6, 7, 8, 9, 10, 11, 12, 13, 14]
-    optval4 = [0, 1, 2, 3]
+    optval4 = [0,1,2,3]
     repo = args.direct
     bkg = args.backg
     vt = args.virustotal
@@ -4154,7 +4171,7 @@ if __name__ == "__main__":
     gt = args.pubkey
     ie = args.impsexts
     ha = args.hybridanalysis
-    windows = args.win
+    #windows = args.win
     urltemp = args.urlx
     domaintemp = args.domainx
     hashtemp = args.filehash
@@ -4165,6 +4182,7 @@ if __name__ == "__main__":
     repoha = args.reportha
     T = args.multithread
     Q = args.quick
+
     mallist = args.malsharelist
     malhash = args.malsharehash
     maltype = args.malsharetype
@@ -4189,6 +4207,7 @@ if __name__ == "__main__":
     androidvttx = args.androidvtt
     ipaddrvtx = args.ipaddrvt
     metatypex = args.metatype
+    config = args.config
 
     if (os.path.isfile(ffpname)):
         fprovided = 1
@@ -4224,7 +4243,7 @@ if __name__ == "__main__":
         parser.print_help()
         print(mycolors.reset)
         exit(0)
-    
+
     if (args.hybridanalysis) not in optval:
         parser.print_help()
         print(mycolors.reset)
@@ -4243,12 +4262,12 @@ if __name__ == "__main__":
             parser.print_help()
             print(mycolors.reset)
             exit(0)
-    
+
     if (args.androidha) not in optval:
         parser.print_help()
         print(mycolors.reset)
         exit(0)
-    
+
     if (args.androidvt) not in optval:
         parser.print_help()
         print(mycolors.reset)
@@ -4258,7 +4277,7 @@ if __name__ == "__main__":
         parser.print_help()
         print(mycolors.reset)
         exit(0)
-    
+
     if (args.metatype) not in optval4:
         parser.print_help()
         print(mycolors.reset)
@@ -4633,3 +4652,5 @@ if __name__ == "__main__":
     if (repo is not None):
         repository = repo
         dirchecking(repository)
+
+
