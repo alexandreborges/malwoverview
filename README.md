@@ -4,7 +4,6 @@
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
 [<img alt="PayPal" src="https://img.shields.io/badge/Donate-Paypal-brightgreen?style=for-the-badge&logo=appveyor">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M8F458EZH8UZE&source=url)
 
-(Gaps in the VT output at image above are because public VT API key, which allows only 4 searches per minute).  
 
 ![Alt text](pictures/picture_1.jpg?raw=true "Title")
 ![Alt text](pictures/picture_2.jpg?raw=true "Title")
@@ -109,8 +108,8 @@ This tool aims to :
 
 # CONTRIBUTORS:
 
-Alexandre Borges (project owner)
-Corey Forman (https://github.com/digitalsleuth)
+      Alexandre Borges (project owner)
+      Corey Forman (https://github.com/digitalsleuth)
 
 # REQUERIMENTS
 
