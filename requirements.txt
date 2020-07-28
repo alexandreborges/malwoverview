@@ -1,0 +1,10 @@
+pefile>=2019.4.18
+python-magic>=0.4.18
+colorama>=0.4.3
+simplejson>=3.17.2
+requests==2.22.0
+validators>=0.16
+geocoder>=1.38.1
+polyswarm-api==1.1.1
+pathlib>=1.0.1
+configparser>=5.0.0
