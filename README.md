@@ -1,6 +1,6 @@
 # Malwoverview.py
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/3.0.0) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/3.1.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
 [<img alt="PayPal" src="https://img.shields.io/badge/Donate-Paypal-brightgreen?style=for-the-badge&logo=appveyor">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M8F458EZH8UZE&source=url)
 
@@ -73,7 +73,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 3.0.0
+# Current Version: 3.1.2
 
 ## Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), "-A" (uppercase) or "-P" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total, Hybrid Analysis and Polyswarm, respectively. 
 
@@ -104,44 +104,50 @@ This tool aims to :
 16. Show URLs related to an user provided tag from URLHaus.
 17. Show payloads related to a tag (signature) from URLHaus.
 18. Show information about an IP address from Virus Total.
-19. Show IP address, domain and URL information fron Polyswarm. 
+19. Show IP address, domain and URL information from Polyswarm. 
 20. List different types of payloads from Malshare along their Yara hits. 
+
+# CONTRIBUTORS:
+
+Alexandre Borges (project owner)
+Corey Forman (https://github.com/digitalsleuth)
 
 # REQUERIMENTS
 
-This tool has been tested on Ubuntu, Kali Linux 2020, Windows 8.1 and 10. Malwoverview can be installed by executing the following command:
+This tool has been tested on Ubuntu, Kali Linux 2020, REMnux, Windows 8.1 and 10. Malwoverview can be installed by executing the following command:
 
-        $ pip3.8 install malwoverview                     (Linux)
-        C:\> python.exe -m pip install malwoverviewwin    (Windows)
+       python -m pip install malwoverview
 
-In Linux systems, add the /usr/local/bin to the PATH environment variable.
+To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare and Polyswarm APIs into the .malapi.conf configuration 
+file (the default one at the home directory -- if it doesn't exist, so you should create it) or you could create a custom configuration file
+and indicate it by using the -c option. 
 
-Additionally, insert your APIs in the malwconf.py file in /usr/local/lib/python3.x/dist-packages/malwoverview/conf directory (Linux) or C:\Python37\Lib\site-packages\malwoverviewwin\conf directory (Windows).
+The .malwapi.conf configuration file (from the the home directory) has the following format: 
 
-In Windows systems, when the package is installed using pip, it is not necessary to specify "-w 1" anymore.
+      [VIRUSTOTAL]
+      VTAPI = 
+
+      [HYBRID-ANALYSIS]
+      HAAPI = 
+
+      [MALSHARE]
+      MALSHAREAPI = 
+
+      [HAUSSUBMIT]
+      HAUSSUBMITAPI = 
+
+      [POLYSWARM]
+      POLYAPI = 
+
+In Windows systems, when the package is installed using pip, you don't need to specify "-w 1" option while using malwoverview.py. 
 
 To check the installation, execute:
 
-       (Linux) malwoverview --help
-       (Windows) malwoverview.py --help
-
-If you are installing the Malwoverview into a Python virtual environment, so you should follow the step-by-step procedure below: 
-
-       $ mkdir mytest
-       $ python3.8 -m venv mytest/
-       $ source mytest/bin/activate
-       $ cd mytest/
-       $ pip3.8 -q install malwoverview
-       $ cd bin
-       $ pip3.8 show malwoverview
-       $ ls ../lib/python3.8/site-packages/malwoverview/conf/
-       $ cp /malwoverview/configmalw.py ../lib/python3.8/site-packages/malwoverview/conf/
-       $ malwoverview
-
+       malwoverview.py --help
+       
 Further information is available on: 
 
-       (Linux) https://pypi.org/project/malwoverview/
-       (Windows) https://pypi.org/project/malwoverviewwin/
+       (Pip repository) https://pypi.org/project/malwoverview/
        (Github) https://github.com/alexandreborges/malwoverview
 
 If you want to perform the manual steps, so few steps will be necessary:
@@ -174,14 +180,16 @@ If you want to perform the manual steps, so few steps will be necessary:
        
        OR
        
-       $ pip3.8 install pefile
-       $ pip3.8 install colorama
-       $ pip3.8 install simplejson
-       $ pip3.8 install python-magic
-       $ pip3.8 install requests
-       $ pip3.8 install validators
-       $ pip3.8 install geocoder
-       $ pip3.8 install polyswarm-api
+       $ pip3.8 install -U pefile
+       $ pip3.8 install -U colorama
+       $ pip3.8 install -U simplejson
+       $ pip3.8 install -U python-magic
+       $ pip3.8 install -U requests
+       $ pip3.8 install -U validators
+       $ pip3.8 install -U geocoder
+       $ pip3.8 install -U polyswarm-api
+       $ pip3.8 install -U pathlib
+       $ pip3.8 install -U configparser
        
 4. To check an Android mobile you need to install the "adb" program by executing the following command:
 
@@ -223,15 +231,11 @@ If you want to perform the manual steps, so few steps will be necessary:
        C:\> python.exe -m pip install validators
        C:\> python.exe -m pip install geocoder
        C:\> python.exe -m pip install polyswarm-api
-       C:\> python.exe -m pip install python-magic-bin==0.4.14
-       
-4. (IMPORTANT) Remove the magic.py file from malwoverview directory.
+       C:\> python.exe -m pip install pathlib
+       C:\> python.exe -m pip install configparser
+       C:\> python.exe -m pip install python-magic-bin
 
-5. (VERY IMPORTANT) Install the python-magic DLLs by executing the following command:
-
-       C:\> python.exe -m pip install python-magic-bin==0.4.14 
-
-6. To check an Android mobile you need to install the "adb" program by:
+4. To check an Android mobile you need to install the "adb" program by:
 
        * Downloading and installing the Android Studio from: https://developer.android.com/studio#downloads (Recommended)
        * Downloading it from https://dl.google.com/android/repository/platform-tools-latest-windows.zip
@@ -241,31 +245,6 @@ If you want to perform the manual steps, so few steps will be necessary:
        * If the adb program is listed in the PATH environment variable.
        * If the system has authorized access to the device by using "adb devices -l"
 
-## Virus Total, Hybrid-Analysis, Malshare, URLHaus and Polyswarm engines
-
-You must edit the configmalw.py file (Linux: /usr/local/lib/python3.x/dist-packages/malwoverview/conf directory ; Windows: C:\<Python installation directory>\Lib\malwoverview directory) and insert your APIs to enable all engines. Pay attention: the APIs are not registered within malwoverview.py anymore!
-
-      VT: 
-
-            VTAPI = '<----ENTER YOUR API HERE---->'
-
-      Hybrid-Analysis: 
-
-            HAAPI = '<----ENTER YOUR API HERE---->'    
-
-      Malshare: 
-
-            MALSHAREAPI = '<----ENTER YOUR API HERE---->'
-
-      HAUSUrl:
-
-            HAUSSUBMITAPI = '<----ENTER YOUR API HERE---->'
-
-      Polyswarm.IO:
-
-            POLYAPI = '<----ENTER YOUR API HERE---->'
-
-
        
 # USAGE
 
@@ -273,7 +252,7 @@ To use the malwoverview, execute the command as shown below:
 
       root@ubuntu19:~/malwoverview# python3.8 malwoverview.py  | more
 
-      usage: python malwoverview.py -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> 
+      usage: python malwoverview.py -c <config file> -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> 
       -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4>
       -A <filename> -g <job_id> -r <domain> -t <0|1> -Q <0|1> -l <0|1> -n <1-12> -m <hash> -M <0|1> 
       -U <url> -S <url> -z <tags> -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> -N <url> 
@@ -286,6 +265,8 @@ Malwoverview is a malware triage tool written by Alexandre Borges.
       optional arguments:
 
       -h, --help        show this help message and exit
+      -c CONFIG FILE, --config CONFIG FILE
+                        Use a custom config file to specify API's
       -d DIRECTORY, --directory DIRECTORY
                         specify directory containing malware samples.
       -f FILENAME, --filename FILENAME
@@ -426,10 +407,7 @@ Malwoverview is a malware triage tool written by Alexandre Borges.
                         Check all third-party APK packages from the USB-connected Android device against VirusTotal 
                         using multithreads (only for Private Virus API). The Android device does not need be rooted and
                         you need have adb in your PATH environment variable.
-
-
-        If you use Virus Total, Hybrid Analysis, Malshare, URLHaus or Polyswarm options, so it is necessary
-        to edit the configmalw.py file and insert your APIs. 
+                        
 
         Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore,
         if you are willing to wait some minutes, so you can use the -p option, which forces a one minute wait 
@@ -447,7 +425,8 @@ Malwoverview is a malware triage tool written by Alexandre Borges.
                          specifies the environment. Therefore, to check an Android sample (for example) it is 
                          necessary to use the right environment (-e 3 for Android).
         
-        **** ATTENTION 4: When you execute Malwoverview on Windows systems, you MUST to specify the "-w 1" option.
+        **** ATTENTION 4: When you execute Malwoverview on Windows systems, you MUST to specify the "-w 1" option
+                          if you've clone using git tool. 
 
 
 ## Examples:
@@ -503,11 +482,19 @@ Malwoverview is a malware triage tool written by Alexandre Borges.
 
 # HISTORY
 
+Version 3.1.1:
+
+      This version:
+      
+            * Introduces the -c option that allows the user to specify a custom API configuration file. 
+            * The API configuration file has been changed to .malwapi.conf file.
+            * The project structure has been changed to make easier to install it in different operating systems.
+            * Updates for this version are a contribution from Corey Forman (https://github.com/digitalsleuth).
+            
 Version 3.0.0:
 
       This version:
       
-            * Introduces the following options:
             * Includes fixes in the URL reporting (-u option) from Virus Total.  
             * New players have have been included in the URL reporting (-u option) from Virus Total.
             * Fixes have been included in payload listing (-K option) from URLhaus.
