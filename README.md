@@ -251,8 +251,8 @@ To use the malwoverview, execute the command as shown below:
 
       root@ubuntu19:~/malwoverview# python3.8 malwoverview.py  | more
 
-      usage: python malwoverview.py -c <config file> -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1> -a <0|1> 
-      -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4>
+      usage: python malwoverview.py -c <config file> -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1>
+      -a <0|1> -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4>
       -A <filename> -g <job_id> -r <domain> -t <0|1> -Q <0|1> -l <0|1> -n <1-12> -m <hash> -M <0|1> 
       -U <url> -S <url> -z <tags> -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> -N <url> 
       -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1> -Y <file name> -Z <0|1> 
@@ -487,7 +487,8 @@ Version 3.1.2:
       
             * Introduces the -c option that allows the user to specify a custom API configuration file. 
             * The API configuration file has been changed to .malwapi.conf file.
-            * The project structure has been changed to make easier to install it in different operating systems.
+            * The project structure has been changed to make easier to install it in different operating 
+	      systems.
             * Updates for this version are a contribution from Corey Forman (https://github.com/digitalsleuth).
             
 Version 3.0.0:
@@ -499,12 +500,13 @@ Version 3.0.0:
             * Fixes have been included in payload listing (-K option) from URLhaus.
             * Yara information has been include in the hash report (-m option) from Malshare.
             * Fixes have been included in the -l option. 
-            * New file types have been included in the -n option: Java, Zip, data, RAR, PDF, Composite (OLE), MS_DOS
-              and UTF-8.
+            * New file types have been included in the -n option: Java, Zip, data, RAR, PDF, Composite (OLE),
+	      MS_DOS and UTF-8.
             * New -W option, which is used to show URLs related to an user provided tags from URLHaus.
             * New -k option, which is used to show payloads related to a tag from URLHaus
             * New -I option, which is used to show information related to an IP address from Virus Total.
-            * The -R option was refactored and now it supports searching for file, IPv4, domain or URL on Polyswarm. 
+            * The -R option was refactored and now it supports searching for file, IPv4, domain or URL on 
+              Polyswarm. 
 
 Version 2.5.0:
 
@@ -657,9 +659,10 @@ Version 1.5.0:
       This version: 
       
             * Includes the -u option to check URLs against Virus Total and associated engines. 
-            * Includes the -H option to find existing reports on Virus Total and Hybrid Analysis through the hash.
-            * Includes the -V option to submit a file to Virus Total. Additionally, the report is shown afer few 
-              minutes.
+            * Includes the -H option to find existing reports on Virus Total and Hybrid Analysis through the 
+              hash.
+            * Includes the -V option to submit a file to Virus Total. Additionally, the report is shown afer 
+              few minutes.
             * Includes two small fixes. 
 
 Version 1.4.5.2:
