@@ -115,10 +115,12 @@ This tool aims to :
 
 This tool has been tested on Ubuntu, Kali Linux 2020, REMnux, Windows 8.1 and 10. Malwoverview can be installed by executing the following command:
 
-       python -m pip install malwoverview
+      pip3.8 install git+https://github.com/alexandreborges/malwoverview 
+      or...
+      python -m pip install malwoverview
 
-To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare and Polyswarm APIs into the .malapi.conf configuration 
-file (the default one at the home directory -- if it doesn't exist, so you should create it) or you could create a custom configuration file
+To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare and Polyswarm APIs into the .malwapi.conf configuration 
+file (the default one at the home directory -- if the file doesn't exist, so you should create it) or you could create a custom configuration file
 and indicate it by using the -c option. 
 
 The .malwapi.conf configuration file (from the the home directory) has the following format: 
@@ -138,7 +140,8 @@ The .malwapi.conf configuration file (from the the home directory) has the follo
       [POLYSWARM]
       POLYAPI = 
 
-In Windows systems, when the package is installed using pip, you don't need to specify "-w 1" option while using malwoverview.py. 
+In Windows systems, when the package is installed using pip, the suggestion is to create the .malwapi.conf in either C:\Users\<username> directory. 
+Additionally, you don't need to specify "-w 1" option while using malwoverview.py on Windows anymore. 
 
 To check the installation, execute:
 
