@@ -146,7 +146,7 @@ To check the installation, execute:
        
 Further information is available on: 
 
-       (Pip repository) https://pypi.org/project/malwoverview/
+       (PYPI.org repository) https://pypi.org/project/malwoverview/
        (Github) https://github.com/alexandreborges/malwoverview
 
 If you want to perform the manual steps, so few steps will be necessary:
