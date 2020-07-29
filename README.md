@@ -501,7 +501,7 @@ Version 3.0.0:
             * Yara information has been include in the hash report (-m option) from Malshare.
             * Fixes have been included in the -l option. 
             * New file types have been included in the -n option: Java, Zip, data, RAR, PDF, Composite (OLE),
-	      MS_DOS and UTF-8.
+              MS_DOS and UTF-8.
             * New -W option, which is used to show URLs related to an user provided tags from URLHaus.
             * New -k option, which is used to show payloads related to a tag from URLHaus
             * New -I option, which is used to show information related to an IP address from Virus Total.
