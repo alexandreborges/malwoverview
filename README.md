@@ -115,9 +115,12 @@ This tool aims to :
 
 This tool has been tested on Ubuntu, Kali Linux 2020, REMnux, Windows 8.1 and 10. Malwoverview can be installed by executing the following command:
 
-      pip3.8 install git+https://github.com/alexandreborges/malwoverview 
+      pip3.8 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
       or...
       python -m pip install malwoverview
+      or...
+      git clone https://github.com/alexandreborges/malwoverview
+
 
 To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare and Polyswarm APIs into the .malwapi.conf configuration 
 file (the default one at the home directory -- if the file doesn't exist, so you should create it) or you could create a custom configuration file
