@@ -488,7 +488,7 @@ Version 3.1.2:
             * Introduces the -c option that allows the user to specify a custom API configuration file. 
             * The API configuration file has been changed to .malwapi.conf file.
             * The project structure has been changed to make easier to install it in different operating 
-	      systems.
+              systems.
             * Updates for this version are a contribution from Corey Forman (https://github.com/digitalsleuth).
             
 Version 3.0.0:
