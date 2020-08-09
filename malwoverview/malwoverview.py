@@ -3896,11 +3896,11 @@ def alien_ipv4(url, arg1):
                         i = 0
                         while (i < len(hatext['pulse_info']['pulses'])):
                             if "modified" in (hatext['pulse_info']['pulses'][i]):
-                                print(mycolors.foreground.lightgreen + "Modified".ljust(13) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['modified']), end='')
+                                print(mycolors.foreground.lightgreen + "Modified:".ljust(13) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['modified']), end='')
                             if "name" in (hatext['pulse_info']['pulses'][i]):
-                                print(mycolors.foreground.lightgreen + "\nNews".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['name']), end='')
+                                print(mycolors.foreground.lightgreen + "\nNews:".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['name']), end='')
                             if "created" in (hatext['pulse_info']['pulses'][i]):
-                                print(mycolors.foreground.lightgreen + "\nCreated".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['created']), end='')
+                                print(mycolors.foreground.lightgreen + "\nCreated:".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['created']), end='')
                                 break
                             else:
                                 i = i + i
@@ -3961,11 +3961,11 @@ def alien_ipv4(url, arg1):
                         i = 0
                         while (i < len(hatext['pulse_info']['pulses'])):
                             if "modified" in (hatext['pulse_info']['pulses'][i]):
-                                print(mycolors.foreground.green + "Modified".ljust(13) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['modified']), end='')
+                                print(mycolors.foreground.green + "Modified:".ljust(13) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['modified']), end='')
                             if "name" in (hatext['pulse_info']['pulses'][i]):
-                                print(mycolors.foreground.green + "\nNews".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['name']), end='')
+                                print(mycolors.foreground.green + "\nNews:".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['name']), end='')
                             if "created" in (hatext['pulse_info']['pulses'][i]):
-                                print(mycolors.foreground.green + "\nCreated".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['created']), end='')
+                                print(mycolors.foreground.green + "\nCreated:".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['created']), end='')
                                 break
                             else:
                                 i = i + i

@@ -200,7 +200,7 @@ Further information is available on:
        (PYPI.org repository) https://pypi.org/project/malwoverview/
        (Github) https://github.com/alexandreborges/malwoverview
 
-If you want to perform the manual steps, so few steps will be necessary:
+If you want to perform the manual steps (usually, it is not necessary), so few steps will be necessary:
 
 ## Kali Linux
 
@@ -251,6 +251,15 @@ If you want to perform the manual steps, so few steps will be necessary:
        * If the adb program is listed in the PATH environment variable.
        * If the system has authorized access to the device by using "adb devices -l"
 
+5. Finally, you can install Malwoverview using one of the following methods:
+
+      pip3.8 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
+      or...
+      python -m pip install -U malwoverview
+      or...
+      git clone https://github.com/alexandreborges/malwoverview
+
+
 ## Windows
 
 1. Install the Python version 3.8.x or later from https://www.python.org/downloads/windows/ 
@@ -297,6 +306,14 @@ If you want to perform the manual steps, so few steps will be necessary:
        * If the adb program is listed in the PATH environment variable.
        * If the system has authorized access to the device by using "adb devices -l"
 
+5. Finally, you can install Malwoverview using one of the following methods:
+
+      pip3.8 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
+      or...
+      python -m pip install -U malwoverview
+      or...
+      git clone https://github.com/alexandreborges/malwoverview
+  
        
 # USAGE
 
