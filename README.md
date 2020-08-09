@@ -151,7 +151,7 @@ can be installed by executing the following command:
 
       pip3.8 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
       or...
-      python -m pip install malwoverview
+      python -m pip install -U malwoverview
       or...
       git clone https://github.com/alexandreborges/malwoverview
 
