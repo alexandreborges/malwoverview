@@ -533,9 +533,6 @@ optional arguments:
       *** ATTENTION 3: Some options searching on Hybrid Analysis strongly depend of the "-e" option, which 
                        specifies the environment. Therefore, to check an Android sample (for example) it is 
                        necessary to use the right environment (-e 3 for Android).
-        
-      **** ATTENTION 4: When you execute Malwoverview on Windows systems, you MUST to specify the "-w 1" option
-                        if you've clone using git tool. 
 
 
 ## Examples:
