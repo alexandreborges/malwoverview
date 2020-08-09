@@ -144,7 +144,7 @@ This tool aims to :
       Alexandre Borges (project owner)
       Corey Forman (https://github.com/digitalsleuth)
 
-# REQUERIMENTS
+# INSTALLATION 
 
 This tool has been tested on Ubuntu, Kali Linux 2020, REMnux, Windows 8.1 and 10. Malwoverview 
 can be installed by executing the following command:
@@ -202,7 +202,7 @@ Further information is available on:
 
 If you want to perform the manual steps (usually, it is not necessary), so few steps will be necessary:
 
-## Kali Linux
+## Kali Linux (manual steps)
 
 1. Python version 3.8 or later (Only Python 3.x !!! It does NOT work using Python 2.7) 
 
@@ -253,18 +253,18 @@ If you want to perform the manual steps (usually, it is not necessary), so few s
 
 5. Finally, you can install Malwoverview using one of the following methods:
 
-      pip3.8 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
-      
-      or...
-      
-      python -m pip install -U malwoverview
-      
-      or...
-      
-      git clone https://github.com/alexandreborges/malwoverview
+         pip3.8 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
+
+         or...
+
+         python -m pip install -U malwoverview
+
+         or...
+
+         git clone https://github.com/alexandreborges/malwoverview
 
 
-## Windows
+## Windows (manual steps)
 
 1. Install the Python version 3.8.x or later from https://www.python.org/downloads/windows/ 
 
@@ -312,15 +312,15 @@ If you want to perform the manual steps (usually, it is not necessary), so few s
 
 5. Finally, you can install Malwoverview using one of the following methods:
 
-      pip3.8 install git+https://github.com/alexandreborges/malwoverview (preferred method)
- 
-      or...
+         pip3.8 install git+https://github.com/alexandreborges/malwoverview (preferred method)
 
-      python -m pip install -U malwoverview
+         or...
 
-      or...
+         python -m pip install -U malwoverview
 
-      git clone https://github.com/alexandreborges/malwoverview
+         or...
+
+         git clone https://github.com/alexandreborges/malwoverview
   
        
 # USAGE
