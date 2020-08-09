@@ -13,7 +13,7 @@ with open("README.md", encoding='utf8') as readme:
 
 setup(
     name="malwoverview",
-    version="4.0.0",
+    version="4.0.1",
     author="Alexandre Borges",
     author_email="alexandreborges@blackstormsecurity.com",
     license="GNU GPL v3.0",
