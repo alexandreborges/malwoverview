@@ -254,9 +254,13 @@ If you want to perform the manual steps (usually, it is not necessary), so few s
 5. Finally, you can install Malwoverview using one of the following methods:
 
       pip3.8 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
+      
       or...
+      
       python -m pip install -U malwoverview
+      
       or...
+      
       git clone https://github.com/alexandreborges/malwoverview
 
 
@@ -308,10 +312,14 @@ If you want to perform the manual steps (usually, it is not necessary), so few s
 
 5. Finally, you can install Malwoverview using one of the following methods:
 
-      pip3.8 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
+      pip3.8 install git+https://github.com/alexandreborges/malwoverview (preferred method)
+ 
       or...
+
       python -m pip install -U malwoverview
+
       or...
+
       git clone https://github.com/alexandreborges/malwoverview
   
        
