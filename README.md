@@ -96,7 +96,12 @@
 
 # Current Version: 4.0.0 
 
-## Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), "-A" (uppercase) or "-P" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total, Hybrid Analysis and Polyswarm, respectively. Additionally, options "-Y" and "-T" also sent the Android package from Android device to Hybrid-Analysis and Virus Total, respectively.  
+     Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by 
+     default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, 
+     if you use the "-V" (uppercase), "-A" (uppercase) or "-P" (uppercase), so Malwoverview SUBMITS your 
+     malware sample to Virus Total, Hybrid Analysis and Polyswarm, respectively. Additionally, options 
+     "-Y" and "-T" also sent the Android package from Android device to Hybrid-Analysis and Virus 
+     Total, respectively.  
 
 
 # ABOUT
@@ -468,15 +473,15 @@ optional arguments:
                         This option is related to MALPEDIA and presents different meanings depending on the 
                         chosen value. Thus, 1: List meta information for all families ; 2: List all actors 
                         ID ; 3: List all available payloads organized by family from Malpedia; 4: Get meta 
-                        information from an specific actor, so it is necesary to use the -m option. Additionally,
-                        try to confirm the correct actor ID by executing malwoverview with option -M 3; 5: 
-                        List all families IDs; 6: Get meta information from an specific family, so it is 
-                        necesary to use the -m option. Additionally, try to confirm the correct
-                        family ID by executing malwoverview with option -M 5; 7: Get a malware sample from 
-                        malpedia (zip format -- password: infected). It is necessary to specifiy the requested 
-                        hash by using -m option; 8: Get a zip file containing Yara rules for a specific 
-                        family (get the possible families using -M 5), which must be specified by using 
-                        -m option.
+                        information from an specific actor, so it is necesary to use the -m option. 
+                        Additionally, try to confirm the correct actor ID by executing malwoverview with 
+                        option -M 3; 5: List all families IDs; 6: Get meta information from an specific 
+                        family, so it is necesary to use the -m option. Additionally, try to confirm the 
+                        correct family ID by executing malwoverview with option -M 5; 7: Get a malware 
+                        sample from malpedia (zip format -- password: infected). It is necessary to specifiy 
+                        the requested hash by using -m option; 8: Get a zip file containing Yara rules for 
+                        a specific family (get the possible families using -M 5), which must be specified 
+                        by using -m option.
       -m MALPEDIAARG, --malpediarg MALPEDIAARG
                         This option provides an argument to the -M option, which is related to MALPEDIA.
       -Q THREATCROWD, --threatcrowd THREATCROWD
