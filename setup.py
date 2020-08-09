@@ -13,7 +13,7 @@ with open("README.md", encoding='utf8') as readme:
 
 setup(
     name="malwoverview",
-    version="3.1.2",
+    version="4.0.0",
     author="Alexandre Borges",
     author_email="alexandreborges@blackstormsecurity.com",
     license="GNU GPL v3.0",
@@ -32,10 +32,10 @@ setup(
         "colorama",
         "python-magic",
         "simplejson",
-        "requests==2.22.0",
+        "requests",
         "validators",
         "geocoder",
-        "polyswarm-api==1.1.1",
+        "polyswarm-api",
         "pathlib",
         "configparser",
 		"python-magic-bin; platform_system == 'Windows'"

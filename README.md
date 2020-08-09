@@ -1,6 +1,6 @@
-# Malwoverview.py
+# Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/3.1.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/4.0.0) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
 [<img alt="PayPal" src="https://img.shields.io/badge/Donate-Paypal-brightgreen?style=for-the-badge&logo=appveyor">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M8F458EZH8UZE&source=url)
 
@@ -56,6 +56,28 @@
 ![Alt text](pictures/picture_49.jpg?raw=true "Title")
 ![Alt text](pictures/picture_50.jpg?raw=true "Title")
 ![Alt text](pictures/picture_51.jpg?raw=true "Title")
+![Alt text](pictures/picture_52.jpg?raw=true "Title")
+![Alt text](pictures/picture_53.jpg?raw=true "Title")
+![Alt text](pictures/picture_54.jpg?raw=true "Title")
+![Alt text](pictures/picture_55.jpg?raw=true "Title")
+![Alt text](pictures/picture_56.jpg?raw=true "Title")
+![Alt text](pictures/picture_57.jpg?raw=true "Title")
+![Alt text](pictures/picture_58.jpg?raw=true "Title")
+![Alt text](pictures/picture_59.jpg?raw=true "Title")
+![Alt text](pictures/picture_60.jpg?raw=true "Title")
+![Alt text](pictures/picture_61.jpg?raw=true "Title")
+![Alt text](pictures/picture_62.jpg?raw=true "Title")
+![Alt text](pictures/picture_63.jpg?raw=true "Title")
+![Alt text](pictures/picture_64.jpg?raw=true "Title")
+![Alt text](pictures/picture_65.jpg?raw=true "Title")
+![Alt text](pictures/picture_66.jpg?raw=true "Title")
+![Alt text](pictures/picture_67.jpg?raw=true "Title")
+![Alt text](pictures/picture_68.jpg?raw=true "Title")
+![Alt text](pictures/picture_69.jpg?raw=true "Title")
+![Alt text](pictures/picture_70.jpg?raw=true "Title")
+![Alt text](pictures/picture_71.jpg?raw=true "Title")
+![Alt text](pictures/picture_72.jpg?raw=true "Title")
+![Alt text](pictures/picture_73.jpg?raw=true "Title")
 
       Copyright (C)  2018-2020 Alexandre Borges <alexandreborges at blackstormsecurity dot com>
 
@@ -72,9 +94,9 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 3.1.2
+# Current Version: 4.0.0 
 
-## Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), "-A" (uppercase) or "-P" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total, Hybrid Analysis and Polyswarm, respectively. 
+## Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), "-A" (uppercase) or "-P" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total, Hybrid Analysis and Polyswarm, respectively. Additionally, options "-Y" and "-T" also sent the Android package from Android device to Hybrid-Analysis and Virus Total, respectively.  
 
 
 # ABOUT
@@ -86,25 +108,31 @@ This tool aims to :
 
 1. Determine similar executable malware samples (PE/PE+) according to the import table (imphash) and group 
    them by different colors (pay attention to the second column from output). Thus, colors matter!
-2. Show hash information on Virus Total, Hybrid Analysis, Malshare, Polyswarm and URLhaus engines. 
+2. Show hash information on Virus Total, Hybrid Analysis, Malshare, Polyswarm, URLhaus, Alien Vault, i
+   Malpedia and ThreatCrowd engines. 
 3. Determining whether the malware samples contain overlay and, if you want, extract it. 
 4. Check suspect files on Virus Total, Hybrid Analysis and Polyswarm.
-5. Check URLs on Virus Total, Malshare, Polyswarm and URLhaus engines. 
-6. Download malware samples from Hybrid Analysis, Malshare and HausURL engines.
+5. Check URLs on Virus Total, Malshare, Polyswarm, URLhaus engines and Alien Vault. 
+6. Download malware samples from Hybrid Analysis, Malshare, HausURL, Polyswarm and Malpedia engines.
 7. Submit malware samples to VirusTotal, Hybrid Analysis and Polyswarm.
 8. List last suspected URLs from URLHaus.
 9. List last payloads from URLHaus. 
 10. Search for specific payloads on the Malshare.
 11. Search for similar payloads (PE32/PE32+) on Polyswarm engine.
 12. Classify all files in a directory searching information on Virus Total and Hybrid Analysis. 
-13. Make reports about a suspect domain. 
+13. Make reports about a suspect domain using different engines such as VirusTotal, Malpedia and 
+    ThreatCrowd. 
 14. Check APK packages directly from Android devices against Hybrid Analysis and Virus Total. 
 15. Submit APK packages directly from Android devices to Hybrid Analysis and Virus Total. 
 16. Show URLs related to an user provided tag from URLHaus.
 17. Show payloads related to a tag (signature) from URLHaus.
-18. Show information about an IP address from Virus Total.
+18. Show information about an IP address from Virus Total, Alien Vault, Malpedia and ThreatCrowd.
 19. Show IP address, domain and URL information from Polyswarm. 
-20. List different types of payloads from Malshare along their Yara hits. 
+21. Perform meta-search on Polyswarm Network using several criterias: imphash, IPv4, domain, URL and
+    malware family. 
+22. Gather threat hunting information from AlienVault using different criteria. 
+23. Gather threat hunting information from Malpedia using different criteria. 
+24. Gather threat hunting information from ThreatCrowd using different criteria. 
 
 # CONTRIBUTORS:
 
@@ -113,7 +141,8 @@ This tool aims to :
 
 # REQUERIMENTS
 
-This tool has been tested on Ubuntu, Kali Linux 2020, REMnux, Windows 8.1 and 10. Malwoverview can be installed by executing the following command:
+This tool has been tested on Ubuntu, Kali Linux 2020, REMnux, Windows 8.1 and 10. Malwoverview 
+can be installed by executing the following command:
 
       pip3.8 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
       or...
@@ -122,9 +151,13 @@ This tool has been tested on Ubuntu, Kali Linux 2020, REMnux, Windows 8.1 and 10
       git clone https://github.com/alexandreborges/malwoverview
 
 
-To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare and Polyswarm APIs into the .malwapi.conf configuration 
-file (the default one at the home directory -- if the file doesn't exist, so you should create it) or you could create a custom configuration file
-and indicate it by using the -c option. 
+To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm,
+Alien Vault and Malpedia APIs into the .malwapi.conf configuration file (the default one at the 
+home directory -- if the file doesn't exist, so you should create it) or you could create a 
+custom configuration file and indicate it by using the -c option. 
+
+A special note about the Alien Vault: it is necessary to subscribe to pulses on Alien Vault 
+website before using -n 1 option.  
 
 The .malwapi.conf configuration file (from the the home directory) has the following format: 
 
@@ -143,8 +176,15 @@ The .malwapi.conf configuration file (from the the home directory) has the follo
       [POLYSWARM]
       POLYAPI = 
 
-In Windows systems, when the package is installed using pip, the suggestion is to create the .malwapi.conf in either C:\Users\<username> directory. 
-Additionally, you don't need to specify "-w 1" option while using malwoverview.py on Windows anymore. 
+      [ALIENVAULT]
+      ALIENAPI = 
+
+      [MALPEDIA]
+      MALPEDIAAPI =
+
+In Windows systems, when the package is installed using pip, the suggestion is to create the 
+.malwapi.conf in either C:\Users\<username> directory.  Additionally, you don't need to specify 
+"-w 1" option while using malwoverview.py on Windows anymore. 
 
 To check the installation, execute:
 
@@ -162,37 +202,38 @@ If you want to perform the manual steps, so few steps will be necessary:
 1. Python version 3.8 or later (Only Python 3.x !!! It does NOT work using Python 2.7) 
 
        $ apt-get install python3.8  (for example)
-            
+
 2. Python-magic.  
 
       To install python-magic package you can execute the following command:
-      
+
        $ pip3.8 install python-magic
-      
+
       Or compiling it from the github repository:
-      
+
        $ git clone https://github.com/ahupp/python-magic
        $ cd python-magic/
        $ python3.8 setup.py build
        $ python3.8 setup.py install
-      
-      As there are serious problems about existing two versions of python-magic package, my recommendation is to install it
-      from github (second procedure above) and copy the magic.py file to the SAME directory of malwoverview tool. 
+
+      As there are serious problems about existing two versions of python-magic package, my 
+      recommendation is to install it from github (second procedure above) and copy the magic.py 
+      file to the SAME directory of malwoverview tool. 
       
 3. Install several Python packages: 
 
        $ pip3.8 install -r requirements.txt
-       
+
        OR
-       
+
        $ pip3.8 install -U pefile
        $ pip3.8 install -U colorama
        $ pip3.8 install -U simplejson
        $ pip3.8 install -U python-magic
-       $ pip3.8 install requests==2.2.22
+       $ pip3.8 install -U requests
        $ pip3.8 install -U validators
        $ pip3.8 install -U geocoder
-       $ pip3.8 install polyswarm-api==1.1.1
+       $ pip3.8 install -U polyswarm-api
        $ pip3.8 install -U pathlib
        $ pip3.8 install -U configparser
        
@@ -201,7 +242,7 @@ If you want to perform the manual steps, so few steps will be necessary:
        # apt get install adb
 
    PS: before trying Android's options, check:
-       
+
        * If the adb program is listed in the PATH environment variable.
        * If the system has authorized access to the device by using "adb devices -l"
 
@@ -209,44 +250,45 @@ If you want to perform the manual steps, so few steps will be necessary:
 
 1. Install the Python version 3.8.x or later from https://www.python.org/downloads/windows/ 
 
-2. Python-magic.  
+2. Python-magic. 
 
       To install python-magic package you can execute the following command:
-      
+
        C:\> python.exe -m pip install python-magic
-      
+
       Or compiling it from the github repository:
-      
+
        C:\> git clone https://github.com/ahupp/python-magic
        C:\> cd python-magic/
        C:\> python.exe setup.py build
        C:\> python.exe setup.py install
-      
+
 3. Install several Python packages: 
-      
+
        C:\> python.exe -m pip install -r requirements.txt
-       
+
        OR: 
-       
-       C:\> python.exe -m pip install pefile
-       C:\> python.exe -m pip install colorama
-       C:\> python.exe -m pip install simplejson
-       C:\> python.exe -m pip install python-magic
-       C:\> python.exe -m pip install requests
-       C:\> python.exe -m pip install validators
-       C:\> python.exe -m pip install geocoder
-       C:\> python.exe -m pip install polyswarm-api
-       C:\> python.exe -m pip install pathlib
-       C:\> python.exe -m pip install configparser
-       C:\> python.exe -m pip install python-magic-bin
+
+       C:\> python.exe -m pip install -U pefile
+       C:\> python.exe -m pip install -U colorama
+       C:\> python.exe -m pip install -U simplejson
+       C:\> python.exe -m pip install -U python-magic
+       C:\> python.exe -m pip install -U requests
+       C:\> python.exe -m pip install -U validators
+       C:\> python.exe -m pip install -U geocoder
+       C:\> python.exe -m pip install -U polyswarm-api
+       C:\> python.exe -m pip install -U pathlib
+       C:\> python.exe -m pip install -U configparser
+       C:\> python.exe -m pip install -U python-magic-bin
 
 4. To check an Android mobile you need to install the "adb" program by:
 
-       * Downloading and installing the Android Studio from: https://developer.android.com/studio#downloads (Recommended)
+       * Downloading and installing the Android Studio from: https://developer.android.com/
+         studio#downloads (Recommended)
        * Downloading it from https://dl.google.com/android/repository/platform-tools-latest-windows.zip
-   
+
    PS: before trying Android's options, check:
-       
+
        * If the adb program is listed in the PATH environment variable.
        * If the system has authorized access to the device by using "adb devices -l"
 
@@ -257,250 +299,335 @@ To use the malwoverview, execute the command as shown below:
 
       root@ubuntu19:~/malwoverview# python3.8 malwoverview.py  | more
 
-      usage: python malwoverview.py -c <config file> -d <directory> -f <fullpath> -i <0|1> -b <0|1> -v <0|1>
-      -a <0|1> -p <0|1> -s <0|1> -x <0|1> -w <|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4>
-      -A <filename> -g <job_id> -r <domain> -t <0|1> -Q <0|1> -l <0|1> -n <1-12> -m <hash> -M <0|1> 
-      -U <url> -S <url> -z <tags> -B <0|1> -K <0|1> -j <hash> -J <hash> -P <filename> -N <url> 
-      -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1> -Y <file name> -Z <0|1> 
-      -X <0|1> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address>
-
+      usage: python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> 
+      -b <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename>
+      -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> 
+      -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, 
+      domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> 
+      -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> 
+      -q <argument>
 
 Malwoverview is a malware triage tool written by Alexandre Borges.
 
-      optional arguments:
+optional arguments:
 
-      -h, --help        show this help message and exit
+      -h, --help        Show this help message and exit
       -c CONFIG FILE, --config CONFIG FILE
                         Use a custom config file to specify API's
       -d DIRECTORY, --directory DIRECTORY
-                        specify directory containing malware samples.
+                        Specifies the directory containing malware samples.
       -f FILENAME, --filename FILENAME
-                        Specifies a full path to a file. Shows general information about the file (any filetype)
+                        Specifies a full path to a malware sample. It returns general information 
+                        about the file (any filetype)
       -b BACKGROUND, --background BACKGROUND
-                        (optional) Adapts the output colors to a white terminal. The default is black terminal
-      -i IAT_EAT, --iat_eat IAT_EAT
-                        (optional) Shows imports and exports (it is used with -f option).
+                        Adapts the output colors to a white terminal. The default is black terminal
       -x OVERLAY, --overlay OVERLAY
-                        (optional) Extracts overlay (it is used with -f option).
-      -s SHOW_VT_REPORT, --vtreport SHOW_VT_REPORT
-                        Shows antivirus reports from the main players. This option is used with the -f option (any filetype).
+                        Extracts the overlay (it is used with -f option).
       -v VIRUSTOTAL, --virustotal VIRUSTOTAL
-                        Queries the Virus Total database for positives and totals.Thus, you need to edit the configmalw.py 
-                        and insert your VT API.
+                        If using "-v 1", so it queries the Virus Total database for positives and 
+                        totals. If "v 2" (which can be used only together with -f option), so it 
+                        shows antivirus reports from the main players. If "v 3", so the binary's IAT 
+                        and EAT are also shown. Remember: you need to edit the .malwapi.conf and insert 
+                        your VT API.
       -a HYBRID_ANALYSIS, --hybrid HYBRID_ANALYSIS
-                        Queries the Hybrid Analysis database for general report. Use the -e option to specify which 
-                        environment are looking for the associate report because the sample can have been submitted to a 
-                        different environment that you are looking for. Thus, you need to edit the configmalw.py i
-                        and insert your HA API and secret.
-      -p USE_VT_PUB_KEY, --vtpub USE_VT_PUB_KEY
-                        (optional) You should use this option if you have a public Virus Total API. It forces a one 
-                        minute wait every 4 malware samples, but allows obtaining a complete evaluation of the 
-                        malware repository.
-      -w RUN_ON_WINDOWS, --windows RUN_ON_WINDOWS
-                        This option is used when the OS is Microsoft Windows.
+                        Queries the Hybrid Analysis database for getting a general report. Possible 
+                        values are: 1: Windows 7 32-bit; 2: Windows 7 32-bit (HWP Support); 3: 
+                        Windows 64-bit; 4: Android; 5: Linux 64-bit. Remember: you need to edit the
+                        .malwapi.conf and insert your HA API and secret.
       -u URL_VT, --vturl URL_VT
-                        SUBMITS a URL for the Virus Total scanning.
+                        SUBMITS a URL to the Virus Total scanning.
       -I IP_VT, --ipaddrvt IP_VT
-                        This options checks an IP address on Virus Total.
+                        This option checks an IP address on Virus Total.
       -r URL_DOMAIN, --urldomain URL_DOMAIN
-                        GETS a domain's report from Virus Total.
+                        This option gets a domain's report from Virus Total.
       -H FILE_HASH, --hash FILE_HASH
-                        Specifies the hash to be checked on Virus Total and Hybrid Analysis. For the Hybrid Analysis
-                        report you must use it together -e option.
+                        This option specifies the hash to be checked on Virus Total and Hybrid Analysis. 
+                        For the Hybrid Analysis report you must use it with the -e option.
       -V FILENAME_VT, --vtsubmit FILENAME_VT
-                        SUBMITS a FILE(up to 32MB) to Virus Total scanning and read the report. Attention: use forward 
-                        slash to specify the target file even on Windows systems. Furthermore, the minimum waiting time
-                        is set up in 90 seconds because the Virus Total queue. If an error occurs, so wait few minutes 
-                        and try to access the report by using -f option.
+                        Submits a file(up to 32MB) for Virus Total scanning and gets the report. Attention: 
+                        use forward slash to specify the target file even on Windows systems. Furthermore, 
+                        the minimum waiting time is set up in 90 seconds because the Virus Total waiting 
+                        queue. If an error occurs, so wait few minutes and try to access the report by 
+                        using -f option.
       -A SUBMIT_HA, --submitha SUBMIT_HA
-                        SUBMITS a FILE(up to 32MB) to be scanned by Hybrid Analysis engine. Use the -e option to specify
-                        the best environment to run the suspicious file.
+                        Submits a file(up to 32MB) to be scanned by the Hybrid Analysis engine. Use the 
+                        -e option to specify the best environment to run the suspicious file.
       -g HA_STATUS, --hastatus HA_STATUS
-                        Checks the report's status of submitted samples to Hybrid Analysis engine by providing the 
-                        job ID. Possible returned status values are: IN_QUEUE, SUCCESS, ERROR, IN_PROGRESS and 
-                        PARTIAL_SUCCESS.
+                        Checks the report's status of submitted samples to Hybrid Analysis engine by 
+                        providing the job ID. Possible returned status values are: IN_QUEUE, SUCCESS,
+                        ERROR, IN_PROGRESS and PARTIAL_SUCCESS.
       -D DOWNLOAD, --download DOWNLOAD
-                        Downloads the sample from Hybrid Analysis. Option -H must be specified.
+                        Downloads the sample from Hybrid Analysis, Malshare and Polyswarm. Options i
+                        -H or -L (Hybrid Analysis and Malshare, respectively) must be specified as well 
+                        -O option for Polyswarm engine.
       -e HA_ENVIRONMENT, --haenv HA_ENVIRONMENT
-                        This option specifies the used environment to be used to test the samlple on Hybrid Analysis:
-                        <0> Windows 7 32-bits; <1> Windows 7 32-bits (with HWP Support); <2> Windows 7 64-bits; 
-                        <3> Android; <4> Linux 64-bits environment. This option is used together either -H option 
-                        or the -A option or -a option.
+                        This option specifies the used environment to be used to test the samlple on 
+                        Hybrid Analysis: <0> Windows 7 32-bits; <1> Windows 7 32-bits (with HWP Support); 
+                        <2> Windows 7 64-bits; <3> Android; <4> Linux 64-bits environment. This option 
+                        is used together either -H option or the -A option.
       -t MULTITHREAD, --thread MULTITHREAD
-                        (optional) This option is used to force multithreads on Linux whether: the -d option is specifed
-                        AND you have a PAID Virus Total API or you are NOT checking the VT while using the -d option.
-                        PS1: using this option causes the Imphashes not to be grouped anymore; PS2: it also works on 
-                        Windows, but there is not gain in performance.
-      -Q QUICK_CHECK, --quick QUICK_CHECK
-                        This option should be used with -d option in two scenarios: 1) either including the -v option
-                        (Virus Total -- you'll see a complete VT response whether you have the private API) for a 
-                        multithread search and reduced output; 2) or including the -a option (Hybrid Analysis) for a
-                        multithread search and complete and amazing output. If you are using the -a option, so -e option
-                        can also be used to adjust the output to your sample types. PS1: certainly, if you have a
-                        directory holding many malware samples, so you will want to test this option with -a option; i
-                        PS2: it also works on Windows, but there is not gain in performance.
+                        (optional) This option has several different meanings according to chosen the 
+                        value. Possible values: <1>: This value is used to force multithreads on Linux 
+                        whether: the -d option is specifed AND you have a PAID Virus Total API or you
+                        are NOT checking the VT while using the -d option. PS1: using this option causes 
+                        Imphashes not to be grouped anymore; PS2: it also works on Windows, but there is 
+                        not gain in performance; <2>: This value should be used with -d option in
+                        two scenarios: 1) either including the "-v 1" option (Virus Total -- you'll see 
+                        a complete VT response whether you have the private API) for a multithread searching
+                        and reduced output; 2) or including the -a option (Hybrid Analysis) for a multithread 
+                        searching to get a complete and amazing output. If you are using the -a option, so 
+                        you should pickup the right number represening the testing environment to adjust the 
+                        output to your sample types. PS1: certainly, if you have a directory holding 
+                        many malware samples, so you will want to test this option with -a option; PS2: it 
+                        also works on Windows, but there is not gain in performance; <3>: You should use 
+                        this value with -v option if you have a public Virus Total API. It forces a one 
+                        minute wait every 4 malware samples, but allows obtaining a complete evaluation of 
+                        the malware repository.
       -l MALSHARE_HASHES, --malsharelist MALSHARE_HASHES
-                        Show hashes from last 24 hours from Malshare. You need to insert your Malshare API into the
-                        configmalw.py file.
-      -m MALSHARE_HASH_SEARCH, --malsharehash MALSHARE_HASH_SEARCH
-                        Searches for the provided hash on the Malshare repository. You need to insert your Malshare API
-                        into the configmalw.py file. PS: sometimes the Malshare website is unavailable, so should check
-                        the website availability if you get some error message.
-      -n FILE_TYPE, --filetype FILE_TYPE
-                        Specifies the file type to be listed by -l option. Therefore, it must be used together i
-                        -l option. Possible values: 1: PE32 (default) ; 2: Dalvik ; 3: ELF ; 4: HTML ; 5: ASCII ; 
-                        6: PHP ; 7: Java ; 8: RAR ; 9: Zip ; 10: UTF-8 ; 11: MS-DOS ; 12: data ; 13: PDF ; i
-                        14: Composite(OLE).
-      -M MALSHARE_DOWNLOAD, --malsharedownload MALSHARE_DOWNLOAD
-                        Downloads the sample from Malshare. This option must be specified with -m option.
-      -B URL_HAUS_BATCH, --haus_batch URL_HAUS_BATCH
-                        Retrieves a list of recent URLs (last 3 days, limited to 1000 entries) from URLHaus website.
-      -K HAUS_PAYLOADS, --haus_payloadbatch HAUS_PAYLOADS
-                        Retrieves a list of downloadable links to recent PAYLOADS (last 3 days, limited to 1000 
-                        entries) from URLHaus website. Take care: each link take you to download a passworless zip file
-                        containing a malware, so your AV can generate alerts!
+                        This option shows hashes of a specific type from the last 24 hours from Malshare 
+                        repository. Possible values are: 1: PE32 (default) ; 2: Dalvik ; 3: ELF ; 4: HTML ;
+                        5: ASCII ; 6: PHP ; 7: Java ; 8: RAR ; 9: Zip ; 10: UTF-8 ; 11: MS-DOS ; 12: data ; 
+                        13: PDF ; 14: Composite(OLE). You need to insert your Malshare API into the 
+                        .malwapi.conf file.
+      -L MALSHARE_HASH_SEARCH, --malsharehash MALSHARE_HASH_SEARCH
+                        Searches for the provided hash on the Malshare repository. You need to insert your 
+                        Malshare API into the .malwapi.conf file. PS: sometimes the Malshare website is 
+                        unavailable, so should check the website availability if you get some error message.
+      -K HAUS_PAYLOAD_URL, --haus_payloadbatch HAUS_PAYLOAD_URL
+                        THis option has few possible values: <1> Retrieves a list of downloadable links of 
+                        recent PAYLOADS (last 3 days, limited to 1000 entries) from URLHaus website; <2>: 
+                        Retrieves a list of recent URLs (last 3 days, limited to 1000 entries) from URLHaus
+                        website. Take care: each link take you to download a passworless zip file containing 
+                        a malware, so your AV can generate alerts!
       -U URL_HAUS_QUERY, --haus_query URL_HAUS_QUERY
                         Queries a URL on the URLHaus website.
       -j HAUS_HASH, --haus_hash HAUS_HASH
-                        Queries a payload's hash (md5 or sha256) on the URLHaus website.
+                        Queries information about a provided payload's hash (md5 or sha256) on the URLHaus 
+                        website.
       -S URL_HAUS_SUB, --haus_submission URL_HAUS_SUB
-                        Submits a URL used to distribute malware (executable, script, document) to the URLHaus website.
-                        Pay attention: Any other submission will be ignored/deleted from URLhaus. You have to register
-                        your URLHaus API into the configmalw.py file.
+                        Submits a URL used to distribute malware (executable, script, document) to the 
+                        URLHaus website. Pay attention: Any other submission will be ignored/deleted from 
+                        URLhaus. You have to register your URLHaus API into the .malwapi.conf file.
       -z [HAUSTAG [HAUSTAG ...]], --haustag [HAUSTAG [HAUSTAG ...]]
-                        Associates tags (separated by spaces) to the specified URL. Please, only upper case, lower 
-                        case, '-' and '.' are allowed. This parameter is optional, which could be used with the 
-                        -S option.
+                        Associates tags (separated by spaces) to the specified URL. Please, only upper case, 
+                        lower case, '-' and '.' are allowed. This parameter is optional, which could be used 
+                        with the -S option.
       -W [HAUSTAGSEARCH [HAUSTAGSEARCH ...]], --haustagsearch [HAUSTAGSEARCH [HAUSTAGSEARCH ...]]
-                        This option is for searching malicious URLs by tag on URLhaus. Tags are case-senstive and only
-                        upper case, lower case, '-' and '.' are allowed.
+                        This option is for searching malicious URLs by tag on URLhaus. Tags are case-senstive 
+                        and only upper case, lower case, '-' and '.' are allowed.
       -k [HAUSSIGSEARCH [HAUSSIGSEARCH ...]], --haussigsearch [HAUSSIGSEARCH [HAUSSIGSEARCH ...]]
-                        This option is for searching malicious payload by tag on URLhaus. Tags are case-sensitive and
-                        only upper case, lower case, '-' and '.' are allowed.
+                        This option is for searching malicious payload by tag on URLhaus. Tags are 
+                        case-sensitive and only upper case, lower case, '-' and '.' are allowed.
       -J HAUS_DOWNLOAD, --haus_download HAUS_DOWNLOAD
-                        Downloads a sample (if it is available) from the URLHaus repository. It is necessary to provide
-                        the SHA256 hash.
+                        Downloads a malware sample (if it is available) from the URLHaus repository. It is 
+                        necessary to provide the SHA256 hash.
       -P POLYSWARMFILE, --polyswarm_scan POLYSWARMFILE
-                        (Only for Linux) Performs a file scan using the Polyswarm engine.
-      -N POLYSWARMURL, --polyswarm_url POLYSWARMURL
-                        (Only for Linux) Performs a URL scan using the Polyswarm engine.
+                        (Only for Linux) Submits a sample to Polyswarm engine and performs a file scan.
       -O POLYSWARMHASH, --polyswarm_hash POLYSWARMHASH
-                        (Only for Linux) Performs a hash scan using the Polyswarm engine.
+                        (Only for Linux) Performs a hash scanning using the Polyswarm engine. Optionally, 
+                        you can specify -D option to download the sample. Take care: Polyswarm enforces a 
+                        restriction to number of downloaded samples in 20/month.
       -R POLYSWARMMETA, --polyswarm_meta POLYSWARMMETA
-                        (Only for Linux) Performs a complementary search for similar PE executables through 
-                        meta-information or IP addresses using the Polyswarm engine. This parameters depends on
-                        -G parameters, so check it, please.
+                        (Only for Linux) Provides the argument value for searches on Polyswarm engine through 
+                        imphash (the PE file must be provided), ipv4, domain, URL and family. This argument 
+                        must be used with -G option, so check it, please. Pay attention: you should check your 
+                        metadata search limit on your Polyswarm account because once you have got the limit,
+                        so you will got an error.
       -G METATYPE, --metatype METATYPE
-                        (Only for Linux) This parameter specifies whether the -R option will gather information about
-                        the PE executable or IP address using the Polyswarm engine. Thus, 0: PE Executable ;
-                        1: IP Address ; 2: Domains ; 3. URL.
+                        (Only for Linux) This parameter specifies search type for arguments provided by
+                        -R option (above) while searching on Polyswarm engine. Thus, the following values are 
+                        valid -- 0: PE Executable (look for samples with the same ImpHash); 1: IP Address ; 
+                        2: Domain ; 3. URL; 4. Family
       -y ANDROID_HA, --androidha ANDROID_HA
-                        Check all third-party APK packages from the USB-connected Android device against Hybrid Analysis
-                        using multithreads. The Android device does not need be rooted and you need have adb in your 
-                        PATH environment variable.
+                        This option has multiple options: <1>: Check all third-party APK packages from the 
+                        USB-connected Android device against Hybrid Analysis using multithreads. The Android 
+                        device does not need to be rooted and the system does need to
+                        have the adb tool in the PATH environment variable; <2>: Check all third-party APK 
+                        packages from the USB-connected
+                        Android device against VirusTotal using Public API (slower because of 60 seconds delay 
+                        for each 4 hashes). The Android device does not need to be rooted and the system does 
+                        need to have adb tool in the PATH environment variable; <3>: Check all third-party 
+                        APK packages from the USB-connected Android device against VirusTotal using 
+                        multithreads (only for Private Virus API). The Android device does not need to be 
+                        rooted and the system needs to have adb tool in the PATH environment variable.
       -Y ANDROID_SEND_HA, --androidsendha ANDROID_SEND_HA
-                        Send an third-party APK packages from your USB-connected Android device to Hybrid Analysis. The
-                        Android device does not need be rooted and you need have adb in your PATH environment variable.
+                        Sends an third-party APK package from your USB-connected Android device to Hybrid 
+                        Analysis. The Android device does not need to be rooted and the system needs to have 
+                        adb tool in the PATH environment variable.
       -T ANDROID_SEND_VT, --androidsendvt ANDROID_SEND_VT
-                        Send an third-party APK packages from your USB-connected Android device to Virus Total. The 
-                        Android device does not need be rooted and you need have adb in your PATH environment variable.
-      -Z ANDROID_VT, --androidvt ANDROID_VT
-                        Check all third-party APK packages from the USB-connected Android device against VirusTotal 
-                        using Public API (slower because of 60 seconds delay for each 4 hashes). The Android device 
-                        does not need be rooted and you need have adb in your PATH environment variable.
-      -X ANDROID_VT, --androidvtt ANDROID_VT
-                        Check all third-party APK packages from the USB-connected Android device against VirusTotal 
-                        using multithreads (only for Private Virus API). The Android device does not need be rooted and
-                        you need have adb in your PATH environment variable.
-                        
+                        Sends an third-party APK package from your USB-connected Android device to Virus 
+                        Total. The Android device does not need be rooted and the system needis to have the 
+                        adb tool in the PATH environment variable.
+      -n ALIENVAULT, --alienvault ALIENVAULT
+                        Checks multiple information from AlienVault. The possible values are: 1: Get the 
+                        subscribed pulses ; 2: Get information about an IP address; 3: Get information about 
+                        a domain; 4: Get information about a hash; 5: Get information about a URL
+      -N ALIENVAULT_ARGS, --alienvaultargs ALIENVAULT_ARGS
+                        Provides argument to AlienVault -n option.The allowed values are: 1, 2, 3, 4, 5.
+      -M MALPEDIA, --malpedia MALPEDIA
+                        This option is related to MALPEDIA and presents different meanings depending on the 
+                        chosen value. Thus, 1: List meta information for all families ; 2: List all actors 
+                        ID ; 3: List all available payloads organized by family from Malpedia; 4: Get meta 
+                        information from an specific actor, so it is necesary to use the -m option. Additionally,
+                        try to confirm the correct actor ID by executing malwoverview with option -M 3; 5: 
+                        List all families IDs; 6: Get meta information from an specific family, so it is 
+                        necesary to use the -m option. Additionally, try to confirm the correct
+                        family ID by executing malwoverview with option -M 5; 7: Get a malware sample from 
+                        malpedia (zip format -- password: infected). It is necessary to specifiy the requested 
+                        hash by using -m option; 8: Get a zip file containing Yara rules for a specific 
+                        family (get the possible families using -M 5), which must be specified by using 
+                        -m option.
+      -m MALPEDIAARG, --malpediarg MALPEDIAARG
+                        This option provides an argument to the -M option, which is related to MALPEDIA.
+      -Q THREATCROWD, --threatcrowd THREATCROWD
+                        Checks multiple information from ThreatCrowd. The possible values are: 1: Get 
+                        information about the provided e-mail ;
+                        2: Get information about an IP address; 3: Get information about a domain; 4: Get 
+                        information about a provided MD5 hash; 5: Get information about a specific malware 
+                        family.
+      -q THREATCROWDARG, --threatcrowdarg THREATCROWDARG
+                        This option provides an argument to the -Q option, which is related to THREATCROWD.
 
-        Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore,
-        if you are willing to wait some minutes, so you can use the -p option, which forces a one minute wait 
-        every 4 malware samples, but allows obtaining a complete evaluation of the repository.
+      Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore,
+      if you are willing to wait some minutes, so you can use the -p option, which forces a one minute wait 
+      every 4 malware samples, but allows obtaining a complete evaluation of the repository.
 
 
-        * ATTENTION 1: if the directory contains many malware samples while using -d option, so malwoverview.py
-                       could take some time. Nonetheless, you can use the new -t option (multithreading) to
-                       speed-up things. :)
+      * ATTENTION 1: if the directory contains many malware samples while using -d option, so malwoverview.py
+                     could take some time. Nonetheless, you can use the new -t option (multithreading) to
+                     speed-up things. :)
          
-        ** ATTENTION 2: All engines enforces quota of submission and/or verification per day and/or month. 
-                        Take care!
+      ** ATTENTION 2: All engines enforces quota of submission and/or verification per day and/or month. 
+                      Take care!
+       
+      *** ATTENTION 3: Some options searching on Hybrid Analysis strongly depend of the "-e" option, which 
+                       specifies the environment. Therefore, to check an Android sample (for example) it is 
+                       necessary to use the right environment (-e 3 for Android).
         
-        *** ATTENTION 3: Some options searching on Hybrid Analysis strongly depend of the "-e" option, which 
-                         specifies the environment. Therefore, to check an Android sample (for example) it is 
-                         necessary to use the right environment (-e 3 for Android).
-        
-        **** ATTENTION 4: When you execute Malwoverview on Windows systems, you MUST to specify the "-w 1" option
-                          if you've clone using git tool. 
+      **** ATTENTION 4: When you execute Malwoverview on Windows systems, you MUST to specify the "-w 1" option
+                        if you've clone using git tool. 
 
 
 ## Examples:
 
       python3.8 malwoverview.py -d /root/malware/misc/
-      python3.8 malwoverview.py -d /root/malware/misc/ -t 1
-      python3.8 malwoverview.py -d /root/malware/misc/ -t 1 -v 1
-      python3.8 malwoverview.py -d /root/malware/misc/ -v 1 -p 1
-      python3.8 malwoverview.py -d /root/malware/misc/ -Q 1 -v 1
-      python3.8 malwoverview.py -d /root/malware/misc/ -Q 1 -a 1
-      python3.8 malwoverview.py -d /root/malware/android/ -Q 1 -a 1 -e 3
-      python3.8 malwoverview.py -d /root/malware/linux/ -Q 1 -a 1 -e 4
-      python3.8 malwoverview.py -f /root/malware/misc/sample1 -v 1 -s 1
-      python3.8 malwoverview.py -f /root/malware/misc/sample1 -i 1
-      python3.8 malwoverview.py -f /root/malware/misc/sample1 -v 1 -s 1 -x 1
-      python3.8 malwoverview.py -u <url>
-      python3.8 malwoverview.py -r <domain>
-      python3.8 malwoverview.py -H <hash> -e 2
-      python3.8 malwoverview.py -H <hash> -e 1
-      python3.8 malwoverview.py -V /root/malware/android/sample.apk
-      python3.8 malwoverview.py -A /root/malware/windows/sample1
-      python3.8 malwoverview.py -A /root/malware/android/sample.apk -e 3
-      python3.8 malwoverview.py -g <job_id>
+      python3.8 malwoverview.py -d /root/malware/misc -t 1
+      python3.8 malwoverview.py -d /root/malware/misc -v 1 -t 3
+      python3.8 malwoverview.py -d /root/malware/misc -v 1 -t 1
+      python3.8 malwoverview.py -d /root/malware/misc -a 1 -t 2
+      python3.8 malwoverview.py -f /root/malware/misc/8a87a1261603af4d976faa57e49ebdd8fd8317e9dd13bd36ff25
+                                   99d1031f53ce -v 2
+      python3.8 malwoverview.py -f /root/malware/misc/806fc33650b7ec35dd01a06be3037674ae3cc0db6ba1e3f690ee
+                                   9ba9403c0627 -a 1 -v 1
+      python3.8 malwoverview.py -f /root/malware/misc/8a87a1261603af4d976faa57e49ebdd8fd8317e9dd13bd36ff25
+                                   99d1031f53ce -v 3
+      python3.8 malwoverview.py -f /root/malware/misc/blackstorm.php -v 2 -x 
+      python3.8 malwoverview.py -u http://mobiletech.net/images/138907/8g7c645373370255099hf4at12buy2lgrdeqo/
+      python3.8 malwoverview.py -r xurl.es
+      python3.8 malwoverview.py -H 9ce861b93e7ddeebec8ed052450fc136162fb3239c502aab8fa9bc8962572457
+      python3.8 malwoverview.py -H 893339624602c7b3a6f481aed9509b53e4e995d6771c72d726ba5a6b319608a7 -e 1
+      python3.8 malwoverview.py -d /root/malware/linux/ -a 5
+      python3.8 malwoverview.py -d /root/malware/android/ -a 4
+      python3.8 malwoverview.py -d /root/malware/android/ -v 1 -t 3
+      python3.8 malwoverview.py -d /root/malware/android/ -a 4 -t 2
+      python3.8 malwoverview.py -V /root/malware/misc/malware999
+      python3.8 malwoverview.py -A /root/malware/android/NubankConvidado.apk -e 3
+      python3.8 malwoverview.py -g 5f2e727f70fa896603576725
+      python3.8 malwoverview.py -A /root/malware/windows/806fc33650b7ec35dd01a06be3037674ae3cc0db6ba1e3f690
+                                   ee9ba9403c0627
       python3.8 malwoverview.py -l 1
-      python3.8 malwoverview.py -l 1 -n 2
-      python3.8 malwoverview.py -l 1 -n 3
-      python3.8 malwoverview.py -m <hash>
-      python3.8 malwoverview.py -m <hash> -M 1
-      python3.8 malwoverview.py -B 1
-      python3.8 malwoverview.py -U <URL>
+      python3.8 malwoverview.py -l 6
+      python3.8 malwoverview.py -l 4
+      python3.8 malwoverview.py -L bc9d356f8d08396d620d249b8f34a664c9397467b1a6033013c788df734f8bda
       python3.8 malwoverview.py -K 1
-      python3.8 malwoverview.py -j <hash>
-      python3.8 malwoverview.py -J <hash>
-      python3.8 malwoverview.py -S <URL> -z SpelevoEK exe psixbot
-      python3.8 malwoverview.py -O <hash>
-      python3.8 malwoverview.py -N <URL>
-      python3.8 malwoverview.py -P sample1
-      python3.8 malwoverview.py -R /root/malware/windows/sample1
-      python3.8 malwoverview.py -y 1
-      python3.8 malwoverview.py -Y skype
-      python3.8 malwoverview.py -Z 1
-      python3.8 malwoverview.py -X 1
-      python3.8 malwoverview.py -T twitter 
-      python3.8 malwoverview.py -u https://toulousa.com/omg/159EYJSFYHMS.exe
-      python3.8 malwoverview.py -k Trickbot
-      python3.8 malwoverview.py -m e47a415662b5fad1f3049764456ba2ac33a1bde6fd3181ec2b658d382ad17d41
-      python3.8 malwoverview.py -W mirai
-      python3.8 malwoverview.py -I 149.56.79.215
-      python3.8 malwoverview.py -R 164.132.92.180 -G 1
+      python3.8 malwoverview.py -K 2
+      python3.8 malwoverview.py -U http://pusatppm.poltekkesbandung.com/wp-admin/report/b17892056589733xcz
+                                   cjkjvqctpr9v9sm/ 
+      python3.8 malwoverview.py -J 9e7d263c3c9f155229a7d6fb29dfa4b62bfec31ed0d3bf4cc2dc60ffd9fd6d0e
+      python3.8 malwoverview.py -S http://jamogames.com/templates/JLHk/
+      python3.8 malwoverview.py -S http://pusatppm.poltekkesbandung.com/wp-admin/report/b17892056589733xc
+                                   zcjkjvqctpr9v9sm/
+      python3.8 malwoverview.py -P 9e7d263c3c9f155229a7d6fb29dfa4b62bfec31ed0d3bf4cc2dc60ffd9fd6d0e
+      python malwoverview.py -O f3ebeeeba13c82daef9731a5f3e8dbe535e963f83e531918ba1a8904b094d3b8
+      python malwoverview.py -R /root/malware/windows/Scarab_Ransomware -G 0
+      python./malwoverview.py -R 164.132.92.180 -G 1
       python3.8 malwoverview.py -R sndoffo79.ddns.net -G 2
-      python3.8 malwoverview.py -R http://t.turconfiok.pro -G 3
-
+      python3.8 malwoverview.py -R http://0uso87.com/bolb/jaent.php?l=liut1.cab -G 3
+      python3.8 malwoverview.py -R *Trickbot* -G 4
+      python3.8 malwoverview.py -R *Trojan* -G 4
+      python3.8 malwoverview.py -R *Ransomware* -G 4
+      python3.8 malwoverview.py -y 1
+      python3.8 malwoverview.py -y 2
+      python3.8 malwoverview.py -y 3
+      python3.8 malwoverview.py -T icompass
+      python3.8 malwoverview.py -Y icompass
+      python3.8 malwoverview.py -k Trickbot | more
+      python3.8 malwoverview.py -W Quakbot
+      python3.8 malwoverview.py -I 149.56.79.215
+      python3.8 malwoverview.py -n 1 -N 12
+      python3.8 malwoverview.py -n 2 -N 79.124.8.24
+      python3.8 malwoverview.py -n 3 -N covid19tracer.ca
+      python3.8 malwoverview.py -n 4 -N ba42665872ea41e3d2edd8978bc38c24
+      python3.8 malwoverview.py -n 5 -N http://ksahosting.net/wp-includes/utf8.php
+      python3.8 malwoverview.py -M 1
+      python3.8 malwoverview.py -M 2 | more
+      python3.8 malwoverview.py -M 3 | more
+      python3.8 malwoverview.py -M 4 -m apt41 | mor
+      python3.8 malwoverview.py -M 5 | more
+      python3.8 malwoverview.py -M 6 -m win.locky
+      python3.8 malwoverview.py -M 7 -m efbdb14f38c20c55e32cd98e4b2fdf197709581581d31fac683aabbf361df5f3
+      python3.8 malwoverview.py -M 8 -m win.trickbot
+      python3.8 malwoverview.py -Q 1 -q potrafamin44as@gmail.com
+      python3.8 malwoverview.py -Q 2 -q 188.40.75.132
+      python3.8 malwoverview.py -Q 3 -q aoldaily.com
+      python3.8 malwoverview.py -Q 4 -q fa6fbd1dd2d58885772bd0b37633d5d7
+      python3.8 malwoverview.py -Q 5 -q plugx
 
 # HISTORY
+
+Version 4.0.0:
+
+      This version:
+
+            * Introduces new engines such as Alien Vault, Malpedia and ThreatCrowd. 
+            * The -s option has been removed. Use -v 2 option for antivirus report.
+            * The -n option is not longer associated to Malshare. Use -l option with 
+              values between 1 and 14.
+            * To specify the hash in Malshare use the L option instead of -m option. 
+            * The -i option has been removed. Use the -v 3 option for IAT/EAT. 
+            * The -a option has been changed to include the system environments in Hybrid 
+              Analysis. However, the -e option has been kept to be used with other options. 
+            * The -M option is not longer responsible for downloading samples in Malshare. Use
+              -D option for this task. 
+            * The -B option for list URLs from URLHaus has been replaced by -K 2 option. 
+            * The -Z and -X options (related to Android) have been replaced for -y 2 and -y 3, 
+              respectively. 
+            * The -D option (download a malware sample) has been extended to Polyswarm. 
+            * The malware sample's DLL list has been introduced. 
+            * The -R and -G options from Polyswarm have been completely fixed. Additionally, both
+              ones also include the polyscore in the output. 
+            * The -N option is not longer associated to Polyswarm . 
+            * The -G 4 option has been introduced and it makes possible to search samples by 
+              families and types such as "*Trickbot*", "*Ransomware", "*Trojan*" and so on. 
+            * Colors from -I option have been fixed. 
+            * The -w option has been removed. 
+            * Several issues in the help have been fixed. 
+
 
 Version 3.1.2:
 
       This version:
-      
+
             * Introduces the -c option that allows the user to specify a custom API configuration file. 
             * The API configuration file has been changed to .malwapi.conf file.
             * The project structure has been changed to make easier to install it in different operating 
               systems.
             * Updates for this version are a contribution from Corey Forman (https://github.com/digitalsleuth).
-            
+
 Version 3.0.0:
 
       This version:
-      
+
             * Includes fixes in the URL reporting (-u option) from Virus Total.  
             * New players have have been included in the URL reporting (-u option) from Virus Total.
             * Fixes have been included in payload listing (-K option) from URLhaus.
@@ -517,7 +644,7 @@ Version 3.0.0:
 Version 2.5.0:
 
       This version:
-      
+
             * Introduces the following options:
                   * -y to check all third-party APKs from an Android device against 
                        the Hybrid Analysis. 
@@ -534,7 +661,7 @@ Version 2.5.0:
 Version 2.1.9.1:
 
       This version:
-      
+
             * Fixes several issues about colors in outputs. 
             * Removes the -L option from Malshare (unfortunately, Malshare doesn't provide an 
               URL list anymore). 
@@ -544,7 +671,7 @@ Version 2.1.9.1:
 Version 2.1:
 
       This version:
-      
+
             * Fixes formatting issues related to Hybrid Analysis output (-Q 1 -a 1). 
             * Fixes color issues. 
             * Fixes small issues related to Polyswarm. 
@@ -552,7 +679,7 @@ Version 2.1:
 Version 2.0.8.1:
 
       This version:
-      
+
             * Introduces installation using: pip3.8 install malwoverview (Linux) or 
               python -m pip install malwoverviewwin (Windows). 
             * Fixes small problems related to Polyswarm usage. 
@@ -561,14 +688,14 @@ Version 2.0.8.1:
 Version 2.0.1:
 
       This version:
-      
+
             * Fixes a problem related to searching by hash on Malshare (-m option). 
             * Fixes a problem related to searching by hash on Polyswarm (-O option). 
 
 Version 2.0.0:
 
       This version:
-      
+
             * Introduces a completely ported version of Malwoverview to Python 3.x (it does not work in 
               Python 2.7.x anymore!)
             * Fixes several bugs related to IAT/EAT listing. 
@@ -587,14 +714,14 @@ Version 2.0.0:
 Version 1.7.5:
 
       This version: 
-      
+
             * It has been fixed a problem related to sample submission to Hybrid Analysis on Windows operating 
               system. Additionally, file name handling has been also fixed. 
             
 Version 1.7.3:
 
       This version: 
-      
+
             * Malwoverview has been adapted to API version 2.6.0 of Hybrid Analysis.
             * -A option has been fixed according to new version (2.6.0) of Hybrid Analysis.
             * -a option has been modified to work together with  -e option.
@@ -603,67 +730,67 @@ Version 1.7.3:
 Version 1.7.2:
 
       This version: 
-      
+
             * A small fix related to -g option has been included. 
             
 Version 1.7.1:
 
       This version: 
-      
+
             * Relevant fix of a problem related to options -A and -H options.
             * Includes a new Hybrid Analysis environment to the -e option (Windows 7 32-bits with HWP support).
             * Updates the Malwoverview to support Hybrid Analysis API version 2.5.0.
-            
+
 Version 1.7.0:
 
       This version: 
-      
+
             * Includes -A option for submitting a sample to Hybrid Analysis.
             * Includes -g option for checking the status a submission of a sample to Hybrid Analysis.
             * Includes -e option for specifying the testing environment on the Hybrid Analysis.
             * Includes -r option for getting a complete domain report from Virus Total.
             * Modifies the -H options for working together the -e option.
             * Modifies several functions of the tool to prepare it for version 1.8.0
-            
+
 Version 1.6.3:
 
       This version: 
-      
+
             * Includes creation of new functions aiming 1.7.0 version.
             * Includes new exception handling blocks.
-            
+
 Version 1.6.2:
 
       This version: 
-      
+
             * Includes small fixes.
             * For the Hybrid Analysis API version 2.40 is not longer necessary to include the API Secret.  
-            
+
 Version 1.6.1:
 
       This version: 
-      
+
             * Includes small format fixes.
-            
+
 Version 1.6.0:
 
       This version: 
-      
+
             * It is using the Hybrid Analysis API version 2.4.0.
             * Includes certificate information in the Hybrid Analysis report. 
             * Includes MITRE information in the Hybrid Analysis report. 
             * Includes an option to download samples from Hybrid Analysis. 
-            
+
 Version 1.5.1:
 
       This version: 
-      
+
             * Small change to fix format issue in -d option. 
-      
+
 Version 1.5.0:
 
       This version: 
-      
+
             * Includes the -u option to check URLs against Virus Total and associated engines. 
             * Includes the -H option to find existing reports on Virus Total and Hybrid Analysis through the 
               hash.
@@ -682,11 +809,11 @@ Version 1.4.5.1:
       This version:
 
             * Includes one small fix. 
-            
+
 Version 1.4.5:
 
       This version:
-      
+
             * Adds the -w option to use malwoverview in Windows systems.
             * Improves and fixes colors when using -b option with black window.  
 
@@ -697,13 +824,13 @@ Version 1.4:
             * Adds the -a option for getting the Hybrid Analysis summary report.
             * Adds the -i option for listing imported and exported functions. Therefore, imported/exported
               function report was decoupled for a separated option.  
-                  
+
 Version 1.3: 
 
       This version:
 
             * Adds the -p option for public Virus Total API.
-            
+
 Version 1.2: 
 
       This version includes:
