@@ -3717,7 +3717,7 @@ def alien_subscribed(url, arg1):
                 c = 1
                 for d in hatext['results']:
                     print(mycolors.reset)
-                    print(mycolors.foreground.lightblue + "INFORMATION: %d" % c)
+                    print(mycolors.foreground.cyan + "INFORMATION: %d" % c)
                     print(mycolors.reset + '-' * 15 + "\n")
                     if d['name']:
                         print(mycolors.foreground.yellow + "Headline:".ljust(13) + mycolors.reset + hatext['results'][x]['name'], end='\n')
