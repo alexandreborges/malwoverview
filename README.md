@@ -616,7 +616,8 @@ Version 4.0.2:
 
       This version:
 
-            * Two small bugs (typos) in the function for Polywarm downloading and Android package checking have been fixed. 
+            * Two small bugs (typos) in the function for Polywarm downloading and Android package checking
+              have been fixed. 
             * An unnecessary and dead code has been removed.
             * Several typos in the README.md and in the help have been corrected. 
             * All fixes for this version have been suggested by Christian Clauss (https://github.com/cclauss)
