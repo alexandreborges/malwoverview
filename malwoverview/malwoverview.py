@@ -1661,7 +1661,7 @@ def polyhashsearch(poly):
             if (score is not None):
                 print(mycolors.foreground.red + "\nPolyscore: \t%f" % score)
             if (down == 1):
-                artifact = polywarm.download(DOWN_DIR, sha256)
+                artifact = polyswarm.download(DOWN_DIR, sha256)
                 print(mycolors.reset + "\n\nThe sample has been SAVED!")
         print(mycolors.reset)
 
@@ -5600,7 +5600,7 @@ class androidVTThread(threading.Thread):
             print((mycolors.foreground.lightcyan +  "%-32s" % key1), end=' ')
             print((mycolors.reset + mycolors.foreground.lightgreen + "%8s" % vtfinal + mycolors.reset))
         else:
-            print((mycolors.foreground.green + "%-08s" % package), end=' ')
+            print((mycolors.foreground.green + "%-08s" % package1), end=' ')
             print((mycolors.foreground.cyan + "%-32s" % key1), end=' ')
             print((mycolors.reset + mycolors.foreground.red + "%8s" % vtfinal + mycolors.reset))
 
