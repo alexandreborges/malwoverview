@@ -600,7 +600,7 @@ optional arguments:
       python3.8 malwoverview.py -M 2 | more
       python3.8 malwoverview.py -M 3 | more
       python3.8 malwoverview.py -M 4 -m apt41 | more
-      python3.8 malwoverview.py -M 5 | mor
+      python3.8 malwoverview.py -M 5 | more
       python3.8 malwoverview.py -M 6 -m win.locky
       python3.8 malwoverview.py -M 7 -m efbdb14f38c20c55e32cd98e4b2fdf197709581581d31fac683aabbf361df5f3
       python3.8 malwoverview.py -M 8 -m win.trickbot
