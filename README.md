@@ -133,7 +133,7 @@ This tool aims to :
 17. Show payloads related to a tag (signature) from URLHaus.
 18. Show information about an IP address from Virus Total, Alien Vault, Malpedia and ThreatCrowd.
 19. Show IP address, domain and URL information from Polyswarm. 
-21. Perform meta-search on Polyswarm Network using several criterias: imphash, IPv4, domain, URL and
+21. Perform meta-search on Polyswarm Network using several criteria: imphash, IPv4, domain, URL and
     malware family. 
 22. Gather threat hunting information from AlienVault using different criteria. 
 23. Gather threat hunting information from Malpedia using different criteria. 
@@ -398,7 +398,7 @@ optional arguments:
       -t MULTITHREAD, --thread MULTITHREAD
                         (optional) This option has several different meanings according to chosen the 
                         value. Possible values: <1>: This value is used to force multithreads on Linux 
-                        whether: the -d option is specifed AND you have a PAID Virus Total API or you
+                        whether: the -d option is specified AND you have a PAID Virus Total API or you
                         are NOT checking the VT while using the -d option. PS1: using this option causes 
                         Imphashes not to be grouped anymore; PS2: it also works on Windows, but there is 
                         not gain in performance; <2>: This value should be used with -d option in
@@ -498,12 +498,12 @@ optional arguments:
                         This option is related to MALPEDIA and presents different meanings depending on the 
                         chosen value. Thus, 1: List meta information for all families ; 2: List all actors 
                         ID ; 3: List all available payloads organized by family from Malpedia; 4: Get meta 
-                        information from an specific actor, so it is necesary to use the -m option. 
+                        information from an specific actor, so it is necessary to use the -m option. 
                         Additionally, try to confirm the correct actor ID by executing malwoverview with 
                         option -M 3; 5: List all families IDs; 6: Get meta information from an specific 
-                        family, so it is necesary to use the -m option. Additionally, try to confirm the 
+                        family, so it is necessary to use the -m option. Additionally, try to confirm the 
                         correct family ID by executing malwoverview with option -M 5; 7: Get a malware 
-                        sample from malpedia (zip format -- password: infected). It is necessary to specifiy 
+                        sample from malpedia (zip format -- password: infected). It is necessary to specify 
                         the requested hash by using -m option; 8: Get a zip file containing Yara rules for 
                         a specific family (get the possible families using -M 5), which must be specified 
                         by using -m option.
@@ -599,8 +599,8 @@ optional arguments:
       python3.8 malwoverview.py -M 1
       python3.8 malwoverview.py -M 2 | more
       python3.8 malwoverview.py -M 3 | more
-      python3.8 malwoverview.py -M 4 -m apt41 | mor
-      python3.8 malwoverview.py -M 5 | more
+      python3.8 malwoverview.py -M 4 -m apt41 | more
+      python3.8 malwoverview.py -M 5 | mor
       python3.8 malwoverview.py -M 6 -m win.locky
       python3.8 malwoverview.py -M 7 -m efbdb14f38c20c55e32cd98e4b2fdf197709581581d31fac683aabbf361df5f3
       python3.8 malwoverview.py -M 8 -m win.trickbot
@@ -828,7 +828,7 @@ Version 1.5.0:
             * Includes the -u option to check URLs against Virus Total and associated engines. 
             * Includes the -H option to find existing reports on Virus Total and Hybrid Analysis through the 
               hash.
-            * Includes the -V option to submit a file to Virus Total. Additionally, the report is shown afer 
+            * Includes the -V option to submit a file to Virus Total. Additionally, the report is shown after 
               few minutes.
             * Includes two small fixes. 
 
