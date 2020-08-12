@@ -616,7 +616,7 @@ Version 4.0.2:
 
       This version:
 
-            * Two small bugs (typos) in the functions for Polywarm downloading and Android package checking
+            * Two small bugs (typos) in the functions for Polyswarm downloading and Android package checking
               have been fixed. 
             * An unnecessary and dead code has been removed.
             * Several typos in the README.md and in the help have been corrected. 
