@@ -21,37 +21,32 @@
 
 # Malwoverview.py: version 4.0.2
 
-import os
-import sys
-import re
-import pefile
-import peutils
-import magic
 import argparse
-import requests
-import hashlib
-import json
-import time
-import validators
-import geocoder
-import threading
-import socket
-import urllib3
-import subprocess
-import types
-import textwrap
 import base64
 import configparser
+import hashlib
+import json
+import os
 import platform
-from operator import itemgetter
-from polyswarm_api.api import PolyswarmAPI
-from urllib.parse import urlparse
-from colorama import init, Fore, Back, Style
+import re
+import socket
+import subprocess
+import sys
+import textwrap
+import threading
+import time
 from datetime import datetime
-from urllib.parse import urlencode, quote_plus
-from urllib.parse import quote
-from requests.exceptions import RetryError
+from operator import itemgetter
 from pathlib import Path
+from urllib.parse import urlparse
+
+import geocoder
+import magic
+import pefile
+import requests
+import validators
+from colorama import Fore, init
+from polyswarm_api.api import PolyswarmAPI
 
 # On Windows systems, it is necessary to install python-magic-bin: pip install python-magic-bin
 
@@ -1504,7 +1499,7 @@ def polymetasearch(poly, metainfo):
 
         print(mycolors.reset)
         
-    except (RetryError) as e:
+    except requests.exceptions.RetryError as e:
             if (bkg == 1):
                 print((mycolors.foreground.lightred + "\nAn error has ocurred during Polyswarm processing. Exiting...\n"))
             else:
