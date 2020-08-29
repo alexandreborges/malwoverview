@@ -616,7 +616,8 @@ Version 4.0.3:
 
       This version:
 
-            * Fixes the fact of Virus Total evaluation wasn't showed when the user specified "-v 2" and "-v 3" options.
+            * Fixes the fact of Virus Total evaluation wasn't showed when the user specified "-v 2" and 
+              "-v 3" options.
             * The version of the Python request package is fixed to prevent issues with Polyswarm API 2.x.
 
 Version 4.0.2:
