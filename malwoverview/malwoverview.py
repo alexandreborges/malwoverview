@@ -1902,7 +1902,7 @@ def generalstatus(key):
     entr = ''
     G = []
 
-    if (vt>1):
+    if (vt>=1):
         myfilehash = sha256hash(key)
         vtfinal = vtcheck(myfilehash, url, param)
     G.append(vtfinal)
@@ -2032,7 +2032,7 @@ def filechecking(ffpname2):
                 print((mycolors.foreground.cyan + "MD5:         %s" % mymd5hash))
                 print(("SHA256:      %s" % mysha256hash))
             print(mycolors.reset)
-            if (vt==1):
+            if (vt>=1):
                 vtfinal = vtcheck(mysha256hash, url, param)
             if(bkg == 1):
                 print((mycolors.foreground.lightred + "VirusTotal: %6s\n" % vtfinal))
