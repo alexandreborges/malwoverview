@@ -2,7 +2,7 @@ pefile>=2019.4.18
 python-magic>=0.4.18
 colorama>=0.4.3
 simplejson>=3.17.2
-requests>=2.22.0
+requests==2.22.0
 validators>=0.16
 geocoder>=1.38.1
 polyswarm-api>=2.1.2
