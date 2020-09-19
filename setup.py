@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
+import os
 from setuptools import setup, find_packages
 from pathlib import Path
 import platform
 
-if platform.system() == 'Windows':
-    USER_HOME_DIR = str(Path.home()) + '\\'
-else:
-    USER_HOME_DIR = str(Path.home()) + '/'
+USER_HOME_DIR = str(Path.home()) + os.sep
 
 with open("README.md", encoding='utf8') as readme:
     long_description = readme.read()
