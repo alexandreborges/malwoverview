@@ -5706,7 +5706,7 @@ def valhalla_service(argx, arg1, VALHALLAPIx):
             print(mycolors.foreground.yellow + "\n\nThe Yara rules have been saved into the \"valhalla-rules.yar\" file.\n" + mycolors.reset,end="\n")
             exit(0)
         else:
-            print(mycolors.foreground.green + "\n\nThe Yara rules have been saved into the \"valhalla-rules.yar\" file.\n" + mycolors.reset,end="\n")
+            print(mycolors.foreground.purple + "\n\nThe Yara rules have been saved into the \"valhalla-rules.yar\" file.\n" + mycolors.reset,end="\n")
             exit(0)
 
 
