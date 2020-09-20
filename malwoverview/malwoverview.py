@@ -18,8 +18,9 @@
 
 # Alexandre Borges (project owner)
 # Corey Forman (https://github.com/digitalsleuth)
+# Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 4.0.3
+# Malwoverview.py: version 4.1
 
 import os
 import sys
@@ -52,13 +53,14 @@ from urllib.parse import urlencode, quote_plus
 from urllib.parse import quote
 from requests.exceptions import RetryError
 from pathlib import Path
+from valhallaAPI.valhalla import ValhallaAPI
 
 # On Windows systems, it is necessary to install python-magic-bin: pip install python-magic-bin
 
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2020, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "4.0.3"
+__version__ = "4.1"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -5459,6 +5461,263 @@ def threatcrowd_antivirus(urlx, arg1):
         print(mycolors.reset)
 
 
+def valhalla_service(argx, arg1, VALHALLAPIx):
+
+    hatext = ''
+    haresponse = ''
+    myarg0 = argx
+    myarg1 = arg1
+
+    try:
+
+        vll = ValhallaAPI(api_key=VALHALLAAPIx)
+
+        if (argx == 1):
+            vllresponse = vll.get_rules_text(search=arg1)
+        elif (argx == 2):
+            vllresponse = vll.get_rules_text(score=int(arg1))
+        elif (argx == 3):
+            vllresponse = vll.get_rules_text(product=arg1)
+        elif(argx == 4):
+            vllresponse = vll.get_hash_info(hash=arg1)
+        elif(argx == 5):
+            vllresponse = vll.get_rule_info(rulename=arg1)
+        else:
+            print(mycolors.foreground.red + "\n\nYou haven't provided a valid value for the Valhalla service!\n" + mycolors.reset,end="\n")
+            exit(1)
+
+        if (argx < 4):
+            if "Number of Rules: 0" in (vllresponse):
+                if(bkg==1):
+                    print(mycolors.foreground.yellow + "\nYara rules for the provided argument haven't been found on Valhalla!\n" + mycolors.reset,end="\n")
+                    exit(0)
+                else:
+                    print(mycolors.foreground.blue + "\nYara rules for the provided argument haven't been found on Valhalla!\n" + mycolors.reset,end="\n")
+                    exit(0)
+
+        if (argx < 4):
+            with open('valhalla-rules.yar', 'w') as fh:
+                fh.write(vllresponse)
+
+        if((argx == 2) or (argx == 3)):
+            with open('valhalla-rules.yar','r') as fr: 
+                for x in range(28):
+                    z = fr.readline()
+                    y = re.search("^rule", z)
+                    if (y is not None):
+                        if(bkg == 1):
+                            print(mycolors.foreground.lightgreen + z,end='')
+                        else:
+                            print(mycolors.foreground.cyan + z,end='')
+                    else:
+                        print(mycolors.reset + z,end='')
+                
+                print("\n......further content can be found in the valhalla-rules.yar file......")
+            fr.close()
+
+        if((argx == 1)):
+            with open('valhalla-rules.yar','r') as fr: 
+                for x in fr:
+                    z = fr.readline()
+                    y = re.search("^rule", z)
+                    if (y is not None):
+                        if(bkg == 1):
+                            print(mycolors.foreground.lightgreen + z,end='')
+                        else:
+                            print(mycolors.foreground.cyan + z,end='')
+                    else:
+                        print(mycolors.reset + z,end='')
+
+            fr.close()
+
+        if(argx == 4):
+            if (vllresponse['status'] == "empty"): 
+                if(bkg == 1):
+                    print(mycolors.foreground.lightred + "\n\nThere isn't any rule associated to this hash on Valhalla service.\n" + mycolors.reset, end="\n")
+                else:
+                    print(mycolors.foreground.red + "\n\nThere isn't any rule associated to this hash on Valhalla service.\n" + mycolors.reset, end="\n")
+                exit(0)
+
+            if (vllresponse['status'] != "empty"):
+                j = 0
+
+                if(bkg == 1):
+                    while j < len(vllresponse['results']):
+                        if 'rulename' in vllresponse['results'][j]:
+                            print(mycolors.foreground.yellow + "\nRulename:".ljust(13) + mycolors.reset + str(vllresponse['results'][j]['rulename']))
+                        if 'positives' in vllresponse['results'][j]:
+                            print(mycolors.foreground.lightgreen + "Positives:".ljust(12) + mycolors.reset + str(vllresponse['results'][j]['positives']))
+                        if 'timestamp' in vllresponse['results'][j]:
+                            print(mycolors.foreground.lightgreen + "Timestamp:".ljust(12) + mycolors.reset + str(vllresponse['results'][j]['timestamp']))
+                        if 'total' in vllresponse['results'][j]:
+                            print(mycolors.foreground.lightgreen + "Total:".ljust(12) + mycolors.reset + str(vllresponse['results'][j]['total']))
+                        if 'tags' in vllresponse['results'][j]:
+                            print(mycolors.foreground.lightgreen + "Tags:".ljust(12), end='')
+                            for i in vllresponse['results'][j]['tags']: 
+                                print(mycolors.reset + i, end=' ')
+                            print(mycolors.reset)
+
+                        j = j + 1
+
+                    print(mycolors.reset)
+                    exit(0)
+
+                if(bkg == 0):
+                    while j < len(vllresponse['results']):
+                        if 'rulename' in vllresponse['results'][j]:
+                            print(mycolors.foreground.red + "\nRulename:".ljust(13) + mycolors.reset + str(vllresponse['results'][j]['rulename']))
+                        if 'positives' in vllresponse['results'][j]:
+                            print(mycolors.foreground.cyan + "Positives:".ljust(12) + mycolors.reset + str(vllresponse['results'][j]['positives']))
+                        if 'timestamp' in vllresponse['results'][j]:
+                            print(mycolors.foreground.cyan + "Timestamp:".ljust(12) + mycolors.reset + str(vllresponse['results'][j]['timestamp']))
+                        if 'total' in vllresponse['results'][j]:
+                            print(mycolors.foreground.cyan + "Total:".ljust(12) + mycolors.reset + str(vllresponse['results'][j]['total']))
+                        if 'tags' in vllresponse['results'][j]:
+                            print(mycolors.foreground.cyan + "Tags:".ljust(12), end='')
+                            for i in vllresponse['results'][j]['tags']: 
+                                print(mycolors.reset + i, end=' ')
+                            print(mycolors.reset)
+
+                        j = j + 1
+
+                    print(mycolors.reset)
+                    exit(0)
+
+        if(argx == 5):
+            if ('status' in vllresponse): 
+                if (vllresponse['status'] == 'error'):
+                    if(bkg == 1):
+                        print(mycolors.foreground.lightred + "\n\nThere isn't any information associated to this rule name on Valhalla service.\n" + mycolors.reset, end="\n")
+                    else:
+                        print(mycolors.foreground.red + "\n\nThere isn't any information associated to this rule name on Valhalla service.\n" + mycolors.reset, end="\n")
+                print(mycolors.reset)
+                exit(0)
+
+            if ("name" in vllresponse):
+                j = 0
+
+                if(bkg == 1):
+                    if 'description' in vllresponse:
+                        print(mycolors.foreground.yellow + "\nDescription:".ljust(15) + mycolors.reset + str(vllresponse['description']))
+                    if 'author' in vllresponse:
+                        print(mycolors.foreground.lightcyan + "Author:".ljust(14) + mycolors.reset + str(vllresponse['author']))
+                    if 'date' in vllresponse:
+                        print(mycolors.foreground.lightcyan + "Date:".ljust(14) + mycolors.reset + str(vllresponse['date']))
+                    if 'reference' in vllresponse:
+                        print(mycolors.foreground.lightcyan + "Reference:".ljust(14) + mycolors.reset + str(vllresponse['reference']))
+                    if 'minimum_yara' in vllresponse:
+                        print(mycolors.foreground.lightcyan + "Minimum_Yara:".ljust(14) + mycolors.reset + str(vllresponse['minimum_yara']))
+                    if 'required_modules' in vllresponse:
+                        print(mycolors.foreground.lightcyan + "Modules: ".ljust(14), end='')
+                        for n in vllresponse['required_modules']:
+                            print(mycolors.reset + n, end=' ')
+                        print(mycolors.reset)
+                    if 'score' in vllresponse:
+                        print(mycolors.foreground.lightgreen + "Score:".ljust(14) + mycolors.reset + str(vllresponse['score']))
+                    if 'tags' in vllresponse:
+                        print(mycolors.foreground.lightgreen + "Tags: ".ljust(14), end='')
+                        for m in vllresponse['tags']:
+                            print(mycolors.reset + m, end=' ')
+                        print(mycolors.reset)
+                    if 'av_ratio' in vllresponse:
+                        print(mycolors.foreground.lightgreen + "AV_ratio:".ljust(14) + mycolors.reset + str(vllresponse['av_ratio']))
+                    if 'av_verdicts' in vllresponse:
+                        print(mycolors.foreground.lightgreen + "\nAV_verdicts:".ljust(14) + mycolors.reset, end='')
+                        if 'clean' in vllresponse['av_verdicts']:
+                            print(mycolors.foreground.pink + "\n".ljust(15) + "clean:".ljust(14) + mycolors.reset + str(vllresponse['av_verdicts']['clean']), end='')
+                        if 'malicious' in vllresponse['av_verdicts']:
+                            print(mycolors.foreground.pink + "\n".ljust(15) + "malicious:".ljust(14) + mycolors.reset + str(vllresponse['av_verdicts']['malicious']), end='')
+                        if 'suspicious' in vllresponse['av_verdicts']:
+                            print(mycolors.foreground.pink + "\n".ljust(15) + "suspicious:".ljust(14) + mycolors.reset + str(vllresponse['av_verdicts']['suspicious']))
+                    if 'rule_matches' in vllresponse:
+                        print(mycolors.foreground.lightgreen + "\nRule_matches:".ljust(14) + mycolors.reset, end='')
+                        k = 0
+                        while k < len(vllresponse['rule_matches']):
+                            if ('hash' in vllresponse['rule_matches'][k]):
+                                print(mycolors.foreground.pink + "\n\n".ljust(16) + "hash:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['hash']), end='')
+                            if ('positives' in vllresponse['rule_matches'][k]):
+                                print(mycolors.foreground.pink + "\n".ljust(15) + "positives:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['positives']), end='')
+                            if ('size' in vllresponse['rule_matches'][k]):
+                                print(mycolors.foreground.pink + "\n".ljust(15) + "size:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['size']), end='')
+                            if ('timestamp' in vllresponse['rule_matches'][k]):
+                                print(mycolors.foreground.pink + "\n".ljust(15) + "timestamp:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['timestamp']), end='')
+                            if ('total' in vllresponse['rule_matches'][k]):
+                                print(mycolors.foreground.pink + "\n".ljust(15) + "total:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['total']), end='')
+
+                            k = k + 1
+
+                    print(mycolors.reset)
+                    exit(0)
+
+                if(bkg == 0):
+                    if 'description' in vllresponse:
+                        print(mycolors.foreground.red + "\nDescription:".ljust(15) + mycolors.reset + str(vllresponse['description']))
+                    if 'author' in vllresponse:
+                        print(mycolors.foreground.blue + "Author:".ljust(14) + mycolors.reset + str(vllresponse['author']))
+                    if 'date' in vllresponse:
+                        print(mycolors.foreground.blue + "Date:".ljust(14) + mycolors.reset + str(vllresponse['date']))
+                    if 'reference' in vllresponse:
+                        print(mycolors.foreground.blue + "Reference:".ljust(14) + mycolors.reset + str(vllresponse['reference']))
+                    if 'minimum_yara' in vllresponse:
+                        print(mycolors.foreground.blue + "Minimum_Yara:".ljust(14) + mycolors.reset + str(vllresponse['minimum_yara']))
+                    if 'required_modules' in vllresponse:
+                        print(mycolors.foreground.blue + "Modules: ".ljust(14), end='')
+                        for n in vllresponse['required_modules']:
+                            print(mycolors.reset + n, end=' ')
+                        print(mycolors.reset)
+                    if 'score' in vllresponse:
+                        print(mycolors.foreground.green + "Score:".ljust(14) + mycolors.reset + str(vllresponse['score']))
+                    if 'tags' in vllresponse:
+                        print(mycolors.foreground.green + "Tags: ".ljust(14), end='')
+                        for m in vllresponse['tags']:
+                            print(mycolors.reset + m, end=' ')
+                        print(mycolors.reset)
+                    if 'av_ratio' in vllresponse:
+                        print(mycolors.foreground.green + "AV_ratio:".ljust(14) + mycolors.reset + str(vllresponse['av_ratio']))
+                    if 'av_verdicts' in vllresponse:
+                        print(mycolors.foreground.green + "\nAV_verdicts:".ljust(14) + mycolors.reset, end='')
+                        if 'clean' in vllresponse['av_verdicts']:
+                            print(mycolors.foreground.purple + "\n".ljust(15) + "clean:".ljust(14) + mycolors.reset + str(vllresponse['av_verdicts']['clean']), end='')
+                        if 'malicious' in vllresponse['av_verdicts']:
+                            print(mycolors.foreground.purple + "\n".ljust(15) + "malicious:".ljust(14) + mycolors.reset + str(vllresponse['av_verdicts']['malicious']), end='')
+                        if 'suspicious' in vllresponse['av_verdicts']:
+                            print(mycolors.foreground.purple + "\n".ljust(15) + "suspicious:".ljust(14) + mycolors.reset + str(vllresponse['av_verdicts']['suspicious']))
+                    if 'rule_matches' in vllresponse:
+                        print(mycolors.foreground.green + "\nRule_matches:".ljust(14) + mycolors.reset, end='')
+                        k = 0
+                        while k < len(vllresponse['rule_matches']):
+                            if ('hash' in vllresponse['rule_matches'][k]):
+                                print(mycolors.foreground.purple + "\n\n".ljust(16) + "hash:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['hash']), end='')
+                            if ('positives' in vllresponse['rule_matches'][k]):
+                                print(mycolors.foreground.purple + "\n".ljust(15) + "positives:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['positives']), end='')
+                            if ('size' in vllresponse['rule_matches'][k]):
+                                print(mycolors.foreground.purple + "\n".ljust(15) + "size:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['size']), end='')
+                            if ('timestamp' in vllresponse['rule_matches'][k]):
+                                print(mycolors.foreground.purple + "\n".ljust(15) + "timestamp:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['timestamp']), end='')
+                            if ('total' in vllresponse['rule_matches'][k]):
+                                print(mycolors.foreground.purple + "\n".ljust(15) + "total:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['total']), end='')
+
+                            k = k + 1
+
+                    print(mycolors.reset)
+                    exit(0)
+
+        if(bkg==1):
+            print(mycolors.foreground.yellow + "\n\nThe Yara rules have been saved into the \"valhalla-rules.yar\" file.\n" + mycolors.reset,end="\n")
+            exit(0)
+        else:
+            print(mycolors.foreground.green + "\n\nThe Yara rules have been saved into the \"valhalla-rules.yar\" file.\n" + mycolors.reset,end="\n")
+            exit(0)
+
+
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "Error while connecting to Valhalla!\n"))
+        else:
+            print((mycolors.foreground.red + "Error while connecting to Valhalla!\n"))
+        print(mycolors.reset)
+
 
 def quickhashowAndroid(filehash):
 
@@ -5992,8 +6251,11 @@ if __name__ == "__main__":
     malpediaargx = ''
     threadcrowd = 0
     threatcrowdarg = 0
+    valhalla = 0
+    valhallaarg = ''
+    VALHALLAAPIx = ''
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a malware triage tool written by Alexandre Borges. The current version is 4.0.3.", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -b <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a malware triage tool written by Alexandre Borges. The current version is 4.1", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -b <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples.')
     parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a malware sample. It returns general information about the file (any filetype)')
@@ -6034,6 +6296,8 @@ if __name__ == "__main__":
     parser.add_argument('-m', '--malpediarg', dest='malpediaarg', type=str, metavar = "MALPEDIAARG", help='This option provides an argument to the -M option, which is related to MALPEDIA.')
     parser.add_argument('-Q', '--threatcrowd', dest='threatcrowd', type=int, default = 0, metavar = "THREATCROWD", help='Checks multiple information from ThreatCrowd. The possible values are: 1: Get information about the provided e-mail ; 2: Get information about an IP address; 3: Get information about a domain; 4: Get information about a provided MD5 hash; 5: Get information about a specific malware family.')
     parser.add_argument('-q', '--threatcrowdarg', dest='threatcrowdarg', type=str, metavar = "THREATCROWDARG", help='This option provides an argument to the -Q option, which is related to THREATCROWD.')
+    parser.add_argument('-E', '--valhalla', dest='valhalla', type=int, default = 0, metavar = "VALHALLA", help='This option is used for getting Yara rules from the Valhalla service given an argument (-C option below). Valid values are 1: searches for Yara rules matching the provided keyword; 2: search for Yara rules matching a minimal score (40-49: anomaly and threat hunting rules / 60-74: rules for suspicious objects / 75-100: hard malicious matches); 3: Look for Yara rules to the following products, which must be specified using the -C option: FireEyeAX, FireEyeNX, FireEyeEX, CarbonBlack, Tanium, Tenable, SymantecMAA, GRR, osquery, McAfeeATD3 and McAfeeATD4; 4: Given the hash (SHA 256) through -C option, show associated Yara rules; 5: Shows information about a specific Yara rule provided through the -C option.')
+    parser.add_argument('-C', '--valhallaarg', dest='valhallaarg', type=str, metavar = "VALHALLAARG", help='This option is used for providing argument to the  Vahalla service (-E option).')
 
 
     args = parser.parse_args()
@@ -6049,6 +6313,7 @@ if __name__ == "__main__":
         POLYAPI = config_file['POLYSWARM']['POLYAPI']
         ALIENAPI = config_file['ALIENVAULT']['ALIENAPI']
         MALPEDIAAPI = config_file['MALPEDIA']['MALPEDIAAPI']
+        VALHALLAAPI = config_file['VALHALLA']['VALHALLAAPI']
 
     except KeyError:
 
@@ -6106,6 +6371,8 @@ if __name__ == "__main__":
     malpediaargx = args.malpediaarg
     threatcrowdx = args.threatcrowd
     threatcrowdargx = args.threatcrowdarg
+    valhallax = args.valhalla
+    valhallaargx = args.valhallaarg
     config = args.config
 
     if (vt == 2):
@@ -6194,14 +6461,18 @@ if __name__ == "__main__":
         parser.print_help()
         print(mycolors.reset)
         exit(0)
-    
+
     if (args.threatcrowd) not in optval5:
         parser.print_help()
         print(mycolors.reset)
         exit(0)
 
+    if (args.valhalla) not in optval5:
+        parser.print_help()
+        print(mycolors.reset)
+        exit(0)
 
-    if ((not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not fileha) and (not repoha) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (not args.urlhausquery) and (not args.urlhaussubmit) and (hausbatch == 0) and (hauspayloads == 0) and (not args.haushash) and (not args.hausdownloadpayload) and (not args.polyswarmscan) and (not args.polyswarmhash) and (not args.polyswarmmeta) and (androidx == 0) and (not androidsendhax) and (androidvtx == 0) and (androidvttx == 0) and (not androidsendvtx) and (not haustagsearchx) and (not haussigsearchx) and (not ipaddrvtx) and (metatype == 0) and (alienx == 0) and (not alienargsx) and (not malpediaargx) and (malpediax ==0) and (not args.threatcrowd)):
+    if ((not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not fileha) and (not repoha) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (not args.urlhausquery) and (not args.urlhaussubmit) and (hausbatch == 0) and (hauspayloads == 0) and (not args.haushash) and (not args.hausdownloadpayload) and (not args.polyswarmscan) and (not args.polyswarmhash) and (not args.polyswarmmeta) and (androidx == 0) and (not androidsendhax) and (androidvtx == 0) and (androidvttx == 0) and (not androidsendvtx) and (not haustagsearchx) and (not haussigsearchx) and (not ipaddrvtx) and (metatype == 0) and (alienx == 0) and (not alienargsx) and (not malpediaargx) and (malpediax ==0) and (not args.threatcrowd) and (not args.valhalla)):
         parser.print_help()
         print(mycolors.reset)
         exit(0)
@@ -6284,9 +6555,10 @@ if __name__ == "__main__":
                                                                                                                 if (not malpediaargx):
                                                                                                                     if (malpediax == 0):
                                                                                                                         if(not args.threatcrowd):
-                                                                                                                            parser.print_help()
-                                                                                                                            print(mycolors.reset)
-                                                                                                                            exit(0)
+                                                                                                                            if(not args.valhalla):
+                                                                                                                                parser.print_help()
+                                                                                                                                print(mycolors.reset)
+                                                                                                                                exit(0)
 
     if (urltemp):
         if (validators.url(urltemp)) == True:
@@ -6502,6 +6774,12 @@ if __name__ == "__main__":
     if (threatcrowdx == 5):
         argx = threatcrowdargx
         threatcrowd_antivirus(threatcrowdurl,argx)
+        print(mycolors.reset)
+        exit(0)
+
+    if (valhallax > 0):
+        argx = valhallaargx
+        valhalla_service(valhallax,argx,VALHALLAAPI)
         print(mycolors.reset)
         exit(0)
 

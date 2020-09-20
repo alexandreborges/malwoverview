@@ -8,3 +8,4 @@ geocoder>=1.38.1
 polyswarm-api>=2.1.2
 pathlib>=1.0.1
 configparser>=5.0.0
+valhallaAPI>=0.3.1

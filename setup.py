@@ -11,7 +11,7 @@ with open("README.md", encoding='utf8') as readme:
 
 setup(
     name="malwoverview",
-    version="4.0.3",
+    version="4.1",
     author="Alexandre Borges",
     author_email="alexandreborges@blackstormsecurity.com",
     license="GNU GPL v3.0",
@@ -35,6 +35,7 @@ setup(
         "geocoder",
         "polyswarm-api",
         "pathlib",
+        "valhallaAPI",
         "configparser",
 		"python-magic-bin; platform_system == 'Windows'"
     ],
