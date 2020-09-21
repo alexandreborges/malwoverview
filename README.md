@@ -650,7 +650,7 @@ Version 4.1:
             * Introduces the -E and -C options for Valhalla service 
               (https://www.nextron-systems.com/valhalla/) 
             * Introduces few changes in the setup.py file (contribution from Christian 
-              Clauss. 
+              Clauss). 
             * Introduces a new contributor: Christian Clauss (https://github.com/cclauss) 
 
 Version 4.0.3:
