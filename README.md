@@ -213,7 +213,7 @@ Valhalla demo-API key is: 111111111111111111111111111111111111111111111111111111
 9. ThreadCrowd: It isn't necessary an API. 
  
 
-In Windows systems, create the .malwapi.conf file in the C:\Users\<username> directory 
+In Windows systems, create the .malwapi.conf file in the C:\Users\\[username\] directory 
 (Windows home user directory). In Linux systems, create the .malwapi.conf file in 
 /home/\[username\] directory (Linux home user directory). 
 
