@@ -198,7 +198,7 @@ The .malwapi.conf configuration file (from the the home directory) has the follo
       VALHALLAAPI =
 
 
-The requested APIs can be requested on the respective service websites:
+The APIs can be requested on the respective service websites:
 
 1. Virus Total (community and paid API): https://www.virustotal.com/gui/join-us
 2. Hybrid Analysis: https://www.hybrid-analysis.com/signup
