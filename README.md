@@ -213,10 +213,12 @@ Valhalla demo-API key is: 111111111111111111111111111111111111111111111111111111
 9. ThreadCrowd: It isn't necessary an API. 
  
 
-In Windows systems, when the package is installed using pip, the suggestion is to create the 
-.malwapi.conf in either C:\Users\<username> directory (Windows home user directory) or 
-/home/\[username\] (Linux home user directory). Additionally, you don't need to specify 
-"-w 1" option while using malwoverview.py on Windows anymore. 
+In Windows systems, create the .malwapi.conf file in the C:\Users\<username> directory 
+(Windows home user directory). In Linux systems, create the .malwapi.conf file in 
+/home/\[username\] directory (Linux home user directory). 
+
+Additionally, you don't need to specify "-w 1" option while using malwoverview.py on Windows
+anymore. 
 
 To check the installation, execute:
 
