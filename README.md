@@ -198,8 +198,24 @@ The .malwapi.conf configuration file (from the the home directory) has the follo
       VALHALLAAPI =
 
 
+The requested APIs can be requested on the respective service websites:
+
+1. Virus Total (community and paid API): https://www.virustotal.com/gui/join-us
+2. Hybrid Analysis: https://www.hybrid-analysis.com/signup
+3. Malshare: https://malshare.com/doc.php
+4. URLHaus: https://urlhaus.abuse.ch/api/#account 
+5. Polyswarm: https://docs.polyswarm.io/consumers
+6. Alien Vault: https://otx.alienvault.com/api
+7. Malpedia: It doesn't offer open registration, but you can request an user account 
+directly through Twitter (DM) or feedback e-email. The Malpedia Twitter handle is @malpedia. 
+8. Valhalla: You can use a demo API key or contract the Valhalla service for a private key. 
+Valhalla demo-API key is: 1111111111111111111111111111111111111111111111111111111111111111.  
+9. ThreadCrowd: It isn't necessary an API. 
+ 
+
 In Windows systems, when the package is installed using pip, the suggestion is to create the 
-.malwapi.conf in either C:\Users\<username> directory.  Additionally, you don't need to specify 
+.malwapi.conf in either C:\Users\<username> directory (Windows home user directory) or 
+/home/\[username\] (Linux home user directory). Additionally, you don't need to specify 
 "-w 1" option while using malwoverview.py on Windows anymore. 
 
 To check the installation, execute:
