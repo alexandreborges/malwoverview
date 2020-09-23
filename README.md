@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/4.1) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/4.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
 [<img alt="PayPal" src="https://img.shields.io/badge/Donate-Paypal-brightgreen?style=for-the-badge&logo=appveyor">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M8F458EZH8UZE&source=url)
 
@@ -99,7 +99,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 4.1
+# Current Version: 4.2
 
      Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by 
      default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, 
@@ -418,7 +418,7 @@ optional arguments:
                         providing the job ID. Possible returned status values are: IN_QUEUE, SUCCESS,
                         ERROR, IN_PROGRESS and PARTIAL_SUCCESS.
       -D DOWNLOAD, --download DOWNLOAD
-                        Downloads the sample from Hybrid Analysis, Malshare and Polyswarm. Options i
+                        Downloads the sample from Hybrid Analysis, Malshare and Polyswarm. Options 
                         -H or -L (Hybrid Analysis and Malshare, respectively) must be specified as well 
                         -O option for Polyswarm engine.
       -e HA_ENVIRONMENT, --haenv HA_ENVIRONMENT
@@ -658,8 +658,19 @@ optional arguments:
       malwoverview.py -E 4 -C 8a883a74702f83a273e6c292c672f1144fd1cce8ee126cd90c
       95131e870744af 
       malwoverview.py -E 5 -C Casing_Anomaly_ByPass | more
+      malwoverview.py -H 9555ea9a1909120dd9be988d91cad345302b38884d2343ee16ab994ac6c5c7df -D 1
+      malwoverview.py -L 081dc7af98fe601e09d81a4698f0df119ac612be1984f1d365b4cd9c21f550a1 -D 1
+      malwoverview.py -O 081dc7af98fe601e09d81a4698f0df119ac612be1984f1d365b4cd9c21f550a1 -D 1
 
 # HISTORY
+
+Version 4.2:
+
+      This version:
+
+            * Fixes -L option from Malware.
+            * Introduces additional instruction on README.md (this file) to help professionals
+              to get the APIs.
 
 Version 4.1:
 

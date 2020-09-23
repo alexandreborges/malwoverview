@@ -20,7 +20,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 4.1
+# Malwoverview.py: version 4.2
 
 import os
 import sys
@@ -60,7 +60,7 @@ from valhallaAPI.valhalla import ValhallaAPI
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2020, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "4.1"
+__version__ = "4.2"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -2560,19 +2560,19 @@ def malsharehashsearch(filehash):
         maltext2 = json.loads(malresponse2.text)
         if (maltext2):
             try:
-                if (maltext2.get('sha256')):
-                    urltemp = maltext2['source']
+                if ((maltext2[0])['sha256']):
+                    urltemp = (maltext2[0])['source']
                     if (validators.url(urltemp)) == True:
                         loc = urltoip(urltemp)
                     else:
                         loc = ''
                     if (bkg == 1):
-                        print((mycolors.reset + "sha256: " + mycolors.foreground.yellow + "%s\n" % maltext2['sha256'] + mycolors.reset + "sha1:   " + mycolors.foreground.yellow + "%s\n" % maltext2['sha1'] + mycolors.reset + "md5:    " + mycolors.foreground.yellow + "%s\n" %  maltext2['md5'] + mycolors.reset + "type:   " + mycolors.foreground.lightcyan + "%s\n" % maltext2['type'] + mycolors.reset + "source: " + mycolors.foreground.lightred + "%s\n" % maltext2['source'] + mycolors.reset + "city:   " + mycolors.foreground.lightgreen + "%s" % loc))
-                        for k in maltext2['yarahits']['yara']:
+                        print((mycolors.reset + "sha256: " + mycolors.foreground.yellow + "%s\n" % (maltext2[0])['sha256'] + mycolors.reset + "sha1:   " + mycolors.foreground.yellow + "%s\n" % (maltext2[0])['sha1'] + mycolors.reset + "md5:    " + mycolors.foreground.yellow + "%s\n" %  (maltext2[0])['md5'] + mycolors.reset + "type:   " + mycolors.foreground.lightcyan + "%s\n" % (maltext2[0])['type'] + mycolors.reset + "source: " + mycolors.foreground.lightred + "%s\n" % (maltext2[0])['source'] + mycolors.reset + "city:   " + mycolors.foreground.lightgreen + "%s" % loc))
+                        for k in (maltext2[0])['yarahits']['yara']:
                             print(mycolors.reset + "Yara Hits: " + mycolors.foreground.lightgreen + str(k))
                     else:
-                        print((mycolors.reset + "sha256: " + mycolors.foreground.green + "%s\n" % maltext2['sha256'] + mycolors.reset + "sha1:   " + mycolors.foreground.green + "%s\n" % maltext2['sha1'] + mycolors.reset + "md5:    " + mycolors.foreground.green +"%s\n" %  maltext2['md5'] + mycolors.reset + "type:   " + mycolors.foreground.cyan + "%s\n" % maltext2['type'] + mycolors.reset + "source: " + mycolors.foreground.red + "%s\n" % maltext2['source'] + mycolors.reset + "city:   " + mycolors.foreground.blue + "%s" % loc))
-                        for k in maltext2['yarahits']['yara']:
+                        print((mycolors.reset + "sha256: " + mycolors.foreground.green + "%s\n" % (maltext2[0])['sha256'] + mycolors.reset + "sha1:   " + mycolors.foreground.green + "%s\n" % (maltext2[0])['sha1'] + mycolors.reset + "md5:    " + mycolors.foreground.green +"%s\n" %  (maltext2[0])['md5'] + mycolors.reset + "type:   " + mycolors.foreground.cyan + "%s\n" % (maltext2[0])['type'] + mycolors.reset + "source: " + mycolors.foreground.red + "%s\n" % (maltext2[0])['source'] + mycolors.reset + "city:   " + mycolors.foreground.blue + "%s" % loc))
+                        for k in (maltext2[0])['yarahits']['yara']:
                             print(mycolors.reset + "Yara Hits: " + mycolors.foreground.purple + str(k))
 
                 if (maldownload == 1):
@@ -6255,7 +6255,7 @@ if __name__ == "__main__":
     valhallaarg = ''
     VALHALLAAPIx = ''
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a malware triage tool written by Alexandre Borges. The current version is 4.1", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -b <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a malware triage tool written by Alexandre Borges. The current version is 4.2", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -b <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples.')
     parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a malware sample. It returns general information about the file (any filetype)')
