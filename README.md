@@ -212,9 +212,9 @@ directly through Twitter (DM) or feedback e-email. The Malpedia Twitter handle i
 Valhalla demo-API key is: 1111111111111111111111111111111111111111111111111111111111111111.  
 9. ThreadCrowd: It isn't necessary an API. 
  
----------------------------------------------
-An special note about the excellent MALPEDIA:
----------------------------------------------
+----------------------------------------------------
+A special note about API requests to the MALPEDIA:
+----------------------------------------------------
 
 The service and acceptance is based on the community vetting. Thus, it's recommended 
 you send a request for an API from your business e-mail address and NOT 
@@ -223,6 +223,7 @@ you provided further information about you (LinkedIn account, Twitter and so on)
 because it would make simpler to proof your identity, professional profile and 
 legitimacy, so making quicker the approval of your request.  
 
+-----------------------------------------------------
 
 
 In Windows systems, create the .malwapi.conf file in the C:\Users\\[username\] directory 
