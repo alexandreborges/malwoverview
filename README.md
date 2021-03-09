@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/4.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/4.3) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
 [<img alt="PayPal" src="https://img.shields.io/badge/Donate-Paypal-brightgreen?style=for-the-badge&logo=appveyor">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M8F458EZH8UZE&source=url)
 
@@ -83,8 +83,21 @@
 ![Alt text](pictures/picture_76.jpg?raw=true "Title")
 ![Alt text](pictures/picture_77.jpg?raw=true "Title")
 ![Alt text](pictures/picture_78.jpg?raw=true "Title")
+![Alt text](pictures/picture_79.jpg?raw=true "Title")
+![Alt text](pictures/picture_80.jpg?raw=true "Title")
+![Alt text](pictures/picture_81.jpg?raw=true "Title")
+![Alt text](pictures/picture_82.jpg?raw=true "Title")
+![Alt text](pictures/picture_83.jpg?raw=true "Title")
+![Alt text](pictures/picture_84.jpg?raw=true "Title")
+![Alt text](pictures/picture_85.jpg?raw=true "Title")
+![Alt text](pictures/picture_86.jpg?raw=true "Title")
+![Alt text](pictures/picture_87.jpg?raw=true "Title")
+![Alt text](pictures/picture_88.jpg?raw=true "Title")
+![Alt text](pictures/picture_89.jpg?raw=true "Title")
+![Alt text](pictures/picture_90.jpg?raw=true "Title")
+![Alt text](pictures/picture_91.jpg?raw=true "Title")
 
-      Copyright (C)  2018-2020 Alexandre Borges <alexandreborges at blackstormsecurity dot com>
+      Copyright (C)  2018-2021 Alexandre Borges <alexandreborges at blackstormsecurity dot com>
 
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
@@ -99,7 +112,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 4.2
+# Current Version: 4.3
 
      Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by 
      default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, 
@@ -111,8 +124,8 @@
 
 # ABOUT
 
-Malwoverview.py is a simple tool to perform an initial and quick triage of malware samples, URLs and hashes. 
-Additionally, Malwoverview is able to show some threat intelligence information.   
+Malwoverview.py is a first response tool for threat hunting, which performs an initial and quick 
+triage of malware samples, URLs, IP addresses, domains, malware families, IOCs and hashes.
 
 This tool aims to : 
 
@@ -144,6 +157,10 @@ This tool aims to :
 23. Gather threat hunting information from Malpedia using different criteria. 
 24. Gather threat hunting information from ThreatCrowd using different criteria. 
 25. Provide Yara rules and associated information from Valhalla. 
+26. Gather threat hunting information from Malware Bazaar using different criteria. 
+27. Gather IOC information from ThreatFox using different criteria. 
+
+
 
 # CONTRIBUTORS:
 
@@ -153,10 +170,10 @@ This tool aims to :
 
 # INSTALLATION 
 
-This tool has been tested on Ubuntu, Kali Linux 2020, REMnux, Windows 8.1 and 10. Malwoverview 
+This tool has been tested on Ubuntu, Kali Linux 2021, REMnux, Windows 8.1 and 10. Malwoverview 
 can be installed by executing the following command:
 
-      pip3.8 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
+      pip3.9 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
       or...
       python -m pip install -U malwoverview
       or...
@@ -171,7 +188,7 @@ custom configuration file and indicate it by using the -c option.
 A special note about the Alien Vault: it is necessary to subscribe to pulses on Alien Vault 
 website before using -n 1 option.  
 
-The .malwapi.conf configuration file (from the the home directory) has the following format: 
+The .malwapi.conf configuration file (from the the home directory) has the following format:
 
       [VIRUSTOTAL]
       VTAPI = 
@@ -207,10 +224,12 @@ The APIs can be requested on the respective service websites:
 5. Polyswarm: https://docs.polyswarm.io/consumers
 6. Alien Vault: https://otx.alienvault.com/api
 7. Malpedia: It doesn't offer open registration, but you can request an user account 
-directly through Twitter (DM) or feedback e-email. The Malpedia Twitter handle is @malpedia. 
-8. Valhalla: You can use a demo API key or contract the Valhalla service for a private key. 
-Valhalla demo-API key is: 1111111111111111111111111111111111111111111111111111111111111111.  
-9. ThreadCrowd: It isn't necessary an API. 
+directly through Twitter (DM) or feedback e-email. The Malpedia Twitter handle is @malpedia.
+8. Valhalla: You can use a demo API key or contract the Valhalla service for a private key.
+Valhalla demo-API key is: 1111111111111111111111111111111111111111111111111111111111111111.
+9. ThreatCrowd: It isn't necessary an API.
+10. Malware Bazaar: It isn't necessary an API.
+11. ThreatFox: It isn't necessary an API.
  
 ----------------------------------------------------
 A special note about API requests to the MALPEDIA:
@@ -228,7 +247,7 @@ legitimacy, so making quicker the approval of your request.
 
 In Windows systems, create the .malwapi.conf file in the C:\Users\\[username\] directory 
 (Windows home user directory). In Linux systems, create the .malwapi.conf file in 
-/home/\[username\] directory (Linux home user directory). 
+/home/\[username\] directory (Linux home user directory).
 
 Additionally, you don't need to specify "-w 1" option while using malwoverview.py on Windows
 anymore. 
@@ -248,20 +267,20 @@ If you want to perform the manual steps (usually, it is not necessary), so few s
 
 1. Python version 3.8 or later (Only Python 3.x !!! It does NOT work using Python 2.7) 
 
-       $ apt-get install python3.8  (for example)
+       $ apt-get install python3.9  (for example)
 
 2. Python-magic.  
 
       To install python-magic package you can execute the following command:
 
-       $ pip3.8 install python-magic
+       $ pip3.9 install python-magic
 
       Or compiling it from the github repository:
 
        $ git clone https://github.com/ahupp/python-magic
        $ cd python-magic/
-       $ python3.8 setup.py build
-       $ python3.8 setup.py install
+       $ python3.9 setup.py build
+       $ python3.9 setup.py install
 
       As there are serious problems about existing two versions of python-magic package, my 
       recommendation is to install it from github (second procedure above) and copy the magic.py 
@@ -269,21 +288,21 @@ If you want to perform the manual steps (usually, it is not necessary), so few s
       
 3. Install several Python packages: 
 
-       $ pip3.8 install -r requirements.txt
+       $ pip3.9 install -r requirements.txt
 
        OR
 
-       $ pip3.8 install -U pefile
-       $ pip3.8 install -U colorama
-       $ pip3.8 install -U simplejson
-       $ pip3.8 install -U python-magic
-       $ pip3.8 install -U requests
-       $ pip3.8 install -U validators
-       $ pip3.8 install -U geocoder
-       $ pip3.8 install -U polyswarm-api
-       $ pip3.8 install -U pathlib
-       $ pip3.8 install -U configparser
-       $ pip3.8 install -U valhallaAPI
+       $ pip3.9 install -U pefile
+       $ pip3.9 install -U colorama
+       $ pip3.9 install -U simplejson
+       $ pip3.9 install -U python-magic
+       $ pip3.9 install -U requests
+       $ pip3.9 install -U validators
+       $ pip3.9 install -U geocoder
+       $ pip3.9 install -U polyswarm-api
+       $ pip3.9 install -U pathlib
+       $ pip3.9 install -U configparser
+       $ pip3.9 install -U valhallaAPI
        
 4. To check an Android mobile you need to install the "adb" program by executing the following command:
 
@@ -296,7 +315,7 @@ If you want to perform the manual steps (usually, it is not necessary), so few s
 
 5. Finally, you can install Malwoverview using one of the following methods:
 
-         pip3.8 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
+         pip3.9 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
 
          or...
 
@@ -356,7 +375,7 @@ If you want to perform the manual steps (usually, it is not necessary), so few s
 
 5. Finally, you can install Malwoverview using one of the following methods:
 
-         pip3.8 install git+https://github.com/alexandreborges/malwoverview (preferred method)
+         pip3.9 install git+https://github.com/alexandreborges/malwoverview (preferred method)
 
          or...
 
@@ -371,15 +390,16 @@ If you want to perform the manual steps (usually, it is not necessary), so few s
 
 To use the malwoverview, execute the command as shown below:
 
-      root@ubuntu19:~/malwoverview# python3.8 malwoverview.py  | more
+      root@ubuntu19:~/malwoverview# python3.9 malwoverview.py  | more
 
       usage: python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> 
-      -b <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename>
-      -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> 
-      -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, 
-      domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> 
-      -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> 
-      -q <argument> -E <1|2|3|4|5> -C <argument>
+      -o <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> 
+      -V <filename> -D <0|1> -e <0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1>
+      -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> 
+      -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> 
+      -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address>
+      -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> 
+      -E <1|2|3|4|5> -C <argument> -b <1|2|3|4|5|6|7|8|9|10> -B <arg>
 
 Malwoverview is a malware triage tool written by Alexandre Borges.
 
@@ -393,7 +413,7 @@ optional arguments:
       -f FILENAME, --filename FILENAME
                         Specifies a full path to a malware sample. It returns general information 
                         about the file (any filetype)
-      -b BACKGROUND, --background BACKGROUND
+      -o BACKGROUND, --background BACKGROUND
                         Adapts the output colors to a white terminal. The default is black terminal
       -x OVERLAY, --overlay OVERLAY
                         Extracts the overlay (it is used with -f option).
@@ -574,6 +594,33 @@ optional arguments:
       -C VALHALLAARG, --valhallaarg VALHALLAARG
                         This option is used for providing argument to the Vahalla service (-E option).
 
+      -b BAZAAR, --bazaar BAZAAR
+                        Checks multiple information from Malware Bazaar and ThreatFox. The possible values
+                        are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar) Get 
+                        information and a list of malware samples associated and according to a specific 
+                        tag; 3: (Bazaar) Get a list of malware samples according to a given imphash; 
+                        4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample 
+                        from Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped 
+                        using the following password: infected; 6: (ThreatFox) Get current IOC dataset 
+                        from last x days given by option -B; 7: (ThreatFox) Search for the specified IOC on
+                        ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified 
+                        tag given by option -B; 9: (ThreatFox) Search IOCs according to the specified malware
+                        family provided by option -B; 10. (ThreatFox) List all available malware families.
+
+      -B BAZAAR_ARG, --bazaararg BAZAAR_ARG
+                        Provides argument to -b Bazaar and ThreatFox option. If you hahave used "-b 1" 
+                        then the -B's argument must be a hash; If you have used "-b 2" then -B's argument 
+                        must be a malware tag; If you have used "-b 3" then the argument must be a imphash;
+                        If you have used "-b 4", so the argument must be "100 or time", where "100" lists 
+                        last "100 samples" and "time" lists last samples added to Malware Bazaar in the last
+                        60 minutes; If you used "-b 5" then the -B's argument must be a SHA256 hash; If you 
+                        used "-b 6", so the -B's value is the number of DAYS to filter IOCs. The default 
+                        (and max) is 90 (days); If you used "-b 7" so the -B's argument is the IOC you want
+                        to search for; If you used "-b 8", so the -B's argument is the TAG you want search 
+                        for; If you used "-b 9", so the -B argument is the malware family you want to search
+                        for;
+
+
       Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore,
       if you are willing to wait some minutes, so you can use the -p option, which forces a one minute wait 
       every 4 malware samples, but allows obtaining a complete evaluation of the repository.
@@ -674,8 +721,28 @@ optional arguments:
       malwoverview.py -H 9555ea9a1909120dd9be988d91cad345302b38884d2343ee16ab994ac6c5c7df -D 1
       malwoverview.py -L 081dc7af98fe601e09d81a4698f0df119ac612be1984f1d365b4cd9c21f550a1 -D 1
       malwoverview.py -O 081dc7af98fe601e09d81a4698f0df119ac612be1984f1d365b4cd9c21f550a1 -D 1
+      malwoverview -b 1 -B c9d7b5d06cd8ab1a01bf0c5bf41ef2a388e41b4c66b1728494f86ed255a95d48 
+      malwoverview -b 2 -B Emotet
+      malwoverview.py -b 3 -B f34d5f2d4577ed6d9ceec516c1f5a744
+      malwoverview.py -b 4 -B 100
+      malwoverview.py -b 4 -B time
+      malwoverview.py -b 5 -B 2db2c1be15db4fc71b60ff3f7556156188cac93abcfabc866a2ca020b774347b
+      malwoverview.py -b 6 -B 20
+      malwoverview.py -b 7 -B  139.180.203.104:443
+      malwoverview.py -b 8 -B Magecart
+      malwoverview.py -b 9 -B "Cobalt Strike"
+      malwoverview.py -b 10 | more
 
 # HISTORY
+
+Version 4.3:
+
+      This version:
+
+            * Introduces Malware Bazaar and ThreatFox endpoints, with 5 options for each one.
+              to get the APIs.
+            * Changes background option from -b to -o.
+            * Fixes problems on Malpedia and URLHaus options.
 
 Version 4.2:
 

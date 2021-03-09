@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (C)  2018-2020 Alexandre Borges <alexandreborges@blackstormsecurity.com>
+# Copyright (C)  2018-2021 Alexandre Borges <alexandreborges@blackstormsecurity.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 4.2
+# Malwoverview.py: version 4.3
 
 import os
 import sys
@@ -58,9 +58,9 @@ from valhallaAPI.valhalla import ValhallaAPI
 # On Windows systems, it is necessary to install python-magic-bin: pip install python-magic-bin
 
 __author__ = "Alexandre Borges"
-__copyright__ = "Copyright 2018-2020, Alexandre Borges"
+__copyright__ = "Copyright 2018-2021, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "4.2"
+__version__ = "4.3"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -73,6 +73,8 @@ urlvtreport = 'https://www.virustotal.com/vtapi/v2/url/report'
 urlvtdomain = 'https://www.virustotal.com/vtapi/v2/domain/report'
 urlfilevtcheck = 'https://www.virustotal.com/vtapi/v2/file/scan'
 urlmalshare = 'https://malshare.com/api.php?api_key='
+urlbazaar = 'https://mb-api.abuse.ch/api/v1/'
+urlthreatfox = 'https://threatfox-api.abuse.ch/api/v1/'
 hauss = 'https://urlhaus.abuse.ch/api/'
 hausq = 'https://urlhaus-api.abuse.ch/v1/url/'
 hausb = 'https://urlhaus-api.abuse.ch/v1/urls/recent/'
@@ -2704,10 +2706,10 @@ def urlhauscheck(urlx, haus):
         print((mycolors.reset + "".center(28)), end='')
         print("\n" + (126*'-').center(59))
 
-        requestsession5 = requests.Session( )
-        requestsession5.headers.update({'accept': 'application/json'})
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept': 'application/json'})
         params = {"url": urlx}
-        hausresponse = requests.post(haus, data=params)
+        hausresponse = requestsession.post(haus, data=params)
         haustext = json.loads(hausresponse.text)
 
 
@@ -2950,11 +2952,11 @@ def haushashsearch(hashx, haus):
         print((mycolors.reset + "".center(28)), end='')
         print("\n" + (126*'-').center(59))
 
-        requestsession9 = requests.Session( )
-        requestsession9.headers.update({'accept': 'application/json'})
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept': 'application/json'})
         if ((len(hashx)==32)):
             params = {"md5_hash": hashx}
-        hausresponse = requests.post(haus, data=params)
+        hausresponse = requestsession.post(haus, data=params)
         haustext = json.loads(hausresponse.text)
 
         if ((len(hashx)==64)):
@@ -3143,6 +3145,1729 @@ def haushashsearch(hashx, haus):
         print(mycolors.reset)
 
 
+def bazaar_hash(bazaarx, bazaar):
+
+    bazaartext = ''
+    bazaarresponse = ''
+    params = ''
+
+    try:
+        
+        print("\n")
+        print((mycolors.reset + "MALWARE BAZAAR REPORT".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100*'-').center(50))
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept': 'application/json'})
+        params = {'query':'get_info',"hash": bazaarx}
+        bazaarresponse = requestsession.post(bazaar, data=params)
+        bazaartext = json.loads(bazaarresponse.text)
+
+        if bazaartext['query_status'] == "hash_not_found":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nThe provided hash was not found!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nThe provided hash was not found!\n" + mycolors.reset)
+            exit(1)
+
+        if bazaartext['query_status'] == "illegal_hash":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nThe provided hash is not valid!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nThe provided hash is not valid!\n" + mycolors.reset)
+            exit(1)
+
+        if (bkg == 1):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            if ("sha256_hash" in y):
+                                if d['sha256_hash']:
+                                    print(mycolors.foreground.lightgreen + "\nsha256_hash: ".ljust(15) + mycolors.reset + d['sha256_hash'],end=' ')
+
+                            if ("sha1_hash" in y):
+                                if d['sha1_hash']:
+                                    print(mycolors.foreground.lightgreen + "\nsha1_hash: ".ljust(15) + mycolors.reset + d['sha1_hash'], end=' ')
+
+                            if ("md5_hash" in y):
+                                if d['md5_hash']:
+                                    print(mycolors.foreground.lightgreen + "\nmd5_hash: ".ljust(15) + mycolors.reset + d['md5_hash'], end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.lightgreen + "\nfirst_seen: ".ljust(15) + mycolors.reset + d['first_seen'], end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.lightgreen + "\nlast_seen: ".ljust(15) + mycolors.reset + d['last_seen'], end=' ')
+
+                            if ("file_name" in y):
+                                if d['file_name']:
+                                    print(mycolors.foreground.lightgreen + "\nfile_name: ".ljust(15) + mycolors.reset + d['file_name'], end=' ')
+
+                            if ("file_size" in y):
+                                if d['file_size']:
+                                    print(mycolors.foreground.lightgreen + "\nfile_size: ".ljust(15) + mycolors.reset + str(d['file_size']) + " bytes", end=' ')
+
+                            if ("file_type" in y):
+                                if d['file_type']:
+                                    print(mycolors.foreground.lightgreen + "\nfile_type: ".ljust(15) + mycolors.reset + str(d['file_type']), end=' ')
+
+                            if ("file_type_mime" in y):
+                                if d['file_type_mime']:
+                                    print(mycolors.foreground.lightgreen + "\nmime_type: ".ljust(15) + mycolors.reset + str(d['file_type_mime']), end=' ')
+                            if ("origin_country" in y):
+                                if d['origin_country']:
+                                    print(mycolors.foreground.lightgreen + "\ncountry: ".ljust(15) + mycolors.reset + d['origin_country'], end=' ')
+
+                            if ("imphash" in y):
+                                if d['imphash']:
+                                    print(mycolors.foreground.lightgreen + "\nimphash: ".ljust(15) + mycolors.reset + d['imphash'], end=' ')
+
+                            if ("tlsh" in y):
+                                if d['tlsh']:
+                                    print(mycolors.foreground.lightgreen + "\ntlsh: ".ljust(15) + mycolors.reset + d['tlsh'], end=' ')
+
+                            if ("comment" in y):
+                                if d['comment']:
+                                    print(mycolors.foreground.lightgreen + "\ncomments: ".ljust(15) + mycolors.reset, end='')
+                                    s = d['comment'].split('\n')
+                                    for n in range(len(s)):
+                                        print("\n".ljust(15) + s[n], end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.lightgreen + "\nreporter: ".ljust(15) + mycolors.reset + d['reporter'], end=' ')
+
+                            if ("oleinformation" in y):
+                                print(mycolors.foreground.lightgreen + "\noleinformation: ".ljust(15),end='') 
+                                for t in d['oleinformation']:
+                                    print(mycolors.reset + t, end=' ')
+
+                            if ("delivery_method" in y):
+                                if d['delivery_method']:
+                                    print(mycolors.foreground.lightgreen + "\ndelivery: ".ljust(15) + mycolors.reset + d['delivery_method'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.lightgreen + "\ntags: ".ljust(15),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+                            if ("file_information" in y):
+                                if (d['file_information'] is not None):
+                                    for x in d['file_information']:
+                                        if ("context" in x):
+                                            if (x['context'] == "twitter"):
+                                                print(mycolors.foreground.orange + "\nTwitter: ".ljust(15) + mycolors.reset + x['value'], end=' ')
+                                            if (x['context'] == "cape"):
+                                                print(mycolors.foreground.orange + "\nCape: ".ljust(15) + mycolors.reset + x['value'], end=' ')
+
+                            if ("vendor_intel" in y):
+                                if (d['vendor_intel'] is not None):
+                                    if ("UnpacMe" in d['vendor_intel']):
+                                        if (d['vendor_intel']['UnpacMe']):
+                                            print(mycolors.foreground.orange + "\nUnpacMe: ".ljust(15) + mycolors.reset, end=' ')
+                                            filtered_list = []
+                                            for j in d['vendor_intel']['UnpacMe']:
+                                                    if ("link" in j):
+                                                        if j['link'] not in filtered_list:
+                                                            filtered_list.append(j['link'])
+                                                            for h in filtered_list:
+                                                                print('\n'.ljust(15) + h, end=' ')
+
+                                    if ("ANY.RUN" in d['vendor_intel']):
+                                        print(mycolors.foreground.orange + "\nAny.Run: ".ljust(15) + mycolors.reset, end=' ')
+                                        for j in d['vendor_intel']['ANY.RUN']:
+                                            if ("analysis_url" in j):
+                                                print("\n".ljust(15) + j['analysis_url'], end=' ')
+
+                                    if ("Triage" in d['vendor_intel']):
+                                        for j in d['vendor_intel']['Triage']:
+                                            if ("link" in j):
+                                                print(mycolors.foreground.orange + "\n\nTriage: ".ljust(16) + mycolors.reset + d['vendor_intel']['Triage']['link'], end=' ')
+
+                                        if (d['vendor_intel']['Triage']['signatures']):
+                                            print(mycolors.foreground.orange + "\nTriage sigs: ".ljust(15) + mycolors.reset,end='\n')
+                                            for m in d['vendor_intel']['Triage']['signatures']:
+                                                if ("signature" in m):
+                                                    print(mycolors.reset + "".ljust(14) + m['signature'])
+
+                                    if ("vxCube" in d['vendor_intel']):
+                                        for j in d['vendor_intel']['vxCube']:
+                                            if ("behaviour" in j):
+                                                print(mycolors.foreground.orange + "\nDr.Web rules: ".ljust(15) + mycolors.reset)
+                                                for m in d['vendor_intel']['vxCube']['behaviour']:
+                                                    if ("rule" in m):
+                                                        print(mycolors.reset + "".ljust(14) + m['rule'])
+
+        if (bkg == 0):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            if ("sha256_hash" in y):
+                                if d['sha256_hash']:
+                                    print(mycolors.foreground.green + "\nsha256_hash: ".ljust(15) + mycolors.reset + d['sha256_hash'],end=' ')
+
+                            if ("sha1_hash" in y):
+                                if d['sha1_hash']:
+                                    print(mycolors.foreground.green + "\nsha1_hash: ".ljust(15) + mycolors.reset + d['sha1_hash'], end=' ')
+
+                            if ("md5_hash" in y):
+                                if d['md5_hash']:
+                                    print(mycolors.foreground.green + "\nmd5_hash: ".ljust(15) + mycolors.reset + d['md5_hash'], end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.green + "\nfirst_seen: ".ljust(15) + mycolors.reset + d['first_seen'], end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.green + "\nlast_seen: ".ljust(15) + mycolors.reset + d['last_seen'], end=' ')
+
+                            if ("file_name" in y):
+                                if d['file_name']:
+                                    print(mycolors.foreground.green + "\nfile_name: ".ljust(15) + mycolors.reset + d['file_name'], end=' ')
+
+                            if ("file_size" in y):
+                                if d['file_size']:
+                                    print(mycolors.foreground.green + "\nfile_size: ".ljust(15) + mycolors.reset + str(d['file_size']) + " bytes", end=' ')
+
+                            if ("file_type" in y):
+                                if d['file_type']:
+                                    print(mycolors.foreground.green + "\nfile_type: ".ljust(15) + mycolors.reset + str(d['file_type']), end=' ')
+
+                            if ("file_type_mime" in y):
+                                if d['file_type_mime']:
+                                    print(mycolors.foreground.green + "\nmime_type: ".ljust(15) + mycolors.reset + str(d['file_type_mime']), end=' ')
+                            if ("origin_country" in y):
+                                if d['origin_country']:
+                                    print(mycolors.foreground.green + "\ncountry: ".ljust(15) + mycolors.reset + d['origin_country'], end=' ')
+
+                            if ("imphash" in y):
+                                if d['imphash']:
+                                    print(mycolors.foreground.green + "\nimphash: ".ljust(15) + mycolors.reset + d['imphash'], end=' ')
+
+                            if ("tlsh" in y):
+                                if d['tlsh']:
+                                    print(mycolors.foreground.green + "\ntlsh: ".ljust(15) + mycolors.reset + d['tlsh'], end=' ')
+
+                            if ("comment" in y):
+                                if d['comment']:
+                                    print(mycolors.foreground.green + "\ncomments: ".ljust(15) + mycolors.reset, end='')
+                                    s = d['comment'].split('\n')
+                                    for n in range(len(s)):
+                                        print("\n".ljust(15) + s[n], end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.green + "\nreporter: ".ljust(15) + mycolors.reset + d['reporter'], end=' ')
+
+                            if ("oleinformation" in y):
+                                print(mycolors.foreground.green + "\noleinformation: ".ljust(15),end='') 
+                                for t in d['oleinformation']:
+                                    print(mycolors.reset + t, end=' ')
+
+                            if ("delivery_method" in y):
+                                if d['delivery_method']:
+                                    print(mycolors.foreground.green + "\ndelivery: ".ljust(15) + mycolors.reset + d['delivery_method'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.green + "\ntags: ".ljust(15),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+                            if ("file_information" in y):
+                                if (d['file_information'] is not None):
+                                    for x in d['file_information']:
+                                        if ("context" in x):
+                                            if (x['context'] == "twitter"):
+                                                print(mycolors.foreground.red + "\nTwitter: ".ljust(15) + mycolors.reset + x['value'], end=' ')
+                                            if (x['context'] == "cape"):
+                                                print(mycolors.foreground.red + "\nCape: ".ljust(15) + mycolors.reset + x['value'], end=' ')
+
+                            if ("vendor_intel" in y):
+                                if (d['vendor_intel'] is not None):
+                                    if ("UnpacMe" in d['vendor_intel']):
+                                        if (d['vendor_intel']['UnpacMe']):
+                                            print(mycolors.foreground.red + "\nUnpacMe: ".ljust(15) + mycolors.reset, end=' ')
+                                            filtered_list = []
+                                            for j in d['vendor_intel']['UnpacMe']:
+                                                    if ("link" in j):
+                                                        if j['link'] not in filtered_list:
+                                                            filtered_list.append(j['link'])
+                                                            for h in filtered_list:
+                                                                print('\n'.ljust(15) + h, end=' ')
+
+                                    if ("ANY.RUN" in d['vendor_intel']):
+                                        print(mycolors.foreground.red + "\nAny.Run: ".ljust(15) + mycolors.reset, end=' ')
+                                        for j in d['vendor_intel']['ANY.RUN']:
+                                            if ("analysis_url" in j):
+                                                print("\n".ljust(15) + j['analysis_url'], end=' ')
+
+                                    if ("Triage" in d['vendor_intel']):
+                                        for j in d['vendor_intel']['Triage']:
+                                            if ("link" in j):
+                                                print(mycolors.foreground.red + "\n\nTriage: ".ljust(16) + mycolors.reset + d['vendor_intel']['Triage']['link'], end=' ')
+
+                                        if (d['vendor_intel']['Triage']['signatures']):
+                                            print(mycolors.foreground.red + "\nTriage sigs: ".ljust(15) + mycolors.reset,end='\n')
+                                            for m in d['vendor_intel']['Triage']['signatures']:
+                                                if ("signature" in m):
+                                                    print(mycolors.reset + "".ljust(14) + m['signature'])
+
+                                    if ("vxCube" in d['vendor_intel']):
+                                        for j in d['vendor_intel']['vxCube']:
+                                            if ("behaviour" in j):
+                                                print(mycolors.foreground.red + "\nDr.Web rules: ".ljust(15) + mycolors.reset)
+                                                for m in d['vendor_intel']['vxCube']['behaviour']:
+                                                    if ("rule" in m):
+                                                        print(mycolors.reset + "".ljust(14) + m['rule'])
+
+
+        print(mycolors.reset)
+        exit(0)
+    
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to Malware Bazaar!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to Malware Bazaar!\n"))
+        print(mycolors.reset)
+
+
+def bazaar_tag(bazaarx, bazaar):
+
+    bazaartext = ''
+    bazaarresponse = ''
+    params = ''
+
+    try:
+        
+        print("\n")
+        print((mycolors.reset + "MALWARE BAZAAR REPORT".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100*'-').center(50))
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept': 'application/json'})
+        params = {'query':'get_taginfo',"tag": bazaarx,"limit": 50}
+        bazaarresponse = requestsession.post(bazaar, data=params)
+        bazaartext = json.loads(bazaarresponse.text)
+
+        if bazaartext['query_status'] == "tag_not_found":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nThe provided tag was not found!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nThe provided tag was not found!\n" + mycolors.reset)
+            exit(1)
+
+        if bazaartext['query_status'] == "illegal_tag":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nThe provided tag is not valid!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nThe provided tag is not valid!\n" + mycolors.reset)
+            exit(1)
+
+        if bazaartext['query_status'] == "no_results":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nYour query yield no results!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nYour query yield no results!\n" + mycolors.reset)
+            exit(1)
+
+        if (bkg == 1):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            print("\n" + (90*'-').center(45), end=' ')
+                            if ("sha256_hash" in y):
+                                if d['sha256_hash']:
+                                    print(mycolors.foreground.lightcyan + "\nsha256_hash: ".ljust(15) + mycolors.reset + d['sha256_hash'],end=' ')
+
+                            if ("sha1_hash" in y):
+                                if d['sha1_hash']:
+                                    print(mycolors.foreground.lightcyan + "\nsha1_hash: ".ljust(15) + mycolors.reset + d['sha1_hash'], end=' ')
+
+                            if ("md5_hash" in y):
+                                if d['md5_hash']:
+                                    print(mycolors.foreground.lightcyan + "\nmd5_hash: ".ljust(15) + mycolors.reset + d['md5_hash'], end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.lightcyan + "\nfirst_seen: ".ljust(15) + mycolors.reset + d['first_seen'], end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.lightcyan + "\nlast_seen: ".ljust(15) + mycolors.reset + d['last_seen'], end=' ')
+
+                            if ("file_name" in y):
+                                if d['file_name']:
+                                    print(mycolors.foreground.lightcyan + "\nfile_name: ".ljust(15) + mycolors.reset + d['file_name'], end=' ')
+
+                            if ("file_size" in y):
+                                if d['file_size']:
+                                    print(mycolors.foreground.lightcyan + "\nfile_size: ".ljust(15) + mycolors.reset + str(d['file_size']) + " bytes", end=' ')
+
+                            if ("file_type" in y):
+                                if d['file_type']:
+                                    print(mycolors.foreground.lightcyan + "\nfile_type: ".ljust(15) + mycolors.reset + str(d['file_type']), end=' ')
+
+                            if ("file_type_mime" in y):
+                                if d['file_type_mime']:
+                                    print(mycolors.foreground.lightcyan + "\nmime_type: ".ljust(15) + mycolors.reset + str(d['file_type_mime']), end=' ')
+                            if ("origin_country" in y):
+                                if d['origin_country']:
+                                    print(mycolors.foreground.lightcyan + "\ncountry: ".ljust(15) + mycolors.reset + d['origin_country'], end=' ')
+
+                            if ("imphash" in y):
+                                if d['imphash']:
+                                    print(mycolors.foreground.lightcyan + "\nimphash: ".ljust(15) + mycolors.reset + d['imphash'], end=' ')
+
+                            if ("tlsh" in y):
+                                if d['tlsh']:
+                                    print(mycolors.foreground.lightcyan + "\ntlsh: ".ljust(15) + mycolors.reset + d['tlsh'], end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.lightcyan + "\nreporter: ".ljust(15) + mycolors.reset + d['reporter'], end=' ')
+
+                            if ("signature" in y):
+                                if d['signature']:
+                                    print(mycolors.foreground.lightcyan + "\nsignature: ".ljust(15) + mycolors.reset + d['signature'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.lightcyan + "\ntags: ".ljust(15),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+        if (bkg == 0):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            print("\n" + (90*'-').center(45), end=' ')
+                            if ("sha256_hash" in y):
+                                if d['sha256_hash']:
+                                    print(mycolors.foreground.blue + "\nsha256_hash: ".ljust(15) + mycolors.reset + d['sha256_hash'],end=' ')
+
+                            if ("sha1_hash" in y):
+                                if d['sha1_hash']:
+                                    print(mycolors.foreground.blue + "\nsha1_hash: ".ljust(15) + mycolors.reset + d['sha1_hash'], end=' ')
+
+                            if ("md5_hash" in y):
+                                if d['md5_hash']:
+                                    print(mycolors.foreground.blue + "\nmd5_hash: ".ljust(15) + mycolors.reset + d['md5_hash'], end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.blue + "\nfirst_seen: ".ljust(15) + mycolors.reset + d['first_seen'], end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.blue + "\nlast_seen: ".ljust(15) + mycolors.reset + d['last_seen'], end=' ')
+
+                            if ("file_name" in y):
+                                if d['file_name']:
+                                    print(mycolors.foreground.blue + "\nfile_name: ".ljust(15) + mycolors.reset + d['file_name'], end=' ')
+
+                            if ("file_size" in y):
+                                if d['file_size']:
+                                    print(mycolors.foreground.blue + "\nfile_size: ".ljust(15) + mycolors.reset + str(d['file_size']) + " bytes", end=' ')
+
+                            if ("file_type" in y):
+                                if d['file_type']:
+                                    print(mycolors.foreground.blue + "\nfile_type: ".ljust(15) + mycolors.reset + str(d['file_type']), end=' ')
+
+                            if ("file_type_mime" in y):
+                                if d['file_type_mime']:
+                                    print(mycolors.foreground.blue + "\nmime_type: ".ljust(15) + mycolors.reset + str(d['file_type_mime']), end=' ')
+                            if ("origin_country" in y):
+                                if d['origin_country']:
+                                    print(mycolors.foreground.blue + "\ncountry: ".ljust(15) + mycolors.reset + d['origin_country'], end=' ')
+
+                            if ("imphash" in y):
+                                if d['imphash']:
+                                    print(mycolors.foreground.blue + "\nimphash: ".ljust(15) + mycolors.reset + d['imphash'], end=' ')
+
+                            if ("tlsh" in y):
+                                if d['tlsh']:
+                                    print(mycolors.foreground.blue + "\ntlsh: ".ljust(15) + mycolors.reset + d['tlsh'], end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.blue + "\nreporter: ".ljust(15) + mycolors.reset + d['reporter'], end=' ')
+
+                            if ("signature" in y):
+                                if d['signature']:
+                                    print(mycolors.foreground.blue + "\nsignature: ".ljust(15) + mycolors.reset + d['signature'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.blue + "\ntags: ".ljust(15),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+        print(mycolors.reset)
+        exit(0)
+    
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to Malware Bazaar!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to Malware Bazaar!\n"))
+        print(mycolors.reset)
+
+
+def bazaar_imphash(bazaarx, bazaar):
+
+    bazaartext = ''
+    params = ''
+
+    try:
+        
+        print("\n")
+        print((mycolors.reset + "MALWARE BAZAAR REPORT".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100*'-').center(50))
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept': 'application/json'})
+        params = {'query':'get_imphash',"imphash": bazaarx,"limit": 50}
+        bazaarresponse = requestsession.post(bazaar, data=params)
+        bazaartext = json.loads(bazaarresponse.text)
+        
+        if bazaartext['query_status'] == "imphash_not_found":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nThe provided imphash was not found!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nThe provided imphash was not found!\n" + mycolors.reset)
+            exit(1)
+
+        if bazaartext['query_status'] == "illegal_imphash":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nThe provided imphash is not valid!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nThe provided imphash is not valid!\n" + mycolors.reset)
+            exit(1)
+
+        if bazaartext['query_status'] == "no_results":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nYour query yield no results!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nYour query yield no results!\n" + mycolors.reset)
+            exit(1)
+
+
+        if (bkg == 1):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            print("\n" + (90*'-').center(45), end=' ')
+                            if ("sha256_hash" in y):
+                                if d['sha256_hash']:
+                                    print(mycolors.foreground.pink + "\nsha256_hash: ".ljust(15) + mycolors.reset + d['sha256_hash'],end=' ')
+
+                            if ("sha1_hash" in y):
+                                if d['sha1_hash']:
+                                    print(mycolors.foreground.pink + "\nsha1_hash: ".ljust(15) + mycolors.reset + d['sha1_hash'], end=' ')
+
+                            if ("md5_hash" in y):
+                                if d['md5_hash']:
+                                    print(mycolors.foreground.pink + "\nmd5_hash: ".ljust(15) + mycolors.reset + d['md5_hash'], end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.pink + "\nfirst_seen: ".ljust(15) + mycolors.reset + d['first_seen'], end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.pink + "\nlast_seen: ".ljust(15) + mycolors.reset + d['last_seen'], end=' ')
+
+                            if ("file_name" in y):
+                                if d['file_name']:
+                                    print(mycolors.foreground.pink + "\nfile_name: ".ljust(15) + mycolors.reset + d['file_name'], end=' ')
+
+                            if ("file_size" in y):
+                                if d['file_size']:
+                                    print(mycolors.foreground.pink + "\nfile_size: ".ljust(15) + mycolors.reset + str(d['file_size']) + " bytes", end=' ')
+
+                            if ("file_type" in y):
+                                if d['file_type']:
+                                    print(mycolors.foreground.pink + "\nfile_type: ".ljust(15) + mycolors.reset + str(d['file_type']), end=' ')
+
+                            if ("file_type_mime" in y):
+                                if d['file_type_mime']:
+                                    print(mycolors.foreground.pink + "\nmime_type: ".ljust(15) + mycolors.reset + str(d['file_type_mime']), end=' ')
+                            if ("origin_country" in y):
+                                if d['origin_country']:
+                                    print(mycolors.foreground.pink + "\ncountry: ".ljust(15) + mycolors.reset + d['origin_country'], end=' ')
+
+                            if ("imphash" in y):
+                                if d['imphash']:
+                                    print(mycolors.foreground.pink + "\nimphash: ".ljust(15) + mycolors.reset + d['imphash'], end=' ')
+
+                            if ("tlsh" in y):
+                                if d['tlsh']:
+                                    print(mycolors.foreground.pink + "\ntlsh: ".ljust(15) + mycolors.reset + d['tlsh'], end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.pink + "\nreporter: ".ljust(15) + mycolors.reset + d['reporter'], end=' ')
+
+                            if ("signature" in y):
+                                if d['signature']:
+                                    print(mycolors.foreground.pink + "\nsignature: ".ljust(15) + mycolors.reset + d['signature'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.pink + "\ntags: ".ljust(15),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+        if (bkg == 0):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            print("\n" + (90*'-').center(45), end=' ')
+                            if ("sha256_hash" in y):
+                                if d['sha256_hash']:
+                                    print(mycolors.foreground.purple + "\nsha256_hash: ".ljust(15) + mycolors.reset + d['sha256_hash'],end=' ')
+
+                            if ("sha1_hash" in y):
+                                if d['sha1_hash']:
+                                    print(mycolors.foreground.purple + "\nsha1_hash: ".ljust(15) + mycolors.reset + d['sha1_hash'], end=' ')
+
+                            if ("md5_hash" in y):
+                                if d['md5_hash']:
+                                    print(mycolors.foreground.purple + "\nmd5_hash: ".ljust(15) + mycolors.reset + d['md5_hash'], end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.purple + "\nfirst_seen: ".ljust(15) + mycolors.reset + d['first_seen'], end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.purple + "\nlast_seen: ".ljust(15) + mycolors.reset + d['last_seen'], end=' ')
+
+                            if ("file_name" in y):
+                                if d['file_name']:
+                                    print(mycolors.foreground.purple + "\nfile_name: ".ljust(15) + mycolors.reset + d['file_name'], end=' ')
+
+                            if ("file_size" in y):
+                                if d['file_size']:
+                                    print(mycolors.foreground.purple + "\nfile_size: ".ljust(15) + mycolors.reset + str(d['file_size']) + " bytes", end=' ')
+
+                            if ("file_type" in y):
+                                if d['file_type']:
+                                    print(mycolors.foreground.purple + "\nfile_type: ".ljust(15) + mycolors.reset + str(d['file_type']), end=' ')
+
+                            if ("file_type_mime" in y):
+                                if d['file_type_mime']:
+                                    print(mycolors.foreground.purple + "\nmime_type: ".ljust(15) + mycolors.reset + str(d['file_type_mime']), end=' ')
+                            if ("origin_country" in y):
+                                if d['origin_country']:
+                                    print(mycolors.foreground.purple + "\ncountry: ".ljust(15) + mycolors.reset + d['origin_country'], end=' ')
+
+                            if ("imphash" in y):
+                                if d['imphash']:
+                                    print(mycolors.foreground.purple + "\nimphash: ".ljust(15) + mycolors.reset + d['imphash'], end=' ')
+
+                            if ("tlsh" in y):
+                                if d['tlsh']:
+                                    print(mycolors.foreground.purple + "\ntlsh: ".ljust(15) + mycolors.reset + d['tlsh'], end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.purple + "\nreporter: ".ljust(15) + mycolors.reset + d['reporter'], end=' ')
+
+                            if ("signature" in y):
+                                if d['signature']:
+                                    print(mycolors.foreground.purple + "\nsignature: ".ljust(15) + mycolors.reset + d['signature'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.purple + "\ntags: ".ljust(15),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+        print(mycolors.reset)
+        exit(0)
+    
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to Malware Bazaar!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to Malware Bazaar!\n"))
+        print(mycolors.reset)
+
+
+def bazaar_lastsamples(bazaarx, bazaar):
+
+    bazaartext = ''
+    bazaarresponse = ''
+    params = ''
+
+    try:
+        
+        print("\n")
+        print((mycolors.reset + "MALWARE BAZAAR REPORT".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100*'-').center(50))
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept': 'application/json'})
+        params = {'query':'get_recent',"selector": bazaarx}
+        bazaarresponse = requestsession.post(bazaar, data=params)
+        bazaartext = json.loads(bazaarresponse.text)
+
+        if bazaartext['query_status'] == "unknown_selector":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nYou didn't provided a valid selector!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nYour search did not yield any result!\n" + mycolors.reset)
+            exit(1)
+
+        if bazaartext['query_status'] == "no_results":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nThe query yield no results!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nThe query yield no results!\n" + mycolors.reset)
+            exit(1)
+        
+        if (bkg == 1):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            print("\n" + (90*'-').center(45), end=' ')
+                            if ("sha256_hash" in y):
+                                if d['sha256_hash']:
+                                    print(mycolors.foreground.orange + "\nsha256_hash: ".ljust(15) + mycolors.reset + d['sha256_hash'],end=' ')
+
+                            if ("sha1_hash" in y):
+                                if d['sha1_hash']:
+                                    print(mycolors.foreground.orange + "\nsha1_hash: ".ljust(15) + mycolors.reset + d['sha1_hash'], end=' ')
+
+                            if ("md5_hash" in y):
+                                if d['md5_hash']:
+                                    print(mycolors.foreground.orange + "\nmd5_hash: ".ljust(15) + mycolors.reset + d['md5_hash'], end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.orange + "\nfirst_seen: ".ljust(15) + mycolors.reset + d['first_seen'], end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.orange + "\nlast_seen: ".ljust(15) + mycolors.reset + d['last_seen'], end=' ')
+
+                            if ("file_name" in y):
+                                if d['file_name']:
+                                    print(mycolors.foreground.orange + "\nfile_name: ".ljust(15) + mycolors.reset + d['file_name'], end=' ')
+
+                            if ("file_size" in y):
+                                if d['file_size']:
+                                    print(mycolors.foreground.orange + "\nfile_size: ".ljust(15) + mycolors.reset + str(d['file_size']) + " bytes", end=' ')
+
+                            if ("file_type" in y):
+                                if d['file_type']:
+                                    print(mycolors.foreground.orange + "\nfile_type: ".ljust(15) + mycolors.reset + str(d['file_type']), end=' ')
+
+                            if ("file_type_mime" in y):
+                                if d['file_type_mime']:
+                                    print(mycolors.foreground.orange + "\nmime_type: ".ljust(15) + mycolors.reset + str(d['file_type_mime']), end=' ')
+                            if ("origin_country" in y):
+                                if d['origin_country']:
+                                    print(mycolors.foreground.orange + "\ncountry: ".ljust(15) + mycolors.reset + d['origin_country'], end=' ')
+
+                            if ("imphash" in y):
+                                if d['imphash']:
+                                    print(mycolors.foreground.orange + "\nimphash: ".ljust(15) + mycolors.reset + d['imphash'], end=' ')
+
+                            if ("tlsh" in y):
+                                if d['tlsh']:
+                                    print(mycolors.foreground.orange + "\ntlsh: ".ljust(15) + mycolors.reset + d['tlsh'], end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.orange + "\nreporter: ".ljust(15) + mycolors.reset + d['reporter'], end=' ')
+
+                            if ("signature" in y):
+                                if d['signature']:
+                                    print(mycolors.foreground.orange + "\nsignature: ".ljust(15) + mycolors.reset + d['signature'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.orange + "\ntags: ".ljust(15),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+        if (bkg == 0):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            print("\n" + (90*'-').center(45), end=' ')
+                            if ("sha256_hash" in y):
+                                if d['sha256_hash']:
+                                    print(mycolors.foreground.cyan + "\nsha256_hash: ".ljust(15) + mycolors.reset + d['sha256_hash'],end=' ')
+
+                            if ("sha1_hash" in y):
+                                if d['sha1_hash']:
+                                    print(mycolors.foreground.cyan + "\nsha1_hash: ".ljust(15) + mycolors.reset + d['sha1_hash'], end=' ')
+
+                            if ("md5_hash" in y):
+                                if d['md5_hash']:
+                                    print(mycolors.foreground.cyan + "\nmd5_hash: ".ljust(15) + mycolors.reset + d['md5_hash'], end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.cyan + "\nfirst_seen: ".ljust(15) + mycolors.reset + d['first_seen'], end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.cyan + "\nlast_seen: ".ljust(15) + mycolors.reset + d['last_seen'], end=' ')
+
+                            if ("file_name" in y):
+                                if d['file_name']:
+                                    print(mycolors.foreground.cyan + "\nfile_name: ".ljust(15) + mycolors.reset + d['file_name'], end=' ')
+
+                            if ("file_size" in y):
+                                if d['file_size']:
+                                    print(mycolors.foreground.cyan + "\nfile_size: ".ljust(15) + mycolors.reset + str(d['file_size']) + " bytes", end=' ')
+
+                            if ("file_type" in y):
+                                if d['file_type']:
+                                    print(mycolors.foreground.cyan + "\nfile_type: ".ljust(15) + mycolors.reset + str(d['file_type']), end=' ')
+
+                            if ("file_type_mime" in y):
+                                if d['file_type_mime']:
+                                    print(mycolors.foreground.cyan + "\nmime_type: ".ljust(15) + mycolors.reset + str(d['file_type_mime']), end=' ')
+                            if ("origin_country" in y):
+                                if d['origin_country']:
+                                    print(mycolors.foreground.cyan + "\ncountry: ".ljust(15) + mycolors.reset + d['origin_country'], end=' ')
+
+                            if ("imphash" in y):
+                                if d['imphash']:
+                                    print(mycolors.foreground.cyan + "\nimphash: ".ljust(15) + mycolors.reset + d['imphash'], end=' ')
+
+                            if ("tlsh" in y):
+                                if d['tlsh']:
+                                    print(mycolors.foreground.cyan + "\ntlsh: ".ljust(15) + mycolors.reset + d['tlsh'], end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.cyan + "\nreporter: ".ljust(15) + mycolors.reset + d['reporter'], end=' ')
+
+                            if ("signature" in y):
+                                if d['signature']:
+                                    print(mycolors.foreground.cyan + "\nsignature: ".ljust(15) + mycolors.reset + d['signature'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.cyan + "\ntags: ".ljust(15),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+        print(mycolors.reset)
+        exit(0)
+    
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to Malware Bazaar!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to Malware Bazaar!\n"))
+        print(mycolors.reset)
+
+
+def bazaar_download(bazaarx, bazaar):
+
+    bazaartext = ''
+    bazaarresponse = ''
+    params = ''
+    resource=bazaarx
+
+    try:
+        
+        print("\n")
+        print((mycolors.reset + "MALWARE BAZAAR REPORT".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100*'-').center(50))
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept': 'application/gzip'})
+        params = {'query':'get_file',"sha256_hash": bazaarx}
+        bazaarresponse = requestsession.post(bazaar, data=params, allow_redirects=True)
+        bazaartext = bazaarresponse.text
+
+        if "illegal_sha256_hash" in bazaartext:
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nYou didn't provided a valid sha256 hash!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nYou didn't provided a valid selector!\n" + mycolors.reset)
+            exit(1)
+
+        if "file_not_found" in bazaartext:
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nNo malware samples found for the provided sha256 hash!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nNo malware samples found for the provided sha256 hash!\n" + mycolors.reset)
+            exit(1)
+
+        open(resource + '.zip', 'wb').write(bazaarresponse.content)
+        final = '\nSAMPLE SAVED!'
+
+        if (bkg == 1):
+            print((mycolors.foreground.yellow + final + "\n"))
+        else:
+            print((mycolors.foreground.green + final + "\n"))
+
+        print(mycolors.reset)
+        exit(0)
+
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "Error while connecting to Malware Bazaar!\n"))
+        else:
+            print((mycolors.foreground.lightred + "Error while connecting to Malware Bazaar!\n"))
+        print(mycolors.reset)
+
+
+def threatfox_listiocs(bazaarx, bazaar):
+
+    bazaartext = ''
+    bazaarresponse = ''
+    params = ''
+
+    try:
+        
+        print("\n")
+        print((mycolors.reset + "THREATFOX REPORT".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100*'-').center(50))
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept':'application/json'})
+        params = {'query':"get_iocs" , 'days':bazaarx}
+        bazaarresponse = requestsession.post(url=bazaar, data=json.dumps(params))
+        bazaartext = json.loads(bazaarresponse.text)
+
+        if (bkg == 1):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            print("\n" + (90*'-').center(45), end=' ')
+                            if ("ioc" in y):
+                                if d['ioc']:
+                                    print(mycolors.foreground.orange + "\nioc: ".ljust(16) + mycolors.reset + d['ioc'],end=' ')
+
+                            if ("id" in y):
+                                if d['id']:
+                                    print(mycolors.foreground.orange + "\nid: ".ljust(16) + mycolors.reset + d['id'],end=' ')
+
+                            if ("threat_type" in y):
+                                if d['threat_type']:
+                                    print(mycolors.foreground.orange + "\nthreat_type: ".ljust(16) + mycolors.reset + d['threat_type'], end=' ')
+
+                            if ("threat_type_desc" in y):
+                                if d['threat_type_desc']:
+                                    print(mycolors.foreground.orange + "\nthreat_desc: ".ljust(16) + mycolors.reset + d['threat_type_desc'], end=' ')
+
+                            if ("ioc_type" in y):
+                                if d['ioc_type']:
+                                    print(mycolors.foreground.orange + "\nioc_type: ".ljust(16) + mycolors.reset + d['ioc_type'], end=' ')
+
+                            if ("ioc_type_desc" in y):
+                                if d['ioc_type_desc']:
+                                    print(mycolors.foreground.orange + "\nioc_desc: ".ljust(16) + mycolors.reset + d['ioc_type_desc'], end=' ')
+
+                            if ("malware" in y):
+                                if d['malware']:
+                                    print(mycolors.foreground.orange + "\nmalware: ".ljust(16) + mycolors.reset + d['malware'], end=' ')
+
+                            if ("malware_printable" in y):
+                                if d['malware_printable']:
+                                    print(mycolors.foreground.orange + "\nmalware_desc: ".ljust(16) + mycolors.reset + d['malware_printable'], end=' ')
+
+                            if ("malware_alias" in y):
+                                if d['malware_alias']:
+                                    print(mycolors.foreground.orange + "\nmalware_alias: ".ljust(16) + mycolors.reset + d['malware_alias'], end=' ')
+
+                            if ("malware_malpedia" in y):
+                                if d['malware_malpedia']:
+                                    print(mycolors.foreground.orange + "\nmalpedia: ".ljust(16) + mycolors.reset + d['malware_malpedia'], end=' ')
+
+                            if ("confidence_level" in y):
+                                if d['confidence_level']:
+                                    print(mycolors.foreground.orange + "\nconfidence: ".ljust(16) + mycolors.reset + str(d['confidence_level']), end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.orange + "\nfirst_seen: ".ljust(16) + mycolors.reset + str(d['first_seen']), end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.orange + "\nlast_seen: ".ljust(16) + mycolors.reset + str(d['last_seen']), end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.orange + "\nreporter: ".ljust(16) + mycolors.reset + str(d['reporter']), end=' ')
+
+                            if ("reference" in y):
+                                if d['reference']:
+                                    print(mycolors.foreground.orange + "\nreference: ".ljust(16) + mycolors.reset + d['reference'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.orange + "\ntags: ".ljust(16),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+        if (bkg == 0):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            print("\n" + (90*'-').center(45), end=' ')
+                            if ("ioc" in y):
+                                if d['ioc']:
+                                    print(mycolors.foreground.red + "\nioc: ".ljust(16) + mycolors.reset + d['ioc'],end=' ')
+
+                            if ("id" in y):
+                                if d['id']:
+                                    print(mycolors.foreground.red + "\nid: ".ljust(16) + mycolors.reset + d['id'],end=' ')
+
+                            if ("threat_type" in y):
+                                if d['threat_type']:
+                                    print(mycolors.foreground.red + "\nthreat_type: ".ljust(16) + mycolors.reset + d['threat_type'], end=' ')
+
+                            if ("threat_type_desc" in y):
+                                if d['threat_type_desc']:
+                                    print(mycolors.foreground.red + "\nthreat_desc: ".ljust(16) + mycolors.reset + d['threat_type_desc'], end=' ')
+
+                            if ("ioc_type" in y):
+                                if d['ioc_type']:
+                                    print(mycolors.foreground.red + "\nioc_type: ".ljust(16) + mycolors.reset + d['ioc_type'], end=' ')
+
+                            if ("ioc_type_desc" in y):
+                                if d['ioc_type_desc']:
+                                    print(mycolors.foreground.red + "\nioc_desc: ".ljust(16) + mycolors.reset + d['ioc_type_desc'], end=' ')
+
+                            if ("malware" in y):
+                                if d['malware']:
+                                    print(mycolors.foreground.red + "\nmalware: ".ljust(16) + mycolors.reset + d['malware'], end=' ')
+
+                            if ("malware_printable" in y):
+                                if d['malware_printable']:
+                                    print(mycolors.foreground.red + "\nmalware_desc: ".ljust(16) + mycolors.reset + d['malware_printable'], end=' ')
+
+                            if ("malware_alias" in y):
+                                if d['malware_alias']:
+                                    print(mycolors.foreground.red + "\nmalware_alias: ".ljust(16) + mycolors.reset + d['malware_alias'], end=' ')
+
+                            if ("malware_malpedia" in y):
+                                if d['malware_malpedia']:
+                                    print(mycolors.foreground.red + "\nmalpedia: ".ljust(16) + mycolors.reset + d['malware_malpedia'], end=' ')
+
+                            if ("confidence_level" in y):
+                                if d['confidence_level']:
+                                    print(mycolors.foreground.red + "\nconfidence: ".ljust(16) + mycolors.reset + str(d['confidence_level']), end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.red + "\nfirst_seen: ".ljust(16) + mycolors.reset + str(d['first_seen']), end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.red + "\nlast_seen: ".ljust(16) + mycolors.reset + str(d['last_seen']), end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.red + "\nreporter: ".ljust(16) + mycolors.reset + str(d['reporter']), end=' ')
+
+                            if ("reference" in y):
+                                if d['reference']:
+                                    print(mycolors.foreground.red + "\nreference: ".ljust(16) + mycolors.reset + d['reference'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.red + "\ntags: ".ljust(16),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+        print(mycolors.reset)
+        exit(0)
+    
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to ThreatFox!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to ThreatFox!\n"))
+        print(mycolors.reset)
+
+
+def threatfox_searchiocs(bazaarx, bazaar):
+
+    bazaartext = ''
+    bazaarresponse = ''
+    params = ''
+
+    try:
+        
+        print("\n")
+        print((mycolors.reset + "THREATFOX REPORT".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100*'-').center(50))
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept':'application/json'})
+        params = {'query':"search_ioc" , 'search_term':bazaarx}
+        bazaarresponse = requestsession.post(url=bazaar, data=json.dumps(params))
+        bazaartext = json.loads(bazaarresponse.text)
+
+        if bazaartext['query_status'] == "no_result":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nYour search did not yield any result!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nYour search did not yield any result!\n" + mycolors.reset)
+            exit(1)
+
+        if bazaartext['query_status'] == "illegal_search_term":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nThe search term you have provided is not valid!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nThe search term you have provided is not valid!\n" + mycolors.reset)
+            exit(1)
+
+        if (bkg == 1):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            print("\n" + (90*'-').center(45), end=' ')
+                            if ("ioc" in y):
+                                if d['ioc']:
+                                    print(mycolors.foreground.orange + "\nioc: ".ljust(16) + mycolors.reset + d['ioc'],end=' ')
+
+                            if ("id" in y):
+                                if d['ioc']:
+                                    print(mycolors.foreground.orange + "\nid: ".ljust(16) + mycolors.reset + d['id'],end=' ')
+
+                            if ("threat_type" in y):
+                                if d['threat_type']:
+                                    print(mycolors.foreground.orange + "\nthreat_type: ".ljust(16) + mycolors.reset + d['threat_type'], end=' ')
+
+                            if ("threat_type_desc" in y):
+                                if d['threat_type_desc']:
+                                    print(mycolors.foreground.orange + "\nthreat_desc: ".ljust(16) + mycolors.reset + d['threat_type_desc'], end=' ')
+
+                            if ("ioc_type" in y):
+                                if d['ioc_type']:
+                                    print(mycolors.foreground.orange + "\nioc_type: ".ljust(16) + mycolors.reset + d['ioc_type'], end=' ')
+
+                            if ("ioc_type_desc" in y):
+                                if d['ioc_type_desc']:
+                                    print(mycolors.foreground.orange + "\nioc_desc: ".ljust(16) + mycolors.reset + d['ioc_type_desc'], end=' ')
+
+                            if ("malware" in y):
+                                if d['malware']:
+                                    print(mycolors.foreground.orange + "\nmalware: ".ljust(16) + mycolors.reset + d['malware'], end=' ')
+
+                            if ("malware_printable" in y):
+                                if d['malware_printable']:
+                                    print(mycolors.foreground.orange + "\nmalware_desc: ".ljust(16) + mycolors.reset + d['malware_printable'], end=' ')
+
+                            if ("malware_alias" in y):
+                                if d['malware_alias']:
+                                    print(mycolors.foreground.orange + "\nmalware_alias: ".ljust(16) + mycolors.reset + d['malware_alias'], end=' ')
+
+                            if ("malware_malpedia" in y):
+                                if d['malware_malpedia']:
+                                    print(mycolors.foreground.orange + "\nmalpedia: ".ljust(16) + mycolors.reset + d['malware_malpedia'], end=' ')
+
+                            if ("confidence_level" in y):
+                                if d['confidence_level']:
+                                    print(mycolors.foreground.orange + "\nconfidence: ".ljust(16) + mycolors.reset + str(d['confidence_level']), end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.orange + "\nfirst_seen: ".ljust(16) + mycolors.reset + str(d['first_seen']), end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.orange + "\nlast_seen: ".ljust(16) + mycolors.reset + str(d['last_seen']), end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.orange + "\nreporter: ".ljust(16) + mycolors.reset + str(d['reporter']), end=' ')
+
+                            if ("reference" in y):
+                                if d['reference']:
+                                    print(mycolors.foreground.orange + "\nreference: ".ljust(16) + mycolors.reset + d['reference'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.orange + "\ntags: ".ljust(16),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+        if (bkg == 0):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            print("\n" + (90*'-').center(45), end=' ')
+                            if ("ioc" in y):
+                                if d['ioc']:
+                                    print(mycolors.foreground.red + "\nioc: ".ljust(16) + mycolors.reset + d['ioc'],end=' ')
+
+                            if ("id" in y):
+                                if d['ioc']:
+                                    print(mycolors.foreground.red + "\nid: ".ljust(16) + mycolors.reset + d['id'],end=' ')
+
+                            if ("threat_type" in y):
+                                if d['threat_type']:
+                                    print(mycolors.foreground.red + "\nthreat_type: ".ljust(16) + mycolors.reset + d['threat_type'], end=' ')
+
+                            if ("threat_type_desc" in y):
+                                if d['threat_type_desc']:
+                                    print(mycolors.foreground.red + "\nthreat_desc: ".ljust(16) + mycolors.reset + d['threat_type_desc'], end=' ')
+
+                            if ("ioc_type" in y):
+                                if d['ioc_type']:
+                                    print(mycolors.foreground.red + "\nioc_type: ".ljust(16) + mycolors.reset + d['ioc_type'], end=' ')
+
+                            if ("ioc_type_desc" in y):
+                                if d['ioc_type_desc']:
+                                    print(mycolors.foreground.red + "\nioc_desc: ".ljust(16) + mycolors.reset + d['ioc_type_desc'], end=' ')
+
+                            if ("malware" in y):
+                                if d['malware']:
+                                    print(mycolors.foreground.red + "\nmalware: ".ljust(16) + mycolors.reset + d['malware'], end=' ')
+
+                            if ("malware_printable" in y):
+                                if d['malware_printable']:
+                                    print(mycolors.foreground.red + "\nmalware_desc: ".ljust(16) + mycolors.reset + d['malware_printable'], end=' ')
+
+                            if ("malware_alias" in y):
+                                if d['malware_alias']:
+                                    print(mycolors.foreground.red + "\nmalware_alias: ".ljust(16) + mycolors.reset + d['malware_alias'], end=' ')
+
+                            if ("malware_malpedia" in y):
+                                if d['malware_malpedia']:
+                                    print(mycolors.foreground.red + "\nmalpedia: ".ljust(16) + mycolors.reset + d['malware_malpedia'], end=' ')
+
+                            if ("confidence_level" in y):
+                                if d['confidence_level']:
+                                    print(mycolors.foreground.red + "\nconfidence: ".ljust(16) + mycolors.reset + str(d['confidence_level']), end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.red + "\nfirst_seen: ".ljust(16) + mycolors.reset + str(d['first_seen']), end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.red + "\nlast_seen: ".ljust(16) + mycolors.reset + str(d['last_seen']), end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.red + "\nreporter: ".ljust(16) + mycolors.reset + str(d['reporter']), end=' ')
+
+                            if ("reference" in y):
+                                if d['reference']:
+                                    print(mycolors.foreground.red + "\nreference: ".ljust(16) + mycolors.reset + d['reference'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.red + "\ntags: ".ljust(16),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+        print(mycolors.reset)
+        exit(0)
+    
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to ThreatFox!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to ThreatFox!\n"))
+        print(mycolors.reset)
+
+
+def threatfox_searchtags(bazaarx, bazaar):
+
+    bazaartext = ''
+    bazaarresponse = ''
+    params = ''
+
+    try:
+        
+        print("\n")
+        print((mycolors.reset + "THREATFOX REPORT".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100*'-').center(50))
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept':'application/json'})
+        params = {'query':"taginfo" , 'tag':bazaarx}
+        bazaarresponse = requestsession.post(url=bazaar, data=json.dumps(params))
+        bazaartext = json.loads(bazaarresponse.text)
+
+        if bazaartext['query_status'] == "no_result":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nYour search did not yield any result!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nYour search did not yield any result!\n" + mycolors.reset)
+            exit(1)
+
+        if bazaartext['query_status'] == "illegal_search_term":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nThe search term you have provided is not valid!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nThe search term you have provided is not valid!\n" + mycolors.reset)
+            exit(1)
+
+        if (bkg == 1):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            print("\n" + (90*'-').center(45), end=' ')
+                            if ("ioc" in y):
+                                if d['ioc']:
+                                    print(mycolors.foreground.lightgreen + "\nioc: ".ljust(16) + mycolors.reset + d['ioc'],end=' ')
+
+                            if ("id" in y):
+                                if d['ioc']:
+                                    print(mycolors.foreground.lightgreen + "\nid: ".ljust(16) + mycolors.reset + d['id'],end=' ')
+
+                            if ("threat_type" in y):
+                                if d['threat_type']:
+                                    print(mycolors.foreground.lightgreen + "\nthreat_type: ".ljust(16) + mycolors.reset + d['threat_type'], end=' ')
+
+                            if ("threat_type_desc" in y):
+                                if d['threat_type_desc']:
+                                    print(mycolors.foreground.lightgreen + "\nthreat_desc: ".ljust(16) + mycolors.reset + d['threat_type_desc'], end=' ')
+
+                            if ("ioc_type" in y):
+                                if d['ioc_type']:
+                                    print(mycolors.foreground.lightgreen + "\nioc_type: ".ljust(16) + mycolors.reset + d['ioc_type'], end=' ')
+
+                            if ("ioc_type_desc" in y):
+                                if d['ioc_type_desc']:
+                                    print(mycolors.foreground.lightgreen + "\nioc_desc: ".ljust(16) + mycolors.reset + d['ioc_type_desc'], end=' ')
+
+                            if ("malware" in y):
+                                if d['malware']:
+                                    print(mycolors.foreground.lightgreen + "\nmalware: ".ljust(16) + mycolors.reset + d['malware'], end=' ')
+
+                            if ("malware_printable" in y):
+                                if d['malware_printable']:
+                                    print(mycolors.foreground.lightgreen + "\nmalware_desc: ".ljust(16) + mycolors.reset + d['malware_printable'], end=' ')
+
+                            if ("malware_alias" in y):
+                                if d['malware_alias']:
+                                    print(mycolors.foreground.lightgreen + "\nmalware_alias: ".ljust(16) + mycolors.reset + d['malware_alias'], end=' ')
+
+                            if ("malware_malpedia" in y):
+                                if d['malware_malpedia']:
+                                    print(mycolors.foreground.lightgreen + "\nmalpedia: ".ljust(16) + mycolors.reset + d['malware_malpedia'], end=' ')
+
+                            if ("confidence_level" in y):
+                                if d['confidence_level']:
+                                    print(mycolors.foreground.lightgreen + "\nconfidence: ".ljust(16) + mycolors.reset + str(d['confidence_level']), end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.lightgreen + "\nfirst_seen: ".ljust(16) + mycolors.reset + str(d['first_seen']), end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.lightgreen + "\nlast_seen: ".ljust(16) + mycolors.reset + str(d['last_seen']), end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.lightgreen + "\nreporter: ".ljust(16) + mycolors.reset + str(d['reporter']), end=' ')
+
+                            if ("reference" in y):
+                                if d['reference']:
+                                    print(mycolors.foreground.lightgreen + "\nreference: ".ljust(16) + mycolors.reset + d['reference'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.lightgreen + "\ntags: ".ljust(16),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+        if (bkg == 0):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            print("\n" + (90*'-').center(45), end=' ')
+                            if ("ioc" in y):
+                                if d['ioc']:
+                                    print(mycolors.foreground.cyan + "\nioc: ".ljust(16) + mycolors.reset + d['ioc'],end=' ')
+
+                            if ("id" in y):
+                                if d['ioc']:
+                                    print(mycolors.foreground.cyan + "\nid: ".ljust(16) + mycolors.reset + d['id'],end=' ')
+
+                            if ("threat_type" in y):
+                                if d['threat_type']:
+                                    print(mycolors.foreground.cyan + "\nthreat_type: ".ljust(16) + mycolors.reset + d['threat_type'], end=' ')
+
+                            if ("threat_type_desc" in y):
+                                if d['threat_type_desc']:
+                                    print(mycolors.foreground.cyan + "\nthreat_desc: ".ljust(16) + mycolors.reset + d['threat_type_desc'], end=' ')
+
+                            if ("ioc_type" in y):
+                                if d['ioc_type']:
+                                    print(mycolors.foreground.cyan + "\nioc_type: ".ljust(16) + mycolors.reset + d['ioc_type'], end=' ')
+
+                            if ("ioc_type_desc" in y):
+                                if d['ioc_type_desc']:
+                                    print(mycolors.foreground.cyan + "\nioc_desc: ".ljust(16) + mycolors.reset + d['ioc_type_desc'], end=' ')
+
+                            if ("malware" in y):
+                                if d['malware']:
+                                    print(mycolors.foreground.cyan + "\nmalware: ".ljust(16) + mycolors.reset + d['malware'], end=' ')
+
+                            if ("malware_printable" in y):
+                                if d['malware_printable']:
+                                    print(mycolors.foreground.cyan + "\nmalware_desc: ".ljust(16) + mycolors.reset + d['malware_printable'], end=' ')
+
+                            if ("malware_alias" in y):
+                                if d['malware_alias']:
+                                    print(mycolors.foreground.cyan + "\nmalware_alias: ".ljust(16) + mycolors.reset + d['malware_alias'], end=' ')
+
+                            if ("malware_malpedia" in y):
+                                if d['malware_malpedia']:
+                                    print(mycolors.foreground.cyan + "\nmalpedia: ".ljust(16) + mycolors.reset + d['malware_malpedia'], end=' ')
+
+                            if ("confidence_level" in y):
+                                if d['confidence_level']:
+                                    print(mycolors.foreground.cyan + "\nconfidence: ".ljust(16) + mycolors.reset + str(d['confidence_level']), end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.cyan + "\nfirst_seen: ".ljust(16) + mycolors.reset + str(d['first_seen']), end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.cyan + "\nlast_seen: ".ljust(16) + mycolors.reset + str(d['last_seen']), end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.cyan + "\nreporter: ".ljust(16) + mycolors.reset + str(d['reporter']), end=' ')
+
+                            if ("reference" in y):
+                                if d['reference']:
+                                    print(mycolors.foreground.cyan + "\nreference: ".ljust(16) + mycolors.reset + d['reference'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.cyan + "\ntags: ".ljust(16),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+        print(mycolors.reset)
+        exit(0)
+    
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to ThreatFox!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to ThreatFox!\n"))
+        print(mycolors.reset)
+
+
+def threatfox_searchmalware(bazaarx, bazaar):
+
+    bazaartext = ''
+    bazaarresponse = ''
+    params = ''
+
+    try:
+        
+        print("\n")
+        print((mycolors.reset + "THREATFOX REPORT".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100*'-').center(50))
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept':'application/json'})
+        params = {'query':"malwareinfo" , 'malware':bazaarx}
+        bazaarresponse = requestsession.post(url=bazaar, data=json.dumps(params))
+        bazaartext = json.loads(bazaarresponse.text)
+
+        if bazaartext['query_status'] == "no_result":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nYour search did not yield any result!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nYour search did not yield any result!\n" + mycolors.reset)
+            exit(1)
+
+        if bazaartext['query_status'] == "illegal_search_term":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nThe search term you have provided is not valid!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nThe search term you have provided is not valid!\n" + mycolors.reset)
+            exit(1)
+
+        if (bkg == 1):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            print("\n" + (90*'-').center(45), end=' ')
+                            if ("ioc" in y):
+                                if d['ioc']:
+                                    print(mycolors.foreground.lightcyan + "\nioc: ".ljust(16) + mycolors.reset + d['ioc'],end=' ')
+
+                            if ("id" in y):
+                                if d['ioc']:
+                                    print(mycolors.foreground.lightcyan + "\nid: ".ljust(16) + mycolors.reset + d['id'],end=' ')
+
+                            if ("threat_type" in y):
+                                if d['threat_type']:
+                                    print(mycolors.foreground.lightcyan + "\nthreat_type: ".ljust(16) + mycolors.reset + d['threat_type'], end=' ')
+
+                            if ("threat_type_desc" in y):
+                                if d['threat_type_desc']:
+                                    print(mycolors.foreground.lightcyan + "\nthreat_desc: ".ljust(16) + mycolors.reset + d['threat_type_desc'], end=' ')
+
+                            if ("ioc_type" in y):
+                                if d['ioc_type']:
+                                    print(mycolors.foreground.lightcyan + "\nioc_type: ".ljust(16) + mycolors.reset + d['ioc_type'], end=' ')
+
+                            if ("ioc_type_desc" in y):
+                                if d['ioc_type_desc']:
+                                    print(mycolors.foreground.lightcyan + "\nioc_desc: ".ljust(16) + mycolors.reset + d['ioc_type_desc'], end=' ')
+
+                            if ("malware" in y):
+                                if d['malware']:
+                                    print(mycolors.foreground.lightcyan + "\nmalware: ".ljust(16) + mycolors.reset + d['malware'], end=' ')
+
+                            if ("malware_printable" in y):
+                                if d['malware_printable']:
+                                    print(mycolors.foreground.lightcyan + "\nmalware_desc: ".ljust(16) + mycolors.reset + d['malware_printable'], end=' ')
+
+                            if ("malware_alias" in y):
+                                if d['malware_alias']:
+                                    print(mycolors.foreground.lightcyan + "\nmalware_alias: ".ljust(16) + mycolors.reset + d['malware_alias'], end=' ')
+
+                            if ("malware_malpedia" in y):
+                                if d['malware_malpedia']:
+                                    print(mycolors.foreground.lightcyan + "\nmalpedia: ".ljust(16) + mycolors.reset + d['malware_malpedia'], end=' ')
+
+                            if ("confidence_level" in y):
+                                if d['confidence_level']:
+                                    print(mycolors.foreground.lightcyan + "\nconfidence: ".ljust(16) + mycolors.reset + str(d['confidence_level']), end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.lightcyan + "\nfirst_seen: ".ljust(16) + mycolors.reset + str(d['first_seen']), end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.lightcyan + "\nlast_seen: ".ljust(16) + mycolors.reset + str(d['last_seen']), end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.lightcyan + "\nreporter: ".ljust(16) + mycolors.reset + str(d['reporter']), end=' ')
+
+                            if ("reference" in y):
+                                if d['reference']:
+                                    print(mycolors.foreground.lightcyan + "\nreference: ".ljust(16) + mycolors.reset + d['reference'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.lightcyan + "\ntags: ".ljust(16),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+        if (bkg == 0):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            y = d.keys()    
+                            print("\n" + (90*'-').center(45), end=' ')
+                            if ("ioc" in y):
+                                if d['ioc']:
+                                    print(mycolors.foreground.green + "\nioc: ".ljust(16) + mycolors.reset + d['ioc'],end=' ')
+
+                            if ("id" in y):
+                                if d['ioc']:
+                                    print(mycolors.foreground.green + "\nid: ".ljust(16) + mycolors.reset + d['id'],end=' ')
+
+                            if ("threat_type" in y):
+                                if d['threat_type']:
+                                    print(mycolors.foreground.green + "\nthreat_type: ".ljust(16) + mycolors.reset + d['threat_type'], end=' ')
+
+                            if ("threat_type_desc" in y):
+                                if d['threat_type_desc']:
+                                    print(mycolors.foreground.green + "\nthreat_desc: ".ljust(16) + mycolors.reset + d['threat_type_desc'], end=' ')
+
+                            if ("ioc_type" in y):
+                                if d['ioc_type']:
+                                    print(mycolors.foreground.green + "\nioc_type: ".ljust(16) + mycolors.reset + d['ioc_type'], end=' ')
+
+                            if ("ioc_type_desc" in y):
+                                if d['ioc_type_desc']:
+                                    print(mycolors.foreground.green + "\nioc_desc: ".ljust(16) + mycolors.reset + d['ioc_type_desc'], end=' ')
+
+                            if ("malware" in y):
+                                if d['malware']:
+                                    print(mycolors.foreground.green + "\nmalware: ".ljust(16) + mycolors.reset + d['malware'], end=' ')
+
+                            if ("malware_printable" in y):
+                                if d['malware_printable']:
+                                    print(mycolors.foreground.green + "\nmalware_desc: ".ljust(16) + mycolors.reset + d['malware_printable'], end=' ')
+
+                            if ("malware_alias" in y):
+                                if d['malware_alias']:
+                                    print(mycolors.foreground.green + "\nmalware_alias: ".ljust(16) + mycolors.reset + d['malware_alias'], end=' ')
+
+                            if ("malware_malpedia" in y):
+                                if d['malware_malpedia']:
+                                    print(mycolors.foreground.green + "\nmalpedia: ".ljust(16) + mycolors.reset + d['malware_malpedia'], end=' ')
+
+                            if ("confidence_level" in y):
+                                if d['confidence_level']:
+                                    print(mycolors.foreground.green + "\nconfidence: ".ljust(16) + mycolors.reset + str(d['confidence_level']), end=' ')
+
+                            if ("first_seen" in y):
+                                if d['first_seen']:
+                                    print(mycolors.foreground.green + "\nfirst_seen: ".ljust(16) + mycolors.reset + str(d['first_seen']), end=' ')
+
+                            if ("last_seen" in y):
+                                if d['last_seen']:
+                                    print(mycolors.foreground.green + "\nlast_seen: ".ljust(16) + mycolors.reset + str(d['last_seen']), end=' ')
+
+                            if ("reporter" in y):
+                                if d['reporter']:
+                                    print(mycolors.foreground.green + "\nreporter: ".ljust(16) + mycolors.reset + str(d['reporter']), end=' ')
+
+                            if ("reference" in y):
+                                if d['reference']:
+                                    print(mycolors.foreground.green + "\nreference: ".ljust(16) + mycolors.reset + d['reference'], end=' ')
+
+                            if ("tags" in y):
+                                if d['tags']:
+                                    print(mycolors.foreground.green + "\ntags: ".ljust(16),end='') 
+                                    for t in d['tags']:
+                                        print(mycolors.reset + t, end=' ')
+
+        print(mycolors.reset)
+        exit(0)
+    
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to ThreatFox!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to ThreatFox!\n"))
+        print(mycolors.reset)
+
+
+def threatfox_listmalware(bazaarx, bazaar):
+
+    bazaartext = ''
+    bazaarresponse = ''
+    params = ''
+
+    try:
+        
+        print("\n")
+        print((mycolors.reset + "THREATFOX REPORT".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100*'-').center(50))
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept':'application/json'})
+        params = {'query':"malware_list"}
+        bazaarresponse = requestsession.post(url=bazaar, data=json.dumps(params))
+        bazaartext = json.loads(bazaarresponse.text)
+        #print(bazaartext)
+
+        if bazaartext['query_status'] == "no_result":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nYour search did not yield any result!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nYour search did not yield any result!\n" + mycolors.reset)
+            exit(1)
+
+        if (bkg == 1):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            for reference,info in bazaartext['data'].items():
+                                print("\n" + (80*'-').center(40), end=' ')
+                                print(mycolors.foreground.yellow + "\nmalware_family: ".ljust(16) + mycolors.reset + reference,end=' ')
+                                for key in info:
+                                    print(mycolors.reset + "\n".ljust(17) + "%-18s" % key + ': ',end='')
+                                    print(info[key],end='')
+
+        if (bkg == 0):
+            for i in bazaartext.keys():
+                if (i == "data"):
+                    if (bazaartext['data'] is not None):
+                        for d in bazaartext['data']:
+                            for reference,info in bazaartext['data'].items():
+                                print("\n" + (80*'-').center(40), end=' ')
+                                print(mycolors.foreground.purple + "\nmalware_family: ".ljust(16) + mycolors.reset + reference,end=' ')
+                                for key in info:
+                                    print(mycolors.reset + "\n".ljust(17) + "%-18s" % key + ': ',end='')
+                                    print(info[key],end='')
+
+        print(mycolors.reset)
+        exit(0)
+    
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to ThreatFox!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to ThreatFox!\n"))
+        print(mycolors.reset)
+
+
+
 def haussigsearchroutine(payloadtagx, haus):
 
     haustext = ''
@@ -3160,7 +4885,7 @@ def haussigsearchroutine(payloadtagx, haus):
         requestsession9 = requests.Session( )
         requestsession9.headers.update({'accept': 'application/json'})
         params = {"signature": payloadtagx}
-        hausresponse = requests.post(haus, data=params)
+        hausresponse = requestsession9.post(haus, data=params)
         haustext = json.loads(hausresponse.text)
 
         if 'query_status' in haustext:
@@ -3305,9 +5030,9 @@ def haustagsearchroutine(haustag, hausurltag):
         print("\n" + (130*'-').center(59))
 
         params = {"tag": haustag}
-        requestsession9 = requests.Session( )
-        requestsession9.headers.update({'accept': 'application/json'})
-        hausresponse = requests.post(hausurltag, data=params)
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept': 'application/json'})
+        hausresponse = requestsession.post(hausurltag, data=params)
         haustext = json.loads(hausresponse.text)
 
         if 'query_status' in haustext:
@@ -4650,6 +6375,7 @@ def malpedia_payloads(urlx, arg1):
                             if (k == 'version'):
                                 if (i['version']):
                                     print(mycolors.foreground.green + "\nVersion:".ljust(12) + mycolors.reset + str(i['version']), end=' ')
+                print("\n" + '-' * 75)
 
     except ValueError as e:
         print(e)
@@ -4849,9 +6575,9 @@ def malpedia_families(urlx, arg1):
                     print(mycolors.foreground.cyan + "Family_%s:     " % j + mycolors.reset + str(i), end='\n'.ljust(11))
                 if ((j > 9) and (j < 100)):
                     print(mycolors.foreground.cyan + "Family_%s:    " % j + mycolors.reset + str(i), end='\n'.ljust(11))
-                if (j > 99):
-                    print(mycolors.foreground.cyan + "Family_%s:   " % j + mycolors.reset + str(i), end='\n'.ljust(11))
                 if ((j > 99) and (j < 1000)):
+                    print(mycolors.foreground.cyan + "Family_%s:   " % j + mycolors.reset + str(i), end='\n'.ljust(11))
+                if (j > 999):
                     print(mycolors.foreground.cyan + "Family_%s:  " % j + mycolors.reset + str(i), end='\n'.ljust(11))
                 j = j + 1
 
@@ -6254,12 +7980,14 @@ if __name__ == "__main__":
     valhalla = 0
     valhallaarg = ''
     VALHALLAAPIx = ''
+    bazaar = 0
+    bazaararg = ''
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a malware triage tool written by Alexandre Borges. The current version is 4.2", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -b <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e<0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.3", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument> -b <'1|2|3|4|5|6|7|8|9|10> -B <arg>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples.')
     parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a malware sample. It returns general information about the file (any filetype)')
-    parser.add_argument('-b', '--background', dest='backg', type=int,default = 1, metavar = "BACKGROUND", help='Adapts the output colors to a white terminal. The default is black terminal')
+    parser.add_argument('-o', '--background', dest='backg', type=int,default = 1, metavar = "BACKGROUND", help='Adapts the output colors to a white terminal. The default is black terminal')
     parser.add_argument('-x', '--overlay', dest='over', type=int,default = 0, metavar = "OVERLAY", help='Extracts the overlay (it is used with -f option).')
     parser.add_argument('-v', '--virustotal', dest='virustotal', type=int,default = 0, metavar = "VIRUSTOTAL", help='If using "-v 1", so it queries the Virus Total database for positives and totals. If "v 2" (which can be used only together with -f option), so it shows antivirus reports from the main players. If "v 3", so the binary\'s IAT and EAT are also shown. Remember: you need to edit the .malwapi.conf and insert your VT API.')
     parser.add_argument('-a', '--hybrid', dest='hybridanalysis', type=int,default = 0, metavar = "HYBRID_ANALYSIS", help='Queries the Hybrid Analysis database for getting a general report. Possible values are: 1: Windows 7 32-bit; 2: Windows 7 32-bit (HWP Support); 3: Windows 64-bit; 4: Android; 5: Linux 64-bit. Remember: you need to edit the .malwapi.conf and insert your HA API and secret.')
@@ -6291,13 +8019,15 @@ if __name__ == "__main__":
     parser.add_argument('-Y', '--androidsendha', dest='androidsendha', type=str, metavar = "ANDROID_SEND_HA", help='Sends an third-party APK package from your USB-connected Android device to Hybrid Analysis. The Android device does not need to be rooted and the system needs to have adb tool in the PATH environment variable.')
     parser.add_argument('-T', '--androidsendvt', dest='androidsendvt', type=str, metavar = "ANDROID_SEND_VT", help='Sends an third-party APK package from your USB-connected Android device to Virus Total. The Android device does not need be rooted and the system needis to have the adb tool in the PATH environment variable.')
     parser.add_argument('-n', '--alienvault', dest='alienvault', type=int, default = 0, metavar = "ALIENVAULT", help='Checks multiple information from AlienVault. The possible values are: 1: Get the subscribed pulses ; 2: Get information about an IP address; 3: Get information about a domain; 4: Get information about a hash; 5: Get information about a URL')
-    parser.add_argument('-N', '--alienvaultargs', dest='alienvaultargs', type=str, metavar = "ALIENVAULT_ARGS", help='Provides argument to AlienVault -n option.The allowed values are: 1, 2, 3, 4, 5.')
+    parser.add_argument('-N', '--alienvaultargs', dest='alienvaultargs', type=str, metavar = "ALIENVAULT_ARGS", help='Provides argument to AlienVault -n option.')
     parser.add_argument('-M', '--malpedia', dest='malpedia', type=int, default = 0, metavar = "MALPEDIA", help='This option is related to MALPEDIA and presents different meanings depending on the chosen value. Thus, 1: List meta information for all families ; 2: List all actors ID ; 3: List all available payloads organized by family from Malpedia; 4: Get meta information from an specific actor, so it is necessary to use the -m option. Additionally, try to confirm the correct actor ID by executing malwoverview with option -M 3; 5: List all families IDs; 6: Get meta information from an specific family, so it is neccesary to use the -m option. Additionally, try to confirm the correct family ID by executing malwoverview with option -M 5; 7: Get a malware sample from malpedia (zip format -- password: infected). It is necessary to specify the requested hash by using -m option; 8: Get a zip file containing Yara rules for a specific family (get the possible families using -M 5), which must be specified by using -m option.')
     parser.add_argument('-m', '--malpediarg', dest='malpediaarg', type=str, metavar = "MALPEDIAARG", help='This option provides an argument to the -M option, which is related to MALPEDIA.')
     parser.add_argument('-Q', '--threatcrowd', dest='threatcrowd', type=int, default = 0, metavar = "THREATCROWD", help='Checks multiple information from ThreatCrowd. The possible values are: 1: Get information about the provided e-mail ; 2: Get information about an IP address; 3: Get information about a domain; 4: Get information about a provided MD5 hash; 5: Get information about a specific malware family.')
     parser.add_argument('-q', '--threatcrowdarg', dest='threatcrowdarg', type=str, metavar = "THREATCROWDARG", help='This option provides an argument to the -Q option, which is related to THREATCROWD.')
     parser.add_argument('-E', '--valhalla', dest='valhalla', type=int, default = 0, metavar = "VALHALLA", help='This option is used for getting Yara rules from the Valhalla service given an argument (-C option below). Valid values are 1: searches for Yara rules matching the provided keyword; 2: search for Yara rules matching a minimal score (40-49: anomaly and threat hunting rules / 60-74: rules for suspicious objects / 75-100: hard malicious matches); 3: Look for Yara rules to the following products, which must be specified using the -C option: FireEyeAX, FireEyeNX, FireEyeEX, CarbonBlack, Tanium, Tenable, SymantecMAA, GRR, osquery, McAfeeATD3 and McAfeeATD4; 4: Given the hash (SHA 256) through -C option, show associated Yara rules; 5: Shows information about a specific Yara rule provided through the -C option.')
     parser.add_argument('-C', '--valhallaarg', dest='valhallaarg', type=str, metavar = "VALHALLAARG", help='This option is used for providing argument to the  Vahalla service (-E option).')
+    parser.add_argument('-b', '--bazaar', dest='bazaar', type=int, default = 0, metavar = "BAZAAR", help='Checks multiple information from Malware Bazaar and ThreatFox. The possible values are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar) Get information and a list of malware samples associated and according to a specific tag; 3: (Bazaar) Get a list of malware samples according to a given imphash; 4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample from Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped using the following password: infected; 6: (ThreatFox) Get current IOC dataset from last x days given by option -B; 7: (ThreatFox) Search for the specified IOC on ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified taggiven by option -B; 9: (ThreatFox) Search IOCs according to the specified malware family provided by option -B; 10. (ThreatFox) List all available malware families. ')
+    parser.add_argument('-B', '--bazaararg', dest='bazaararg', type=str, metavar = "BAZAAR_ARG", help='Provides argument to -b Bazaar and ThreatFox option. If you hahave used "-b 1" then the -B\'s argument must be a hash; If you have used "-b 2" then -B\'s argument must be a malware tag; If you have used "-b 3" then the argument must be a imphash; If you have used "-b 4", so the argument must be "100 or time", where "100" lists last "100 samples" and "time" lists last samples added to Malware Bazaar in the last 60 minutes; If you used "-b 5" then the -B\'s argument must be a SHA256 hash; If you used "-b 6", so the -B\'s value is the number of DAYS to filter IOCs. The default (and max) is 90 (days); If you used "-b 7" so the -B\'s argument is the IOC you want to search for; If you used "-b 8", so the -B\'s argument is the TAG you want search for; If you used "-b 9", so the -B argument is the malware family you want to search for;')
 
 
     args = parser.parse_args()
@@ -6330,6 +8060,7 @@ if __name__ == "__main__":
     optval4 = [0, 1, 2, 3]
     optval5 = [0, 1, 2, 3, 4, 5]
     optval6 = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    optval7 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     repo = args.direct
     bkg = args.backg
     vt = args.virustotal
@@ -6373,6 +8104,8 @@ if __name__ == "__main__":
     threatcrowdargx = args.threatcrowdarg
     valhallax = args.valhalla
     valhallaargx = args.valhallaarg
+    bazaarx = args.bazaar
+    bazaarargx = args.bazaararg
     config = args.config
 
     if (vt == 2):
@@ -6457,6 +8190,11 @@ if __name__ == "__main__":
         print(mycolors.reset)
         exit(0)
 
+    if (args.bazaar) not in optval7:
+        parser.print_help()
+        print(mycolors.reset)
+        exit(0)
+
     if (args.malpedia) not in optval6:
         parser.print_help()
         print(mycolors.reset)
@@ -6472,7 +8210,7 @@ if __name__ == "__main__":
         print(mycolors.reset)
         exit(0)
 
-    if ((not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not fileha) and (not repoha) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (not args.urlhausquery) and (not args.urlhaussubmit) and (hausbatch == 0) and (hauspayloads == 0) and (not args.haushash) and (not args.hausdownloadpayload) and (not args.polyswarmscan) and (not args.polyswarmhash) and (not args.polyswarmmeta) and (androidx == 0) and (not androidsendhax) and (androidvtx == 0) and (androidvttx == 0) and (not androidsendvtx) and (not haustagsearchx) and (not haussigsearchx) and (not ipaddrvtx) and (metatype == 0) and (alienx == 0) and (not alienargsx) and (not malpediaargx) and (malpediax ==0) and (not args.threatcrowd) and (not args.valhalla)):
+    if ((not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not fileha) and (not repoha) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (not args.urlhausquery) and (not args.urlhaussubmit) and (hausbatch == 0) and (hauspayloads == 0) and (not args.haushash) and (not args.hausdownloadpayload) and (not args.polyswarmscan) and (not args.polyswarmhash) and (not args.polyswarmmeta) and (androidx == 0) and (not androidsendhax) and (androidvtx == 0) and (androidvttx == 0) and (not androidsendvtx) and (not haustagsearchx) and (not haussigsearchx) and (not ipaddrvtx) and (metatype == 0) and (alienx == 0) and (not alienargsx) and (not malpediaargx) and (malpediax ==0) and (not args.threatcrowd) and (not args.valhalla) and (bazaarx == 0) and (not bazaarargx)):
         parser.print_help()
         print(mycolors.reset)
         exit(0)
@@ -6552,13 +8290,15 @@ if __name__ == "__main__":
                                                                                                     if (args.metatype == 0):
                                                                                                         if (args.alienvault == 0):
                                                                                                             if (not args.alienvaultargs):
-                                                                                                                if (not malpediaargx):
-                                                                                                                    if (malpediax == 0):
-                                                                                                                        if(not args.threatcrowd):
-                                                                                                                            if(not args.valhalla):
-                                                                                                                                parser.print_help()
-                                                                                                                                print(mycolors.reset)
-                                                                                                                                exit(0)
+                                                                                                                if (args.bazaar == 0):
+                                                                                                                    if (not args.bazaararg):
+                                                                                                                        if (not malpediaargx):
+                                                                                                                            if (malpediax == 0):
+                                                                                                                                if(not args.threatcrowd):
+                                                                                                                                    if(not args.valhalla):
+                                                                                                                                        parser.print_help()
+                                                                                                                                        print(mycolors.reset)
+                                                                                                                                        exit(0)
 
     if (urltemp):
         if (validators.url(urltemp)) == True:
@@ -6697,6 +8437,70 @@ if __name__ == "__main__":
         print(mycolors.reset)
         exit(0)
 
+    if (bazaarx == 1):
+        argx = bazaarargx
+        bazaarcheck=0
+        if(argx):
+            if ((len(argx) == 32) or (len(argx)==64)):
+                bazaarcheck=1
+        if(bazaarcheck == 1):
+            bazaar_hash(argx, urlbazaar)
+        print(mycolors.reset)
+        exit(0)
+
+    if (bazaarx == 2):
+        argx = bazaarargx
+        bazaar_tag(argx, urlbazaar)
+        print(mycolors.reset)
+        exit(0)
+
+    if (bazaarx == 3):
+        argx = bazaarargx
+        bazaar_imphash(argx, urlbazaar)
+        print(mycolors.reset)
+        exit(0)
+
+    if (bazaarx == 4):
+        argx = bazaarargx
+        bazaar_lastsamples(argx, urlbazaar)
+        print(mycolors.reset)
+        exit(0)
+
+    if (bazaarx == 5):
+        argx = bazaarargx
+        bazaar_download(argx, urlbazaar)
+        print(mycolors.reset)
+        exit(0)
+
+    if (bazaarx == 6):
+        argx = bazaarargx
+        threatfox_listiocs(argx, urlthreatfox)
+        print(mycolors.reset)
+        exit(0)
+
+    if (bazaarx == 7):
+        argx = bazaarargx
+        threatfox_searchiocs(argx, urlthreatfox)
+        print(mycolors.reset)
+        exit(0) 
+
+    if (bazaarx == 8):
+        argx = bazaarargx
+        threatfox_searchtags(argx, urlthreatfox)
+        print(mycolors.reset)
+        exit(0) 
+
+    if (bazaarx == 9):
+        argx = bazaarargx
+        threatfox_searchmalware(argx, urlthreatfox)
+        print(mycolors.reset)
+        exit(0) 
+    
+    if (bazaarx == 10):
+        argx = bazaarargx
+        threatfox_listmalware(argx, urlthreatfox)
+        print(mycolors.reset)
+        exit(0) 
 
     if (malpediax == 1):
         argx = malpediaargx

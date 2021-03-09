@@ -11,12 +11,12 @@ with open("README.md", encoding='utf8') as readme:
 
 setup(
     name="malwoverview",
-    version="4.2",
+    version="4.3",
     author="Alexandre Borges",
     author_email="alexandreborges@blackstormsecurity.com",
     license="GNU GPL v3.0",
     url="https://github.com/alexandreborges/malwoverview",
-    description=("Malwoverview is a first response tool for profiling malware samples, URLs, submitting and downloading malware samples."),
+    description=("Malwoverview is a first response tool for threat hunting."),
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=find_packages(),
