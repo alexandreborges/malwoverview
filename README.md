@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/4.3) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/4.3.1) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
 [<img alt="PayPal" src="https://img.shields.io/badge/Donate-Paypal-brightgreen?style=for-the-badge&logo=appveyor">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M8F458EZH8UZE&source=url)
 
@@ -112,7 +112,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 4.3
+# Current Version: 4.3.1
 
      Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by 
      default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, 
@@ -401,7 +401,7 @@ To use the malwoverview, execute the command as shown below:
       -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> 
       -E <1|2|3|4|5> -C <argument> -b <1|2|3|4|5|6|7|8|9|10> -B <arg>
 
-Malwoverview is a malware triage tool written by Alexandre Borges.
+Malwoverview is a first response tool for threat hunting written by Alexandre Borges.
 
 optional arguments:
 
@@ -608,13 +608,13 @@ optional arguments:
                         family provided by option -B; 10. (ThreatFox) List all available malware families.
 
       -B BAZAAR_ARG, --bazaararg BAZAAR_ARG
-                        Provides argument to -b Bazaar and ThreatFox option. If you hahave used "-b 1" 
-                        then the -B's argument must be a hash; If you have used "-b 2" then -B's argument 
-                        must be a malware tag; If you have used "-b 3" then the argument must be a imphash;
-                        If you have used "-b 4", so the argument must be "100 or time", where "100" lists 
+                        Provides argument to -b Bazaar and ThreatFox option. If you specified "-b 1" 
+                        then the -B's argument must be a hash; If you specified "-b 2" then -B's argument 
+                        must be a malware tag; If you specified "-b 3" then the argument must be a imphash;
+                        If you specified "-b 4", so the argument must be "100 or time", where "100" lists 
                         last "100 samples" and "time" lists last samples added to Malware Bazaar in the last
-                        60 minutes; If you used "-b 5" then the -B's argument must be a SHA256 hash; If you 
-                        used "-b 6", so the -B's value is the number of DAYS to filter IOCs. The default 
+                        60 minutes; If you specified "-b 5" then the -B's argument must be a SHA256 hash; If you 
+                        specified "-b 6", so the -B's value is the number of DAYS to filter IOCs. The default 
                         (and max) is 90 (days); If you used "-b 7" so the -B's argument is the IOC you want
                         to search for; If you used "-b 8", so the -B's argument is the TAG you want search 
                         for; If you used "-b 9", so the -B argument is the malware family you want to search
@@ -734,6 +734,13 @@ optional arguments:
       malwoverview.py -b 10 | more
 
 # HISTORY
+
+Version 4.3.1:
+
+      This version:
+
+            * Introduces a fix in the "-b 8" ThreatFox option.
+            * Corrects sentences in the help's section.
 
 Version 4.3:
 

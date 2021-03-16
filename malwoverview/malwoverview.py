@@ -20,7 +20,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 4.3
+# Malwoverview.py: version 4.3.1
 
 import os
 import sys
@@ -60,7 +60,7 @@ from valhallaAPI.valhalla import ValhallaAPI
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2021, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "4.3"
+__version__ = "4.3.1"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -4455,6 +4455,13 @@ def threatfox_searchtags(bazaarx, bazaar):
                 print(mycolors.foreground.red + "\nThe search term you have provided is not valid!\n" + mycolors.reset)
             exit(1)
 
+        if bazaartext['query_status'] == "illegal_tag":
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nThe tag you have provided is not valid!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nThe tag you have provided is not valid!\n" + mycolors.reset)
+            exit(1)
+
         if (bkg == 1):
             for i in bazaartext.keys():
                 if (i == "data"):
@@ -7983,7 +7990,7 @@ if __name__ == "__main__":
     bazaar = 0
     bazaararg = ''
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.3", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument> -b <'1|2|3|4|5|6|7|8|9|10> -B <arg>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.3.1", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument> -b <'1|2|3|4|5|6|7|8|9|10> -B <arg>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples.')
     parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a malware sample. It returns general information about the file (any filetype)')
@@ -8026,8 +8033,8 @@ if __name__ == "__main__":
     parser.add_argument('-q', '--threatcrowdarg', dest='threatcrowdarg', type=str, metavar = "THREATCROWDARG", help='This option provides an argument to the -Q option, which is related to THREATCROWD.')
     parser.add_argument('-E', '--valhalla', dest='valhalla', type=int, default = 0, metavar = "VALHALLA", help='This option is used for getting Yara rules from the Valhalla service given an argument (-C option below). Valid values are 1: searches for Yara rules matching the provided keyword; 2: search for Yara rules matching a minimal score (40-49: anomaly and threat hunting rules / 60-74: rules for suspicious objects / 75-100: hard malicious matches); 3: Look for Yara rules to the following products, which must be specified using the -C option: FireEyeAX, FireEyeNX, FireEyeEX, CarbonBlack, Tanium, Tenable, SymantecMAA, GRR, osquery, McAfeeATD3 and McAfeeATD4; 4: Given the hash (SHA 256) through -C option, show associated Yara rules; 5: Shows information about a specific Yara rule provided through the -C option.')
     parser.add_argument('-C', '--valhallaarg', dest='valhallaarg', type=str, metavar = "VALHALLAARG", help='This option is used for providing argument to the  Vahalla service (-E option).')
-    parser.add_argument('-b', '--bazaar', dest='bazaar', type=int, default = 0, metavar = "BAZAAR", help='Checks multiple information from Malware Bazaar and ThreatFox. The possible values are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar) Get information and a list of malware samples associated and according to a specific tag; 3: (Bazaar) Get a list of malware samples according to a given imphash; 4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample from Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped using the following password: infected; 6: (ThreatFox) Get current IOC dataset from last x days given by option -B; 7: (ThreatFox) Search for the specified IOC on ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified taggiven by option -B; 9: (ThreatFox) Search IOCs according to the specified malware family provided by option -B; 10. (ThreatFox) List all available malware families. ')
-    parser.add_argument('-B', '--bazaararg', dest='bazaararg', type=str, metavar = "BAZAAR_ARG", help='Provides argument to -b Bazaar and ThreatFox option. If you hahave used "-b 1" then the -B\'s argument must be a hash; If you have used "-b 2" then -B\'s argument must be a malware tag; If you have used "-b 3" then the argument must be a imphash; If you have used "-b 4", so the argument must be "100 or time", where "100" lists last "100 samples" and "time" lists last samples added to Malware Bazaar in the last 60 minutes; If you used "-b 5" then the -B\'s argument must be a SHA256 hash; If you used "-b 6", so the -B\'s value is the number of DAYS to filter IOCs. The default (and max) is 90 (days); If you used "-b 7" so the -B\'s argument is the IOC you want to search for; If you used "-b 8", so the -B\'s argument is the TAG you want search for; If you used "-b 9", so the -B argument is the malware family you want to search for;')
+    parser.add_argument('-b', '--bazaar', dest='bazaar', type=int, default = 0, metavar = "BAZAAR", help='Checks multiple information from Malware Bazaar and ThreatFox. The possible values are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar) Get information and a list of malware samples associated and according to a specific tag; 3: (Bazaar) Get a list of malware samples according to a given imphash; 4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample from Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped using the following password: infected; 6: (ThreatFox) Get current IOC dataset from last x days given by option -B; 7: (ThreatFox) Search for the specified IOC on ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified tag given by option -B; 9: (ThreatFox) Search IOCs according to the specified malware family provided by option -B; 10. (ThreatFox) List all available malware families. ')
+    parser.add_argument('-B', '--bazaararg', dest='bazaararg', type=str, metavar = "BAZAAR_ARG", help='Provides argument to -b Bazaar and ThreatFox option. If you specified "-b 1" then the -B\'s argument must be a hash; If you specified "-b 2" then -B\'s argument must be a malware tag; If you specified "-b 3" then the argument must be a imphash; If you specified "-b 4", so the argument must be "100 or time", where "100" lists last "100 samples" and "time" lists last samples added to Malware Bazaar in the last 60 minutes; If you specified "-b 5" then the -B\'s argument must be a SHA256 hash; If you specified "-b 6", so the -B\'s value is the number of DAYS to filter IOCs. The default (and max) is 90 (days); If you used "-b 7" so the -B\'s argument is the IOC you want to search for; If you used "-b 8", so the -B\'s argument is the TAG you want search for; If you used "-b 9", so the -B argument is the malware family you want to search for;')
 
 
     args = parser.parse_args()
