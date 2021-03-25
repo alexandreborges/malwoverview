@@ -1130,6 +1130,9 @@ def vtshow(filehash, url, param):
         if ('F-Secure' in vttext['scans']):
             print("F-Secure:".ljust(13),vttext['scans']['F-Secure']['result'])
 
+        if ('FireEye' in vttext['scans']):
+            print("FireEye:".ljust(13),vttext['scans']['FireEye']['result'])
+            
         if ('Fortinet' in vttext['scans']):
             print("Fortinet:".ljust(13),vttext['scans']['Fortinet']['result'])
 
