@@ -20,7 +20,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 4.3.1
+# Malwoverview.py: version 4.3.2
 
 import os
 import sys
@@ -60,7 +60,7 @@ from valhallaAPI.valhalla import ValhallaAPI
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2021, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "4.3.1"
+__version__ = "4.3.2"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -226,11 +226,13 @@ def listdlls(fname):
     pe=pefile.PE(fname)
 
     if(bkg == 1):
-        print(mycolors.foreground.lightgreen + "\nImported DLLs: ", end='\n\n')
+        print(mycolors.reset + "\nImported DLLs: ", end='\n')
+        print((25*'-').ljust(25),end='\n\n')
         for x in pe.DIRECTORY_ENTRY_IMPORT:
             print("\t " + mycolors.foreground.lightgreen + x.dll.decode('utf-8') + mycolors.reset)
     else:
-        print(mycolors.foreground.purple + "\nImported DLLs: ", end='\n\n')
+        print(mycolors.reset + "\nImported DLLs: ", end='\n')
+        print((25*'-').ljust(25),end='\n\n')
         for x in pe.DIRECTORY_ENTRY_IMPORT:
             print("\t " + mycolors.foreground.purple + x.dll.decode('utf-8') + mycolors.reset)
 
@@ -934,7 +936,7 @@ def ipvtcheck(ipaddress, urlvtip):
                 for j in vttext['detected_urls']:
                     if (bkg == 0):
                         print(mycolors.foreground.cyan + "\nURL:\t\t", end='')
-                        print(mycolors.reset + j['url'] + mycolors.reset)
+                        print(mycolors.reset + ("\n".ljust(17)).join(textwrap.wrap(j['url'], width=100)), end='\n')
                         print(mycolors.foreground.cyan+ "Scan Date:\t", end='')
                         print(mycolors.reset + j['scan_date'] + mycolors.reset)
                         print(mycolors.foreground.cyan + "Positives:\t", end='')
@@ -943,7 +945,7 @@ def ipvtcheck(ipaddress, urlvtip):
                         print(mycolors.reset + str(j['total']) + mycolors.reset)
                     else:
                         print(mycolors.foreground.lightred + "\nURL:\t\t", end='')
-                        print(mycolors.reset + j['url'] + mycolors.reset)
+                        print(mycolors.reset + ("\n".ljust(17)).join(textwrap.wrap(j['url'], width=100)), end='\n')
                         print(mycolors.foreground.lightred + "Scan Date:\t", end='')
                         print(mycolors.reset + j['scan_date'] + mycolors.reset)
                         print(mycolors.foreground.lightred + "Positives:\t", end='')
@@ -1129,6 +1131,9 @@ def vtshow(filehash, url, param):
 
         if ('F-Secure' in vttext['scans']):
             print("F-Secure:".ljust(13),vttext['scans']['F-Secure']['result'])
+
+        if ('FireEye' in vttext['scans']):
+            print("FireEye:".ljust(13),vttext['scans']['FireEye']['result'])
 
         if ('Fortinet' in vttext['scans']):
             print("Fortinet:".ljust(13),vttext['scans']['Fortinet']['result'])
@@ -1998,8 +2003,9 @@ def filechecking(ffpname2):
                 print((mycolors.foreground.yellow + ""))
             else:
                 print((mycolors.foreground.green + ""))
+
             listsections(targetfile)
-            listdlls(targetfile)
+
             if (showreport == 1):
                 print(mycolors.reset)
                 print("\nMain Antivirus Reports:")
@@ -2016,6 +2022,8 @@ def filechecking(ffpname2):
 
             if (ovrly == 1):
                 status_over = overextract(targetfile)
+
+            listdlls(targetfile)
 
             print(mycolors.reset)
             exit(0)
@@ -2054,9 +2062,10 @@ def filechecking(ffpname2):
 
     except (AttributeError, NameError) as e:
         if (bkg == 1):
-            print((mycolors.foreground.lightred + "\nThe file %s doesn't respect some PE format rules. Skipping this file...\n" % targetfile))
+            print((mycolors.foreground.yellow + "\t\tThe file %s seems not having a valid Import Table.\n" % targetfile))
+            pass
         else:
-            print((mycolors.foreground.red + "\nThe file %s doesn't respect some PE format rules. Skipping this file...\n" % targetfile))
+            print((mycolors.foreground.red + "\t\tThe file %s seems not having a valid Import Table.\n" % targetfile))
         print(mycolors.reset)
         exit(1)
 
@@ -4829,7 +4838,6 @@ def threatfox_listmalware(bazaarx, bazaar):
         params = {'query':"malware_list"}
         bazaarresponse = requestsession.post(url=bazaar, data=json.dumps(params))
         bazaartext = json.loads(bazaarresponse.text)
-        #print(bazaartext)
 
         if bazaartext['query_status'] == "no_result":
             if (bkg == 1):
@@ -4849,6 +4857,7 @@ def threatfox_listmalware(bazaarx, bazaar):
                                 for key in info:
                                     print(mycolors.reset + "\n".ljust(17) + "%-18s" % key + ': ',end='')
                                     print(info[key],end='')
+                            break
 
         if (bkg == 0):
             for i in bazaartext.keys():
@@ -4861,6 +4870,7 @@ def threatfox_listmalware(bazaarx, bazaar):
                                 for key in info:
                                     print(mycolors.reset + "\n".ljust(17) + "%-18s" % key + ': ',end='')
                                     print(info[key],end='')
+                            break
 
         print(mycolors.reset)
         exit(0)
@@ -5255,7 +5265,7 @@ def hausgetbatch(haus):
                                     print(" " * ((28 - l) - len(alltags)) , end=' ')
                                 else:
                                     print(" " * 28, end=' ')
-                            print(mycolors.foreground.lightcyan + haustext['urls'][i].get('url'))
+                            print(mycolors.reset + ("\n".ljust(38)).join(textwrap.wrap((haustext['urls'][i].get('url')).ljust(14), width=90)), end='\n')
                             l = 0
                         else:
                             if(haustext['urls'][i].get('url_status') == 'online'):
@@ -5274,7 +5284,7 @@ def hausgetbatch(haus):
                                     print(" " * ((28 - l) - len(alltags)) , end=' ')
                                 else:
                                     print(" " * 28, end=' ')
-                            print(mycolors.foreground.purple + haustext['urls'][i].get('url'))
+                            print(mycolors.reset + ("\n".ljust(38)).join(textwrap.wrap((haustext['urls'][i].get('url')).ljust(14), width=90)), end='\n')
                             l = 0
 
                 print(mycolors.reset , file=sys.stderr)
@@ -5610,11 +5620,12 @@ def alien_ipv4(url, arg1):
                             while i < len(hatext['pulse_info'][key]):
                                 if(isinstance(hatext['pulse_info'][key][i], dict)):
                                     if 'malware_families' in hatext['pulse_info'][key][i]:
+                                        print(mycolors.foreground.lightgreen + "\nMalware:".ljust(13) + mycolors.reset)
                                         for z in hatext['pulse_info'][key][i]['malware_families']:
-                                            print(mycolors.foreground.lightgreen + "Malware:".ljust(13) + mycolors.reset + z['display_name'])
+                                            print("".ljust(13) + z['display_name'])
                                     if 'tags' in hatext['pulse_info'][key][i]:
+                                        print(mycolors.foreground.lightgreen + "Tags:".ljust(12) + mycolors.reset, end=' ')
                                         if (hatext['pulse_info'][key][i]['tags']):
-                                            print(mycolors.foreground.lightgreen + "Tags:".ljust(12) + mycolors.reset, end=' ')
                                             b = 0
                                             for z in hatext['pulse_info'][key][i]['tags']:
                                                 b = b + 1
@@ -5630,7 +5641,7 @@ def alien_ipv4(url, arg1):
                         i = 0
                         while (i < len(hatext['pulse_info']['pulses'])):
                             if "modified" in (hatext['pulse_info']['pulses'][i]):
-                                print(mycolors.foreground.lightgreen + "Modified:".ljust(13) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['modified']), end='')
+                                print(mycolors.foreground.lightgreen + "\nModified:".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['modified']), end='')
                             if "name" in (hatext['pulse_info']['pulses'][i]):
                                 print(mycolors.foreground.lightgreen + "\nNews:".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['name']), end='')
                             if "created" in (hatext['pulse_info']['pulses'][i]):
@@ -5640,19 +5651,20 @@ def alien_ipv4(url, arg1):
                                 i = i + i
 
                         k = 0
+                        print(mycolors.foreground.lightgreen + "\n\nDescription:" + mycolors.reset, end='')
                         while (k < len(hatext['pulse_info']['pulses'])):
                             for key in hatext['pulse_info']['pulses'][k]:
                                 if (key == 'description'):
                                     if (hatext['pulse_info']['pulses'][k]['description']):
-                                        print(mycolors.foreground.lightgreen + "\nDescription:" + "\n".ljust(14) + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(hatext['pulse_info']['pulses'][k]['description'],width=100)), end='')
+                                        print("\n".ljust(14) + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(hatext['pulse_info']['pulses'][k]['description'],width=100)), end='\n')
                                         break
                             k = k + 1
 
                 if hatext['pulse_info']:
                     if hatext['pulse_info']['references']:
-                        print("\n")
+                        print(mycolors.foreground.lightgreen + "\nReferences: ".ljust(14) + mycolors.reset, end=' ')
                         for r in hatext['pulse_info']['references']:
-                            print(mycolors.foreground.lightgreen + "\nReferences: ".ljust(14) + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(r,width=100)), end='')
+                            print("\n".ljust(14) + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(r,width=100)), end='\n')
         else:
             if 'sections' in hatext:
                 print(mycolors.reset + "\n\n" + "ALIEN VAULT IPv4 REPORT".center(120))
@@ -5675,11 +5687,12 @@ def alien_ipv4(url, arg1):
                         if (isinstance(hatext['pulse_info'][key], list)):
                             while i < len(hatext['pulse_info'][key]):
                                 if(isinstance(hatext['pulse_info'][key][i], dict)):
+                                    print(mycolors.foreground.green + "\nMalware:".ljust(13) + mycolors.reset, end='')
                                     if 'malware_families' in hatext['pulse_info'][key][i]:
                                         for z in hatext['pulse_info'][key][i]['malware_families']:
-                                            print(mycolors.foreground.green + "Malware:".ljust(13) + mycolors.reset + z['display_name'])
+                                            print("\n".ljust(14) + z['display_name'], end='')
+                                    print(mycolors.foreground.green + "\nTags:".ljust(13) + mycolors.reset, end=' ')
                                     if 'tags' in hatext['pulse_info'][key][i]:
-                                        print(mycolors.foreground.green + "Tags:".ljust(12) + mycolors.reset, end=' ')
                                         b = 0
                                         for z in hatext['pulse_info'][key][i]['tags']:
                                             b = b + 1
@@ -5695,7 +5708,7 @@ def alien_ipv4(url, arg1):
                         i = 0
                         while (i < len(hatext['pulse_info']['pulses'])):
                             if "modified" in (hatext['pulse_info']['pulses'][i]):
-                                print(mycolors.foreground.green + "Modified:".ljust(13) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['modified']), end='')
+                                print(mycolors.foreground.green + "\nModified:".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['modified']), end='')
                             if "name" in (hatext['pulse_info']['pulses'][i]):
                                 print(mycolors.foreground.green + "\nNews:".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['name']), end='')
                             if "created" in (hatext['pulse_info']['pulses'][i]):
@@ -5705,19 +5718,20 @@ def alien_ipv4(url, arg1):
                                 i = i + i
 
                         k = 0
+                        print(mycolors.foreground.green + "\n\nDescription:" + "\n".ljust(14) + mycolors.reset, end='')
                         while (k < len(hatext['pulse_info']['pulses'])):
                             for key in hatext['pulse_info']['pulses'][k]:
                                 if (key == 'description'):
                                     if (hatext['pulse_info']['pulses'][k]['description']):
-                                        print(mycolors.foreground.green + "\nDescription:" + "\n".ljust(14) + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(hatext['pulse_info']['pulses'][k]['description'],width=100)), end='')
+                                        print("\n".ljust(14) + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(hatext['pulse_info']['pulses'][k]['description'],width=100)), end='\n')
                                         break
                             k = k + 1
 
                 if hatext['pulse_info']:
                     if hatext['pulse_info']['references']:
-                        print("\n")
+                        print(mycolors.foreground.green + "\n\nReferences: ".ljust(14) + mycolors.reset, end='')
                         for r in hatext['pulse_info']['references']:
-                            print(mycolors.foreground.green + "\nReferences: ".ljust(14) + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(r,width=100)), end='')
+                            print("\n".ljust(14) + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(r,width=100)), end='\n')
 
     except ValueError as e:
         print(e)
@@ -7990,7 +8004,7 @@ if __name__ == "__main__":
     bazaar = 0
     bazaararg = ''
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.3.1", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument> -b <'1|2|3|4|5|6|7|8|9|10> -B <arg>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.3.2", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument> -b <'1|2|3|4|5|6|7|8|9|10> -B <arg>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples.')
     parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a malware sample. It returns general information about the file (any filetype)')

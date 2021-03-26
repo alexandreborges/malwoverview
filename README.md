@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/4.3.1) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/4.3.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
 [<img alt="PayPal" src="https://img.shields.io/badge/Donate-Paypal-brightgreen?style=for-the-badge&logo=appveyor">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M8F458EZH8UZE&source=url)
 
@@ -112,13 +112,14 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 4.3.1
+# Current Version: 4.3.2
 
-     Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid Analysis by 
-     default. It submits only hashes, so respecting Non-Disclosure Agreements (NDAs). Nonetheless, 
-     if you use the "-V" (uppercase), "-A" (uppercase) or "-P" (uppercase), so Malwoverview SUBMITS your 
-     malware sample to Virus Total, Hybrid Analysis and Polyswarm, respectively. Additionally, options 
-     "-Y" and "-T" also sent the Android package from Android device to Hybrid-Analysis and Virus 
+     Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid 
+     Analysis by default. It submits only hashes, so respecting Non-Disclosure 
+     Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), "-A" (uppercase)
+     or "-P" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total,
+     Hybrid Analysis and Polyswarm, respectively. Additionally, options "-Y" and "-T"
+     also sent the Android package from Android device to Hybrid-Analysis and Virus 
      Total, respectively.  
 
 
@@ -366,7 +367,8 @@ If you want to perform the manual steps (usually, it is not necessary), so few s
 
        * Downloading and installing the Android Studio from: https://developer.android.com/
          studio#downloads (Recommended)
-       * Downloading it from https://dl.google.com/android/repository/platform-tools-latest-windows.zip
+       * Downloading it from:
+         https://dl.google.com/android/repository/platform-tools-latest-windows.zip
 
    PS: before trying Android's options, check:
 
@@ -734,6 +736,19 @@ optional arguments:
       malwoverview.py -b 10 | more
 
 # HISTORY
+
+
+Version 4.3.2:
+
+      This version:
+
+            * Fixes output formatting of option -n 2 (Alien Vault).
+            * Fixes URL output formatting of long URL when using option -I (Virus Total). 
+            * Fixes option -f when using a binary without IAT (Virus Total). 
+            * Fixes option -B 10, which caused a endless loop (ThreatFox). 
+            * Fixes option formatting issue related to -K 2 when fetched URLs were long
+              (URLHaus). 
+            * Introduces "FireEye" endpoint in the -v 2 output  (VirusTotal). 
 
 Version 4.3.1:
 
