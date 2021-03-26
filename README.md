@@ -748,7 +748,8 @@ Version 4.3.2:
             * Fixes option -B 10, which caused a endless loop (ThreatFox). 
             * Fixes option formatting issue related to -K 2 when fetched URLs were long
               (URLHaus). 
-            * Introduces "FireEye" endpoint in the -v 2 output  (VirusTotal). 
+            * Introduces "FireEye" endpoint in -v 2 output (VirusTotal). This
+              addition has been suggested by @vxsh4d0w.
 
 Version 4.3.1:
 
