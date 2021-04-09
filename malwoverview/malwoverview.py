@@ -20,7 +20,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 4.3.2
+# Malwoverview.py: version 4.3.3
 
 import os
 import sys
@@ -60,7 +60,7 @@ from valhallaAPI.valhalla import ValhallaAPI
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2021, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "4.3.2"
+__version__ = "4.3.3"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -7602,11 +7602,11 @@ class androidVTThread(threading.Thread):
         vtfinal = vtcheck(myhash, url, param)
     
         if (bkg == 1):
-            print((mycolors.foreground.orange +  "%-50s" % package1), end=' ')
+            print((mycolors.foreground.orange +  "%-70s" % package1), end=' ')
             print((mycolors.foreground.lightcyan +  "%-32s" % key1), end=' ')
             print((mycolors.reset + mycolors.foreground.lightgreen + "%8s" % vtfinal + mycolors.reset))
         else:
-            print((mycolors.foreground.green + "%-08s" % package1), end=' ')
+            print((mycolors.foreground.green + "%-70s" % package1), end=' ')
             print((mycolors.foreground.cyan + "%-32s" % key1), end=' ')
             print((mycolors.reset + mycolors.foreground.red + "%8s" % vtfinal + mycolors.reset))
 
@@ -7628,13 +7628,9 @@ class quickHAAndroidThread(threading.Thread):
         (final, verdict, avdetect, totalsignatures, threatscore, totalprocesses, networkconnections) =  quickhashowAndroid(myhash)
 
         if (bkg == 1):
-            print((mycolors.foreground.lightgreen + "%-50s" % package1), end=' ')
+            print((mycolors.foreground.lightgreen + "%-70s" % package1), end=' ')
             print((mycolors.foreground.yellow + "%-34s" % key1), end=' ')
             print((mycolors.foreground.lightcyan + "%9s" % final), end='')
-            if (verdict == "malicious"):
-                print((mycolors.foreground.lightred + "%20s" % verdict), end='')
-            else:
-                print((mycolors.foreground.yellow + "%20s" % verdict), end='')
             if(avdetect == 'None'):
                 print((mycolors.foreground.lightcyan + "%7s" % avdetect), end='')
             else:
@@ -7647,13 +7643,9 @@ class quickHAAndroidThread(threading.Thread):
             print((mycolors.foreground.lightgreen + "%6s" % totalprocesses), end='')
             print((mycolors.foreground.lightgreen + "%6s" % networkconnections + mycolors.reset))
         else:
-            print((mycolors.foreground.lightcyan + "%-50s" % key1), end=' ')
+            print((mycolors.foreground.lightcyan + "%-70s" % package1), end=' ')
             print((mycolors.foreground.green + "%-34s" % key1), end=' ')
             print((mycolors.foreground.cyan + "%9s" % final), end='')
-            if (verdict == "malicious"):
-                print((mycolors.foreground.red + "%20s" % verdict), end='')
-            else:
-                print((mycolors.foreground.green + "%20s" % verdict), end='')
             if (avdetect == 'None'):
                 print((mycolors.foreground.purple + "%7s" % avdetect), end='')
             else:
@@ -7683,11 +7675,11 @@ def checkandroidvt(key, package):
     key1 = key
     vtfinal = vtcheck(key1, url, param)
     if (bkg == 1):
-        print((mycolors.foreground.orange +  "%-50s" % package), end=' ')
+        print((mycolors.foreground.orange +  "%-70s" % package), end=' ')
         print((mycolors.foreground.lightcyan +  "%-32s" % key1), end=' ')
         print((mycolors.reset + mycolors.foreground.lightgreen + "%8s" % vtfinal + mycolors.reset))
     else:
-        print((mycolors.foreground.green + "%-08s" % package), end=' ')
+        print((mycolors.foreground.green + "%-70s" % package), end=' ')
         print((mycolors.foreground.cyan + "%-32s" % key1), end=' ')
         print((mycolors.reset + mycolors.foreground.red + "%8s" % vtfinal + mycolors.reset))
 
@@ -7752,15 +7744,15 @@ def checkandroid(engine):
     if(engine == 1):
 
         print(mycolors.reset + "\n")
-        print("Package".center(50) + "Hash".center(34) + "Found?".center(12) + "Verdict".center(23) + "AVdet".center(6) + "Sigs".center(5) + "Score".center(14) + "Procs".center(6) + "Conns".center(6))
+        print("Package".center(70) + "Hash".center(34) + "Found?".center(12) + "AVdet".center(10) + "Sigs".center(5) + "Score".center(14) + "Procs".center(6) + "Conns".center(6))
         print((160*'-').center(80))
         for key, value in dictAndroid.items():
             checkandroidha(value, key)
 
     if(engine == 2):
         print(mycolors.reset + "\n")
-        print("Package".center(50) +  "Hash".center(36) + "Virus Total".center(12))
-        print((100*'-').center(50))
+        print("Package".center(70) +  "Hash".center(36) + "Virus Total".center(12))
+        print((118*'-').center(59))
         for key, value in dictAndroid.items():
             tm1 = tm1 + 1
             if tm1 % 4 == 0:
@@ -7769,8 +7761,8 @@ def checkandroid(engine):
 
     if(engine == 3):
         print(mycolors.reset + "\n")
-        print("Package".center(50) +  "Hash".center(36) + "Virus Total".center(12))
-        print((100*'-').center(50))
+        print("Package".center(70) +  "Hash".center(36) + "Virus Total".center(12))
+        print((118*'-').center(59))
         for key, value in dictAndroid.items():
             checkandroidvtx(value, key)
 
@@ -8004,7 +7996,7 @@ if __name__ == "__main__":
     bazaar = 0
     bazaararg = ''
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.3.2", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument> -b <'1|2|3|4|5|6|7|8|9|10> -B <arg>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.3.3", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument> -b <'1|2|3|4|5|6|7|8|9|10> -B <arg>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples.')
     parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a malware sample. It returns general information about the file (any filetype)')
