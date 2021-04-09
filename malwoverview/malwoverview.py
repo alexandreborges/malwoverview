@@ -20,7 +20,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 4.3.3
+# Malwoverview.py: version 4.3.4
 
 import os
 import sys
@@ -60,7 +60,7 @@ from valhallaAPI.valhalla import ValhallaAPI
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2021, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "4.3.3"
+__version__ = "4.3.4"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -7640,8 +7640,10 @@ class quickHAAndroidThread(threading.Thread):
                 print((mycolors.foreground.lightred + "%12s" % threatscore), end='')
             else:
                 print((mycolors.foreground.lightred + "%8s/100" % threatscore), end='')
-            print((mycolors.foreground.lightgreen + "%6s" % totalprocesses), end='')
-            print((mycolors.foreground.lightgreen + "%6s" % networkconnections + mycolors.reset))
+            if (verdict == "malicious"):
+                print((mycolors.foreground.lightred + "%20s" % verdict), end='')
+            else:
+                print((mycolors.foreground.yellow + "%20s" % verdict), end='\n')
         else:
             print((mycolors.foreground.lightcyan + "%-70s" % package1), end=' ')
             print((mycolors.foreground.green + "%-34s" % key1), end=' ')
@@ -7655,8 +7657,10 @@ class quickHAAndroidThread(threading.Thread):
                 print((mycolors.foreground.red + "%12s" % threatscore), end='')
             else:
                 print((mycolors.foreground.red + "%8s/100" % threatscore), end='')
-            print((mycolors.foreground.blue + "%6s" % totalprocesses), end='')
-            print((mycolors.foreground.blue + "%6s" % networkconnections + mycolors.reset))
+            if (verdict == "malicious"):
+                print((mycolors.foreground.lightred + "%20s" % verdict), end='')
+            else:
+                print((mycolors.foreground.yellow + "%20s" % verdict), end='\n')
 
 
 def checkandroidha(key, package):
@@ -7744,8 +7748,8 @@ def checkandroid(engine):
     if(engine == 1):
 
         print(mycolors.reset + "\n")
-        print("Package".center(70) + "Hash".center(34) + "Found?".center(12) + "AVdet".center(10) + "Sigs".center(5) + "Score".center(14) + "Procs".center(6) + "Conns".center(6))
-        print((160*'-').center(80))
+        print("Package".center(70) + "Hash".center(34) + "Found?".center(12) + "AVdet".center(10) + "Sigs".center(5) + "Score".center(14) + "Verdict".center(14))
+        print((162*'-').center(81))
         for key, value in dictAndroid.items():
             checkandroidha(value, key)
 
@@ -7996,7 +8000,7 @@ if __name__ == "__main__":
     bazaar = 0
     bazaararg = ''
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.3.3", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument> -b <'1|2|3|4|5|6|7|8|9|10> -B <arg>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.3.4", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument> -b <'1|2|3|4|5|6|7|8|9|10> -B <arg>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples.')
     parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a malware sample. It returns general information about the file (any filetype)')
