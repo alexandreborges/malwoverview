@@ -184,13 +184,14 @@ can be installed by executing the following command:
 
 To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm,
 Alien Vault and Malpedia APIs into the .malwapi.conf configuration file (the default one at the 
-home directory -- if the file doesn't exist, so you should create it) or you could create a 
-custom configuration file and indicate it by using the -c option. 
+home directory (/home/username or /root) -- if the file doesn't exist, so you should create it) 
+or you could create a custom configuration file and indicate it by using the -c option. 
 
 A special note about the Alien Vault: it is necessary to subscribe to pulses on Alien Vault 
 website before using -n 1 option.  
 
-The .malwapi.conf configuration file (from the the home directory) has the following format:
+The .malwapi.conf configuration file (from the the home directory -- /home/username or /root) 
+has the following format:
 
       [VIRUSTOTAL]
       VTAPI = 
@@ -470,16 +471,16 @@ optional arguments:
                         Imphashes not to be grouped anymore; PS2: it also works on Windows, but there is 
                         not gain in performance; <2>: This value should be used with -d option in
                         two scenarios: 1) either including the "-v 1" option (Virus Total -- you'll see 
-                        a complete VT response whether you have the private API) for a multithread searching
-                        and reduced output; 2) or including the -a option (Hybrid Analysis) for a multithread 
-                        searching to get a complete and amazing output. If you are using the -a option, so 
-                        you should pickup the right number represening the testing environment to adjust the 
-                        output to your sample types. PS1: certainly, if you have a directory holding 
-                        many malware samples, so you will want to test this option with -a option; PS2: it 
-                        also works on Windows, but there is not gain in performance; <3>: You should use 
-                        this value with -v option if you have a public Virus Total API. It forces a one 
-                        minute wait every 4 malware samples, but allows obtaining a complete evaluation of 
-                        the malware repository.
+                        a complete VT response whether you have the private API) for a multithread 
+                        searching and reduced output; 2) or including the -a option (Hybrid Analysis) 
+                        for a multithread searching to get a complete and amazing output. If you are 
+                        using the -a option, so you should pickup the right number represening the 
+                        testing environment to adjust the output to your sample types. PS1: certainly,
+                        if you have a directory holding many malware samples, so you will want to test
+                        this option with -a option; PS2: it also works on Windows, but there is not gain
+                        in performance; <3>: You should use this value with -v option if you have a public
+                        Virus Total API. It forces a one minute wait every 4 malware samples, but allows
+                        obtaining a complete evaluation of the malware repository.
       -l MALSHARE_HASHES, --malsharelist MALSHARE_HASHES
                         This option shows hashes of a specific type from the last 24 hours from Malshare 
                         repository. Possible values are: 1: PE32 (default) ; 2: Dalvik ; 3: ELF ; 4: HTML ;
@@ -494,8 +495,8 @@ optional arguments:
                         THis option has few possible values: <1> Retrieves a list of downloadable links of 
                         recent PAYLOADS (last 3 days, limited to 1000 entries) from URLHaus website; <2>: 
                         Retrieves a list of recent URLs (last 3 days, limited to 1000 entries) from URLHaus
-                        website. Take care: each link take you to download a passworless zip file containing 
-                        a malware, so your AV can generate alerts!
+                        website. Take care: each link take you to download a passworless zip file 
+                        containing a malware, so your AV can generate alerts!
       -U URL_HAUS_QUERY, --haus_query URL_HAUS_QUERY
                         Queries a URL on the URLHaus website.
       -j HAUS_HASH, --haus_hash HAUS_HASH
@@ -510,14 +511,14 @@ optional arguments:
                         lower case, '-' and '.' are allowed. This parameter is optional, which could be used 
                         with the -S option.
       -W [HAUSTAGSEARCH [HAUSTAGSEARCH ...]], --haustagsearch [HAUSTAGSEARCH [HAUSTAGSEARCH ...]]
-                        This option is for searching malicious URLs by tag on URLhaus. Tags are case-senstive 
-                        and only upper case, lower case, '-' and '.' are allowed.
+                        This option is for searching malicious URLs by tag on URLhaus. Tags are 
+                        case-senstive and only upper case, lower case, '-' and '.' are allowed.
       -k [HAUSSIGSEARCH [HAUSSIGSEARCH ...]], --haussigsearch [HAUSSIGSEARCH [HAUSSIGSEARCH ...]]
                         This option is for searching malicious payload by tag on URLhaus. Tags are 
                         case-sensitive and only upper case, lower case, '-' and '.' are allowed.
       -J HAUS_DOWNLOAD, --haus_download HAUS_DOWNLOAD
-                        Downloads a malware sample (if it is available) from the URLHaus repository. It is 
-                        necessary to provide the SHA256 hash.
+                        Downloads a malware sample (if it is available) from the URLHaus repository. It 
+                        is necessary to provide the SHA256 hash.
       -P POLYSWARMFILE, --polyswarm_scan POLYSWARMFILE
                         (Only for Linux) Submits a sample to Polyswarm engine and performs a file scan.
       -O POLYSWARMHASH, --polyswarm_hash POLYSWARMHASH
@@ -525,11 +526,11 @@ optional arguments:
                         you can specify -D option to download the sample. Take care: Polyswarm enforces a 
                         restriction to number of downloaded samples in 20/month.
       -R POLYSWARMMETA, --polyswarm_meta POLYSWARMMETA
-                        (Only for Linux) Provides the argument value for searches on Polyswarm engine through 
-                        imphash (the PE file must be provided), ipv4, domain, URL and family. This argument 
-                        must be used with -G option, so check it, please. Pay attention: you should check your 
-                        metadata search limit on your Polyswarm account because once you have got the limit,
-                        so you will got an error.
+                        (Only for Linux) Provides the argument value for searches on Polyswarm engine 
+                        through imphash (the PE file must be provided), ipv4, domain, URL and family. This
+                        argument must be used with -G option, so check it, please. Pay attention: you 
+                        should check your metadata search limit on your Polyswarm account because once you
+                        have got the limit, so you will got an error.
       -G METATYPE, --metatype METATYPE
                         (Only for Linux) This parameter specifies search type for arguments provided by
                         -R option (above) while searching on Polyswarm engine. Thus, the following values are 
@@ -541,12 +542,13 @@ optional arguments:
                         device does not need to be rooted and the system does need to
                         have the adb tool in the PATH environment variable; <2>: Check all third-party APK 
                         packages from the USB-connected
-                        Android device against VirusTotal using Public API (slower because of 60 seconds delay 
-                        for each 4 hashes). The Android device does not need to be rooted and the system does 
-                        need to have adb tool in the PATH environment variable; <3>: Check all third-party 
-                        APK packages from the USB-connected Android device against VirusTotal using 
-                        multithreads (only for Private Virus API). The Android device does not need to be 
-                        rooted and the system needs to have adb tool in the PATH environment variable.
+                        Android device against VirusTotal using Public API (slower because of 60 seconds 
+                        delay for each 4 hashes). The Android device does not need to be rooted and the 
+                        system does need to have adb tool in the PATH environment variable; <3>: Check 
+                        all third-party APK packages from the USB-connected Android device against 
+                        VirusTotal using multithreads (only for Private Virus API). The Android device 
+                        does not need to be rooted and the system needs to have adb tool in the PATH 
+                        environment variable.
       -Y ANDROID_SEND_HA, --androidsendha ANDROID_SEND_HA
                         Sends an third-party APK package from your USB-connected Android device to Hybrid 
                         Analysis. The Android device does not need to be rooted and the system needs to have 
@@ -616,12 +618,12 @@ optional arguments:
                         must be a malware tag; If you specified "-b 3" then the argument must be a imphash;
                         If you specified "-b 4", so the argument must be "100 or time", where "100" lists 
                         last "100 samples" and "time" lists last samples added to Malware Bazaar in the last
-                        60 minutes; If you specified "-b 5" then the -B's argument must be a SHA256 hash; If you 
-                        specified "-b 6", so the -B's value is the number of DAYS to filter IOCs. The default 
-                        (and max) is 90 (days); If you used "-b 7" so the -B's argument is the IOC you want
-                        to search for; If you used "-b 8", so the -B's argument is the TAG you want search 
-                        for; If you used "-b 9", so the -B argument is the malware family you want to search
-                        for;
+                        60 minutes; If you specified "-b 5" then the -B's argument must be a SHA256 hash; If
+                        you specified "-b 6", so the -B's value is the number of DAYS to filter IOCs. The 
+                        default (and max) is 90 (days); If you used "-b 7" so the -B's argument is the IOC
+                        you want to search for; If you used "-b 8", so the -B's argument is the TAG you 
+                        want search for; If you used "-b 9", so the -B argument is the malware family you 
+                        want to search for;
 
 
       Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore,
