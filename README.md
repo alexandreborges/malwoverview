@@ -184,13 +184,13 @@ can be installed by executing the following command:
 
 To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm,
 Alien Vault and Malpedia APIs into the .malwapi.conf configuration file (the default one at the 
-home directory (/home/username or /root) -- if the file doesn't exist, so you should create it) 
+home directory (/home/[username] or /root) -- if the file doesn't exist, so you should create it) 
 or you could create a custom configuration file and indicate it by using the -c option. 
 
 A special note about the Alien Vault: it is necessary to subscribe to pulses on Alien Vault 
 website before using -n 1 option.  
 
-The .malwapi.conf configuration file (from the the home directory -- /home/username or /root) 
+The .malwapi.conf configuration file (from the the home directory -- /home/[username] or /root) 
 has the following format:
 
       [VIRUSTOTAL]
@@ -250,7 +250,7 @@ legitimacy, so making quicker the approval of your request.
 
 In Windows systems, create the .malwapi.conf file in the C:\Users\\[username\] directory 
 (Windows home user directory). In Linux systems, create the .malwapi.conf file in 
-/home/\[username\] directory (Linux home user directory).
+/home/\[username\] directory (Linux home user directory -- /home/[username] or /root).
 
 Additionally, you don't need to specify "-w 1" option while using malwoverview.py on Windows
 anymore. 
