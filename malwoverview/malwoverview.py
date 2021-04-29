@@ -20,7 +20,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 4.3.4
+# Malwoverview.py: version 4.3.5
 
 import os
 import sys
@@ -60,7 +60,7 @@ from valhallaAPI.valhalla import ValhallaAPI
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2021, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "4.3.4"
+__version__ = "4.3.5"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -2579,12 +2579,14 @@ def malsharehashsearch(filehash):
                         loc = ''
                     if (bkg == 1):
                         print((mycolors.reset + "sha256: " + mycolors.foreground.yellow + "%s\n" % (maltext2[0])['sha256'] + mycolors.reset + "sha1:   " + mycolors.foreground.yellow + "%s\n" % (maltext2[0])['sha1'] + mycolors.reset + "md5:    " + mycolors.foreground.yellow + "%s\n" %  (maltext2[0])['md5'] + mycolors.reset + "type:   " + mycolors.foreground.lightcyan + "%s\n" % (maltext2[0])['type'] + mycolors.reset + "source: " + mycolors.foreground.lightred + "%s\n" % (maltext2[0])['source'] + mycolors.reset + "city:   " + mycolors.foreground.lightgreen + "%s" % loc))
-                        for k in (maltext2[0])['yarahits']['yara']:
-                            print(mycolors.reset + "Yara Hits: " + mycolors.foreground.lightgreen + str(k))
+                        if (maltext2[0]['yarahits'] is not None):
+                            for k in (maltext2[0])['yarahits']['yara']:
+                                print(mycolors.reset + "Yara Hits: " + mycolors.foreground.lightgreen + str(k))
                     else:
                         print((mycolors.reset + "sha256: " + mycolors.foreground.green + "%s\n" % (maltext2[0])['sha256'] + mycolors.reset + "sha1:   " + mycolors.foreground.green + "%s\n" % (maltext2[0])['sha1'] + mycolors.reset + "md5:    " + mycolors.foreground.green +"%s\n" %  (maltext2[0])['md5'] + mycolors.reset + "type:   " + mycolors.foreground.cyan + "%s\n" % (maltext2[0])['type'] + mycolors.reset + "source: " + mycolors.foreground.red + "%s\n" % (maltext2[0])['source'] + mycolors.reset + "city:   " + mycolors.foreground.blue + "%s" % loc))
-                        for k in (maltext2[0])['yarahits']['yara']:
-                            print(mycolors.reset + "Yara Hits: " + mycolors.foreground.purple + str(k))
+                        if (maltext2[0]['yarahits'] is not None):
+                            for k in (maltext2[0])['yarahits']['yara']:
+                                print(mycolors.reset + "Yara Hits: " + mycolors.foreground.purple + str(k))
 
                 if (maldownload == 1):
                     malsharedown(filehash)
@@ -4971,8 +4973,8 @@ def haussigsearchroutine(payloadtagx, haus):
 
         if 'urls' in haustext:
             if ('url_id' in haustext['urls']) is not None:
-                print(mycolors.reset + "\nStatus".center(9) + " " * 2 + "File Type".ljust(10) + " SHA256 Hash".center(64) + " " * 5 + "Virus Total".ljust(14) + ' ' * 2 + "URL to Payload".center(45))
-                print("-" * 170 + "\n")
+                print(mycolors.reset + "\nStatus".center(9) + " " * 2 + "FType".ljust(7) + " SHA256 Hash".center(64) + " " * 5 + "Virus Total".ljust(14) + ' ' * 2 + "URL to Payload".center(45))
+                print("-" * 150 + "\n")
                 for w in haustext['urls']:
                     if (bkg == 1):
                         if(w['url_status'] == 'online'):
@@ -4982,17 +4984,17 @@ def haussigsearchroutine(payloadtagx, haus):
                         if(w['url_status'] == ''):
                             print(mycolors.foreground.lightblue + mycolors.reverse + "unknown" + mycolors.reset, end=' ')
                         if w['file_type']:
-                            print(mycolors.foreground.lightcyan + ' ' * 2 + "%-10s" % w['file_type'] + mycolors.reset, end=' ')
+                            print(mycolors.foreground.lightcyan + ' ' * 2 + "%-6s" % w['file_type'] + mycolors.reset, end=' ')
                         else:
-                            print(mycolors.foreground.lightcyan + ' ' * 2 + "%-10s" % "unknown" + mycolors.reset, end=' ')
+                            print(mycolors.foreground.lightcyan + ' ' * 2 + "%-6s" % "data" + mycolors.reset, end=' ')
                         if w['sha256_hash']:
                             print(mycolors.foreground.yellow + w['sha256_hash'] + mycolors.reset, end= ' ')
                         if w['virustotal']:
-                            print(mycolors.foreground.lightgreen + ' ' * 2 + "%-9s" % w['virustotal'].get('result') + mycolors.reset, end= ' ')
+                            print(mycolors.foreground.lightgreen + ' ' * 2 + "%-9s" % w['virustotal'].get('result') + mycolors.reset, end='\t  ')
                         else:
-                            print(mycolors.foreground.lightgreen + ' ' * 2 + "%-9s" % "Not Found" + mycolors.reset, end= ' ')
+                            print(mycolors.foreground.lightgreen + ' ' * 2 + "%-9s" % "Not Found" + mycolors.reset, end= '\t  ')
                         if (w['url']):
-                            print(mycolors.foreground.pink + ' ' * 2 + w['url'] + mycolors.reset)
+                            print(mycolors.foreground.red + (("\n" + " ".ljust(98)).join(textwrap.wrap(w['url'],width=40))), end="\n")
                         else:
                             print(mycolors.foreground.pink + ' ' * 2 + "URL not provided".center(20) + mycolors.reset)
 
@@ -5004,9 +5006,9 @@ def haussigsearchroutine(payloadtagx, haus):
                         if(w['url_status'] == ''):
                             print(mycolors.foreground.blue + mycolors.reverse + "unknown" + mycolors.reset, end=' ')
                         if w['file_type']:
-                            print(mycolors.foreground.purple + ' ' * 2 + "%-10s" % w['file_type'] + mycolors.reset, end=' ')
+                            print(mycolors.foreground.purple + ' ' * 2 + "%-6s" % w['file_type'] + mycolors.reset, end=' ')
                         else:
-                            print(mycolors.foreground.purple + ' ' * 2 + "%-10s" % "unknown" + mycolors.reset, end=' ')
+                            print(mycolors.foreground.purple + ' ' * 2 + "%-6s" % "data" + mycolors.reset, end=' ')
                         if w['sha256_hash']:
                             print(mycolors.foreground.red + w['sha256_hash'] + mycolors.reset, end= ' ')
                         if w['virustotal']:
@@ -5014,7 +5016,7 @@ def haussigsearchroutine(payloadtagx, haus):
                         else:
                             print(mycolors.foreground.cyan + ' ' * 2 + "%-9s" % "Not Found" + mycolors.reset, end= ' ')
                         if (w['url']):
-                            print(mycolors.foreground.green + ' ' * 2 + w['url'] + mycolors.reset)
+                            print(mycolors.foreground.green + (("\n" + " ".ljust(98)).join(textwrap.wrap(w['url'],width=40))), end="\n")
                         else:
                             print(mycolors.foreground.green + ' ' * 2 + "URL not provided".center(20) + mycolors.reset)
 
@@ -5128,7 +5130,7 @@ def haustagsearchroutine(haustag, hausurltag):
                             else:
                                 print(mycolors.foreground.pink + "not provided".center(22) + mycolors.reset, end=' ')
                             if (w['url']):
-                                print(mycolors.foreground.yellow + " " * 2 + (w['url']).ljust(80) + mycolors.reset)
+                                print(mycolors.foreground.yellow + ("\n" + "".ljust(51)).join(textwrap.wrap(w['url'],width=80)).ljust(80), end="\n")
                             else:
                                 print(mycolors.foreground.yellow + " " * 2 + "URL not provided".center(80) + mycolors.reset)
 
@@ -5149,7 +5151,7 @@ def haustagsearchroutine(haustag, hausurltag):
                             else:
                                 print(mycolors.foreground.blue + "not provided".center(22) + mycolors.reset, end=' ')
                             if (w['url']):
-                                print(mycolors.foreground.red + " " * 2 + (w['url']).ljust(80) + mycolors.reset)
+                                print(mycolors.foreground.red + ("\n" + "".ljust(51)).join(textwrap.wrap(w['url'],width=80)).ljust(80), end="\n")
                             else:
                                 print(mycolors.foreground.red + " " * 2 + "URL not provided".center(80) + mycolors.reset, end=' ')
 
@@ -8000,7 +8002,7 @@ if __name__ == "__main__":
     bazaar = 0
     bazaararg = ''
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.3.4", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument> -b <'1|2|3|4|5|6|7|8|9|10> -B <arg>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.3.5", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument> -b <'1|2|3|4|5|6|7|8|9|10> -B <arg>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples.')
     parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a malware sample. It returns general information about the file (any filetype)')
@@ -8037,7 +8039,7 @@ if __name__ == "__main__":
     parser.add_argument('-T', '--androidsendvt', dest='androidsendvt', type=str, metavar = "ANDROID_SEND_VT", help='Sends an third-party APK package from your USB-connected Android device to Virus Total. The Android device does not need be rooted and the system needis to have the adb tool in the PATH environment variable.')
     parser.add_argument('-n', '--alienvault', dest='alienvault', type=int, default = 0, metavar = "ALIENVAULT", help='Checks multiple information from AlienVault. The possible values are: 1: Get the subscribed pulses ; 2: Get information about an IP address; 3: Get information about a domain; 4: Get information about a hash; 5: Get information about a URL')
     parser.add_argument('-N', '--alienvaultargs', dest='alienvaultargs', type=str, metavar = "ALIENVAULT_ARGS", help='Provides argument to AlienVault -n option.')
-    parser.add_argument('-M', '--malpedia', dest='malpedia', type=int, default = 0, metavar = "MALPEDIA", help='This option is related to MALPEDIA and presents different meanings depending on the chosen value. Thus, 1: List meta information for all families ; 2: List all actors ID ; 3: List all available payloads organized by family from Malpedia; 4: Get meta information from an specific actor, so it is necessary to use the -m option. Additionally, try to confirm the correct actor ID by executing malwoverview with option -M 3; 5: List all families IDs; 6: Get meta information from an specific family, so it is neccesary to use the -m option. Additionally, try to confirm the correct family ID by executing malwoverview with option -M 5; 7: Get a malware sample from malpedia (zip format -- password: infected). It is necessary to specify the requested hash by using -m option; 8: Get a zip file containing Yara rules for a specific family (get the possible families using -M 5), which must be specified by using -m option.')
+    parser.add_argument('-M', '--malpedia', dest='malpedia', type=int, default = 0, metavar = "MALPEDIA", help='This option is related to MALPEDIA and presents different meanings depending on the chosen value. Thus, 1: List meta information for all families ; 2: List all actors ID ; 3: List all available payloads organized by family from Malpedia; 4: Get meta information from an specific actor, so it is necessary to use the -m option. Additionally, try to confirm the correct actor ID by executing malwoverview with option -M 3; 5: List all families IDs; 6: Get meta information from an specific family, so it is necessary to use the -m option. Additionally, try to confirm the correct family ID by executing malwoverview with option -M 5; 7: Get a malware sample from malpedia (zip format -- password: infected). It is necessary to specify the requested hash by using -m option; 8: Get a zip file containing Yara rules for a specific family (get the possible families using -M 5), which must be specified by using -m option.')
     parser.add_argument('-m', '--malpediarg', dest='malpediaarg', type=str, metavar = "MALPEDIAARG", help='This option provides an argument to the -M option, which is related to MALPEDIA.')
     parser.add_argument('-Q', '--threatcrowd', dest='threatcrowd', type=int, default = 0, metavar = "THREATCROWD", help='Checks multiple information from ThreatCrowd. The possible values are: 1: Get information about the provided e-mail ; 2: Get information about an IP address; 3: Get information about a domain; 4: Get information about a provided MD5 hash; 5: Get information about a specific malware family.')
     parser.add_argument('-q', '--threatcrowdarg', dest='threatcrowdarg', type=str, metavar = "THREATCROWDARG", help='This option provides an argument to the -Q option, which is related to THREATCROWD.')
