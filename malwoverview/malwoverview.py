@@ -8066,7 +8066,7 @@ if __name__ == "__main__":
 
     except KeyError:
 
-        print(mycolors.foreground.red + "\nYou must create the .malwapi.conf file in your home directory (in Linux is $HOME\\.malwapi.conf and in Windows is on Users\\<username\\.malwapi.conf) and configure Virus Total, Hybrid Analysis, URLHaus, Malshare, Polyswarm, Alien Vault and Malpedia APIs according to the format shown on the Github website. It isn't necessary any API for ThreatCrowd service." + mycolors.reset + "\n")
+        print(mycolors.foreground.red + "\nYou must create the .malwapi.conf file in your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and configure Virus Total, Hybrid Analysis, URLHaus, Malshare, Polyswarm, Alien Vault, Valhalla and Malpedia APIs according to the format shown on the Github website. It isn't necessary any API for ThreatCrowd, Malware Bazar and ThreatFox services." + mycolors.reset + "\n")
         exit(1)
 
     if (POLYAPI):
