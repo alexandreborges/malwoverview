@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/4.3.5) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/4.4) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
 [<img alt="PayPal" src="https://img.shields.io/badge/Donate-Paypal-brightgreen?style=for-the-badge&logo=appveyor">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M8F458EZH8UZE&source=url)
 
@@ -97,6 +97,18 @@
 ![Alt text](pictures/picture_90.jpg?raw=true "Title")
 ![Alt text](pictures/picture_91.jpg?raw=true "Title")
 ![Alt text](pictures/picture_92.jpg?raw=true "Title")
+![Alt text](pictures/picture_93.jpg?raw=true "Title")
+![Alt text](pictures/picture_94.jpg?raw=true "Title")
+![Alt text](pictures/picture_95.jpg?raw=true "Title")
+![Alt text](pictures/picture_96.jpg?raw=true "Title")
+![Alt text](pictures/picture_97.jpg?raw=true "Title")
+![Alt text](pictures/picture_98.jpg?raw=true "Title")
+![Alt text](pictures/picture_99.jpg?raw=true "Title")
+![Alt text](pictures/picture_100.jpg?raw=true "Title")
+![Alt text](pictures/picture_101.jpg?raw=true "Title")
+![Alt text](pictures/picture_102.jpg?raw=true "Title")
+![Alt text](pictures/picture_103.jpg?raw=true "Title")
+![Alt text](pictures/picture_104.jpg?raw=true "Title")
 
       Copyright (C)  2018-2021 Alexandre Borges <alexandreborges at blackstormsecurity dot com>
 
@@ -113,7 +125,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 4.3.5
+# Current Version: 4.4
 
      Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid 
      Analysis by default. It submits only hashes, so respecting Non-Disclosure 
@@ -161,6 +173,7 @@ This tool aims to :
 25. Provide Yara rules and associated information from Valhalla. 
 26. Gather threat hunting information from Malware Bazaar using different criteria. 
 27. Gather IOC information from ThreatFox using different criteria. 
+28. Gather threat hunting information from Triage using different criteria. 
 
 
 
@@ -217,6 +230,9 @@ has the following format:
       [VALHALLA]
       VALHALLAAPI =
 
+      [TRIAGE]
+      TRIAGEAPI =
+
 
 The APIs can be requested on the respective service websites:
 
@@ -233,6 +249,7 @@ Valhalla demo-API key is: 111111111111111111111111111111111111111111111111111111
 9. ThreatCrowd: It isn't necessary an API.
 10. Malware Bazaar: It isn't necessary an API.
 11. ThreatFox: It isn't necessary an API.
+12. Triage: https://tria.ge/signup.
  
 ----------------------------------------------------
 A special note about API requests to the MALPEDIA:
@@ -247,6 +264,16 @@ legitimacy, so making quicker the approval of your request.
 
 -----------------------------------------------------
 
+----------------------------------------------------
+Additional explanation about Triage:
+----------------------------------------------------
+
+Every Triage operation is based on the Triage ID of each artifact, so you need to
+use the "-x 1 -X \<attribute\>:\<value\>" to look for the correct ID of the artifact,
+so use this ID information with the remaining Triage options (-x [2-7]) for getting 
+further threat hunting information from Triage endpoint.
+
+-----------------------------------------------------
 
 In Windows systems, create the .malwapi.conf file in the C:\Users\\[username\] directory 
 (Windows home user directory). In Linux systems, create the .malwapi.conf file in 
@@ -397,13 +424,13 @@ To use the malwoverview, execute the command as shown below:
       root@ubuntu19:~/malwoverview# python3.9 malwoverview.py  | more
 
       usage: python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> 
-      -o <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> 
-      -V <filename> -D <0|1> -e <0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1>
+      -o <0|1> -v <0-4> -a <0-5> -w <0|1> -u <url> -H <hash file> 
+      -V <filename> -D <0|1> -e <0-4> -A <filename> -g <job_id> -r <domain> -t <0|1>
       -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> 
-      -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> 
+      -P <filename> -R <PE file, IP address, domain or URL> -G <0-4> -y <0-3> 
       -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address>
-      -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> 
-      -E <1|2|3|4|5> -C <argument> -b <1|2|3|4|5|6|7|8|9|10> -B <arg>
+      -n <1-5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> 
+      -E <1-5> -C <argument> -b <1-10> -B <arg> -x <1-7> -X <arg>
 
 Malwoverview is a first response tool for threat hunting written by Alexandre Borges.
 
@@ -426,7 +453,8 @@ optional arguments:
                         totals. If "v 2" (which can be used only together with -f option), so it 
                         shows antivirus reports from the main players. If "v 3", so the binary's IAT 
                         and EAT are also shown. Remember: you need to edit the .malwapi.conf and insert 
-                        your VT API.
+                        your VT API.If "v 4" it extracts the overlay (it must be used with -f 
+                        option). Remember: you need to edit the .malwapi.conf and insert your VT API.
       -a HYBRID_ANALYSIS, --hybrid HYBRID_ANALYSIS
                         Queries the Hybrid Analysis database for getting a general report. Possible 
                         values are: 1: Windows 7 32-bit; 2: Windows 7 32-bit (HWP Support); 3: 
@@ -626,6 +654,21 @@ optional arguments:
                         want to search for;
 
 
+      -x TRIAGE, --triage TRIAGE
+                        Provides information from Triage according to the specified value: <1> this option
+                        gets sample's general information by providing an argument with -B option in the
+                        following possible formats: sha256:<value>, sha1:<value>, md5:<value>,
+                        familily:<value>, score:<value>, tag:<value>, url:<value>, wallet:<value>,
+                        ip:<value>; <2> Get a sumary report for a given Triage ID (got from option -x 1) ;
+                        <3> Submit a sample for analysis ; <4> Submit a sample through a URL for analysis ;
+                        <5> Download sample specified by the Triage ID; <6> Download pcapng file from sample
+                        associated to given Triage ID; <7> Get a dynamic report for the given Triage ID (got
+                        from option -x 1);
+       -X TRIAGE_ARG, --triagearg TRIAGE_ARG
+                        Provides argument for options especified by -x option. Pay attention: the format of
+                        this argument depends on provided -x value.
+
+
       Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore,
       if you are willing to wait some minutes, so you can use the -p option, which forces a one minute wait 
       every 4 malware samples, but allows obtaining a complete evaluation of the repository.
@@ -656,7 +699,7 @@ optional arguments:
       9ba9403c0627 -a 1 -v 1
       malwoverview.py -f /root/malware/misc/8a87a1261603af4d976faa57e49ebdd8fd8317e9dd13bd36ff25
       99d1031f53ce -v 3
-      malwoverview.py -f /root/malware/misc/blackstorm.php -v 2 -x 
+      malwoverview.py -f /root/malware/misc/blackstorm.php -v 4 
       malwoverview.py -u http://mobiletech.net/images/138907/8g7c645373370255099hf4at12buy2lgrdeqo/
       malwoverview.py -r xurl.es
       malwoverview.py -H 9ce861b93e7ddeebec8ed052450fc136162fb3239c502aab8fa9bc8962572457
@@ -721,7 +764,7 @@ optional arguments:
       malwoverview.py -E 2 -C 85 
       malwoverview.py -E 3 -C osquery 
       malwoverview.py -E 4 -C 8a883a74702f83a273e6c292c672f1144fd1cce8ee126cd90c
-      95131e870744af 
+                              95131e870744af 
       malwoverview.py -E 5 -C Casing_Anomaly_ByPass | more
       malwoverview.py -H 9555ea9a1909120dd9be988d91cad345302b38884d2343ee16ab994ac6c5c7df -D 1
       malwoverview.py -L 081dc7af98fe601e09d81a4698f0df119ac612be1984f1d365b4cd9c21f550a1 -D 1
@@ -737,8 +780,29 @@ optional arguments:
       malwoverview.py -b 8 -B Magecart
       malwoverview.py -b 9 -B "Cobalt Strike"
       malwoverview.py -b 10 | more
+      python3.9 malwoverview/malwoverview.py -x 1 -X score:10 | more
+      python3.9 malwoverview/malwoverview.py -x 1 -X sha256:3e27b6b287f0b9f7e85bfe18901d96111
+                                                     0ae969d58b44af15b1d75be749022c2
+      malwoverview.py -x 1 -X tag:trojan | more
+      malwoverview.py -x 1 -X url:https://pcwizardrepair.com/grduoams
+      malwoverview.py -x 1 -X family:emotet | more
+      malwoverview.py -x 2 -X 210607-5j5bg6q9r2
+      malwoverview.py -x 3 -X /root/malware/windows/c3c5dd5504de3725ef9e40d0379cc273a356a90c6
+                              b2febb9dbc1f711348a1601 
+      malwoverview.py -x 4 -X http://ztechinternational.com/Img/XSD.exe
+      malwoverview.py -x 5 -X 210607-37pxrcst8a
+      malwoverview.py -x 6 -X 210607-pbt1j18myx
+      malwoverview.py -x 7 -X 210607-pbt1j18myx
 
 # HISTORY
+
+Version 4.4:
+
+      This version:
+
+            * Introduces Triage endpoint and seven associated options. 
+            * Changes the overlay extraction option (previously -x) 
+              to -v 4. 
 
 Version 4.3.5:
 

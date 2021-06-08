@@ -20,7 +20,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 4.3.5
+# Malwoverview.py: version 4.4
 
 import os
 import sys
@@ -44,6 +44,7 @@ import textwrap
 import base64
 import configparser
 import platform
+import binascii
 from operator import itemgetter
 from polyswarm_api.api import PolyswarmAPI
 from urllib.parse import urlparse
@@ -54,13 +55,15 @@ from urllib.parse import quote
 from requests.exceptions import RetryError
 from pathlib import Path
 from valhallaAPI.valhalla import ValhallaAPI
+from io import StringIO, BytesIO
+from requests import Request, Session, exceptions
 
 # On Windows systems, it is necessary to install python-magic-bin: pip install python-magic-bin
 
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2021, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "4.3.5"
+__version__ = "4.4"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -86,6 +89,7 @@ haussig = 'https://urlhaus-api.abuse.ch/v1/signature/'
 urlalien = 'http://otx.alienvault.com/api/v1'
 malpediaurl = 'https://malpedia.caad.fkie.fraunhofer.de/api'
 threatcrowdurl = 'https://www.threatcrowd.org/searchApi/v2/'
+triageurl = 'https://api.tria.ge/v0/'
 
 F = []
 H = []
@@ -3451,6 +3455,1120 @@ def bazaar_hash(bazaarx, bazaar):
             print((mycolors.foreground.lightred + "\nError while connecting to Malware Bazaar!\n"))
         else:
             print((mycolors.foreground.lightred + "\nError while connecting to Malware Bazaar!\n"))
+        print(mycolors.reset)
+
+
+def triage_search(triagex, triage):
+
+    triagetext = ''
+    triageresponse = ''
+    params = ''
+
+    try:
+
+        print("\n")
+        print((mycolors.reset + "TRIAGE OVERVIEW REPORT".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100*'-').center(50))
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept':'application/json', 'Authorization':'Bearer ' + TRIAGEAPI})
+        triageresponse = requestsession.get(triage + triagex)
+        triagetext = json.loads(triageresponse.text)
+
+        if 'error' in triagetext:
+            if triagetext['error'] == "NOT_FOUND":
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "\nThe provided argument was not found!\n" + mycolors.reset)
+                else:
+                    print(mycolors.foreground.red + "\nThe provided argument was not found!\n" + mycolors.reset)
+                exit(1)
+
+            if triagetext['error'] == "INVALID":
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "\nThe provided argument is not valid!\n" + mycolors.reset)
+                else:
+                    print(mycolors.foreground.red + "\nThe provided argument is not valid!\n" + mycolors.reset)
+                exit(1)
+
+            if triagetext['error'] == "UNAUTHORIZED":
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "\nThe provided credential is not valid!\n" + mycolors.reset)
+                else:
+                    print(mycolors.foreground.red + "\nThe provided credential is not valid!\n" + mycolors.reset)
+                exit(1)
+            
+            if triagetext['error'] == "INVALID_QUERY":
+                if (bkg == 1):
+                    print("\n" + mycolors.foreground.lightred + triagetext['message'] + mycolors.reset, end='\n\n')
+                else:
+                    print("\n" + mycolors.foreground.red + triagetext['message'] + mycolors.reset, end='\n\n')
+                exit(1)
+
+        if (bkg == 1):
+            for i in triagetext.keys():
+                if (i == "data"):
+                    if (triagetext['data'] is not None):
+                        for d in triagetext['data']:
+                            y = d.keys()    
+                            if ("id" in y):
+                                if d['id']:
+                                    print(mycolors.foreground.lightgreen + "\nid: ".ljust(12) + mycolors.reset + d['id'],end=' ')
+
+                            if ("status" in y):
+                                if d['status']:
+                                    print(mycolors.foreground.lightgreen + "\nstatus: ".ljust(12) + mycolors.reset + d['status'], end=' ')
+
+                            if ("kind" in y):
+                                if d['kind']:
+                                    print(mycolors.foreground.lightgreen + "\nkind: ".ljust(12) + mycolors.reset + d['kind'], end=' ')
+
+                            if ("filename" in y):
+                                if d['filename']:
+                                    print(mycolors.foreground.lightgreen + "\nfilename: ".ljust(12) + mycolors.reset + d['filename'], end=' ')
+
+                            if ("submitted" in y):
+                                if d['submitted']:
+                                    print(mycolors.foreground.lightgreen + "\nsubmitted: ".ljust(12) + mycolors.reset + d['submitted'], end=' ')
+
+                            if ("completed" in y):
+                                if d['completed']:
+                                    print(mycolors.foreground.lightgreen + "\ncompleted: ".ljust(12) + mycolors.reset + d['completed'], end=' ')
+
+                            if ("private" in y):
+                                if d['private']:
+                                    print(mycolors.foreground.lightgreen + "\nprivate: ".ljust(12) + mycolors.reset + d['private'], end=' ')
+
+                            for x in triagetext['data'][0].keys():
+                                if (x == "tasks"):
+                                    if (triagetext['data'][0]['tasks'] is not None):
+                                        for d in triagetext['data'][0]['tasks']:
+                                            print(mycolors.foreground.lightgreen + "\ntasks: " + mycolors.reset, end=' ')
+                                            z = d.keys()    
+                                            if ("id" in z):
+                                                if d['id']:
+                                                    print(mycolors.foreground.purple + "\n\t   id: ".ljust(13) + mycolors.reset + d['id'], end=' ')
+
+                                            if ("status" in z):
+                                                if d['status']:
+                                                    print(mycolors.foreground.purple + "\n\t   status: ".ljust(12) + mycolors.reset + d['status'], end=' ')
+
+                                            if ("target" in z):
+                                                if d['target']:
+                                                    print(mycolors.foreground.purple + "\n\t   target: ".ljust(12) + mycolors.reset + d['target'], end=' ')
+                                            
+                                            if ("pick" in z):
+                                                if d['pick']:
+                                                    print(mycolors.foreground.purple + "\n\t   pick: ".ljust(13) + mycolors.reset + d['pick'], end=' ')
+
+                            print("\n" + (90*'-').center(45),end='')
+
+                if (i == "next"):
+                    if (triagetext['next'] is not None):
+                        print(mycolors.foreground.lightgreen + "\nnext: ".ljust(12) + mycolors.reset + triagetext['next'], end=' ')
+
+        if (bkg == 0):
+            for i in triagetext.keys():
+                if (i == "data"):
+                    if (triagetext['data'] is not None):
+                        for d in triagetext['data']:
+                            y = d.keys()    
+                            if ("id" in y):
+                                if d['id']:
+                                    print(mycolors.foreground.purple + "\nid: ".ljust(12) + mycolors.reset + d['id'],end=' ')
+
+                            if ("status" in y):
+                                if d['status']:
+                                    print(mycolors.foreground.purple + "\nstatus: ".ljust(12) + mycolors.reset + d['status'], end=' ')
+
+                            if ("kind" in y):
+                                if d['kind']:
+                                    print(mycolors.foreground.purple + "\nkind: ".ljust(12) + mycolors.reset + d['kind'], end=' ')
+
+                            if ("filename" in y):
+                                if d['filename']:
+                                    print(mycolors.foreground.purple + "\nfilename: ".ljust(12) + mycolors.reset + d['filename'], end=' ')
+
+                            if ("submitted" in y):
+                                if d['submitted']:
+                                    print(mycolors.foreground.purple + "\nsubmitted: ".ljust(12) + mycolors.reset + d['submitted'], end=' ')
+
+                            if ("completed" in y):
+                                if d['completed']:
+                                    print(mycolors.foreground.purple + "\ncompleted: ".ljust(12) + mycolors.reset + d['completed'], end=' ')
+
+                            if ("private" in y):
+                                if d['private']:
+                                    print(mycolors.foreground.purple + "\nprivate: ".ljust(12) + mycolors.reset + d['private'], end=' ')
+
+                            for x in triagetext['data'][0].keys():
+                                if (x == "tasks"):
+                                    if (triagetext['data'][0]['tasks'] is not None):
+                                        for d in triagetext['data'][0]['tasks']:
+                                            print(mycolors.foreground.purple + "\ntasks: " + mycolors.reset, end=' ')
+                                            z = d.keys()    
+                                            if ("id" in z):
+                                                if d['id']:
+                                                    print(mycolors.foreground.cyan + "\n\t   id: ".ljust(13) + mycolors.reset + d['id'], end=' ')
+
+                                            if ("status" in z):
+                                                if d['status']:
+                                                    print(mycolors.foreground.cyan + "\n\t   status: ".ljust(12) + mycolors.reset + d['status'], end=' ')
+
+                                            if ("target" in z):
+                                                if d['target']:
+                                                    print(mycolors.foreground.cyan + "\n\t   target: ".ljust(12) + mycolors.reset + d['target'], end=' ')
+                                            
+                                            if ("pick" in z):
+                                                if d['pick']:
+                                                    print(mycolors.foreground.cyan + "\n\t   pick: ".ljust(13) + mycolors.reset + d['pick'], end=' ')
+
+                            print("\n" + (90*'-').center(45),end='')
+
+                if (i == "next"):
+                    if (triagetext['next'] is not None):
+                        print(mycolors.foreground.purple + "\nnext: ".ljust(12) + mycolors.reset + triagetext['next'], end=' ')
+
+
+        print(mycolors.reset)
+        exit(0)
+    
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to Tri.age!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to Tri.age!\n"))
+        print(mycolors.reset)
+
+
+def triage_summary(triagex, triage):
+
+    triagetext = ''
+    triageresponse = ''
+    params = ''
+    idx = ''
+
+    try:
+
+        print("\n")
+        print((mycolors.reset + "TRIAGE SEARCH REPORT".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100*'-').center(50))
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept':'application/json', 'Authorization':'Bearer ' + TRIAGEAPI})
+        triageresponse = requestsession.get(triage + 'samples/' +  triagex + '/overview.json')
+        triagetext = json.loads(triageresponse.text)
+
+        if 'error' in triagetext:
+            if triagetext['error'] == "NOT_FOUND":
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "\nThe provided ID was not found!\n" + mycolors.reset)
+                else:
+                    print(mycolors.foreground.red + "\nThe provided ID was not found!\n" + mycolors.reset)
+                exit(1)
+
+            if triagetext['error'] == "UNAUTHORIZED":
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "\nThe provided credential is not valid!\n" + mycolors.reset)
+                else:
+                    print(mycolors.foreground.red + "\nThe provided credential is not valid!\n" + mycolors.reset)
+                exit(1)
+            
+            if triagetext['error'] == "INVALID_QUERY":
+                if (bkg == 1):
+                    print("\n" + mycolors.foreground.lightred + triagetext['message'] + mycolors.reset, end='\n\n')
+                else:
+                    print("\n" + mycolors.foreground.red + triagetext['message'] + mycolors.reset, end='\n\n')
+                exit(1)
+
+        if (bkg == 1):
+            for i in triagetext.keys():
+                if (i == "sample"):
+                    if (triagetext['sample'] is not None):
+                        y = triagetext['sample'].keys()    
+                        if ("id" in y):
+                            print(mycolors.foreground.lightgreen + "\n\nid: ".ljust(13) + mycolors.reset + triagetext['sample']['id'],end=' ')
+
+                        if ("target" in y):
+                            print(mycolors.foreground.lightgreen + "\ntarget: ".ljust(12) + mycolors.reset + triagetext['sample']['target'], end=' ')
+
+                        if ("size" in y):
+                            print((mycolors.foreground.lightgreen + "\nsize: ".ljust(12) + mycolors.reset + "%d") % int(triagetext['sample']['size']), end=' ')
+
+                        if ("md5" in y):
+                            print(mycolors.foreground.lightgreen + "\nmd5: ".ljust(12) + mycolors.reset + triagetext['sample']['md5'], end=' ')
+
+                        if ("sha1" in y):
+                            print(mycolors.foreground.lightgreen + "\nsha1: ".ljust(12) + mycolors.reset + triagetext['sample']['sha1'], end=' ')
+
+                        if ("sha256" in y):
+                            print(mycolors.foreground.lightgreen + "\nsha256: ".ljust(12) + mycolors.reset + triagetext['sample']['sha256'], end=' ')
+
+                        if ("completed" in y):
+                            print(mycolors.foreground.lightgreen + "\ncompleted: ".ljust(12) + mycolors.reset + triagetext['sample']['completed'], end=' ')
+
+                if (i == "analysis"):
+                    if (triagetext['analysis'] is not None):
+                        if ("score" in triagetext['analysis']):
+                            print(mycolors.foreground.lightgreen + "\nscore: ".ljust(12) + mycolors.reset + str(triagetext['analysis']['score']),end=' ')
+
+                if (i == "tasks"):
+                    if (triagetext[i] is not None):
+                        print(mycolors.foreground.lightgreen + "\n\ntasks: ".ljust(11) + mycolors.reset,end=' ')
+                        for d in (triagetext[i].keys()):
+                            print("\n".ljust(12) + mycolors.foreground.lightcyan + "* " + d + ": \n" + mycolors.reset,end=' ')
+                            if ("kind" in triagetext[i][d]):
+                                print(mycolors.foreground.orange + "\n".ljust(12) + "kind: ".ljust(10)+ mycolors.reset + triagetext[i][d]['kind'], end=' ')
+                            if ("status" in triagetext[i][d]):
+                                print(mycolors.foreground.orange + "\n".ljust(12) + "status: ".ljust(10) + mycolors.reset + triagetext[i][d]['status'], end=' ')
+                            if ("score" in triagetext[i][d]):
+                                print(mycolors.foreground.orange + "\n".ljust(12) + "score: ".ljust(10) + mycolors.reset + str(triagetext[i][d]['score']), end=' ')
+                            if ("target" in triagetext[i][d]):
+                                print(mycolors.foreground.orange + "\n".ljust(12) + "target: ".ljust(10) + mycolors.reset + triagetext[i][d]['target'], end=' ')
+                            if ("resource" in triagetext[i][d]):
+                                print(mycolors.foreground.orange + "\n".ljust(12) + "resource: ".ljust(8) + mycolors.reset + triagetext[i][d]['resource'], end=' ')
+                            if ("platform" in triagetext[i][d]):
+                                print(mycolors.foreground.orange + "\n".ljust(12) + "platform: ".ljust(8) + mycolors.reset + triagetext[i][d]['platform'], end=' ')
+
+                            print(mycolors.foreground.orange + "\n".ljust(12) + "tags: ".ljust(10) + mycolors.reset, end=' ')
+                            if ("tags" in triagetext[i][d]):
+                                for j in triagetext[i][d]['tags']:
+                                    print("\n".ljust(22) +  mycolors.reset + j, end=' ')
+
+                            print(mycolors.reset + "")
+
+                if (i == "targets"):
+                    if (triagetext['targets'] is not None):
+                        print(mycolors.foreground.lightgreen + "\ntargets: ".ljust(12) + mycolors.reset,end=' ')
+                        for k in range(len(triagetext['targets'])):
+                            for m in (triagetext['targets'][k]):
+                                if ("tasks" == m):
+                                    print(mycolors.foreground.orange + "\n".ljust(12) + "tasks: ".ljust(9) + mycolors.reset,end=' ')
+                                    for i in range(len(triagetext['targets'][k][m])):
+                                        print(str(triagetext['targets'][k][m][i]),end=' ')
+                                if ("score" == m):
+                                    print(mycolors.foreground.orange + "\n".ljust(12) + "score: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
+                                if ("target" == m):
+                                    print(mycolors.foreground.orange + "\n".ljust(12) + "target: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
+                                if ("size" == m):
+                                    print(mycolors.foreground.orange + "\n".ljust(12) + "size: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]) + "bytes",end=' ')
+                                if ("md5" == m):
+                                    print(mycolors.foreground.orange + "\n".ljust(12) + "md5: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
+                                if ("sha1" == m):
+                                    print(mycolors.foreground.orange + "\n".ljust(12) + "sha1: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
+                                if ("sha256" == m):
+                                    print(mycolors.foreground.orange + "\n".ljust(12) + "sha256: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
+                                if ("tags" == m):
+                                    print(mycolors.foreground.orange + "\n".ljust(12) + "tags: ".ljust(10) + mycolors.reset,end=' ')
+                                    for j in (triagetext['targets'][k][m]):
+                                        print("\n".ljust(22) + mycolors.reset + j,end=' ')
+                                if ("family" == m):
+                                    print(mycolors.foreground.orange + "\n".ljust(12) + "family: ".ljust(9) + mycolors.reset,end=' ')
+                                    for n in range(len(triagetext['targets'][k][m])):
+                                        print(mycolors.reset + str(triagetext['targets'][k][m][n]),end=' ')
+                                if ("iocs" == m):
+                                    print(mycolors.foreground.orange + "\n".ljust(12) + "iocs: ",end=' ')
+                                    for j in (triagetext['targets'][k][m]):
+                                        if ('ips' == j):
+                                            for i in range(len(triagetext['targets'][k][m][j])):
+                                                print("\n".ljust(22) + mycolors.reset + str(triagetext['targets'][k][m][j][i]),end=' ')
+                                        if ('domains' == j):
+                                            for i in range(len(triagetext['targets'][k][m][j])):
+                                                print("\n".ljust(22) + mycolors.reset + str(triagetext['targets'][k][m][j][i]),end=' ')
+                                        if ('urls' == j):
+                                            for i in range(len(triagetext['targets'][k][m][j])):
+                                                print("\n".ljust(22) + mycolors.reset + str(triagetext['targets'][k][m][j][i]),end=' ')
+
+                if (i == "signatures"):
+                    if (triagetext[i] is not None):
+                        print(mycolors.foreground.lightgreen + "\nsignatures: ".ljust(12) + mycolors.reset,end=' ')
+                        for y in range(len(triagetext[i])):
+                            for d in (triagetext[i][y]).keys():
+                                if (d == 'name'):
+                                    print(mycolors.foreground.orange + "\n".ljust(12) + mycolors.reset + str(triagetext[i][y][d]),end=' ')
+
+                        print(mycolors.reset + "")
+
+                if (i == "extracted"):
+                    if (triagetext['extracted'] is not None):
+                        print(mycolors.foreground.lightgreen + "\nextracted: ".ljust(12) + mycolors.reset,end=' ')
+                        for k in range(len(triagetext['extracted'])):
+                            for m in (triagetext['extracted'][k]):
+                                if ("tasks" == m):
+                                    print(mycolors.foreground.orange + "\n".ljust(12) + "tasks: ".ljust(9) + mycolors.reset,end=' ')
+                                    for i in range(len(triagetext['extracted'][k][m])):
+                                        print(str(triagetext['extracted'][k][m][i]),end=' ')
+                                if ("resource" == m):
+                                    print(mycolors.foreground.orange + "\n".ljust(12) + "resource: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m]),end=' ')
+                                if ("dumped_file" == m):
+                                    print(mycolors.foreground.orange + "\n".ljust(12) + "dumped: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m]),end=' ')
+                                if ("config" == m):
+                                    for x in ((triagetext['extracted'][k][m]).keys()):
+                                        if ('family' == x):
+                                            print(mycolors.foreground.orange + "\n".ljust(12) + "family: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x]),end=' ')
+                                        if ('rule' == x):
+                                            print(mycolors.foreground.orange + "\n".ljust(12) + "rule: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x]),end=' ')
+                                        if ("extracted_pe" == x):
+                                            print(mycolors.foreground.orange + "\n".ljust(12) + "extracted_pe: ".ljust(9) + mycolors.reset,end=' ')
+                                            for i in range(len(triagetext['extracted'][k][m][x])):
+                                                print("\n".ljust(22) + str(triagetext['extracted'][k][m][x][i]),end=' ')
+                                        if ('c2' == x):
+                                            print(mycolors.foreground.orange + "\n".ljust(12) + "c2: ".ljust(9) + mycolors.reset,end=' ')
+                                            for z in range(len(triagetext['extracted'][k][m][x])):
+                                                print("\n".ljust(22) + mycolors.reset + str(triagetext['extracted'][k][m][x][z]),end=' ')
+                                        if ("botnet" == x):
+                                            print(mycolors.foreground.orange + "\n".ljust(12) + "botnet: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x]),end=' ')
+                                        if ("keys" == x):
+                                            for p in range(len(triagetext['extracted'][k][m][x])):
+                                                for q in (triagetext['extracted'][k][m][x][p]).keys():
+                                                    if ('key' == q):
+                                                        print(mycolors.foreground.orange + "\n".ljust(12) + "key: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x][p][q]),end=' ')
+                                                    if ('value' == q):
+                                                        print(mycolors.foreground.orange + "\n".ljust(12) + "value:".ljust(10) + mycolors.reset,end='')
+                                                        print(mycolors.reset + (("\n" + "".ljust(21)).join(textwrap.wrap((triagetext['extracted'][k][m][x][p][q]),width=80))),end=' ')
+
+
+        if (bkg == 0):
+            for i in triagetext.keys():
+                if (i == "sample"):
+                    if (triagetext['sample'] is not None):
+                        y = triagetext['sample'].keys()    
+                        if ("id" in y):
+                            print(mycolors.foreground.green + "\n\nid: ".ljust(13) + mycolors.reset + triagetext['sample']['id'],end=' ')
+
+                        if ("target" in y):
+                            print(mycolors.foreground.green + "\ntarget: ".ljust(12) + mycolors.reset + triagetext['sample']['target'], end=' ')
+
+                        if ("size" in y):
+                            print((mycolors.foreground.green + "\nsize: ".ljust(12) + mycolors.reset + "%d") % int(triagetext['sample']['size']), end=' ')
+
+                        if ("md5" in y):
+                            print(mycolors.foreground.green + "\nmd5: ".ljust(12) + mycolors.reset + triagetext['sample']['md5'], end=' ')
+
+                        if ("sha1" in y):
+                            print(mycolors.foreground.green + "\nsha1: ".ljust(12) + mycolors.reset + triagetext['sample']['sha1'], end=' ')
+
+                        if ("sha256" in y):
+                            print(mycolors.foreground.green + "\nsha256: ".ljust(12) + mycolors.reset + triagetext['sample']['sha256'], end=' ')
+
+                        if ("completed" in y):
+                            print(mycolors.foreground.green + "\ncompleted: ".ljust(12) + mycolors.reset + triagetext['sample']['completed'], end=' ')
+
+                if (i == "analysis"):
+                    if (triagetext['analysis'] is not None):
+                        if ("score" in triagetext['analysis']):
+                            print(mycolors.foreground.green + "\nscore: ".ljust(12) + mycolors.reset + str(triagetext['analysis']['score']),end=' ')
+                
+                if (i == "tasks"):
+                    if (triagetext[i] is not None):
+                        print(mycolors.foreground.green + "\n\ntasks: ".ljust(11) + mycolors.reset,end=' ')
+                        for d in (triagetext[i].keys()):
+                            print("\n".ljust(12) + mycolors.foreground.blue + "* " + d + ": \n" + mycolors.reset,end=' ')
+                            if ("kind" in triagetext[i][d]):
+                                print(mycolors.foreground.red + "\n".ljust(12) + "kind: ".ljust(10)+ mycolors.reset + triagetext[i][d]['kind'], end=' ')
+                            if ("status" in triagetext[i][d]):
+                                print(mycolors.foreground.red + "\n".ljust(12) + "status: ".ljust(10) + mycolors.reset + triagetext[i][d]['status'], end=' ')
+                            if ("score" in triagetext[i][d]):
+                                print(mycolors.foreground.red + "\n".ljust(12) + "score: ".ljust(10) + mycolors.reset + str(triagetext[i][d]['score']), end=' ')
+                            if ("target" in triagetext[i][d]):
+                                print(mycolors.foreground.red + "\n".ljust(12) + "target: ".ljust(10) + mycolors.reset + triagetext[i][d]['target'], end=' ')
+                            if ("resource" in triagetext[i][d]):
+                                print(mycolors.foreground.red + "\n".ljust(12) + "resource: ".ljust(8) + mycolors.reset + triagetext[i][d]['resource'], end=' ')
+                            if ("platform" in triagetext[i][d]):
+                                print(mycolors.foreground.red + "\n".ljust(12) + "platform: ".ljust(8) + mycolors.reset + triagetext[i][d]['platform'], end=' ')
+
+                            print(mycolors.foreground.red + "\n".ljust(12) + "tags: ".ljust(10) + mycolors.reset, end=' ')
+                            if ("tags" in triagetext[i][d]):
+                                for j in triagetext[i][d]['tags']:
+                                    print("\n".ljust(22) +  mycolors.reset + j, end=' ')
+                            
+                            print(mycolors.reset + "")
+
+                if (i == "targets"):
+                    if (triagetext['targets'] is not None):
+                        print(mycolors.foreground.green + "\ntargets: ".ljust(12) + mycolors.reset,end=' ')
+                        for k in range(len(triagetext['targets'])):
+                            for m in (triagetext['targets'][k]):
+                                if ("tasks" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "tasks: ".ljust(9) + mycolors.reset,end=' ')
+                                    for i in range(len(triagetext['targets'][k][m])):
+                                        print(str(triagetext['targets'][k][m][i]),end=' ')
+                                if ("score" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "score: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
+                                if ("target" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "target: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
+                                if ("size" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "size: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]) + "bytes",end=' ')
+                                if ("md5" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "md5: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
+                                if ("sha1" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "sha1: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
+                                if ("sha256" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "sha256: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
+                                if ("tags" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "tags: ".ljust(10) + mycolors.reset,end=' ')
+                                    for j in (triagetext['targets'][k][m]):
+                                        print("\n".ljust(22) + mycolors.reset + j,end=' ')
+                                if ("family" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "family: ".ljust(9) + mycolors.reset,end=' ')
+                                    for n in range(len(triagetext['targets'][k][m])):
+                                        print(mycolors.reset + str(triagetext['targets'][k][m][n]),end=' ')
+                                if ("iocs" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "iocs: ",end=' ')
+                                    for j in (triagetext['targets'][k][m]):
+                                        if ('ips' == j):
+                                            for i in range(len(triagetext['targets'][k][m][j])):
+                                                print("\n".ljust(22) + mycolors.reset + str(triagetext['targets'][k][m][j][i]),end=' ')
+                                        if ('domains' == j):
+                                            for i in range(len(triagetext['targets'][k][m][j])):
+                                                print("\n".ljust(22) + mycolors.reset + str(triagetext['targets'][k][m][j][i]),end=' ')
+                                        if ('urls' == j):
+                                            for i in range(len(triagetext['targets'][k][m][j])):
+                                                print("\n".ljust(22) + mycolors.reset + str(triagetext['targets'][k][m][j][i]),end=' ')
+
+                if (i == "signatures"):
+                    if (triagetext[i] is not None):
+                        print(mycolors.foreground.green + "\nsignatures: ".ljust(12) + mycolors.reset,end=' ')
+                        for y in range(len(triagetext[i])):
+                            for d in (triagetext[i][y]).keys():
+                                if (d == 'name'):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + mycolors.reset + str(triagetext[i][y][d]),end=' ')
+
+                        print(mycolors.reset + "")
+
+
+                if (i == "extracted"):
+                    if (triagetext['extracted'] is not None):
+                        print(mycolors.foreground.green + "\nextracted: ".ljust(12) + mycolors.reset,end=' ')
+                        for k in range(len(triagetext['extracted'])):
+                            for m in (triagetext['extracted'][k]):
+                                if ("tasks" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "tasks: ".ljust(9) + mycolors.reset,end=' ')
+                                    for i in range(len(triagetext['extracted'][k][m])):
+                                        print(str(triagetext['extracted'][k][m][i]),end=' ')
+                                if ("resource" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "resource: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m]),end=' ')
+                                if ("dumped_file" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "dumped: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m]),end=' ')
+                                if ("config" == m):
+                                    for x in ((triagetext['extracted'][k][m]).keys()):
+                                        if ('family' == x):
+                                            print(mycolors.foreground.red + "\n".ljust(12) + "family: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x]),end=' ')
+                                        if ('rule' == x):
+                                            print(mycolors.foreground.red + "\n".ljust(12) + "rule: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x]),end=' ')
+                                        if ("extracted_pe" == x):
+                                            print(mycolors.foreground.red + "\n".ljust(12) + "extracted_pe: ".ljust(9) + mycolors.reset,end=' ')
+                                            for i in range(len(triagetext['extracted'][k][m][x])):
+                                                print("\n".ljust(22) + str(triagetext['extracted'][k][m][x][i]),end=' ')
+                                        if ('c2' == x):
+                                            print(mycolors.foreground.red + "\n".ljust(12) + "c2: ".ljust(9) + mycolors.reset,end=' ')
+                                            for z in range(len(triagetext['extracted'][k][m][x])):
+                                                print("\n".ljust(22) + mycolors.reset + str(triagetext['extracted'][k][m][x][z]),end=' ')
+                                        if ("botnet" == x):
+                                            print(mycolors.foreground.red + "\n".ljust(12) + "botnet: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x]),end=' ')
+                                        if ("keys" == x):
+                                            for p in range(len(triagetext['extracted'][k][m][x])):
+                                                for q in (triagetext['extracted'][k][m][x][p]).keys():
+                                                    if ('key' == q):
+                                                        print(mycolors.foreground.red + "\n".ljust(12) + "key: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x][p][q]),end=' ')
+                                                    if ('value' == q):
+                                                        print(mycolors.foreground.red + "\n".ljust(12) + "value:".ljust(10) + mycolors.reset,end='')
+                                                        print(mycolors.reset + (("\n" + "".ljust(21)).join(textwrap.wrap((triagetext['extracted'][k][m][x][p][q]),width=80))),end=' ')
+
+
+        print(mycolors.reset + "\n")
+        exit(0)
+    
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to Tri.age!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to Tri.age!\n"))
+        print(mycolors.reset)
+
+
+def triage_sample_submit(triagex, triage):
+
+    triagetext = ''
+    triageresponse = ''
+
+    def encode_multipart_formdata(infodata):
+        boundary = binascii.hexlify(os.urandom(16)).decode('ascii')
+
+        body = BytesIO()
+        for field, value in infodata.items():
+            if isinstance(value, tuple):
+                filename, file = value
+                body.write('--{boundary}\r\nContent-Disposition: form-data; filename="{filename}"; name=\"{field}\"\r\n\r\n'.format(boundary=boundary, field=field, filename=filename).encode('utf-8'))
+                b = file.read()
+                if isinstance(b, str): 
+                    b = b.encode('ascii')
+                body.write(b)
+                body.write(b'\r\n')
+            else:
+                body.write('--{boundary}\r\nContent-Disposition: form-data; name="{field}"\r\n\r\n{value}\r\n'.format(boundary=boundary, field=field, value=value).encode('utf-8'))
+        body.write('--{0}--\r\n'.format(boundary).encode('utf-8'))
+        body.seek(0)
+
+        return body, "multipart/form-data; boundary=" + boundary
+
+    try:
+
+        print("\n")
+        print((mycolors.reset + "TRIAGE SAMPLE SUBMIT REPORT".center(80)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (80*'-').center(40))
+
+        myfile = open(triagex,'rb')
+        mydata = {
+            'kind': 'file',
+            'interactive': False,
+        }
+
+        filename = os.path.basename(triagex)
+        mybody, content_type = encode_multipart_formdata({
+            '_json': json.dumps(mydata),
+            'file': (filename, myfile),
+        })
+
+        req = Request('POST', triage + 'samples', data=mybody, headers={"Content-Type": content_type, "Authorization": "Bearer " + TRIAGEAPI})
+        requestsession = requests.Session( )
+        triageres = requestsession.send(req.prepare())
+        triagetext = triageres.json()
+
+        if 'error' in triagetext:
+
+            if triagetext['error'] == "UNAUTHORIZED":
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "\nThe provided credential is not valid!\n" + mycolors.reset)
+                else:
+                    print(mycolors.foreground.red + "\nThe provided credential is not valid!\n" + mycolors.reset)
+                exit(1)
+
+            if triagetext['error'] == "INVALID_QUERY":
+                if (bkg == 1):
+                    print("\n" + mycolors.foreground.lightred + triagetext['message'] + mycolors.reset, end='\n\n')
+                else:
+                    print("\n" + mycolors.foreground.red + triagetext['message'] + mycolors.reset, end='\n\n')
+                exit(1)
+
+        if 'id' in triagetext:
+            if (bkg == 1):
+                print("\n" + mycolors.foreground.yellow + "id: ".ljust(12) + mycolors.reset + triagetext['id'], end=' ') 
+                print("\n" + mycolors.foreground.yellow + "status: ".ljust(12) + mycolors.reset + triagetext['status'], end=' ') 
+                print("\n" + mycolors.foreground.yellow + "filename: ".ljust(12) + mycolors.reset + triagetext['filename'], end=' ') 
+                print("\n" + mycolors.foreground.yellow + "submitted: ".ljust(12) + mycolors.reset + triagetext['submitted'], end=' ') 
+            if (bkg == 0):
+                print("\n" + mycolors.foreground.blue + "id: ".ljust(12) + mycolors.reset + triagetext['id'], end=' ') 
+                print("\n" + mycolors.foreground.blue + "status: ".ljust(12) + mycolors.reset + triagetext['status'], end=' ') 
+                print("\n" + mycolors.foreground.blue + "filename: ".ljust(12) + mycolors.reset + triagetext['filename'], end=' ') 
+                print("\n" + mycolors.foreground.blue + "submitted: ".ljust(12) + mycolors.reset + triagetext['submitted'], end=' ') 
+
+        print(mycolors.reset + "\n")
+        exit(0)
+    
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to Tri.age!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to Tri.age!\n"))
+        print(mycolors.reset)
+
+
+def triage_url_sample_submit(triagex, triage):
+
+    triagetext = ''
+    triageresponse = ''
+
+    try:
+
+        print("\n")
+        print((mycolors.reset + "TRIAGE URL SAMPLE SUBMIT REPORT".center(80)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (80*'-').center(40))
+
+        mydata = {
+            'kind': 'fetch',
+            'url': triagex,
+            'interactive': False,
+            }
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept':'application/json', 'Authorization':'Bearer ' + TRIAGEAPI, 'Content-Type': 'application/json'})
+        triageresponse = requestsession.post(triage + 'samples', data=json.dumps(mydata))
+        triagetext = json.loads(triageresponse.text)
+
+        if 'error' in triagetext:
+
+            if triagetext['error'] == "UNAUTHORIZED":
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "\nThe provided credential is not valid!\n" + mycolors.reset)
+                else:
+                    print(mycolors.foreground.red + "\nThe provided credential is not valid!\n" + mycolors.reset)
+                exit(1)
+            
+            if triagetext['error'] == "INVALID_QUERY":
+                if (bkg == 1):
+                    print("\n" + mycolors.foreground.lightred + triagetext['message'] + mycolors.reset, end='\n\n')
+                else:
+                    print("\n" + mycolors.foreground.red + triagetext['message'] + mycolors.reset, end='\n\n')
+                exit(1)
+
+        if 'id' in triagetext:
+            if (bkg == 1):
+                print("\n" + mycolors.foreground.yellow + "id: ".ljust(12) + mycolors.reset + triagetext['id'], end=' ') 
+                print("\n" + mycolors.foreground.yellow + "status: ".ljust(12) + mycolors.reset + triagetext['status'], end=' ') 
+                print("\n" + mycolors.foreground.yellow + "filename: ".ljust(12) + mycolors.reset + triagetext['filename'], end=' ') 
+                print("\n" + mycolors.foreground.yellow + "submitted: ".ljust(12) + mycolors.reset + triagetext['submitted'], end=' ') 
+            if (bkg == 0):
+                print("\n" + mycolors.foreground.blue + "id: ".ljust(12) + mycolors.reset + triagetext['id'], end=' ') 
+                print("\n" + mycolors.foreground.blue + "status: ".ljust(12) + mycolors.reset + triagetext['status'], end=' ') 
+                print("\n" + mycolors.foreground.blue + "filename: ".ljust(12) + mycolors.reset + triagetext['filename'], end=' ') 
+                print("\n" + mycolors.foreground.blue + "submitted: ".ljust(12) + mycolors.reset + triagetext['submitted'], end=' ') 
+
+
+        print(mycolors.reset + "\n")
+        exit(0)
+
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to Tri.age!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to Tri.age!\n"))
+        print(mycolors.reset)
+
+
+def triage_download(triagex, triage):
+
+    triagetext = ''
+    triageresponse = ''
+
+    try:
+
+        print("\n")
+        print((mycolors.reset + "TRIAGE DOWNLOAD REPORT".center(80)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (80*'-').center(40))
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'Authorization':'Bearer ' + TRIAGEAPI})
+        triageresponse = requestsession.get(triage + 'samples/' + triagex + '/sample')
+        if (triageresponse.status_code == 404):
+            triagetext = json.loads(triageresponse.text)
+
+        if 'error' in triagetext:
+            if triagetext['error'] == "NOT_FOUND":
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "\nThe provided ID was not found!\n" + mycolors.reset)
+                else:
+                    print(mycolors.foreground.red + "\nThe provided ID was not found!\n" + mycolors.reset)
+                exit(1)
+
+            if triagetext['error'] == "UNAUTHORIZED":
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "\nThe provided credential is not valid!\n" + mycolors.reset)
+                else:
+                    print(mycolors.foreground.red + "\nThe provided credential is not valid!\n" + mycolors.reset)
+                exit(1)
+            
+            if triagetext['error'] == "INVALID_QUERY":
+                if (bkg == 1):
+                    print("\n" + mycolors.foreground.lightred + triagetext['message'] + mycolors.reset, end='\n\n')
+                else:
+                    print("\n" + mycolors.foreground.red + triagetext['message'] + mycolors.reset, end='\n\n')
+                exit(1)
+
+        open(triagex + '.bin', 'wb').write(triageresponse.content)
+        if (bkg == 1):
+            print("\n" + mycolors.foreground.yellow + "SAMPLE SAVED as: " + triagex + ".bin" + mycolors.reset, end=' ')
+        if (bkg == 0):
+            print("\n" + mycolors.foreground.blue + "SAMPLE SAVED as: " + triagex + ".bin" + mycolors.reset, end=' ')
+
+        print(mycolors.reset + "\n")
+        exit(0)
+
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to Tri.age!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to Tri.age!\n"))
+        print(mycolors.reset)
+
+
+def triage_download_pcap(triagex, triage):
+
+    triagetext = ''
+    triageresponse = ''
+
+    try:
+
+        print("\n")
+        print((mycolors.reset + "TRIAGE PCAPNG DOWNLOAD REPORT".center(80)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (80*'-').center(40))
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'Authorization':'Bearer ' + TRIAGEAPI})
+        triageresponse = requestsession.get(triage + 'samples/' + triagex + '/behavioral1/dump.pcapng')
+        if (triageresponse.status_code == 404):
+            triagetext = json.loads(triageresponse.text)
+
+        if 'error' in triagetext:
+            if triagetext['error'] == "NOT_FOUND":
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "\nThe pcap file was not found!\n" + mycolors.reset)
+                else:
+                    print(mycolors.foreground.red + "\nThe pcap file was not found!\n" + mycolors.reset)
+                exit(1)
+
+            if triagetext['error'] == "UNAUTHORIZED":
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "\nThe provided credential is not valid!\n" + mycolors.reset)
+                else:
+                    print(mycolors.foreground.red + "\nThe provided credential is not valid!\n" + mycolors.reset)
+                exit(1)
+            
+            if triagetext['error'] == "INVALID_QUERY":
+                if (bkg == 1):
+                    print("\n" + mycolors.foreground.lightred + triagetext['message'] + mycolors.reset, end='\n\n')
+                else:
+                    print("\n" + mycolors.foreground.red + triagetext['message'] + mycolors.reset, end='\n\n')
+                exit(1)
+
+        open(triagex + '.pcapng', 'wb').write(triageresponse.content)
+        if (bkg == 1):
+            print("\n" + mycolors.foreground.yellow + "PCAP SAVED as: " + triagex + ".pcapng" + mycolors.reset, end=' ')
+        if (bkg == 0):
+            print("\n" + mycolors.foreground.blue + "PCAP SAVED as: " + triagex + ".pcapng" + mycolors.reset, end=' ')
+
+        print(mycolors.reset + "\n")
+        exit(0)
+
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to Tri.age!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to Tri.age!\n"))
+        print(mycolors.reset)
+
+
+def triage_dynamic(triagex, triage):
+
+    triagetext = ''
+    triageresponse = ''
+    params = ''
+    idx = ''
+
+    try:
+
+        print("\n")
+        print((mycolors.reset + "TRIAGE SEARCH REPORT".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100*'-').center(50))
+
+        requestsession = requests.Session( )
+        requestsession.headers.update({'accept':'application/json', 'Authorization':'Bearer ' + TRIAGEAPI})
+        triageresponse = requestsession.get(triage + 'samples/' +  triagex + '/behavioral1/report_triage.json')
+        triagetext = json.loads(triageresponse.text)
+
+        if 'error' in triagetext:
+            if triagetext['error'] == "NOT_FOUND":
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "\nThe provided ID was not found!\n" + mycolors.reset)
+                else:
+                    print(mycolors.foreground.red + "\nThe provided ID was not found!\n" + mycolors.reset)
+                exit(1)
+
+            if triagetext['error'] == "UNAUTHORIZED":
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "\nThe provided credential is not valid!\n" + mycolors.reset)
+                else:
+                    print(mycolors.foreground.red + "\nThe provided credential is not valid!\n" + mycolors.reset)
+                exit(1)
+            
+            if triagetext['error'] == "INVALID_QUERY":
+                if (bkg == 1):
+                    print("\n" + mycolors.foreground.lightred + triagetext['message'] + mycolors.reset, end='\n\n')
+                else:
+                    print("\n" + mycolors.foreground.red + triagetext['message'] + mycolors.reset, end='\n\n')
+                exit(1)
+
+        if (bkg == 1):
+            for i in triagetext.keys():
+                if (i == "sample"):
+                    if (triagetext['sample'] is not None):
+                        y = triagetext['sample'].keys()    
+                        if ("id" in y):
+                            print(mycolors.foreground.lightgreen + "\nid: ".ljust(12) + mycolors.reset + triagetext['sample']['id'],end=' ')
+
+                        if ("target" in y):
+                            print(mycolors.foreground.lightgreen + "\ntarget: ".ljust(12) + mycolors.reset + triagetext['sample']['target'], end=' ')
+
+                        if ("score" in y):
+                            print(mycolors.foreground.lightgreen + "\nscore: ".ljust(12) + mycolors.reset + str(triagetext['sample']['score']), end=' ')
+
+                        if ("submitted" in y):
+                            print(mycolors.foreground.lightgreen + "\nsubmitted: ".ljust(12) + mycolors.reset + triagetext['sample']['submitted'], end=' ')
+
+                        if ("size" in y):
+                            print(mycolors.foreground.lightgreen + "\nsize: ".ljust(12) + mycolors.reset + str(triagetext['sample']['size']), end=' ')
+
+                        if ("md5" in y):
+                            print(mycolors.foreground.lightgreen + "\nmd5: ".ljust(12) + mycolors.reset + triagetext['sample']['md5'], end=' ')
+
+                        if ("sha1" in y):
+                            print(mycolors.foreground.lightgreen + "\nsha1: ".ljust(12) + mycolors.reset + triagetext['sample']['sha1'], end=' ')
+
+                        if ("sha256" in y):
+                            print(mycolors.foreground.lightgreen + "\nsha256: ".ljust(12) + mycolors.reset + triagetext['sample']['sha256'], end=' ')
+
+                        print(mycolors.foreground.lightgreen + "\nstatic_tags: ".ljust(12) + mycolors.reset, end=' ')
+                        if ("static_tags" in triagetext[i]):
+                            for j in triagetext[i]['static_tags']:
+                                print("\n".ljust(12) +  mycolors.reset + j, end=' ')
+
+                if (i == "analysis"):
+                    if (triagetext[i] is not None):
+                        print(mycolors.foreground.lightgreen + "\n\nanalysis: ".ljust(11) + mycolors.reset,end=' ')
+                        if ("score" in triagetext[i]):
+                            print(mycolors.foreground.lightred + "\n".ljust(12) + "score: ".ljust(10)+ mycolors.reset + str(triagetext[i]['score']), end=' ')
+                        if ("reported" in triagetext[i]):
+                            print(mycolors.foreground.lightred + "\n".ljust(12) + "reported: ".ljust(10) + mycolors.reset + triagetext[i]['reported'], end=' ')
+                        if ("platform" in triagetext[i]):
+                            print(mycolors.foreground.lightred + "\n".ljust(12) + "platform: ".ljust(10) + mycolors.reset + str(triagetext[i]['platform']), end=' ')
+                        if ("resource" in triagetext[i]):
+                            print(mycolors.foreground.lightred + "\n".ljust(12) + "resource: ".ljust(10) + mycolors.reset + triagetext[i]['resource'], end=' ')
+                        if ("max_time_network" in triagetext[i]):
+                            print(mycolors.foreground.lightred + "\n".ljust(12) + "time_net: ".ljust(8) + mycolors.reset + str(triagetext[i]['max_time_network']), end=' ')
+                        if ("max_time_kernel" in triagetext[i]):
+                            print(mycolors.foreground.lightred + "\n".ljust(12) + "time_krn: ".ljust(8) + mycolors.reset + str(triagetext[i]['max_time_kernel']), end=' ')
+
+                        print(mycolors.foreground.lightred + "\n".ljust(12) + "tags: ".ljust(10) + mycolors.reset, end=' ')
+                        if ("tags" in triagetext[i]):
+                            for j in triagetext[i]['tags']:
+                                print("\n".ljust(22) +  mycolors.reset + j, end=' ')
+                        
+                        print(mycolors.foreground.lightred + "\n".ljust(12) + "ttps: ".ljust(10) + mycolors.reset, end=' ')
+                        if ("ttp" in triagetext[i]):
+                            for j in triagetext[i]['ttp']:
+                                print("\n".ljust(22) +  mycolors.reset + j, end=' ')
+
+                        print(mycolors.foreground.lightred + "\n".ljust(12) + "features: ".ljust(10) + mycolors.reset, end=' ')
+                        if ("features" in triagetext[i]):
+                            for j in triagetext[i]['features']:
+                                print("\n".ljust(22) +  mycolors.reset + j, end=' ')
+                            
+                        print(mycolors.reset + "")
+
+
+                if (i == "processes"):
+                    if (triagetext[i] is not None):
+                        print(mycolors.foreground.lightgreen + "\nprocesses: ".ljust(12) + mycolors.reset,end=' ')
+                        for k in range(len(triagetext[i])):
+                            for m in (triagetext[i][k]):
+                                if ("pid" == m):
+                                    print(mycolors.foreground.lightred + "\n".ljust(12) + "pid: ".ljust(10) + mycolors.reset + str(triagetext[i][k][m]),end=' ')
+                                if ("ppid" == m):
+                                    print(mycolors.foreground.lightred + "\n".ljust(12) + "ppid: ".ljust(10) + mycolors.reset + str(triagetext[i][k][m]),end=' ')
+                                if ("procid" == m):
+                                    print(mycolors.foreground.lightred + "\n".ljust(12) + "procid: ".ljust(10) + mycolors.reset + str(triagetext[i][k][m]),end=' ')
+                                if ("procid_parent" == m):
+                                    print(mycolors.foreground.lightred + "\n".ljust(12) + "procid_p: ".ljust(10) + mycolors.reset + str(triagetext[i][k][m]),end=' ')
+                                if ("cmd" == m):
+                                    print(mycolors.foreground.lightred + "\n".ljust(12) + "cmd: ".ljust(10) + mycolors.reset + str(triagetext[i][k][m]),end=' ')
+                                if ("image" == m):
+                                    print(mycolors.foreground.lightred + "\n".ljust(12) + "image: ".ljust(10) + mycolors.reset + str(triagetext[i][k][m]),end=' ')
+                            print(mycolors.reset + "")
+
+                if (i == "signatures"):
+                    if (triagetext[i] is not None):
+                        print(mycolors.foreground.lightgreen + "\nsignatures: ".ljust(12) + mycolors.reset,end=' ')
+                        for y in range(len(triagetext[i])):
+                            for d in (triagetext[i][y]).keys():
+                                if (d == 'name'):
+                                    print(mycolors.foreground.lightred + "\n".ljust(12) + mycolors.reset + str(triagetext[i][y][d]),end=' ')
+                        print(mycolors.reset + "")
+
+                    if (triagetext[i] is not None):
+                        list_1 = []
+                        set_1 = ()
+                        print(mycolors.foreground.lightgreen + "\n".ljust(12) + "iocs: ".ljust(10) + mycolors.reset,end='')
+                        for y in range(len(triagetext[i])):
+                            for d in (triagetext[i][y]).keys():
+                                if (d == 'indicators'):
+                                    for z in range(len(triagetext[i][y][d])):
+                                        for t in (triagetext[i][y][d][z]).keys():
+                                            if (t == 'ioc'):
+                                                list_1.append(triagetext[i][y][d][z][t])
+                        set_1 = set(list_1)
+                        final_list = (list(set_1))
+                        for w in final_list:
+                            print("\n".ljust(17) + mycolors.reset + (("\n".ljust(19)).join(textwrap.wrap("* " + w,width=90))),end=' ')
+
+                if (i == "network"):
+                        list_1 = []
+                        set_1 = ()
+                        print(mycolors.foreground.lightgreen + "\nnetwork: ".ljust(12) + mycolors.reset,end='')
+                        for d in (triagetext[i]).keys():
+                            if (d == 'flows'):
+                                for z in range(len(triagetext[i][d])):
+                                    for t in (triagetext[i][d][z]).keys():
+                                        if (t == 'domain'):
+                                            list_1.append(triagetext[i][d][z][t])
+                        set_1 = set(list_1)
+                        final_list = (list(set_1))
+                        for w in final_list:
+                            print("\n".ljust(12) + mycolors.reset + (("\n".ljust(12)).join(textwrap.wrap(w,width=90))),end=' ')
+
+                        print(mycolors.reset + "")
+
+
+        if (bkg == 0):
+            for i in triagetext.keys():
+                if (i == "sample"):
+                    if (triagetext['sample'] is not None):
+                        y = triagetext['sample'].keys()    
+                        if ("id" in y):
+                            print(mycolors.foreground.purple + "\nid: ".ljust(12) + mycolors.reset + triagetext['sample']['id'],end=' ')
+
+                        if ("target" in y):
+                            print(mycolors.foreground.purple + "\ntarget: ".ljust(12) + mycolors.reset + triagetext['sample']['target'], end=' ')
+
+                        if ("score" in y):
+                            print(mycolors.foreground.purple + "\nscore: ".ljust(12) + mycolors.reset + str(triagetext['sample']['score']), end=' ')
+
+                        if ("submitted" in y):
+                            print(mycolors.foreground.purple + "\nsubmitted: ".ljust(12) + mycolors.reset + triagetext['sample']['submitted'], end=' ')
+
+                        if ("size" in y):
+                            print(mycolors.foreground.purple + "\nsize: ".ljust(12) + mycolors.reset + str(triagetext['sample']['size']), end=' ')
+
+                        if ("md5" in y):
+                            print(mycolors.foreground.purple + "\nmd5: ".ljust(12) + mycolors.reset + triagetext['sample']['md5'], end=' ')
+
+                        if ("sha1" in y):
+                            print(mycolors.foreground.purple + "\nsha1: ".ljust(12) + mycolors.reset + triagetext['sample']['sha1'], end=' ')
+
+                        if ("sha256" in y):
+                            print(mycolors.foreground.purple + "\nsha256: ".ljust(12) + mycolors.reset + triagetext['sample']['sha256'], end=' ')
+
+                        print(mycolors.foreground.purple + "\nstatic_tags: ".ljust(12) + mycolors.reset, end=' ')
+                        if ("static_tags" in triagetext[i]):
+                            for j in triagetext[i]['static_tags']:
+                                print("\n".ljust(12) +  mycolors.reset + j, end=' ')
+
+                if (i == "analysis"):
+                    if (triagetext[i] is not None):
+                        print(mycolors.foreground.purple + "\n\nanalysis: ".ljust(11) + mycolors.reset,end=' ')
+                        if ("score" in triagetext[i]):
+                            print(mycolors.foreground.red + "\n".ljust(12) + "score: ".ljust(10)+ mycolors.reset + str(triagetext[i]['score']), end=' ')
+                        if ("reported" in triagetext[i]):
+                            print(mycolors.foreground.red + "\n".ljust(12) + "reported: ".ljust(10) + mycolors.reset + triagetext[i]['reported'], end=' ')
+                        if ("platform" in triagetext[i]):
+                            print(mycolors.foreground.red + "\n".ljust(12) + "platform: ".ljust(10) + mycolors.reset + str(triagetext[i]['platform']), end=' ')
+                        if ("resource" in triagetext[i]):
+                            print(mycolors.foreground.red + "\n".ljust(12) + "resource: ".ljust(10) + mycolors.reset + triagetext[i]['resource'], end=' ')
+                        if ("max_time_network" in triagetext[i]):
+                            print(mycolors.foreground.red + "\n".ljust(12) + "time_net: ".ljust(8) + mycolors.reset + str(triagetext[i]['max_time_network']), end=' ')
+                        if ("max_time_kernel" in triagetext[i]):
+                            print(mycolors.foreground.red + "\n".ljust(12) + "time_krn: ".ljust(8) + mycolors.reset + str(triagetext[i]['max_time_kernel']), end=' ')
+
+                        print(mycolors.foreground.red + "\n".ljust(12) + "tags: ".ljust(10) + mycolors.reset, end=' ')
+                        if ("tags" in triagetext[i]):
+                            for j in triagetext[i]['tags']:
+                                print("\n".ljust(22) +  mycolors.reset + j, end=' ')
+                        
+                        print(mycolors.foreground.red + "\n".ljust(12) + "ttps: ".ljust(10) + mycolors.reset, end=' ')
+                        if ("ttp" in triagetext[i]):
+                            for j in triagetext[i]['ttp']:
+                                print("\n".ljust(22) +  mycolors.reset + j, end=' ')
+
+                        print(mycolors.foreground.red + "\n".ljust(12) + "features: ".ljust(10) + mycolors.reset, end=' ')
+                        if ("features" in triagetext[i]):
+                            for j in triagetext[i]['features']:
+                                print("\n".ljust(22) +  mycolors.reset + j, end=' ')
+                            
+                        print(mycolors.reset + "")
+
+
+                if (i == "processes"):
+                    if (triagetext[i] is not None):
+                        print(mycolors.foreground.purple + "\nprocesses: ".ljust(12) + mycolors.reset,end=' ')
+                        for k in range(len(triagetext[i])):
+                            for m in (triagetext[i][k]):
+                                if ("pid" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "pid: ".ljust(10) + mycolors.reset + str(triagetext[i][k][m]),end=' ')
+                                if ("ppid" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "ppid: ".ljust(10) + mycolors.reset + str(triagetext[i][k][m]),end=' ')
+                                if ("procid" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "procid: ".ljust(10) + mycolors.reset + str(triagetext[i][k][m]),end=' ')
+                                if ("procid_parent" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "procid_p: ".ljust(10) + mycolors.reset + str(triagetext[i][k][m]),end=' ')
+                                if ("cmd" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "cmd: ".ljust(10) + mycolors.reset + str(triagetext[i][k][m]),end=' ')
+                                if ("image" == m):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "image: ".ljust(10) + mycolors.reset + str(triagetext[i][k][m]),end=' ')
+                            print(mycolors.reset + "")
+
+                if (i == "signatures"):
+                    if (triagetext[i] is not None):
+                        print(mycolors.foreground.purple + "\nsignatures: ".ljust(12) + mycolors.reset,end=' ')
+                        for y in range(len(triagetext[i])):
+                            for d in (triagetext[i][y]).keys():
+                                if (d == 'name'):
+                                    print(mycolors.foreground.red + "\n".ljust(12) + mycolors.reset + str(triagetext[i][y][d]),end=' ')
+                        print(mycolors.reset + "")
+
+                    if (triagetext[i] is not None):
+                        list_1 = []
+                        set_1 = ()
+                        print(mycolors.foreground.purple + "\n".ljust(12) + "iocs: ".ljust(10) + mycolors.reset,end='')
+                        for y in range(len(triagetext[i])):
+                            for d in (triagetext[i][y]).keys():
+                                if (d == 'indicators'):
+                                    for z in range(len(triagetext[i][y][d])):
+                                        for t in (triagetext[i][y][d][z]).keys():
+                                            if (t == 'ioc'):
+                                                list_1.append(triagetext[i][y][d][z][t])
+                        set_1 = set(list_1)
+                        final_list = (list(set_1))
+                        for w in final_list:
+                            print("\n".ljust(17) + mycolors.reset + (("\n".ljust(19)).join(textwrap.wrap("* " + w,width=90))),end=' ')
+
+                if (i == "network"):
+                        list_1 = []
+                        set_1 = ()
+                        print(mycolors.foreground.purple + "\nnetwork: ".ljust(12) + mycolors.reset,end='')
+                        for d in (triagetext[i]).keys():
+                            if (d == 'flows'):
+                                for z in range(len(triagetext[i][d])):
+                                    for t in (triagetext[i][d][z]).keys():
+                                        if (t == 'domain'):
+                                            list_1.append(triagetext[i][d][z][t])
+                        set_1 = set(list_1)
+                        final_list = (list(set_1))
+                        for w in final_list:
+                            print("\n".ljust(12) + mycolors.reset + (("\n".ljust(12)).join(textwrap.wrap(w,width=90))),end=' ')
+
+                        print(mycolors.reset + "")
+
+
+        print(mycolors.reset + "\n")
+        exit(0)
+
+    except ValueError as e:
+        print(e)
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "\nError while connecting to Tri.age!\n"))
+        else:
+            print((mycolors.foreground.lightred + "\nError while connecting to Tri.age!\n"))
         print(mycolors.reset)
 
 
@@ -8001,14 +9119,15 @@ if __name__ == "__main__":
     VALHALLAAPIx = ''
     bazaar = 0
     bazaararg = ''
+    triage = 0
+    triagearg = ''
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.3.5", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0|1|2|3> -a <0|1|2|3|4|5> -x <0|1> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0|1|2|3|4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0|1|2|3|4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1|2|3|4|5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1|2|3|4|5> -C <argument> -b <'1|2|3|4|5|6|7|8|9|10> -B <arg>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.4", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0-4> -a <0-5> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0-4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0-4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1-5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1-5> -C <argument> -b <'1-10> -B <arg> -x <1-7> -X <arg>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples.')
     parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a malware sample. It returns general information about the file (any filetype)')
     parser.add_argument('-o', '--background', dest='backg', type=int,default = 1, metavar = "BACKGROUND", help='Adapts the output colors to a white terminal. The default is black terminal')
-    parser.add_argument('-x', '--overlay', dest='over', type=int,default = 0, metavar = "OVERLAY", help='Extracts the overlay (it is used with -f option).')
-    parser.add_argument('-v', '--virustotal', dest='virustotal', type=int,default = 0, metavar = "VIRUSTOTAL", help='If using "-v 1", so it queries the Virus Total database for positives and totals. If "v 2" (which can be used only together with -f option), so it shows antivirus reports from the main players. If "v 3", so the binary\'s IAT and EAT are also shown. Remember: you need to edit the .malwapi.conf and insert your VT API.')
+    parser.add_argument('-v', '--virustotal', dest='virustotal', type=int,default = 0, metavar = "VIRUSTOTAL", help='If using "-v 1", so it queries the Virus Total database for positives and totals. If "v 2" (which can be used only together with -f option), so it shows antivirus reports from the main players. If "v 3", so the binary\'s IAT and EAT are also shown; If "v 4" it extracts the overlay (it must be used with -f option). Remember: you need to edit the .malwapi.conf and insert your VT API.')
     parser.add_argument('-a', '--hybrid', dest='hybridanalysis', type=int,default = 0, metavar = "HYBRID_ANALYSIS", help='Queries the Hybrid Analysis database for getting a general report. Possible values are: 1: Windows 7 32-bit; 2: Windows 7 32-bit (HWP Support); 3: Windows 64-bit; 4: Android; 5: Linux 64-bit. Remember: you need to edit the .malwapi.conf and insert your HA API and secret.')
     parser.add_argument('-u', '--vturl', dest='urlx', type=str, metavar = "URL_VT", help='SUBMITS a URL to the Virus Total scanning.')
     parser.add_argument('-I', '--ipaddrvt', dest='ipaddrvt', type=str, metavar = "IP_VT", help='This option checks an IP address on Virus Total.')
@@ -8047,6 +9166,8 @@ if __name__ == "__main__":
     parser.add_argument('-C', '--valhallaarg', dest='valhallaarg', type=str, metavar = "VALHALLAARG", help='This option is used for providing argument to the  Vahalla service (-E option).')
     parser.add_argument('-b', '--bazaar', dest='bazaar', type=int, default = 0, metavar = "BAZAAR", help='Checks multiple information from Malware Bazaar and ThreatFox. The possible values are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar) Get information and a list of malware samples associated and according to a specific tag; 3: (Bazaar) Get a list of malware samples according to a given imphash; 4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample from Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped using the following password: infected; 6: (ThreatFox) Get current IOC dataset from last x days given by option -B; 7: (ThreatFox) Search for the specified IOC on ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified tag given by option -B; 9: (ThreatFox) Search IOCs according to the specified malware family provided by option -B; 10. (ThreatFox) List all available malware families. ')
     parser.add_argument('-B', '--bazaararg', dest='bazaararg', type=str, metavar = "BAZAAR_ARG", help='Provides argument to -b Bazaar and ThreatFox option. If you specified "-b 1" then the -B\'s argument must be a hash; If you specified "-b 2" then -B\'s argument must be a malware tag; If you specified "-b 3" then the argument must be a imphash; If you specified "-b 4", so the argument must be "100 or time", where "100" lists last "100 samples" and "time" lists last samples added to Malware Bazaar in the last 60 minutes; If you specified "-b 5" then the -B\'s argument must be a SHA256 hash; If you specified "-b 6", so the -B\'s value is the number of DAYS to filter IOCs. The default (and max) is 90 (days); If you used "-b 7" so the -B\'s argument is the IOC you want to search for; If you used "-b 8", so the -B\'s argument is the TAG you want search for; If you used "-b 9", so the -B argument is the malware family you want to search for;')
+    parser.add_argument('-x', '--triage', dest='triage', type=int,default = 0, metavar = "TRIAGE", help='Provides information from Triage according to the specified value: <1> this option gets sample\'s general information by providing an argument with -B option in the following possible formats: sha256:<value>, sha1:<value>, md5:<value>, familily:<value>, score:<value>, tag:<value>, url:<value>, wallet:<value>, ip:<value>; <2> Get a sumary report for a given Triage ID (got from option -x 1) ; <3> Submit a sample for analysis ; <4> Submit a sample through a URL for analysis ; <5> Download sample specified by the Triage ID; <6> Download pcapng file from sample associated to given Triage ID; <7> Get a dynamic report for the given Triage ID (got from option -x 1); ')
+    parser.add_argument('-X', '--triagearg', dest='triagearg', type=str, metavar = "TRIAGE_ARG", help='Provides argument for options especified by -x option. Pay attention: the format of this argument depends on provided -x value.')
 
 
     args = parser.parse_args()
@@ -8063,6 +9184,7 @@ if __name__ == "__main__":
         ALIENAPI = config_file['ALIENVAULT']['ALIENAPI']
         MALPEDIAAPI = config_file['MALPEDIA']['MALPEDIAAPI']
         VALHALLAAPI = config_file['VALHALLA']['VALHALLAAPI']
+        TRIAGEAPI = config_file['TRIAGE']['TRIAGEAPI']
 
     except KeyError:
 
@@ -8080,11 +9202,11 @@ if __name__ == "__main__":
     optval5 = [0, 1, 2, 3, 4, 5]
     optval6 = [0, 1, 2, 3, 4, 5, 6, 7, 8]
     optval7 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    optval8 = [0, 1, 2, 3, 4, 5, 6, 7]
     repo = args.direct
     bkg = args.backg
     vt = args.virustotal
     ffpname = args.fpname
-    ovrly = args.over
     ha = args.hybridanalysis
     urltemp = args.urlx
     domaintemp = args.domainx
@@ -8125,6 +9247,8 @@ if __name__ == "__main__":
     valhallaargx = args.valhallaarg
     bazaarx = args.bazaar
     bazaarargx = args.bazaararg
+    triagex = args.triage
+    triageargx = args.triagearg
     config = args.config
 
     if (vt == 2):
@@ -8132,6 +9256,9 @@ if __name__ == "__main__":
 
     if (vt == 3):
         ie = 1
+
+    if (vt == 4):
+        ovrly = 1
 
     if (T == 2):
         Q = 1
@@ -8156,16 +9283,6 @@ if __name__ == "__main__":
         fprovided = 1
     else:
         fprovided = 0
-
-    if (args.over) not in optval:
-        parser.print_help()
-        print(mycolors.reset)
-        exit(0)
-    elif ovrly == 1:
-        if fprovided == 0:
-            parser.print_help()
-            print(mycolors.reset)
-            exit(0)
 
     if ie == 1:
         if fprovided == 0:
@@ -8229,7 +9346,12 @@ if __name__ == "__main__":
         print(mycolors.reset)
         exit(0)
 
-    if ((not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not fileha) and (not repoha) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (not args.urlhausquery) and (not args.urlhaussubmit) and (hausbatch == 0) and (hauspayloads == 0) and (not args.haushash) and (not args.hausdownloadpayload) and (not args.polyswarmscan) and (not args.polyswarmhash) and (not args.polyswarmmeta) and (androidx == 0) and (not androidsendhax) and (androidvtx == 0) and (androidvttx == 0) and (not androidsendvtx) and (not haustagsearchx) and (not haussigsearchx) and (not ipaddrvtx) and (metatype == 0) and (alienx == 0) and (not alienargsx) and (not malpediaargx) and (malpediax ==0) and (not args.threatcrowd) and (not args.valhalla) and (bazaarx == 0) and (not bazaarargx)):
+    if (args.triage) not in optval8:
+        parser.print_help()
+        print(mycolors.reset)
+        exit(0)
+
+    if ((not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not fileha) and (not repoha) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (not args.urlhausquery) and (not args.urlhaussubmit) and (hausbatch == 0) and (hauspayloads == 0) and (not args.haushash) and (not args.hausdownloadpayload) and (not args.polyswarmscan) and (not args.polyswarmhash) and (not args.polyswarmmeta) and (androidx == 0) and (not androidsendhax) and (androidvtx == 0) and (androidvttx == 0) and (not androidsendvtx) and (not haustagsearchx) and (not haussigsearchx) and (not ipaddrvtx) and (metatype == 0) and (alienx == 0) and (not alienargsx) and (not malpediaargx) and (malpediax ==0) and (not args.threatcrowd) and (not args.valhalla) and (bazaarx == 0) and (not bazaarargx) and (triagex == 0) and (not triageargx)):
         parser.print_help()
         print(mycolors.reset)
         exit(0)
@@ -8269,10 +9391,15 @@ if __name__ == "__main__":
             print(mycolors.reset)
             sys.exit(0)
 
-    if (args.virustotal) not in optval4:
+    if (args.virustotal) not in optval2:
         parser.print_help()
         print(mycolors.reset)
         sys.exit(0)
+    elif ovrly == 1:
+        if fprovided == 0:
+            parser.print_help()
+            print(mycolors.reset)
+            exit(0)
 
     if (args.sysenviron) not in optval2:
         parser.print_help()
@@ -8315,9 +9442,11 @@ if __name__ == "__main__":
                                                                                                                             if (malpediax == 0):
                                                                                                                                 if(not args.threatcrowd):
                                                                                                                                     if(not args.valhalla):
-                                                                                                                                        parser.print_help()
-                                                                                                                                        print(mycolors.reset)
-                                                                                                                                        exit(0)
+                                                                                                                                        if (triagex == 0):
+                                                                                                                                            if (not args.triagearg):
+                                                                                                                                                parser.print_help()
+                                                                                                                                                print(mycolors.reset)
+                                                                                                                                                exit(0)
 
     if (urltemp):
         if (validators.url(urltemp)) == True:
@@ -8521,6 +9650,55 @@ if __name__ == "__main__":
         print(mycolors.reset)
         exit(0) 
 
+    if (triagex == 1):
+        argx = triageargx
+        triageurlx = triageurl + "search?query="
+        triage_search(argx, triageurlx)
+        print(mycolors.reset)
+        exit(0)
+
+    if (triagex == 2):
+        argx = triageargx
+        triageurlx = triageurl
+        triage_summary(argx, triageurlx)
+        print(mycolors.reset)
+        exit(0)
+
+    if (triagex == 3):
+        argx = triageargx
+        triageurlx = triageurl
+        triage_sample_submit(argx, triageurlx)
+        print(mycolors.reset)
+        exit(0)
+
+    if (triagex == 4):
+        argx = triageargx
+        triageurlx = triageurl
+        triage_url_sample_submit(argx, triageurlx)
+        print(mycolors.reset)
+        exit(0)
+
+    if (triagex == 5):
+        argx = triageargx
+        triageurlx = triageurl
+        triage_download(argx, triageurlx)
+        print(mycolors.reset)
+        exit(0)
+
+    if (triagex == 6):
+        argx = triageargx
+        triageurlx = triageurl
+        triage_download_pcap(argx, triageurlx)
+        print(mycolors.reset)
+        exit(0)
+
+    if (triagex == 7):
+        argx = triageargx
+        triageurlx = triageurl
+        triage_dynamic(argx, triageurlx)
+        print(mycolors.reset)
+        exit(0)
+ 
     if (malpediax == 1):
         argx = malpediaargx
         malpedia_families(malpediaurl,argx)
