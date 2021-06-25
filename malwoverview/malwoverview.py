@@ -20,7 +20,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 4.4.0.2
+# Malwoverview.py: version 4.4.1
 
 import os
 import sys
@@ -63,7 +63,7 @@ from requests import Request, Session, exceptions
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2021, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "4.4.0.2"
+__version__ = "4.4.1"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -3779,7 +3779,7 @@ def triage_summary(triagex, triage):
                                                 print("\n".ljust(22) + mycolors.reset + str(triagetext['targets'][k][m][j][i]),end=' ')
                                         if ('urls' == j):
                                             for i in range(len(triagetext['targets'][k][m][j])):
-                                                print("\n".ljust(22) + mycolors.reset + str(triagetext['targets'][k][m][j][i]),end=' ')
+                                                print(mycolors.reset + ("\n".ljust(22) + ("\n" + "".ljust(21)).join(textwrap.wrap((triagetext['targets'][k][m][j][i]),width=80))),end=' ')
 
                 if (i == "signatures"):
                     if (triagetext[i] is not None):
@@ -3926,7 +3926,7 @@ def triage_summary(triagex, triage):
                                                 print("\n".ljust(22) + mycolors.reset + str(triagetext['targets'][k][m][j][i]),end=' ')
                                         if ('urls' == j):
                                             for i in range(len(triagetext['targets'][k][m][j])):
-                                                print("\n".ljust(22) + mycolors.reset + str(triagetext['targets'][k][m][j][i]),end=' ')
+                                                print(mycolors.reset + ("\n".ljust(22) + ("\n" + "".ljust(21)).join(textwrap.wrap((triagetext['targets'][k][m][j][i]),width=80))),end=' ')
 
                 if (i == "signatures"):
                     if (triagetext[i] is not None):
@@ -9122,7 +9122,7 @@ if __name__ == "__main__":
     triage = 0
     triagearg = ''
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.4.0.2", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0-4> -a <0-5> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0-4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0-4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1-5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1-5> -C <argument> -b <'1-10> -B <arg> -x <1-7> -X <arg>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.4.1", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0-4> -a <0-5> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0-4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0-4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1-5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1-5> -C <argument> -b <'1-10> -B <arg> -x <1-7> -X <arg>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples.')
     parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a malware sample. It returns general information about the file (any filetype)')
