@@ -20,7 +20,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 4.4.1
+# Malwoverview.py: version 4.4.2
 
 import os
 import sys
@@ -63,7 +63,7 @@ from requests import Request, Session, exceptions
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2021, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "4.4.1"
+__version__ = "4.4.2"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -96,6 +96,62 @@ H = []
 final=''
 ffpname2 = ''
 repo2 = ''
+global polyswarm
+
+def requestVTAPI():
+
+    if(VTAPI == ''):
+        print(mycolors.foreground.red + "\nTo be able to get information from Virus Total, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the Virus Total API according to the format shown on the Github website." + mycolors.reset + "\n")
+        exit(1)
+
+def requestHAAPI():
+
+    if(HAAPI == ''):
+        print(mycolors.foreground.red + "\nTo be able to get/submit information from/to Hybrid Analysis, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the Hybrid Analysis API according to the format shown on the Github website." + mycolors.reset + "\n")
+        exit(1)
+
+
+def requestMALSHAREAPI():
+
+    if(MALSHAREAPI == ''):
+        print(mycolors.foreground.red + "\nTo be able to get/submit information from/to Malshare, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the Malshare API according to the format shown on the Github website." + mycolors.reset + "\n")
+        exit(1)
+
+def requestHAUSSUBMITAPI():
+
+    if(HAUSSUBMITAPI == ''):
+        print(mycolors.foreground.red + "\nTo be able to get/submit information from/to URLHaus, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the URLHaus API according to the format shown on the Github website." + mycolors.reset + "\n")
+        exit(1)
+
+def requestPOLYAPI():
+
+    if(POLYAPI == ''):
+        print(mycolors.foreground.red + "\nTo be able to get/submit information from/to Polyswarm, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the Polyswarm API according to the format shown on the Github website." + mycolors.reset + "\n")
+        exit(1)
+
+def requestALIENAPI():
+
+    if(ALIENAPI == ''):
+        print(mycolors.foreground.red + "\nTo be able to get information from Alien Vault, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the Alien Vault API according to the format shown on the Github website." + mycolors.reset + "\n")
+        exit(1)
+
+def requestMALPEDIAAPI():
+
+    if(MALPEDIAAPI == ''):
+        print(mycolors.foreground.red + "\nTo be able to get information from Malpedia, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the Malpedia API according to the format shown on the Github website." + mycolors.reset + "\n")
+        exit(1)
+
+def requestVALHALLAAPI():
+
+    if(VALHALLAAPI == ''):
+        print(mycolors.foreground.red + "\nTo be able to get information from Valhalla, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the Valhalla API according to the format shown on the Github website." + mycolors.reset + "\n")
+        exit(1)
+
+def requestTRIAGEAPI():
+
+    if(TRIAGEAPI == ''):
+        print(mycolors.foreground.red + "\nTo be able to get/submit information from/to Triage, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the Triage API according to the format shown on the Github website." + mycolors.reset + "\n")
+        exit(1)
 
 class mycolors:
 
@@ -351,6 +407,8 @@ def vtcheck(filehash, url, param):
     vttext = ''
     response = ''
 
+    requestVTAPI()
+
     try:
 
         resource = filehash
@@ -386,6 +444,8 @@ def vturlcheck(myurl, param):
     vttext = ''
     response = ''
     resource = ''
+
+    requestVTAPI()
 
     try:
 
@@ -581,6 +641,8 @@ def vtdomaincheck(mydomain, param):
     resource = ''
     rc = ''
     vxtext = ''
+
+    requestVTAPI()
 
     try:
 
@@ -873,6 +935,8 @@ def ipvtcheck(ipaddress, urlvtip):
     rc = ''
     vxtext = ''
 
+    requestVTAPI()
+
     try:
 
         resource = ipaddress
@@ -1024,6 +1088,9 @@ def vtfilecheck(filename, urlfilevtcheck, param):
     resource = ''
     dname = ''
     fname = '' 
+
+    requestVTAPI()
+
     try:
 
         resource = {'file': (filename, open(filename,'rb'))}
@@ -1099,6 +1166,8 @@ def vtshow(filehash, url, param):
 
     vttext = ''
     response = ''
+ 
+    requestVTAPI()
 
     try:
         resource=filehash
@@ -1182,6 +1251,8 @@ def hashow(filehash):
     hatext = ''
     haresponse = ''
     final = ''
+
+    requestHAAPI()
 
     try:
 
@@ -1414,6 +1485,9 @@ def hashow(filehash):
 
 def polymetasearch(poly, metainfo):
 
+    requestPOLYAPI()
+    polyswarm = PolyswarmAPI(key=POLYAPI)
+
     if (metainfo == 0):
         targetfile = poly 
         mysha256hash=''
@@ -1542,6 +1616,9 @@ def polyfile(poly):
     firstseen = ''
     score = 0
 
+    requestPOLYAPI()
+    polyswarm = PolyswarmAPI(key=POLYAPI)
+
     try:
     
         myhash = sha256hash(poly)
@@ -1613,6 +1690,9 @@ def polyhashsearch(poly):
     firstseen = ''
     score = 0
     DOWN_DIR = '.'
+
+    requestPOLYAPI()
+    polyswarm = PolyswarmAPI(key=POLYAPI)
 
     try:
 
@@ -1694,6 +1774,8 @@ def hafilecheck(filenameha):
     resource = ''
     haenv = '100'
     job_id = ''
+
+    requestHAAPI()
 
     try:
 
@@ -1783,6 +1865,8 @@ def checkreportha(jobid):
     hatext = ''
     haresponse = ''
 
+    requestHAAPI()
+
     try:
 
         resource = jobid
@@ -1835,6 +1919,8 @@ def downhash(filehash):
     hatext = ''
     haresponse = ''
     final = ''
+
+    requestHAAPI()
 
     try:
 
@@ -2085,6 +2171,8 @@ def quickhashow(filehash):
     threatscore = '-'
     totalprocesses = '-'
     networkconnections = '-'
+
+    requestHAAPI()
 
     try:
 
@@ -2493,6 +2581,8 @@ def malsharedown(filehash):
     malresponse3 = ''
     resource = ''
 
+    requestMALSHAREAPI()
+
     try:
 
         resource = filehash
@@ -2551,6 +2641,8 @@ def malsharehashsearch(filehash):
     maltext2 = ''
     malresponse2 = ''
     resource = ''
+
+    requestMALSHAREAPI()
 
     try:
         
@@ -2636,6 +2728,8 @@ def malsharelastlist(typex):
     malresponse = ''
     filetype = ''
     maltype = typex
+
+    requestMALSHAREAPI()
 
     if (maltype == 1):
         filetype = 'PE32'
@@ -3464,6 +3558,8 @@ def triage_search(triagex, triage):
     triageresponse = ''
     params = ''
 
+    requestTRIAGEAPI()
+
     try:
 
         print("\n")
@@ -3648,6 +3744,8 @@ def triage_summary(triagex, triage):
     triageresponse = ''
     params = ''
     idx = ''
+
+    requestTRIAGEAPI()
 
     try:
 
@@ -3995,6 +4093,8 @@ def triage_sample_submit(triagex, triage):
     triagetext = ''
     triageresponse = ''
 
+    requestTRIAGEAPI()
+
     def encode_multipart_formdata(infodata):
         boundary = binascii.hexlify(os.urandom(16)).decode('ascii')
 
@@ -4084,6 +4184,8 @@ def triage_url_sample_submit(triagex, triage):
     triagetext = ''
     triageresponse = ''
 
+    requestTRIAGEAPI()
+
     try:
 
         print("\n")
@@ -4148,6 +4250,8 @@ def triage_download(triagex, triage):
     triagetext = ''
     triageresponse = ''
 
+    requestTRIAGEAPI()
+
     try:
 
         print("\n")
@@ -4205,6 +4309,8 @@ def triage_download_pcap(triagex, triage):
 
     triagetext = ''
     triageresponse = ''
+
+    requestTRIAGEAPI()
 
     try:
 
@@ -4266,10 +4372,12 @@ def triage_dynamic(triagex, triage):
     params = ''
     idx = ''
 
+    requestTRIAGEAPI()
+
     try:
 
         print("\n")
-        print((mycolors.reset + "TRIAGE DYNAMIC DYNAMIC REPORT".center(100)), end='')
+        print((mycolors.reset + "TRIAGE DYNAMIC REPORT".center(100)), end='')
         print((mycolors.reset + "".center(28)), end='')
         print("\n" + (100*'-').center(50))
 
@@ -6507,6 +6615,8 @@ def urlhauspost(urlx, haus, mytags):
     hausresponse = ''
     finalurl6 = ''
 
+    requestHAUSSUBMITAPI()
+
     try:
 
         print("\n")
@@ -6557,6 +6667,8 @@ def urlhauspost(urlx, haus, mytags):
 
 
 def alien_subscribed(url, arg1):
+
+    requestALIENAPI()
 
     hatext = ''
     haresponse = ''
@@ -6703,6 +6815,7 @@ def alien_subscribed(url, arg1):
 
 def alien_ipv4(url, arg1):
 
+    requestALIENAPI()
     hatext = ''
     haresponse = ''
     history = '10'
@@ -6864,6 +6977,8 @@ def alien_ipv4(url, arg1):
 
 def alien_domain(url, arg1):
 
+    requestALIENAPI()
+
     hatext = ''
     haresponse = ''
     history = '10'
@@ -6988,6 +7103,8 @@ def alien_domain(url, arg1):
 
 
 def alien_hash(url, arg1):
+
+    requestALIENAPI()
 
     hatext = ''
     haresponse = ''
@@ -7145,6 +7262,8 @@ def alien_hash(url, arg1):
 
 
 def alien_url(urlx, arg1):
+
+    requestALIENAPI()
 
     hatext = ''
     haresponse = ''
@@ -7328,6 +7447,8 @@ def malpedia_families(urlx, arg1):
     haresponse = ''
     myargs = arg1
 
+    requestMALPEDIAAPI()
+
     try:
 
         resource = urlx
@@ -7417,6 +7538,8 @@ def malpedia_actors(urlx, arg1):
     haresponse = ''
     myargs = arg1
 
+    requestMALPEDIAAPI()
+
     try:
 
         resource = urlx
@@ -7469,6 +7592,8 @@ def malpedia_payloads(urlx, arg1):
     hatext = ''
     haresponse = ''
     myargs = arg1
+
+    requestMALPEDIAAPI()
 
     try:
 
@@ -7533,6 +7658,8 @@ def malpedia_get_actor(urlx, arg1):
     haresponse = ''
     myargs = arg1
     wrapper = textwrap.TextWrapper(width=100)
+
+    requestMALPEDIAAPI()
 
     try:
 
@@ -7680,6 +7807,8 @@ def malpedia_families(urlx, arg1):
     myargs = arg1
     wrapper = textwrap.TextWrapper(width=100)
 
+    requestMALPEDIAAPI()
+
     try:
 
         resource = urlx
@@ -7737,6 +7866,8 @@ def malpedia_get_family(urlx, arg1):
     haresponse = ''
     myargs = arg1
     wrapper = textwrap.TextWrapper(width=100)
+
+    requestMALPEDIAAPI()
 
     try:
 
@@ -7831,6 +7962,8 @@ def malpedia_get_sample(urlx, arg1):
     haresponse = ''
     myargs = arg1
 
+    requestMALPEDIAAPI()
+
     try:
 
         resource = urlx
@@ -7878,6 +8011,8 @@ def malpedia_get_yara(urlx, arg1):
     hatext = ''
     haresponse = ''
     myargs = arg1
+
+    requestMALPEDIAAPI()
 
     try:
         resource = urlx
@@ -8598,6 +8733,8 @@ def quickhashowAndroid(filehash):
     totalprocesses = '-'
     networkconnections = '-'
 
+    requestHAAPI()
+
     try:
 
         resource = filehash
@@ -8641,6 +8778,8 @@ def quickhashowAndroid(filehash):
     threatscore = '-'
     totalprocesses = '-'
     networkconnections = '-'
+
+    requestHAAPI()
 
     try:
 
@@ -9122,13 +9261,13 @@ if __name__ == "__main__":
     triage = 0
     triagearg = ''
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.4.1", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0-4> -a <0-5> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0-4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0-4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1-5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1-5> -C <argument> -b <'1-10> -B <arg> -x <1-7> -X <arg>")
-    parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s')
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.4.2", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0-4> -a <0-5> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0-4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0-4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1-5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1-5> -C <argument> -b <'1-10> -B <arg> -x <1-7> -X <arg>")
+    parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s.')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples.')
-    parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a malware sample. It returns general information about the file (any filetype)')
-    parser.add_argument('-o', '--background', dest='backg', type=int,default = 1, metavar = "BACKGROUND", help='Adapts the output colors to a white terminal. The default is black terminal')
-    parser.add_argument('-v', '--virustotal', dest='virustotal', type=int,default = 0, metavar = "VIRUSTOTAL", help='If using "-v 1", so it queries the Virus Total database for positives and totals. If "v 2" (which can be used only together with -f option), so it shows antivirus reports from the main players. If "v 3", so the binary\'s IAT and EAT are also shown; If "v 4" it extracts the overlay (it must be used with -f option). Remember: you need to edit the .malwapi.conf and insert your VT API.')
-    parser.add_argument('-a', '--hybrid', dest='hybridanalysis', type=int,default = 0, metavar = "HYBRID_ANALYSIS", help='Queries the Hybrid Analysis database for getting a general report. Possible values are: 1: Windows 7 32-bit; 2: Windows 7 32-bit (HWP Support); 3: Windows 64-bit; 4: Android; 5: Linux 64-bit. Remember: you need to edit the .malwapi.conf and insert your HA API and secret.')
+    parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a malware sample. It returns general information about the file (any filetype).')
+    parser.add_argument('-o', '--background', dest='backg', type=int,default = 1, metavar = "BACKGROUND", help='Adapts the output colors to a white terminal. The default is black terminal.')
+    parser.add_argument('-v', '--virustotal', dest='virustotal', type=int,default = 0, metavar = "VIRUSTOTAL", help='If using "-v 1", so it queries the Virus Total database for positives and totals. If "-v 2" (which can be used only together with -f option), so it shows antivirus reports from the main players. If "-v 3", so the binary\'s IAT and EAT are also shown; If "-v 4" it extracts the overlay (it must be used with -f option).')
+    parser.add_argument('-a', '--hybrid', dest='hybridanalysis', type=int,default = 0, metavar = "HYBRID_ANALYSIS", help='Queries the Hybrid Analysis database for getting a general report. Possible values are: 1: Windows 7 32-bit; 2: Windows 7 32-bit (HWP Support); 3: Windows 64-bit; 4: Android; 5: Linux 64-bit.')
     parser.add_argument('-u', '--vturl', dest='urlx', type=str, metavar = "URL_VT", help='SUBMITS a URL to the Virus Total scanning.')
     parser.add_argument('-I', '--ipaddrvt', dest='ipaddrvt', type=str, metavar = "IP_VT", help='This option checks an IP address on Virus Total.')
     parser.add_argument('-r', '--urldomain', dest='domainx', type=str, metavar = "URL_DOMAIN", help='This option gets a domain\'s report from Virus Total.')
@@ -9139,12 +9278,12 @@ if __name__ == "__main__":
     parser.add_argument('-D', '--download', dest='download', type=int,default = 0, metavar = "DOWNLOAD", help='Downloads the sample from Hybrid Analysis, Malshare and Polyswarm. Options -H or -L (Hybrid Analysis and Malshare, respectively) must be specified as well -O option for Polyswarm engine.')
     parser.add_argument('-e', '--haenv', dest='sysenviron', type=int,default = 0, metavar = "HA_ENVIRONMENT", help='This option specifies the used environment to be used to test the samlple on Hybrid Analysis: <0> Windows 7 32-bits; <1> Windows 7 32-bits (with HWP Support); <2> Windows 7 64-bits; <3> Android; <4> Linux 64-bits environment. This option is used together either -H option or the -A option.')
     parser.add_argument('-t', '--thread', dest='multithread', type=int,default = 0, metavar = "MULTITHREAD", help='(optional) This option has several different meanings according to chosen the value. Possible values: <1>: This value is used to force multithreads on Linux whether: the -d option is specified AND you have a PAID Virus Total API or you are NOT checking the VT while using the -d option. PS1: using this option causes Imphashes not to be grouped anymore; PS2: it also works on Windows, but there is not gain in performance; <2>: This value should be used with -d option in two scenarios: 1) either including the "-v 1" option (Virus Total -- you\'ll see a complete VT response whether you have the private API) for a multithread searching and reduced output; 2) or including the -a option (Hybrid Analysis) for a multithread searching to get a complete and amazing output. If you are using the -a option, so you should pickup the right number represening the testing environment to adjust the output to your sample types. PS1: certainly, if you have a directory holding many malware samples, so you will want to test this option with -a option; PS2: it also works on Windows, but there is not gain in performance; <3>: You should use this value with -v option if you have a public Virus Total API. It forces a one minute wait every 4 malware samples, but allows obtaining a complete evaluation of the malware repository.')
-    parser.add_argument('-l', '--malsharelist', dest='malsharelist', type=int,default = 0, metavar = "MALSHARE_HASHES", help='This option shows hashes of a specific type from the last 24 hours from Malshare repository. Possible values are:  1: PE32 (default) ; 2: Dalvik ; 3: ELF ; 4: HTML ; 5: ASCII ; 6: PHP ; 7: Java ; 8: RAR ; 9: Zip ; 10: UTF-8 ; 11: MS-DOS ; 12: data ; 13: PDF ; 14: Composite(OLE). You need to insert your Malshare API into the .malwapi.conf file.')
-    parser.add_argument('-L', '--malsharehash', dest='malsharehash', type=str, metavar = "MALSHARE_HASH_SEARCH", help='Searches for the provided hash on the  Malshare repository. You need to insert your Malshare API into the .malwapi.conf file. PS: sometimes the Malshare website is unavailable, so should check the website availability if you get some error message.')
+    parser.add_argument('-l', '--malsharelist', dest='malsharelist', type=int,default = 0, metavar = "MALSHARE_HASHES", help='This option shows hashes of a specific type from the last 24 hours from Malshare repository. Possible values are:  1: PE32 (default) ; 2: Dalvik ; 3: ELF ; 4: HTML ; 5: ASCII ; 6: PHP ; 7: Java ; 8: RAR ; 9: Zip ; 10: UTF-8 ; 11: MS-DOS ; 12: data ; 13: PDF ; 14: Composite(OLE).')
+    parser.add_argument('-L', '--malsharehash', dest='malsharehash', type=str, metavar = "MALSHARE_HASH_SEARCH", help='Searches for the provided hash on the  Malshare repository.')
     parser.add_argument('-K', '--haus_payloadbatch', dest='hauspayloadbatch', type=int, default = 0, metavar = "HAUS_PAYLOAD_URL", help='THis option has few possible values: <1> Retrieves a list of downloadable links of recent PAYLOADS (last 3 days, limited to 1000 entries) from URLHaus website; <2>: Retrieves a list of recent URLs (last 3 days, limited to 1000 entries) from URLHaus website. Take care: each link take you to download a passworless zip file containing a malware, so your AV can generate alerts!')
     parser.add_argument('-U', '--haus_query', dest='urlhausquery', type=str, metavar = "URL_HAUS_QUERY", help='Queries a URL on the URLHaus website.')
     parser.add_argument('-j', '--haus_hash', dest='haushash', type=str, metavar = "HAUS_HASH", help='Queries information about a provided payload\'s hash (md5 or sha256) on the URLHaus website.')
-    parser.add_argument('-S', '--haus_submission', dest='urlhaussubmit', type=str, metavar = "URL_HAUS_SUB", help='Submits a URL used to distribute malware (executable, script, document) to the URLHaus website. Pay attention: Any other submission will be ignored/deleted from URLhaus. You have to register your URLHaus API into the .malwapi.conf file.')
+    parser.add_argument('-S', '--haus_submission', dest='urlhaussubmit', type=str, metavar = "URL_HAUS_SUB", help='Submits a URL used to distribute malware (executable, script, document) to the URLHaus website. Pay attention: Any other submission will be ignored/deleted from URLhaus.')
     parser.add_argument('-z', '--haustag', dest='tag', type=str, default='', metavar = "HAUSTAG", nargs = "*", help='Associates tags (separated by spaces) to the specified URL. Please, only upper case, lower case, \'-\' and \'.\' are allowed. This parameter is optional, which could be used with the -S option.')
     parser.add_argument('-W', '--haustagsearch', dest='haustagsearch', type=str, default='', metavar = "HAUSTAGSEARCH", nargs = "*", help='This option is for searching malicious URLs by tag on URLhaus. Tags are case-senstive and only upper case, lower case, \'-\' and \'.\' are allowed.')
     parser.add_argument('-k', '--haussigsearch', dest='haussigsearch', type=str, default='', metavar = "HAUSSIGSEARCH", nargs = "*", help='This option is for searching malicious payload by tag on URLhaus. Tags are case-sensitive and only  upper case, lower case, \'-\' and \'.\' are allowed.')
@@ -9152,11 +9291,11 @@ if __name__ == "__main__":
     parser.add_argument('-P', '--polyswarm_scan', dest='polyswarmscan', type=str, metavar = "POLYSWARMFILE", help='(Only for Linux) Submits a sample to Polyswarm engine and performs a file scan.')
     parser.add_argument('-O', '--polyswarm_hash', dest='polyswarmhash', type=str, metavar = "POLYSWARMHASH", help='(Only for Linux) Performs a hash scanning using the Polyswarm engine. Optionally, you can specify -D option to download the sample. Take care: Polyswarm enforces a restriction to number of downloaded samples in 20/month.')
     parser.add_argument('-R', '--polyswarm_meta', dest='polyswarmmeta', type=str, metavar = "POLYSWARMMETA", help='(Only for Linux) Provides the argument value for searches on Polyswarm engine through imphash (the PE file must be provided), ipv4, domain, URL and family. This argument must be used with -G option, so check it, please. Pay attention: you should check your metadata search limit on your Polyswarm account because once you have got the limit, so you will got an error.')
-    parser.add_argument('-G', '--metatype', dest='metatype', type=int, default = 0, metavar = "METATYPE", help='(Only for Linux) This parameter specifies search type for arguments provided by -R option (above) while searching on Polyswarm engine. Thus, the following values are valid -- 0: PE Executable (look for samples with the same ImpHash); 1: IP Address ; 2: Domain ; 3. URL; 4. Family')
+    parser.add_argument('-G', '--metatype', dest='metatype', type=int, default = 0, metavar = "METATYPE", help='(Only for Linux) This parameter specifies search type for arguments provided by -R option (above) while searching on Polyswarm engine. Thus, the following values are valid -- 0: PE Executable (look for samples with the same ImpHash); 1: IP Address ; 2: Domain ; 3. URL; 4. Family .')
     parser.add_argument('-y', '--androidha', dest='androidha', type=int, default = 0, metavar = "ANDROID_HA", help='This option has multiple options: <1>: Check all third-party APK packages from the USB-connected Android device against Hybrid Analysis using multithreads. The Android device does not need to be rooted and the system does need to have the adb tool in the PATH environment variable; <2>: Check all third-party APK packages from the USB-connected Android device against VirusTotal using Public API (slower because of 60 seconds delay for each 4 hashes). The Android device does not need to be rooted and the system does need to have adb tool in the PATH environment variable; <3>: Check all third-party APK packages from the USB-connected Android device against VirusTotal using multithreads (only for Private Virus API). The Android device does not need to be rooted and the system needs to have adb tool in the PATH environment variable.')
     parser.add_argument('-Y', '--androidsendha', dest='androidsendha', type=str, metavar = "ANDROID_SEND_HA", help='Sends an third-party APK package from your USB-connected Android device to Hybrid Analysis. The Android device does not need to be rooted and the system needs to have adb tool in the PATH environment variable.')
     parser.add_argument('-T', '--androidsendvt', dest='androidsendvt', type=str, metavar = "ANDROID_SEND_VT", help='Sends an third-party APK package from your USB-connected Android device to Virus Total. The Android device does not need be rooted and the system needis to have the adb tool in the PATH environment variable.')
-    parser.add_argument('-n', '--alienvault', dest='alienvault', type=int, default = 0, metavar = "ALIENVAULT", help='Checks multiple information from AlienVault. The possible values are: 1: Get the subscribed pulses ; 2: Get information about an IP address; 3: Get information about a domain; 4: Get information about a hash; 5: Get information about a URL')
+    parser.add_argument('-n', '--alienvault', dest='alienvault', type=int, default = 0, metavar = "ALIENVAULT", help='Checks multiple information from AlienVault. The possible values are: 1: Get the subscribed pulses ; 2: Get information about an IP address; 3: Get information about a domain; 4: Get information about a hash; 5: Get information about a URL.')
     parser.add_argument('-N', '--alienvaultargs', dest='alienvaultargs', type=str, metavar = "ALIENVAULT_ARGS", help='Provides argument to AlienVault -n option.')
     parser.add_argument('-M', '--malpedia', dest='malpedia', type=int, default = 0, metavar = "MALPEDIA", help='This option is related to MALPEDIA and presents different meanings depending on the chosen value. Thus, 1: List meta information for all families ; 2: List all actors ID ; 3: List all available payloads organized by family from Malpedia; 4: Get meta information from an specific actor, so it is necessary to use the -m option. Additionally, try to confirm the correct actor ID by executing malwoverview with option -M 3; 5: List all families IDs; 6: Get meta information from an specific family, so it is necessary to use the -m option. Additionally, try to confirm the correct family ID by executing malwoverview with option -M 5; 7: Get a malware sample from malpedia (zip format -- password: infected). It is necessary to specify the requested hash by using -m option; 8: Get a zip file containing Yara rules for a specific family (get the possible families using -M 5), which must be specified by using -m option.')
     parser.add_argument('-m', '--malpediarg', dest='malpediaarg', type=str, metavar = "MALPEDIAARG", help='This option provides an argument to the -M option, which is related to MALPEDIA.')
@@ -9164,9 +9303,9 @@ if __name__ == "__main__":
     parser.add_argument('-q', '--threatcrowdarg', dest='threatcrowdarg', type=str, metavar = "THREATCROWDARG", help='This option provides an argument to the -Q option, which is related to THREATCROWD.')
     parser.add_argument('-E', '--valhalla', dest='valhalla', type=int, default = 0, metavar = "VALHALLA", help='This option is used for getting Yara rules from the Valhalla service given an argument (-C option below). Valid values are 1: searches for Yara rules matching the provided keyword; 2: search for Yara rules matching a minimal score (40-49: anomaly and threat hunting rules / 60-74: rules for suspicious objects / 75-100: hard malicious matches); 3: Look for Yara rules to the following products, which must be specified using the -C option: FireEyeAX, FireEyeNX, FireEyeEX, CarbonBlack, Tanium, Tenable, SymantecMAA, GRR, osquery, McAfeeATD3 and McAfeeATD4; 4: Given the hash (SHA 256) through -C option, show associated Yara rules; 5: Shows information about a specific Yara rule provided through the -C option.')
     parser.add_argument('-C', '--valhallaarg', dest='valhallaarg', type=str, metavar = "VALHALLAARG", help='This option is used for providing argument to the  Vahalla service (-E option).')
-    parser.add_argument('-b', '--bazaar', dest='bazaar', type=int, default = 0, metavar = "BAZAAR", help='Checks multiple information from Malware Bazaar and ThreatFox. The possible values are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar) Get information and a list of malware samples associated and according to a specific tag; 3: (Bazaar) Get a list of malware samples according to a given imphash; 4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample from Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped using the following password: infected; 6: (ThreatFox) Get current IOC dataset from last x days given by option -B; 7: (ThreatFox) Search for the specified IOC on ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified tag given by option -B; 9: (ThreatFox) Search IOCs according to the specified malware family provided by option -B; 10. (ThreatFox) List all available malware families. ')
+    parser.add_argument('-b', '--bazaar', dest='bazaar', type=int, default = 0, metavar = "BAZAAR", help='Checks multiple information from Malware Bazaar and ThreatFox. The possible values are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar) Get information and a list of malware samples associated and according to a specific tag; 3: (Bazaar) Get a list of malware samples according to a given imphash; 4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample from Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped using the following password: infected; 6: (ThreatFox) Get current IOC dataset from last x days given by option -B; 7: (ThreatFox) Search for the specified IOC on ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified tag given by option -B; 9: (ThreatFox) Search IOCs according to the specified malware family provided by option -B; 10. (ThreatFox) List all available malware families.')
     parser.add_argument('-B', '--bazaararg', dest='bazaararg', type=str, metavar = "BAZAAR_ARG", help='Provides argument to -b Bazaar and ThreatFox option. If you specified "-b 1" then the -B\'s argument must be a hash; If you specified "-b 2" then -B\'s argument must be a malware tag; If you specified "-b 3" then the argument must be a imphash; If you specified "-b 4", so the argument must be "100 or time", where "100" lists last "100 samples" and "time" lists last samples added to Malware Bazaar in the last 60 minutes; If you specified "-b 5" then the -B\'s argument must be a SHA256 hash; If you specified "-b 6", so the -B\'s value is the number of DAYS to filter IOCs. The default (and max) is 90 (days); If you used "-b 7" so the -B\'s argument is the IOC you want to search for; If you used "-b 8", so the -B\'s argument is the TAG you want search for; If you used "-b 9", so the -B argument is the malware family you want to search for;')
-    parser.add_argument('-x', '--triage', dest='triage', type=int,default = 0, metavar = "TRIAGE", help='Provides information from Triage according to the specified value: <1> this option gets sample\'s general information by providing an argument with -B option in the following possible formats: sha256:<value>, sha1:<value>, md5:<value>, familily:<value>, score:<value>, tag:<value>, url:<value>, wallet:<value>, ip:<value>; <2> Get a sumary report for a given Triage ID (got from option -x 1) ; <3> Submit a sample for analysis ; <4> Submit a sample through a URL for analysis ; <5> Download sample specified by the Triage ID; <6> Download pcapng file from sample associated to given Triage ID; <7> Get a dynamic report for the given Triage ID (got from option -x 1); ')
+    parser.add_argument('-x', '--triage', dest='triage', type=int,default = 0, metavar = "TRIAGE", help='Provides information from Triage according to the specified value: <1> this option gets sample\'s general information by providing an argument with -B option in the following possible formats: sha256:<value>, sha1:<value>, md5:<value>, family:<value>, score:<value>, tag:<value>, url:<value>, wallet:<value>, ip:<value>; <2> Get a sumary report for a given Triage ID (got from option -x 1) ; <3> Submit a sample for analysis ; <4> Submit a sample through a URL for analysis ; <5> Download sample specified by the Triage ID; <6> Download pcapng file from sample associated to given Triage ID; <7> Get a dynamic report for the given Triage ID (got from option -x 1);')
     parser.add_argument('-X', '--triagearg', dest='triagearg', type=str, metavar = "TRIAGE_ARG", help='Provides argument for options especified by -x option. Pay attention: the format of this argument depends on provided -x value.')
 
 
@@ -9187,12 +9326,8 @@ if __name__ == "__main__":
         TRIAGEAPI = config_file['TRIAGE']['TRIAGEAPI']
 
     except KeyError:
+        pass
 
-        print(mycolors.foreground.red + "\nYou must create the .malwapi.conf file in your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and configure Virus Total, Hybrid Analysis, URLHaus, Malshare, Polyswarm, Alien Vault, Valhalla and Malpedia APIs according to the format shown on the Github website. It isn't necessary any API for ThreatCrowd, Malware Bazar and ThreatFox services." + mycolors.reset + "\n")
-        exit(1)
-
-    if (POLYAPI):
-        polyswarm = PolyswarmAPI(key=POLYAPI)
 
     optval = [0,1]
     optval1 = [0,1,2]
@@ -9780,6 +9915,7 @@ if __name__ == "__main__":
 
     if (valhallax > 0):
         argx = valhallaargx
+        requestVALHALLAAPI()
         valhalla_service(valhallax,argx,VALHALLAAPI)
         print(mycolors.reset)
         exit(0)

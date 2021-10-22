@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/4.4.1) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/4.4.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
 [<img alt="PayPal" src="https://img.shields.io/badge/Donate-Paypal-brightgreen?style=for-the-badge&logo=appveyor">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M8F458EZH8UZE&source=url)
 
@@ -124,21 +124,19 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 4.4.1
+# Current Version: 4.4.2
 
-     Important note:  Malwoverview does NOT submit samples to Virus Total or Hybrid 
-     Analysis by default. It submits only hashes, so respecting Non-Disclosure 
-     Agreements (NDAs). Nonetheless, if you use the "-V" (uppercase), "-A" (uppercase)
-     or "-P" (uppercase), so Malwoverview SUBMITS your malware sample to Virus Total,
-     Hybrid Analysis and Polyswarm, respectively. Additionally, options "-Y" and "-T"
-     also sent the Android package from Android device to Hybrid-Analysis and Virus 
-     Total, respectively.  
+     Important note:  By default Malwoverview does NOT submit samples to Virus Total or Hybrid 
+     Analysis, so it only submits hashes and respects possible Non-Disclosure Agreements (NDAs).
+     There're specific options that explicitly submit samples, but these options are explained 
+     on help.   
 
 
 # ABOUT
 
 Malwoverview.py is a first response tool for threat hunting, which performs an initial and quick 
-triage of malware samples, URLs, IP addresses, domains, malware families, IOCs and hashes.
+triage of malware samples, URLs, IP addresses, domains, malware families, IOCs and hashes. Additionally,
+Malwoverview is able to submit and download samples from several endpoints.
 
 This tool aims to : 
 
@@ -195,9 +193,14 @@ can be installed by executing the following command:
 
 
 To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm,
-Alien Vault and Malpedia APIs into the .malwapi.conf configuration file (the default one at the 
-home directory (/home/[username] or /root) -- if the file doesn't exist, so you should create it) 
-or you could create a custom configuration file and indicate it by using the -c option. 
+Alien Vault, Malpedia APIs, Valhalla and Triage into the .malwapi.conf configuration file 
+(the default one at the home directory (/home/[username] or /root) -- if the file doesn't exist,
+so you should create it) or you could create a custom configuration file and indicate it by 
+using the -c option. 
+
+Nonetheless, starting on version 4.4.2, it isn't necessary to insert all APIs into .malwapi.conf
+before using Malwoverview anymore. Therefore, users can only insert few APIs and use options 
+respective to these APIs. 
 
 A special note about the Alien Vault: it is necessary to subscribe to pulses on Alien Vault 
 website before using -n 1 option.  
@@ -435,237 +438,237 @@ Malwoverview is a first response tool for threat hunting written by Alexandre Bo
 
 optional arguments:
 
-      -h, --help        Show this help message and exit
-      -c CONFIG FILE, --config CONFIG FILE
-                        Use a custom config file to specify API's
-      -d DIRECTORY, --directory DIRECTORY
-                        Specifies the directory containing malware samples.
-      -f FILENAME, --filename FILENAME
-                        Specifies a full path to a malware sample. It returns general information 
-                        about the file (any filetype)
-      -o BACKGROUND, --background BACKGROUND
-                        Adapts the output colors to a white terminal. The default is black terminal
-      -x OVERLAY, --overlay OVERLAY
-                        Extracts the overlay (it is used with -f option).
-      -v VIRUSTOTAL, --virustotal VIRUSTOTAL
-                        If using "-v 1", so it queries the Virus Total database for positives and 
-                        totals. If "v 2" (which can be used only together with -f option), so it 
-                        shows antivirus reports from the main players. If "v 3", so the binary's IAT 
-                        and EAT are also shown. Remember: you need to edit the .malwapi.conf and insert 
-                        your VT API.If "v 4" it extracts the overlay (it must be used with -f 
-                        option). Remember: you need to edit the .malwapi.conf and insert your VT API.
-      -a HYBRID_ANALYSIS, --hybrid HYBRID_ANALYSIS
-                        Queries the Hybrid Analysis database for getting a general report. Possible 
-                        values are: 1: Windows 7 32-bit; 2: Windows 7 32-bit (HWP Support); 3: 
-                        Windows 64-bit; 4: Android; 5: Linux 64-bit. Remember: you need to edit the
-                        .malwapi.conf and insert your HA API and secret.
-      -u URL_VT, --vturl URL_VT
-                        SUBMITS a URL to the Virus Total scanning.
-      -I IP_VT, --ipaddrvt IP_VT
-                        This option checks an IP address on Virus Total.
-      -r URL_DOMAIN, --urldomain URL_DOMAIN
-                        This option gets a domain's report from Virus Total.
-      -H FILE_HASH, --hash FILE_HASH
-                        This option specifies the hash to be checked on Virus Total and Hybrid Analysis. 
-                        For the Hybrid Analysis report you must use it with the -e option.
-      -V FILENAME_VT, --vtsubmit FILENAME_VT
-                        Submits a file(up to 32MB) for Virus Total scanning and gets the report. Attention: 
-                        use forward slash to specify the target file even on Windows systems. Furthermore, 
-                        the minimum waiting time is set up in 90 seconds because the Virus Total waiting 
-                        queue. If an error occurs, so wait few minutes and try to access the report by 
-                        using -f option.
-      -A SUBMIT_HA, --submitha SUBMIT_HA
-                        Submits a file(up to 32MB) to be scanned by the Hybrid Analysis engine. Use the 
-                        -e option to specify the best environment to run the suspicious file.
-      -g HA_STATUS, --hastatus HA_STATUS
-                        Checks the report's status of submitted samples to Hybrid Analysis engine by 
-                        providing the job ID. Possible returned status values are: IN_QUEUE, SUCCESS,
-                        ERROR, IN_PROGRESS and PARTIAL_SUCCESS.
-      -D DOWNLOAD, --download DOWNLOAD
-                        Downloads the sample from Hybrid Analysis, Malshare and Polyswarm. Options 
-                        -H or -L (Hybrid Analysis and Malshare, respectively) must be specified as well 
-                        -O option for Polyswarm engine.
-      -e HA_ENVIRONMENT, --haenv HA_ENVIRONMENT
-                        This option specifies the used environment to be used to test the samlple on 
-                        Hybrid Analysis: <0> Windows 7 32-bits; <1> Windows 7 32-bits (with HWP Support); 
-                        <2> Windows 7 64-bits; <3> Android; <4> Linux 64-bits environment. This option 
-                        is used together either -H option or the -A option.
-      -t MULTITHREAD, --thread MULTITHREAD
-                        (optional) This option has several different meanings according to chosen the 
-                        value. Possible values: <1>: This value is used to force multithreads on Linux 
-                        whether: the -d option is specified AND you have a PAID Virus Total API or you
-                        are NOT checking the VT while using the -d option. PS1: using this option causes 
-                        Imphashes not to be grouped anymore; PS2: it also works on Windows, but there is 
-                        not gain in performance; <2>: This value should be used with -d option in
-                        two scenarios: 1) either including the "-v 1" option (Virus Total -- you'll see 
-                        a complete VT response whether you have the private API) for a multithread 
-                        searching and reduced output; 2) or including the -a option (Hybrid Analysis) 
-                        for a multithread searching to get a complete and amazing output. If you are 
-                        using the -a option, so you should pickup the right number represening the 
-                        testing environment to adjust the output to your sample types. PS1: certainly,
-                        if you have a directory holding many malware samples, so you will want to test
-                        this option with -a option; PS2: it also works on Windows, but there is not gain
-                        in performance; <3>: You should use this value with -v option if you have a public
-                        Virus Total API. It forces a one minute wait every 4 malware samples, but allows
-                        obtaining a complete evaluation of the malware repository.
-      -l MALSHARE_HASHES, --malsharelist MALSHARE_HASHES
-                        This option shows hashes of a specific type from the last 24 hours from Malshare 
-                        repository. Possible values are: 1: PE32 (default) ; 2: Dalvik ; 3: ELF ; 4: HTML ;
-                        5: ASCII ; 6: PHP ; 7: Java ; 8: RAR ; 9: Zip ; 10: UTF-8 ; 11: MS-DOS ; 12: data ; 
-                        13: PDF ; 14: Composite(OLE). You need to insert your Malshare API into the 
-                        .malwapi.conf file.
-      -L MALSHARE_HASH_SEARCH, --malsharehash MALSHARE_HASH_SEARCH
-                        Searches for the provided hash on the Malshare repository. You need to insert your 
-                        Malshare API into the .malwapi.conf file. PS: sometimes the Malshare website is 
-                        unavailable, so should check the website availability if you get some error message.
-      -K HAUS_PAYLOAD_URL, --haus_payloadbatch HAUS_PAYLOAD_URL
-                        THis option has few possible values: <1> Retrieves a list of downloadable links of 
-                        recent PAYLOADS (last 3 days, limited to 1000 entries) from URLHaus website; <2>: 
-                        Retrieves a list of recent URLs (last 3 days, limited to 1000 entries) from URLHaus
-                        website. Take care: each link take you to download a passworless zip file 
-                        containing a malware, so your AV can generate alerts!
-      -U URL_HAUS_QUERY, --haus_query URL_HAUS_QUERY
-                        Queries a URL on the URLHaus website.
-      -j HAUS_HASH, --haus_hash HAUS_HASH
-                        Queries information about a provided payload's hash (md5 or sha256) on the URLHaus 
-                        website.
-      -S URL_HAUS_SUB, --haus_submission URL_HAUS_SUB
-                        Submits a URL used to distribute malware (executable, script, document) to the 
-                        URLHaus website. Pay attention: Any other submission will be ignored/deleted from 
-                        URLhaus. You have to register your URLHaus API into the .malwapi.conf file.
-      -z [HAUSTAG [HAUSTAG ...]], --haustag [HAUSTAG [HAUSTAG ...]]
-                        Associates tags (separated by spaces) to the specified URL. Please, only upper case, 
-                        lower case, '-' and '.' are allowed. This parameter is optional, which could be used 
-                        with the -S option.
-      -W [HAUSTAGSEARCH [HAUSTAGSEARCH ...]], --haustagsearch [HAUSTAGSEARCH [HAUSTAGSEARCH ...]]
-                        This option is for searching malicious URLs by tag on URLhaus. Tags are 
-                        case-senstive and only upper case, lower case, '-' and '.' are allowed.
-      -k [HAUSSIGSEARCH [HAUSSIGSEARCH ...]], --haussigsearch [HAUSSIGSEARCH [HAUSSIGSEARCH ...]]
-                        This option is for searching malicious payload by tag on URLhaus. Tags are 
-                        case-sensitive and only upper case, lower case, '-' and '.' are allowed.
-      -J HAUS_DOWNLOAD, --haus_download HAUS_DOWNLOAD
-                        Downloads a malware sample (if it is available) from the URLHaus repository. It 
-                        is necessary to provide the SHA256 hash.
-      -P POLYSWARMFILE, --polyswarm_scan POLYSWARMFILE
-                        (Only for Linux) Submits a sample to Polyswarm engine and performs a file scan.
-      -O POLYSWARMHASH, --polyswarm_hash POLYSWARMHASH
-                        (Only for Linux) Performs a hash scanning using the Polyswarm engine. Optionally, 
-                        you can specify -D option to download the sample. Take care: Polyswarm enforces a 
-                        restriction to number of downloaded samples in 20/month.
-      -R POLYSWARMMETA, --polyswarm_meta POLYSWARMMETA
-                        (Only for Linux) Provides the argument value for searches on Polyswarm engine 
-                        through imphash (the PE file must be provided), ipv4, domain, URL and family. This
-                        argument must be used with -G option, so check it, please. Pay attention: you 
-                        should check your metadata search limit on your Polyswarm account because once you
-                        have got the limit, so you will got an error.
-      -G METATYPE, --metatype METATYPE
-                        (Only for Linux) This parameter specifies search type for arguments provided by
-                        -R option (above) while searching on Polyswarm engine. Thus, the following values are 
-                        valid -- 0: PE Executable (look for samples with the same ImpHash); 1: IP Address ; 
-                        2: Domain ; 3. URL; 4. Family
-      -y ANDROID_HA, --androidha ANDROID_HA
-                        This option has multiple options: <1>: Check all third-party APK packages from the 
-                        USB-connected Android device against Hybrid Analysis using multithreads. The Android 
-                        device does not need to be rooted and the system does need to
-                        have the adb tool in the PATH environment variable; <2>: Check all third-party APK 
-                        packages from the USB-connected
-                        Android device against VirusTotal using Public API (slower because of 60 seconds 
-                        delay for each 4 hashes). The Android device does not need to be rooted and the 
-                        system does need to have adb tool in the PATH environment variable; <3>: Check 
-                        all third-party APK packages from the USB-connected Android device against 
-                        VirusTotal using multithreads (only for Private Virus API). The Android device 
-                        does not need to be rooted and the system needs to have adb tool in the PATH 
-                        environment variable.
-      -Y ANDROID_SEND_HA, --androidsendha ANDROID_SEND_HA
-                        Sends an third-party APK package from your USB-connected Android device to Hybrid 
-                        Analysis. The Android device does not need to be rooted and the system needs to have 
-                        adb tool in the PATH environment variable.
-      -T ANDROID_SEND_VT, --androidsendvt ANDROID_SEND_VT
-                        Sends an third-party APK package from your USB-connected Android device to Virus 
-                        Total. The Android device does not need be rooted and the system needis to have the 
-                        adb tool in the PATH environment variable.
-      -n ALIENVAULT, --alienvault ALIENVAULT
-                        Checks multiple information from AlienVault. The possible values are: 1: Get the 
-                        subscribed pulses ; 2: Get information about an IP address; 3: Get information about 
-                        a domain; 4: Get information about a hash; 5: Get information about a URL
-      -N ALIENVAULT_ARGS, --alienvaultargs ALIENVAULT_ARGS
-                        Provides argument to AlienVault -n option.The allowed values are: 1, 2, 3, 4, 5.
-      -M MALPEDIA, --malpedia MALPEDIA
-                        This option is related to MALPEDIA and presents different meanings depending on the 
-                        chosen value. Thus, 1: List meta information for all families ; 2: List all actors 
-                        ID ; 3: List all available payloads organized by family from Malpedia; 4: Get meta 
-                        information from an specific actor, so it is necessary to use the -m option. 
-                        Additionally, try to confirm the correct actor ID by executing malwoverview with 
-                        option -M 3; 5: List all families IDs; 6: Get meta information from an specific 
-                        family, so it is necessary to use the -m option. Additionally, try to confirm the 
-                        correct family ID by executing malwoverview with option -M 5; 7: Get a malware 
-                        sample from malpedia (zip format -- password: infected). It is necessary to specify 
-                        the requested hash by using -m option; 8: Get a zip file containing Yara rules for 
-                        a specific family (get the possible families using -M 5), which must be specified 
-                        by using -m option.
-      -m MALPEDIAARG, --malpediarg MALPEDIAARG
-                        This option provides an argument to the -M option, which is related to MALPEDIA.
-      -Q THREATCROWD, --threatcrowd THREATCROWD
-                        Checks multiple information from ThreatCrowd. The possible values are: 1: Get 
-                        information about the provided e-mail ;
-                        2: Get information about an IP address; 3: Get information about a domain; 4: Get 
-                        information about a provided MD5 hash; 5: Get information about a specific malware 
-                        family.
-      -q THREATCROWDARG, --threatcrowdarg THREATCROWDARG
-                        This option provides an argument to the -Q option, which is related to THREATCROWD.
-      -E VALHALLA, --valhalla VALHALLA
-                        This option is used for getting Yara rules from the Valhalla service given an 
-                        argument (-C option below). Valid values are 1: searches for Yara rules matching
-                        the provided keyword; 2: search for Yara rules matching a minimal score (40-49:
-                        anomaly and threat hunting rules / 60-74: rules for suspicious objects / 75-100: 
-                        hard malicious matches); 3: Look for Yara rules to the following products, which
-                        must be specified using the -C option: FireEyeAX, FireEyeNX, FireEyeEX, CarbonBlack,
-                        Tanium, Tenable, SymantecMAA, GRR, osquery, McAfeeATD3 and McAfeeATD4; 4: Given 
-                        the hash (SHA 256) through -C option, show associated Yara rules; 5: Shows 
-                        information about a specific Yara rule provided through the -C option.
-      -C VALHALLAARG, --valhallaarg VALHALLAARG
-                        This option is used for providing argument to the Vahalla service (-E option).
-
-      -b BAZAAR, --bazaar BAZAAR
-                        Checks multiple information from Malware Bazaar and ThreatFox. The possible values
-                        are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar) Get 
-                        information and a list of malware samples associated and according to a specific 
-                        tag; 3: (Bazaar) Get a list of malware samples according to a given imphash; 
-                        4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample 
-                        from Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped 
-                        using the following password: infected; 6: (ThreatFox) Get current IOC dataset 
-                        from last x days given by option -B; 7: (ThreatFox) Search for the specified IOC on
-                        ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified 
-                        tag given by option -B; 9: (ThreatFox) Search IOCs according to the specified malware
-                        family provided by option -B; 10. (ThreatFox) List all available malware families.
-
-      -B BAZAAR_ARG, --bazaararg BAZAAR_ARG
-                        Provides argument to -b Bazaar and ThreatFox option. If you specified "-b 1" 
-                        then the -B's argument must be a hash; If you specified "-b 2" then -B's argument 
-                        must be a malware tag; If you specified "-b 3" then the argument must be a imphash;
-                        If you specified "-b 4", so the argument must be "100 or time", where "100" lists 
-                        last "100 samples" and "time" lists last samples added to Malware Bazaar in the last
-                        60 minutes; If you specified "-b 5" then the -B's argument must be a SHA256 hash; If
-                        you specified "-b 6", so the -B's value is the number of DAYS to filter IOCs. The 
-                        default (and max) is 90 (days); If you used "-b 7" so the -B's argument is the IOC
-                        you want to search for; If you used "-b 8", so the -B's argument is the TAG you 
-                        want search for; If you used "-b 9", so the -B argument is the malware family you 
-                        want to search for;
-
-
-      -x TRIAGE, --triage TRIAGE
-                        Provides information from Triage according to the specified value: <1> this option
-                        gets sample's general information by providing an argument with -B option in the
-                        following possible formats: sha256:<value>, sha1:<value>, md5:<value>,
-                        familily:<value>, score:<value>, tag:<value>, url:<value>, wallet:<value>,
-                        ip:<value>; <2> Get a sumary report for a given Triage ID (got from option -x 1) ;
-                        <3> Submit a sample for analysis ; <4> Submit a sample through a URL for analysis ;
-                        <5> Download sample specified by the Triage ID; <6> Download pcapng file from sample
-                        associated to given Triage ID; <7> Get a dynamic report for the given Triage ID (got
-                        from option -x 1);
+       -h, --help            show this help message and exit
+       -c CONFIG FILE, --config CONFIG FILE
+                             Use a custom config file to specify API's
+       -d DIRECTORY, --directory DIRECTORY
+                             Specifies the directory containing malware samples.
+       -f FILENAME, --filename FILENAME
+                             Specifies a full path to a malware sample. It returns general information 
+                             about the file (any filetype)
+       -o BACKGROUND, --background BACKGROUND
+                             Adapts the output colors to a white terminal. The default is black terminal
+       -v VIRUSTOTAL, --virustotal VIRUSTOTAL
+                             If using "-v 1", so it queries the Virus Total database for positives and 
+                             totals. If "v 2" (which can be used only together with -f option), so it 
+                             shows antivirus reports from the main players. If "v 3", so the binary's 
+                             IAT and EAT are also shown; If "v 4" it extracts the overlay (it must be 
+                             used with -f option). Remember: you need to edit the .malwapi.conf and 
+                             insert your VT API.
+       -a HYBRID_ANALYSIS, --hybrid HYBRID_ANALYSIS
+                             Queries the Hybrid Analysis database for getting a general report. Possible
+                             values are: 1: Windows 7 32-bit; 2: Windows 7 32-bit (HWP Support); 
+                             3: Windows 64-bit; 4: Android; 5: Linux 64-bit. Remember: you need to edit
+                             the .malwapi.conf and insert your HA API and secret.
+       -u URL_VT, --vturl URL_VT
+                             SUBMITS a URL to the Virus Total scanning.
+       -I IP_VT, --ipaddrvt IP_VT
+                             This option checks an IP address on Virus Total.
+       -r URL_DOMAIN, --urldomain URL_DOMAIN
+                             This option gets a domain's report from Virus Total.
+       -H FILE_HASH, --hash FILE_HASH
+                             This option specifies the hash to be checked on Virus Total and Hybrid 
+                             Analysis. For the Hybrid Analysis report you must use it with the -e i
+                             option.
+       -V FILENAME_VT, --vtsubmit FILENAME_VT
+                             Submits a file(up to 32MB) for Virus Total scanning and gets the report.
+                             Attention: use forward slash to specify the target file even on Windows 
+                             systems. Furthermore, the minimum waiting time is set up in 90 seconds
+                             because the Virus Total waiting queue. If an error occurs, so wait few 
+                             minutes and try to access the report by using -f option.
+       -A SUBMIT_HA, --submitha SUBMIT_HA
+                             Submits a file(up to 32MB) to be scanned by the Hybrid Analysis engine.
+                             Use the -e option to specify the best environment to run the suspicious 
+                             file.
+       -g HA_STATUS, --hastatus HA_STATUS
+                             Checks the report's status of submitted samples to Hybrid Analysis engine
+                             by providing the job ID. Possible returned status values are: IN_QUEUE,
+                             SUCCESS, ERROR, IN_PROGRESS and PARTIAL_SUCCESS.
+       -D DOWNLOAD, --download DOWNLOAD
+                             Downloads the sample from Hybrid Analysis, Malshare and Polyswarm. 
+                             Options -H or -L (Hybrid Analysis and Malshare, respectively) must be
+                             specified as well -O option for Polyswarm engine.
+       -e HA_ENVIRONMENT, --haenv HA_ENVIRONMENT
+                             This option specifies the used environment to be used to test the sample
+                             on Hybrid Analysis: <0> Windows 7 32-bits; <1> Windows 7 32-bits (with 
+                             HWP Support); <2> Windows 7 64-bits; <3> Android; <4> Linux 64-bits 
+                             environment. This option is used together either -H option or the -A 
+                             option.
+       -t MULTITHREAD, --thread MULTITHREAD
+                             (optional) This option has several different meanings according to 
+                             chosen the value. Possible values: <1>: This value is used to force 
+                             multithreads on Linux whether: the -d option is specified AND you have
+                             a PAID Virus Total API or you are NOT checking the VT while using the
+                             -d option. PS1: using this option causes Imphashes not to be grouped 
+                             anymore; PS2: it also works on Windows, but there is not gain in 
+                             performance; <2>: This value should be used with -d option in two
+                             scenarios: 1) either including the "-v 1" option (Virus Total -- you'll
+                             see a complete VT response whether you have the private API) for a 
+                             multithread searching and reduced output; 2) or including the -a option
+                             (Hybrid Analysis) for a multithread searching to get a complete and 
+                             amazing output. If you are using the -a option, so you should pickup 
+                             the right number represening the testing environment to adjust the output
+                             to your sample types. PS1: certainly, if you have a directory holding 
+                             many malware samples, so you will want to test this option with -a 
+                             option; PS2: it also works on Windows, but there is not gain in performance;
+                             <3>: You should use this value with -v option if you have a public Virus 
+                             Total API. It forces a one minute wait every 4 malware samples, but 
+                             allows obtaining a complete evaluation of the malware repository.
+       -l MALSHARE_HASHES, --malsharelist MALSHARE_HASHES
+                             This option shows hashes of a specific type from the last 24 hours 
+                             from Malshare repository. Possible values are: 1: PE32 (default) ; 
+                             2: Dalvik ; 3: ELF ; 4: HTML ; 5: ASCII ; 6: PHP ; 7: Java ; 8: RAR ; 
+                             9: Zip ; 10: UTF-8 ; 11: MS-DOS ; 12: data ; 13: PDF ; 14: Composite(OLE).
+                             You need to insert your Malshare API into the .malwapi.conf file.
+       -L MALSHARE_HASH_SEARCH, --malsharehash MALSHARE_HASH_SEARCH
+                             Searches for the provided hash on the Malshare repository. You need to
+                             insert your Malshare API into the .malwapi.conf file. PS: sometimes the
+                             Malshare website is unavailable, so should check the website availability
+                             if you get some error message.
+       -K HAUS_PAYLOAD_URL, --haus_payloadbatch HAUS_PAYLOAD_URL
+                             This option has few possible values: <1> Retrieves a list of downloadable
+                             links of recent PAYLOADS (last 3 days, limited to 1000 entries) from URLHaus
+                             website; <2>: Retrieves a list of recent URLs (last 3 days, limited to 1000
+                             entries) from URLHaus website. Take care: each link take you to download a
+                             passworless zip file containing a malware, so your AV can generate alerts!
+       -U URL_HAUS_QUERY, --haus_query URL_HAUS_QUERY
+                             Queries a URL on the URLHaus website.
+       -j HAUS_HASH, --haus_hash HAUS_HASH
+                             Queries information about a provided payload's hash (md5 or sha256) on the
+                             URLHaus website.
+       -S URL_HAUS_SUB, --haus_submission URL_HAUS_SUB
+                            Submits a URL used to distribute malware (executable, script, document) to 
+                            the URLHaus website. Pay attention: Any other submission will be ignored/deleted
+                            from URLhaus. You have to register your URLHaus API into the .malwapi.conf file.
+       -z [HAUSTAG ...], --haustag [HAUSTAG ...]
+                            Associates tags (separated by spaces) to the specified URL. Please, only upper 
+                            case, lower case, '-' and '.' are allowed. This parameter is optional, which could
+                            be used with the -S option.
+       -W [HAUSTAGSEARCH ...], --haustagsearch [HAUSTAGSEARCH ...]
+                            This option is for searching malicious URLs by tag on URLhaus. Tags are 
+                            case-senstive and only upper case, lower case, '-' and '.' are allowed.
+       -k [HAUSSIGSEARCH ...], --haussigsearch [HAUSSIGSEARCH ...]
+                            This option is for searching malicious payload by tag on URLhaus. Tags are 
+                            case-sensitive and only upper case, lower case, '-' and '.' are allowed.
+       -J HAUS_DOWNLOAD, --haus_download HAUS_DOWNLOAD
+                            Downloads a malware sample (if it is available) from the URLHaus repository.
+                            It is necessary to provide the SHA256 hash.
+       -P POLYSWARMFILE, --polyswarm_scan POLYSWARMFILE
+                           (Only for Linux) Submits a sample to Polyswarm engine and performs a file scan.
+       -O POLYSWARMHASH, --polyswarm_hash POLYSWARMHASH
+                           (Only for Linux) Performs a hash scanning using the Polyswarm engine. Optionally,
+                           you can specify -D option to download the sample. Take care: Polyswarm enforces
+                           a restriction to number of downloaded samples in 20/month.
+       -R POLYSWARMMETA, --polyswarm_meta POLYSWARMMETA
+                          (Only for Linux) Provides the argument value for searches on Polyswarm engine 
+                          through imphash (the PE file must be provided), ipv4, domain, URL and family. This
+                          argument must be used with -G option, so check it, please. Pay attention: you 
+                          should check your metadata search limit on your Polyswarm account because once you
+                          have got the limit, so you will got an error.
+       -G METATYPE, --metatype METATYPE
+                          (Only for Linux) This parameter specifies search type for arguments provided by 
+                          -R option (above) while searching on Polyswarm engine. Thus, the following values
+                          are valid -- 0: PE Executable (look for samples with the same ImpHash); 1: IP 
+                          Address ; 2: Domain ; 3. URL; 4. Family
+       -y ANDROID_HA, --androidha ANDROID_HA
+                          This option has multiple options: <1>: Check all third-party APK packages from 
+                          the USB-connected Android device against Hybrid Analysis using multithreads. The
+                          Android device does not need to be rooted and the system does need to have the 
+                          adb tool in the PATH environment variable; <2>: Check all third-party APK packages
+                          from the USB-connected Android device against VirusTotal using Public API (slower
+                          because of 60 seconds delay for each 4 hashes). The Android device does not need
+                          to be rooted and the system does need to have adb tool in the PATH environment 
+                          variable; <3>: Check all third-party APK packages from the USB-connected Android
+                          device against VirusTotal using multithreads (only for Private Virus API). The 
+                          Android device does not need to be rooted and the system needs to have adb tool in
+                          the PATH environment variable.
+       -Y ANDROID_SEND_HA, --androidsendha ANDROID_SEND_HA
+                          Sends an third-party APK package from your USB-connected Android device to Hybrid
+                          Analysis. The Android device does not need to be rooted and the system needs to
+                          have adb tool in the PATH environment variable.
+       -T ANDROID_SEND_VT, --androidsendvt ANDROID_SEND_VT
+                         Sends an third-party APK package from your USB-connected Android device to Virus 
+                         Total. The Android device does not need be rooted and the system needis to have
+                         the adb tool in the PATH environment variable.
+       -n ALIENVAULT, --alienvault ALIENVAULT
+                         Checks multiple information from AlienVault. The possible values are: 1: Get 
+                         the subscribed pulses ; 2: Get information about an IP address; 3: Get information
+                         about a domain; 4: Get information about a hash; 5: Get information about a URL
+       -N ALIENVAULT_ARGS, --alienvaultargs ALIENVAULT_ARGS
+                         Provides argument to AlienVault -n option.
+       -M MALPEDIA, --malpedia MALPEDIA
+                         This option is related to MALPEDIA and presents different meanings depending on
+                         the chosen value. Thus, 1: List meta information for all families ; 2: List all
+                         actors ID ; 3: List all available payloads organized by family from Malpedia; 
+                         4: Get meta information from an specific actor, so it is necessary to use the -m
+                         option. Additionally, try to confirm the correct actor ID by executing malwoverview
+                         with option -M 3; 5: List all families IDs; 6: Get meta information from an
+                         specific family, so it is necessary to use the -m option. Additionally, try to 
+                         confirm the correct family ID by executing malwoverview with option -M 5; 7: Get a
+                         malware sample from malpedia (zip format -- password: infected). It is necessary 
+                         to specify the requested hash by using -m option; 8: Get a zip file containing
+                         Yara rules for a specific family (get the possible families using -M 5), which 
+                         must be specified by using -m option.
+       -m MALPEDIAARG, --malpediarg MALPEDIAARG
+                         This option provides an argument to the -M option, which is related to MALPEDIA.
+       -Q THREATCROWD, --threatcrowd THREATCROWD
+                         Checks multiple information from ThreatCrowd. The possible values are: 1: Get 
+                         information about the provided e-mail ; 2: Get information about an IP address;
+                         3: Get information about a domain; 4: Get information about a provided MD5 
+                         hash; 5: Get information about a specific malware family.
+       -q THREATCROWDARG, --threatcrowdarg THREATCROWDARG
+                         This option provides an argument to the -Q option, which is related to THREATCROWD.
+       -E VALHALLA, --valhalla VALHALLA
+                         This option is used for getting Yara rules from the Valhalla service given an 
+                         argument (-C option below). Valid values are 1: searches for Yara rules matching the
+                         provided keyword; 2: search for Yara rules matching a minimal score (40-49: anomaly
+                         and threat hunting rules / 60-74: rules for suspicious objects / 75-100: hard
+                         malicious matches); 3: Look for Yara rules to the following products, which must be
+                         specified using the -C option: FireEyeAX, FireEyeNX, FireEyeEX, CarbonBlack, Tanium,
+                         Tenable, SymantecMAA, GRR, osquery, McAfeeATD3 and McAfeeATD4; 4: Given the hash 
+                         (SHA 256) through -C option, show associated Yara rules; 5: Shows information about
+                         a specific Yara rule provided through the -C option.
+       -C VALHALLAARG, --valhallaarg VALHALLAARG
+                         This option is used for providing argument to the Vahalla service (-E option).
+       -b BAZAAR, --bazaar BAZAAR
+                         Checks multiple information from Malware Bazaar and ThreatFox. The possible values 
+                         are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar)
+                         Get information and a list of malware samples associated and according to a specific
+                         tag; 3: (Bazaar) Get a list of malware samples according to a given imphash;
+                         4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample from
+                         Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped
+                         using the following password: infected; 6: (ThreatFox) Get current IOC dataset from
+                         last x days given by option -B; 7: (ThreatFox) Search for the specified IOC on
+                         ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified
+                         tag given by option -B; 9: (ThreatFox) Search IOCs according to the specified
+                         malware family provided by option -B; 10. (ThreatFox) List all available malware 
+                         families.
+       -B BAZAAR_ARG, --bazaararg BAZAAR_ARG
+                         Provides argument to -b Bazaar and ThreatFox option. If you specified "-b 1" then
+                         the -B's argument must be a hash; If you specified "-b 2" then -B's argument
+                         must be a malware tag; If you specified "-b 3" then the argument must be a imphash;
+                         If you specified "-b 4", so the argument must be "100 or time", where "100"
+                         lists last "100 samples" and "time" lists last samples added to Malware Bazaar in
+                         the last 60 minutes; If you specified "-b 5" then the -B's argument must be a
+                         SHA256 hash; If you specified "-b 6", so the -B's value is the number of DAYS to
+                         filter IOCs. The default (and max) is 90 (days); If you used "-b 7" so the -B's
+                         argument is the IOC you want to search for; If you used "-b 8", so the -B's argument
+                         is the TAG you want search for; If you used "-b 9", so the -B argument is the
+                         malware family you want to search for;
+       -x TRIAGE, --triage TRIAGE
+                         Provides information from Triage according to the specified value: <1> this option
+                         gets sample's general information by providing an argument with -B option in
+                         the following possible formats: sha256:<value>, sha1:<value>, md5:<value>,
+                         familily:<value>, score:<value>, tag:<value>, url:<value>, wallet:<value>, ip:<value>;
+                         <2> Get a sumary report for a given Triage ID (got from option -x 1) ; <3> Submit
+                         a sample for analysis ; <4> Submit a sample through a URL for analysis ; <5>
+                         Download sample specified by the Triage ID; <6> Download pcapng file from sample 
+                         associated to given Triage ID; <7> Get a dynamic report for the given Triage ID
+                         (got from option -x 1);
        -X TRIAGE_ARG, --triagearg TRIAGE_ARG
-                        Provides argument for options especified by -x option. Pay attention: the format of
-                        this argument depends on provided -x value.
+                         Provides argument for options especified by -x option. Pay attention: the format
+                         of this argument depends on provided -x value.
+
 
 
       Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore,
@@ -794,6 +797,18 @@ optional arguments:
       malwoverview.py -x 7 -X 210607-pbt1j18myx
 
 # HISTORY
+
+Version 4.4.2:
+
+      This version:
+
+            * It is NOT longer necessary to insert all APIs into .malwapi.conf file 
+              before using Malwoverview. For example, if you have only Virus Total
+              and Hybrid Analysis APIs, so you can use their respective options 
+              without needing insert the remaining ones. The same rule is valid 
+              for any API and option. 
+
+            * Small fixes have been done on the code and this README file. 
 
 Version 4.4.1:
 
