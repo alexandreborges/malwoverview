@@ -125,11 +125,15 @@ This tool aims to :
 This tool has been tested on REMnux, Ubuntu and Kali Linux only. Malwoverview 
 can be installed by executing the following command:
 
-      pip3.9 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
+      * pip3.9 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
+      
       or...
-      python -m pip install -U malwoverview
+      
+      * python -m pip install -U malwoverview
+      
       or...
-      git clone https://github.com/alexandreborges/malwoverview
+      
+      * git clone https://github.com/alexandreborges/malwoverview
 
 
 To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm,
@@ -224,13 +228,11 @@ light background.
 
 -----------------------------------------------------
 
-Just in case you install it on Windows systems, you should create the .malwapi.conf 
-file in the C:\Users\\[username\] directory (Windows home user directory). In Linux
-systems, create the .malwapi.conf file within /home/\[username\] directory 
+On Linux systems, create the .malwapi.conf file within /home/\[username\] directory 
 (Linux home user directory -- /home/[username] or /root).
 
-Additionally, you don't need to specify "-w 1" option while using malwoverview.py on Windows
-anymore. 
+Just in case you install it on Windows systems, you should create the .malwapi.conf 
+file in the C:\Users\\[username\] directory (Windows home user directory). 
 
 To check the installation, execute:
 
@@ -244,7 +246,7 @@ Further information is available on:
 If you want to perform the manual steps (usually, it is not necessary), so few steps 
 should be executed:
 
-## Kali Linux (manual steps)
+## REMnux / Ubuntu (manual steps)
 
 1. Python version 3.8 or later (Only Python 3.x !!! It does NOT work using Python 2.7) 
 
@@ -292,79 +294,6 @@ should be executed:
 
        * If the adb program is listed in the PATH environment variable.
        * If the system has authorized access to the device by using "adb devices -l"
-
-5. Finally, you can install Malwoverview using one of the following methods:
-
-         pip3.9 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
-
-         or...
-
-         python -m pip install -U malwoverview
-
-         or...
-
-         git clone https://github.com/alexandreborges/malwoverview
-
-
-## Windows (manual steps)
-
-1. Install the Python version 3.8.x or later from https://www.python.org/downloads/windows/ 
-
-2. Python-magic. 
-
-      To install python-magic package you can execute the following command:
-
-       C:\> python.exe -m pip install python-magic
-
-      Or compiling it from the github repository:
-
-       C:\> git clone https://github.com/ahupp/python-magic
-       C:\> cd python-magic/
-       C:\> python.exe setup.py build
-       C:\> python.exe setup.py install
-
-3. Install several Python packages: 
-
-       C:\> python.exe -m pip install -r requirements.txt
-
-       OR: 
-
-       C:\> python.exe -m pip install -U pefile
-       C:\> python.exe -m pip install -U colorama
-       C:\> python.exe -m pip install -U simplejson
-       C:\> python.exe -m pip install -U python-magic
-       C:\> python.exe -m pip install -U requests
-       C:\> python.exe -m pip install -U validators
-       C:\> python.exe -m pip install -U geocoder
-       C:\> python.exe -m pip install -U polyswarm-api
-       C:\> python.exe -m pip install -U pathlib
-       C:\> python.exe -m pip install -U configparser
-       C:\> python.exe -m pip install -U python-magic-bin
-
-4. To check an Android mobile you need to install the "adb" program by:
-
-       * Downloading and installing the Android Studio from: https://developer.android.com/
-         studio#downloads (Recommended)
-
-       * Downloading it from:
-         https://dl.google.com/android/repository/platform-tools-latest-windows.zip
-
-   PS: before trying Android's options, check:
-
-       * If the adb program is listed in the PATH environment variable.
-       * If the system has authorized access to the device by using "adb devices -l"
-
-5. Finally, you can install Malwoverview using one of the following methods:
-
-         pip3.9 install git+https://github.com/alexandreborges/malwoverview (preferred method)
-
-         or...
-
-         python -m pip install -U malwoverview
-
-         or...
-
-         git clone https://github.com/alexandreborges/malwoverview
 
 
 ## Examples:
