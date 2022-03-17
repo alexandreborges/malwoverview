@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (C)  2018-2021 Alexandre Borges <alexandreborges@blackstormsecurity.com>
+# Copyright (C)  2018-2022 Alexandre Borges <alexandreborges@blackstormsecurity.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 4.4.2
+# Malwoverview.py: version 5.0.0
 
 import os
 import sys
@@ -54,7 +54,6 @@ from urllib.parse import urlencode, quote_plus
 from urllib.parse import quote
 from requests.exceptions import RetryError
 from pathlib import Path
-from valhallaAPI.valhalla import ValhallaAPI
 from io import StringIO, BytesIO
 from requests import Request, Session, exceptions
 
@@ -63,18 +62,16 @@ from requests import Request, Session, exceptions
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2021, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "4.4.2"
+__version__ = "5.0.0"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
-url = 'https://www.virustotal.com/vtapi/v2/file/report'
+urlfilevt3 = 'https://www.virustotal.com/api/v3/files'
+urlurlvt3 = 'https://www.virustotal.com/api/v3/urls'
+urlipvt3 = 'https://www.virustotal.com/api/v3/ip_addresses'
+urldomainvt3 = 'https://www.virustotal.com/api/v3/domains'
 param = 'params'
 user_agent = 'Falcon Sandbox'
-urlvt = 'https://www.virustotal.com/vtapi/v2/url/scan'
-ipvt = 'https://www.virustotal.com/vtapi/v2/ip-address/report'
-urlvtreport = 'https://www.virustotal.com/vtapi/v2/url/report' 
-urlvtdomain = 'https://www.virustotal.com/vtapi/v2/domain/report'
-urlfilevtcheck = 'https://www.virustotal.com/vtapi/v2/file/scan'
 urlmalshare = 'https://malshare.com/api.php?api_key='
 urlbazaar = 'https://mb-api.abuse.ch/api/v1/'
 urlthreatfox = 'https://threatfox-api.abuse.ch/api/v1/'
@@ -97,12 +94,6 @@ final=''
 ffpname2 = ''
 repo2 = ''
 global polyswarm
-
-def requestVTAPI():
-
-    if(VTAPI == ''):
-        print(mycolors.foreground.red + "\nTo be able to get information from Virus Total, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the Virus Total API according to the format shown on the Github website." + mycolors.reset + "\n")
-        exit(1)
 
 def requestHAAPI():
 
@@ -139,12 +130,6 @@ def requestMALPEDIAAPI():
 
     if(MALPEDIAAPI == ''):
         print(mycolors.foreground.red + "\nTo be able to get information from Malpedia, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the Malpedia API according to the format shown on the Github website." + mycolors.reset + "\n")
-        exit(1)
-
-def requestVALHALLAAPI():
-
-    if(VALHALLAAPI == ''):
-        print(mycolors.foreground.red + "\nTo be able to get information from Valhalla, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the Valhalla API according to the format shown on the Github website." + mycolors.reset + "\n")
         exit(1)
 
 def requestTRIAGEAPI():
@@ -186,26 +171,6 @@ class mycolors:
 def ftype(filename):
     type = magic.from_file(filename)
     return type
-
-def packed(pe):
-    try:
-
-        n = 0
-
-        for sect in pe.sections:
-            if sect.SizeOfRawData == 0:
-                n = n + 1
-            if (sect.get_entropy() < 1 and sect.get_entropy() > 0) or sect.get_entropy() > 7:
-                n = n + 2
-        if n > 2:
-            return True
-        if (n > 0 and n < 3):
-            return "probably packed"
-        else:
-            return False
-
-    except:
-        return None
 
 
 def sha256hash(fname):
@@ -264,40 +229,7 @@ def listimports(fname):
     return I
 
 
-def listsections(fname):
-
-    pe=pefile.PE(fname)
-
-    if(windows == 1):
-        print("Sections: ", end='')
-        print("\t\tEntropy\n")
-        for sect in pe.sections:
-            print("%17s" % (sect.Name).decode('utf-8'), end='')
-            print(("\t%5.2f" % sect.get_entropy()))
-    else:
-        print("Sections: ", end='')
-        print("\t\tEntropy\n")
-        for sect in pe.sections:
-            print("%17s" % (sect.Name).decode('utf-8'), end='')
-            print(("\t\t%5.2f" % sect.get_entropy()))
-
-def listdlls(fname):
-
-    pe=pefile.PE(fname)
-
-    if(bkg == 1):
-        print(mycolors.reset + "\nImported DLLs: ", end='\n')
-        print((25*'-').ljust(25),end='\n\n')
-        for x in pe.DIRECTORY_ENTRY_IMPORT:
-            print("\t " + mycolors.foreground.lightgreen + x.dll.decode('utf-8') + mycolors.reset)
-    else:
-        print(mycolors.reset + "\nImported DLLs: ", end='\n')
-        print((25*'-').ljust(25),end='\n\n')
-        for x in pe.DIRECTORY_ENTRY_IMPORT:
-            print("\t " + mycolors.foreground.purple + x.dll.decode('utf-8') + mycolors.reset)
-
-
-def impext(targetfile):
+def list_imports_exports(targetfile):
 
     print(mycolors.reset)
 
@@ -323,7 +255,7 @@ def impext(targetfile):
         if i is None:
                 break
         if (bkg == 1):
-            print((mycolors.foreground.lightcyan + "%-40s" % (i)[2:-1]), end=' ')
+            print((mycolors.foreground.pink + "%-40s" % (i)[2:-1]), end=' ')
         else:
             print((mycolors.foreground.cyan + "%-40s" % (i)[2:-1]), end=' ')
         w = next(Y, None)
@@ -334,7 +266,7 @@ def impext(targetfile):
         if w is None:
             break
         if (bkg == 1):
-            print((mycolors.foreground.lightgreen + "%-40s" % (w)[2:-1]), end=' ')
+            print((mycolors.foreground.lightcyan + "%-40s" % (w)[2:-1]), end=' ')
         else:
             print((mycolors.foreground.green + "%-40s" % (w)[2:-1]), end=' ')
         t = next(Y, None)
@@ -381,7 +313,7 @@ def impext(targetfile):
         if w is None:
             break
         if (bkg == 1):
-            print((mycolors.foreground.lightgreen + "%-40s" % (w)[2:-1]), end=' ')
+            print((mycolors.foreground.lightcyan + "%-40s" % (w)[2:-1]), end=' ')
         else:
             print((mycolors.foreground.green + "%-40s" % (w)[2:-1]), end=' ')
 
@@ -393,42 +325,31 @@ def impext(targetfile):
         if t is None:
             break
         if (bkg == 1):
-            print((mycolors.foreground.lightblue + "%-40s" % (t)[2:-1]))
+            print((mycolors.foreground.lightcyan + "%-40s" % (t)[2:-1]))
         else:
             print((mycolors.foreground.cyan + "%-40s" % (t)[2:-1]))
 
     print(mycolors.reset)
 
 
-def vtcheck(filehash, url, param):
-
-    pos = ''
-    total = ''
-    vttext = ''
-    response = ''
-
-    requestVTAPI()
+def vtcheck(myhash, url, showreport):
 
     try:
 
-        resource = filehash
-        params = {'apikey': VTAPI , 'resource': resource}
-        response = requests.get(url, params=params)
+        finalurl = ''.join([url, "/", myhash ])
+        requestsession = requests.Session( )
+        requestsession.headers.update({'x-apikey': VTAPI})
+        requestsession.headers.update({'content-type': 'application/json'})
+        response = requestsession.get(finalurl)
         vttext = json.loads(response.text)
-        rc = (vttext['response_code'])
-        if (rc == 0):
-            final = ' Not Found'
-            return final
-        while (rc != 1):
-            time.sleep(20)
-            response = requests.get(url, params=params)
-            vttext = json.loads(response.text)
-            rc = (vttext['response_code'])
 
-        pos = str(vttext['positives'])
-        total = str(vttext['total'])
-        final = (pos + "/" + total)
-        rc = str(vttext['response_code'])
+        if (response.status_code == 404):
+            final = " NOT FOUND"
+        else:
+            if('last_analysis_stats' in vttext['data']['attributes']):
+                malicious =  vttext['data']['attributes']['last_analysis_stats']['malicious']
+                undetected =  vttext['data']['attributes']['last_analysis_stats']['undetected']
+                final = (str(malicious) + "/" + str(malicious + undetected))
 
         return final
 
@@ -437,721 +358,410 @@ def vtcheck(filehash, url, param):
         return final
 
 
-def vturlcheck(myurl, param):
+def vt_url_ip_domain_report_dark(vttext):
 
-    pos = ''
-    total = ''
-    vttext = ''
-    response = ''
-    resource = ''
+    print(mycolors.foreground.lightred + "\n\nAV Report:", end='')
 
-    requestVTAPI()
+    if('last_analysis_results' in vttext['data']['attributes']):
+        ok = "CLEAN"
+        if('AlienVault' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['AlienVault']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "AlienVault: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "AlienVault: ".ljust(15) + mycolors.reset + ok, end='')
+        if('BitDefender' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['BitDefender']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "BitDefender: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "BitDefender: ".ljust(15) + mycolors.reset + ok, end='')
+        if('Avira' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['Avira']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Avira: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Avira: ".ljust(15) + mycolors.reset + ok, end='')
+        if('Comodo Valkyrie Verdict' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['Comodo Valkyrie Verdict']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Comodo: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Comodo: ".ljust(15) + mycolors.reset + ok, end='')
+        if('CyRadar' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['CyRadar']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "CyRadar: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "CyRadar: ".ljust(15) + mycolors.reset + ok, end='')
+        if('Dr.Web' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['Dr.Web']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Dr.Web: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Dr.Web: ".ljust(15) + mycolors.reset + ok, end='')
+        if('Emsisoft' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['Emsisoft']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Emsisoft: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Emsisoft: ".ljust(15) + mycolors.reset + ok, end='')
+        if('ESET' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['ESET']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "ESET: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "ESET: ".ljust(15) + mycolors.reset + ok, end='')
+        if('Forcepoint ThreatSeeker' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['Forcepoint ThreatSeeker']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Forcepoint: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Forcepoint: ".ljust(15) + mycolors.reset + ok, end='')
+        if('Fortinet' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['Fortinet']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Fortinet: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Fortinet: ".ljust(15) + mycolors.reset + ok, end='')
+        if('G-Data' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['G-Data']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "G-Data: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "G-Data: ".ljust(15) + mycolors.reset + ok, end='')
+        if('Google Safebrowsing' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['Google Safebrowsing']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Google: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Google: ".ljust(15) + mycolors.reset + ok, end='')
+        if('Kaspersky' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['Kaspersky']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Kaspersky: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Kaspersky: ".ljust(15) + mycolors.reset + ok, end='')
+        if('MalwarePatrol' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['MalwarePatrol']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "MalwarePatrol: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "MalwarePatrol: ".ljust(15) + mycolors.reset + ok, end='')
+        if('OpenPhish' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['OpenPhish']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "OpenPhish: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "OpenPhish: ".ljust(15) + mycolors.reset + ok, end='')
+        if('PhishLabs' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['PhishLabs']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "PhishLabs: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "PhishLabs: ".ljust(15) + mycolors.reset + ok, end='')
+        if('Phishtank' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['Phishtank']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Phishtank: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Phishtank: ".ljust(15) + mycolors.reset + ok, end='')
+        if('Spamhaus' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['Spamhaus']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Spamhaus: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Spamhaus: ".ljust(15) + mycolors.reset + ok, end='')
+        if('Sophos' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['Sophos']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Sophos: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Sophos: ".ljust(15) + mycolors.reset + ok, end='')
+        if('Sucuri SiteCheck' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['Sucuri SiteCheck']['result']
+            if(result):
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Sucuri: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Sucuri: ".ljust(15) + mycolors.reset + ok, end='')
+        if('Trustwave' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['Trustwave']['result']
+            if(result):
+                 print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Trustwave: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                 print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Trustwave: ".ljust(15) + mycolors.reset + ok, end='')
+        if('URLhaus' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['URLhaus']['result']
+            if(result):
+                 print(mycolors.foreground.lightcyan + "\n".ljust(26) + "URLhaus: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                 print(mycolors.foreground.lightcyan + "\n".ljust(26) + "URLhaus: ".ljust(15) + mycolors.reset + ok, end='')
+        if('VX Vault' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['VX Vault']['result']
+            if(result):
+                 print(mycolors.foreground.lightcyan + "\n".ljust(26) + "VX Vault: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                 print(mycolors.foreground.lightcyan + "\n".ljust(26) + "VX Vault: ".ljust(15) + mycolors.reset + ok, end='')
+        if('Webroot' in vttext['data']['attributes']['last_analysis_results']):
+            result = vttext['data']['attributes']['last_analysis_results']['Webroot']['result']
+            if(result):
+                 print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Webroot: ".ljust(15) + mycolors.reset + result, end='')
+            else:
+                  print(mycolors.foreground.lightcyan + "\n".ljust(26) + "Webroot: ".ljust(15) + mycolors.reset + ok, end='')
+
+
+def vt_url_ip_domain_report_light(vttext):
+
+   print(mycolors.foreground.red + "\n\nAV Report:", end='')
+
+   if('last_analysis_results' in vttext['data']['attributes']):
+       ok = "CLEAN"
+       if('AlienVault' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['AlienVault']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "AlienVault: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "AlienVault: ".ljust(15) + mycolors.reset + ok, end='')
+       if('BitDefender' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['BitDefender']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "BitDefender: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "BitDefender: ".ljust(15) + mycolors.reset + ok, end='')
+       if('Avira' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['Avira']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Avira: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Avira: ".ljust(15) + mycolors.reset + ok, end='')
+       if('Comodo Valkyrie Verdict' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['Comodo Valkyrie Verdict']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Comodo: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Comodo: ".ljust(15) + mycolors.reset + ok, end='')
+       if('CyRadar' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['CyRadar']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "CyRadar: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "CyRadar: ".ljust(15) + mycolors.reset + ok, end='')
+       if('Dr.Web' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['Dr.Web']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Dr.Web: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Dr.Web: ".ljust(15) + mycolors.reset + ok, end='')
+       if('Emsisoft' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['Emsisoft']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Emsisoft: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Emsisoft: ".ljust(15) + mycolors.reset + ok, end='')
+       if('ESET' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['ESET']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "ESET: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "ESET: ".ljust(15) + mycolors.reset + ok, end='')
+       if('Forcepoint ThreatSeeker' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['Forcepoint ThreatSeeker']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Forcepoint: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Forcepoint: ".ljust(15) + mycolors.reset + ok, end='')
+       if('Fortinet' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['Fortinet']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Fortinet: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Fortinet: ".ljust(15) + mycolors.reset + ok, end='')
+       if('G-Data' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['G-Data']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "G-Data: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "G-Data: ".ljust(15) + mycolors.reset + ok, end='')
+       if('Google Safebrowsing' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['Google Safebrowsing']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Google: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Google: ".ljust(15) + mycolors.reset + ok, end='')
+       if('Kaspersky' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['Kaspersky']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Kaspersky: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Kaspersky: ".ljust(15) + mycolors.reset + ok, end='')
+       if('MalwarePatrol' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['MalwarePatrol']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "MalwarePatrol: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "MalwarePatrol: ".ljust(15) + mycolors.reset + ok, end='')
+       if('OpenPhish' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['OpenPhish']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "OpenPhish: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "OpenPhish: ".ljust(15) + mycolors.reset + ok, end='')
+       if('PhishLabs' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['PhishLabs']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "PhishLabs: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "PhishLabs: ".ljust(15) + mycolors.reset + ok, end='')
+       if('Phishtank' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['Phishtank']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Phishtank: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Phishtank: ".ljust(15) + mycolors.reset + ok, end='')
+       if('Spamhaus' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['Spamhaus']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Spamhaus: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Spamhaus: ".ljust(15) + mycolors.reset + ok, end='')
+       if('Sophos' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['Sophos']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Sophos: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Sophos: ".ljust(15) + mycolors.reset + ok, end='')
+       if('Sucuri SiteCheck' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['Sucuri SiteCheck']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Sucuri: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Sucuri: ".ljust(15) + mycolors.reset + ok, end='')
+       if('Trustwave' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['Trustwave']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Trustwave: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Trustwave: ".ljust(15) + mycolors.reset + ok, end='')
+       if('URLhaus' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['URLhaus']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "URLhaus: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "URLhaus: ".ljust(15) + mycolors.reset + ok, end='')
+       if('VX Vault' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['VX Vault']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "VX Vault: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "VX Vault: ".ljust(15) + mycolors.reset + ok, end='')
+       if('Webroot' in vttext['data']['attributes']['last_analysis_results']):
+           result = vttext['data']['attributes']['last_analysis_results']['Webroot']['result']
+           if(result):
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Webroot: ".ljust(15) + mycolors.reset + result, end='')
+           else:
+               print(mycolors.foreground.cyan + "\n".ljust(26) + "Webroot: ".ljust(15) + mycolors.reset + ok, end='')
+
+
+def vtdomainwork(mydomain, url):
 
     try:
 
-        resource = myurl
-        params = {'apikey': VTAPI , 'url': resource, 'allinfo': True}
-        response = requests.post(urlvt, params=params)
-        vttext = json.loads(response.text)
-        rc = (vttext['response_code'])
-        if (rc == 0):
-            final = 'Error during URL checking'
-            if (bkg == 1):
-                print(mycolors.foreground.lightred + final)
-            else:
-                print(mycolors.foreground.red + final)
-            exit(1)
-        if (rc == 1):
-            print(mycolors.reset + "\nURL SUMMARY REPORT")
-            print("-"*20,"\n")
-
-        if (bkg == 0):
-            print(mycolors.foreground.blue + "Status: ".ljust(17),vttext['verbose_msg'])
-            print(mycolors.foreground.blue + "Scan date: ".ljust(17),vttext['scan_date'])
-            print(mycolors.foreground.blue + "Scan ID: ".ljust(17),vttext['scan_id'])
-            print(mycolors.foreground.purple + "URL: ".ljust(17),vttext['url'])
-            print(mycolors.foreground.cyan + "Permanent Link: ".ljust(17),vttext['permalink'])
-            print(mycolors.foreground.red + "Result VT: ".ljust(17), end=' ')
-
-        else:
-            print(mycolors.foreground.lightgreen + "Status: ".ljust(17),vttext['verbose_msg'])
-            print(mycolors.foreground.lightgreen + "Scan date: ".ljust(17),vttext['scan_date'])
-            print(mycolors.foreground.lightgreen + "Scan ID: ".ljust(17),vttext['scan_id'])
-            print(mycolors.foreground.yellow + "URL: ".ljust(17),vttext['url'])
-            print(mycolors.foreground.lightcyan + "Permanent Link: ".ljust(17),vttext['permalink'])
-            print(mycolors.foreground.lightred + "Result VT: ".ljust(17), end=' ')
-
-        time.sleep(10)
-
-        try:
-
-            resource=vttext['url']
-            params = {'apikey': VTAPI , 'resource': resource}
-            response = requests.get(urlvtreport, params=params)
-            vttext = json.loads(response.text)
-            rc = (vttext['response_code'])
-            if (rc == 0):
-                final = 'Error gathering the Report.'
-                if (bkg == 1):
-                    print(mycolors.foreground.lightred + final)
-                else:
-                    print(mycolors.foreground.red + final)
-                exit(1)
-            pos = str(vttext['positives'])
-            total = str(vttext['total'])
-            final = (pos + "/" + total)
-            print(final + "\n")
-
-            if (bkg == 1):
-                print(Fore.WHITE + "URL DETAILED REPORT")
-                print("-"*20,"\n")
-
-                if('AlienVault' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "AlienVault: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['AlienVault']['result'])
-                if('Avira' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "Avira: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Avira']['result'])
-                if('BitDefender' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "BitDefender: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['BitDefender']['result'])
-                if('Certego' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "Certego: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Certego']['result'])
-                if('Comodo Valkyrie Verdict' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "Comodo: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Comodo Valkyrie Verdict']['result'])
-                if('CRDF' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "CRDF: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['CRDF']['result'])
-                if('CyRadar' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "CyRadar: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['CyRadar']['result'])
-                if('Emsisoft' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "Emsisoft: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Emsisoft']['result'])
-                if('ESET' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "ESET: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['ESET']['result'])
-                if('Forcepoint ThreatSeeker' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "Forcepoint: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Forcepoint ThreatSeeker']['result'])
-                if('Fortinet' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "Fortinet: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Fortinet']['result'])
-                if('G-Data' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "G-Data: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['G-Data']['result'])
-                if('Google Safebrowsing' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "Google: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Google Safebrowsing']['result'])
-                if('Kaspersky' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "Kaspersky: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Kaspersky']['result'])
-                if('malwares.com URL checker' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "Malwares.com: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['malwares.com URL checker']['result'])
-                if('Malc0de Database' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "Malc0de: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Malc0de Database']['result'])
-                if('MalwarePatrol' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "MalwarePatrol: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['MalwarePatrol']['result'])
-                if('OpenPhish' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "OpenPhish: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['OpenPhish']['result'])
-                if('PhishLabs' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "PhishLabs: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['PhishLabs']['result'])
-                if('Phishtank' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "Phishtank: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Phishtank']['result'])
-                if('Spamhaus' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "Spamhaus: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Spamhaus']['result'])
-                if('Sophos' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "Sophos: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Sophos']['result'])
-                if('Trustwave' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "Trustwave: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['Trustwave']['result'])
-                if('VX Vault' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "VX Vault: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['VX Vault']['result'])
-                if('ZeroCERT' in vttext['scans']):
-                    print(mycolors.foreground.lightcyan + "ZeroCERT: ".ljust(17),mycolors.foreground.yellow + vttext['scans']['ZeroCERT']['result'])
-                print(mycolors.reset + "\n")
-                exit(0)
-
-            else:
-                print(Fore.BLACK + "URL DETAILED REPORT")
-                print("-"*20,"\n")
-                if('AlienVault' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "AlienVault: ".ljust(17),mycolors.foreground.red + vttext['scans']['AlienVault']['result'])
-                if('Avira' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "Avira: ".ljust(17),mycolors.foreground.red + vttext['scans']['Avira']['result'])
-                if('BitDefender' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "BitDefender: ".ljust(17),mycolors.foreground.red + vttext['scans']['BitDefender']['result'])
-                if('Certgo' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "Certego: ".ljust(17),mycolors.foreground.red + vttext['scans']['Certego']['result'])
-                if('Comodo Valkyrie Verdict' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "Comodo: ".ljust(17),mycolors.foreground.red + vttext['scans']['Comodo Valkyrie Verdict']['result'])
-                if('CRDF' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "CRDF: ".ljust(17),mycolors.foreground.red + vttext['scans']['CRDF']['result'])
-                if('CyRadar' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "CyRadar: ".ljust(17),mycolors.foreground.red + vttext['scans']['CyRadar']['result'])
-                if('Emsisoft' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "Emsisoft: ".ljust(17),mycolors.foreground.red + vttext['scans']['Emsisoft']['result'])
-                if('ESET' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "ESET: ".ljust(17),mycolors.foreground.red + vttext['scans']['ESET']['result'])
-                if('Forcepoint ThreatSeeker' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "Forcepoint: ".ljust(17),mycolors.foreground.red + vttext['scans']['Forcepoint ThreatSeeker']['result'])
-                if('Fortinet' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "Fortinet: ".ljust(17),mycolors.foreground.red + vttext['scans']['Fortinet']['result'])
-                if('G-Data' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "G-Data: ".ljust(17),mycolors.foreground.red + vttext['scans']['G-Data']['result'])
-                if('Google Safebrowsing' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "Google: ".ljust(17),mycolors.foreground.red + vttext['scans']['Google Safebrowsing']['result'])
-                if('Kaspersky' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "Kaspersky: ".ljust(17),mycolors.foreground.red + vttext['scans']['Kaspersky']['result'])
-                if('malwares.com URL checker' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "Malwares.com: ".ljust(17),mycolors.foreground.red + vttext['scans']['malwares.com URL checker']['result'])
-                if('Malc0de Database' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "Malc0de: ".ljust(17),mycolors.foreground.red + vttext['scans']['Malc0de Database']['result'])
-                if('MalwarePatrol' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "MalwarePatrol: ".ljust(17),mycolors.foreground.red + vttext['scans']['MalwarePatrol']['result'])
-                if('OpenPhish' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "OpenPhish: ".ljust(17),mycolors.foreground.red + vttext['scans']['OpenPhish']['result'])
-                if('PhishLabs' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "PhishLabs: ".ljust(17),mycolors.foreground.red + vttext['scans']['PhishLabs']['result'])
-                if('Phishtank' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "Phishtank: ".ljust(17),mycolors.foreground.red + vttext['scans']['Phishtank']['result'])
-                if('Spamhaus' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "Spamhaus: ".ljust(17),mycolors.foreground.red + vttext['scans']['Spamhaus']['result'])
-                if('Sophos' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "Sophos: ".ljust(17),mycolors.foreground.red + vttext['scans']['Sophos']['result'])
-                if('Truswave' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "Trustwave: ".ljust(17),mycolors.foreground.red + vttext['scans']['Trustwave']['result'])
-                if('VX Vault' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "VX Vault: ".ljust(17),mycolors.foreground.red + vttext['scans']['VX Vault']['result'])
-                if('ZeroCERT' in vttext['scans']):
-                    print(mycolors.foreground.cyan + "ZeroCERT: ".ljust(17),mycolors.foreground.red + vttext['scans']['ZeroCERT']['result'])
-                print(mycolors.reset + "\n")
-                exit(0)
-
-        except ValueError:
-            if (bkg == 1):
-                print(mycolors.foreground.lightred + "Error while connecting to Virus Total!\n")
-            else:
-                print(mycolors.foreground.red + "Error while connecting to Virus Total!\n")
-            print(mycolors.reset)
-            exit(2)
-
-    except ValueError:
-        if (bkg == 1):
-            print(mycolors.foreground.lightred + "Error while connecting to Virus Total!\n")
-        else:
-            print(mycolors.foreground.red + "Error while connecting to Virus Total!\n")
-        print(mycolors.reset)
-        exit(3)
-
-
-def vtdomaincheck(mydomain, param):
-
-    pos = ''
-    total = ''
-    vttext = ''
-    response = ''
-    resource = ''
-    rc = ''
-    vxtext = ''
-
-    requestVTAPI()
-
-    try:
-
-        resource = mydomain
-        params = {'apikey': VTAPI , 'domain': resource}
-        response = requests.get(urlvtdomain, params=params)
+        finalurl = ''.join([url, "/", mydomain ])
+        requestsession = requests.Session( )
+        requestsession.headers.update({'x-apikey': VTAPI})
+        requestsession.headers.update({'content-type': 'application/json'})
+        response = requestsession.get(finalurl)
         vttext = json.loads(response.text)
 
-        rc = (vttext['response_code'])
-        if (rc == 0):
-            final = 'Domain not found.'
+        if (response.status_code == 404):
             if (bkg == 1):
-                print(mycolors.foreground.lightred + final)
-            else:
-                print(mycolors.foreground.red + final)
-            print(mycolors.reset)
-            exit(1)
-
-        if (rc == 1):
-
-            print(mycolors.reset)
-            print("\nDOMAIN SUMMARY REPORT")
-            print("-"*20,"\n")
-
+                print(mycolors.foreground.yellow + "\nDOMAIN NOT FOUND!")
             if (bkg == 0):
-                print(mycolors.foreground.green + "Undetected Referrer Samples:  ".ljust(17))
-            else:
-                print(mycolors.foreground.lightcyan + "Undetected Referrer Samples: ".ljust(17))
-
-            if 'undetected_referrer_samples' in vttext:
-                if (bool(vttext['undetected_referrer_samples'])):
-                    try:
-                        for i in range(0, len(vttext['undetected_referrer_samples'])):
-                            if (vttext['undetected_referrer_samples'][i].get('date')):
-                                print("".ljust(28), end=' ')
-                                print(("date: %s" % vttext['undetected_referrer_samples'][i]['date']))
-                            if (vttext['undetected_referrer_samples'][i].get('positives')):
-                                print("".ljust(28), end=' ')
-                                print(("positives: %s" % vttext['undetected_referrer_samples'][i]['positives']))
-                            if (vttext['undetected_referrer_samples'][i].get('total')):
-                                print("".ljust(28), end=' ')
-                                print(("total: %s" % vttext['undetected_referrer_samples'][i]['total']))
-                            if (vttext['undetected_referrer_samples'][i].get('sha256')):
-                                print("".ljust(28), end=' ')
-                                print(("sha256: %s" % vttext['undetected_referrer_samples'][i]['sha256']), end=' ')
-                            print("\n")
-                    except KeyError as e:
-                        pass
-
-
-            if (bkg == 0):
-                print(mycolors.foreground.blue + "Detected Referrer Samples:  ".ljust(17))
-            else:
-                print(mycolors.foreground.yellow + "Detected Referrer Samples: ".ljust(17))
-
-            if 'detected_referrer_samples' in vttext:
-                if (bool(vttext['detected_referrer_samples'])):
-                    try:
-                        for i in range(len(vttext['detected_referrer_samples'])):
-                            if (vttext['detected_referrer_samples'][i].get('date')):
-                                print("".ljust(28), end=' ')
-                                print(("date: %s" % vttext['detected_referrer_samples'][i]['date']))
-                            if (vttext['detected_referrer_samples'][i].get('positives')):
-                                print("".ljust(28), end=' ')
-                                print(("positives: %s" % vttext['detected_referrer_samples'][i]['positives']))
-                            if (vttext['detected_referrer_samples'][i].get('total')):
-                                print("".ljust(28), end=' ')
-                                print(("total: %s" % vttext['detected_referrer_samples'][i]['total']))
-                            if (vttext['detected_referrer_samples'][i].get('sha256')):
-                                print("".ljust(28), end=' ')
-                                print(("sha256: %s" % vttext['detected_referrer_samples'][i]['sha256']), end=' ')
-                            print("\n")
-                    except KeyError as e:
-                        pass
-
-            if (bkg == 0):
-                print(mycolors.foreground.red + "\nWhois Timestamp:  ".ljust(17))
-            else:
-                print(mycolors.foreground.yellow + "\nWhois Timestamp: ".ljust(17))
-
-            if 'whois_timestamp' in vttext:
-                if (bool(vttext['whois_timestamp'])):
-                    try:
-                        print("".ljust(28), end=' ') 
-                        ts = vttext['whois_timestamp']
-                        print((datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')))
-                    except KeyError as e:
-                        pass
-
-            if (bkg == 0):
-                print(mycolors.foreground.purple + "\nUndetected Downld. Samples:  ".ljust(17))
-            else:
-                print(mycolors.foreground.lightgreen + "\nUndetected Downld. Samples: ".ljust(17))
-
-            if 'undetected_downloaded_samples' in vttext:
-                if (bool(vttext['undetected_downloaded_samples'])):
-                    try:
-                        for i in range(len(vttext['undetected_downloaded_samples'])):
-                            if (vttext['undetected_downloaded_samples'][i].get('date')):
-                                print("".ljust(28), end=' ')
-                                print(("date: %s" % vttext['undetected_downloaded_samples'][i]['date']))
-                            if (vttext['undetected_downloaded_samples'][i].get('positives')):
-                                print("".ljust(28), end=' ')
-                                print(("positives: %s" % vttext['undetected_downloaded_samples'][i]['positives']))
-                            if (vttext['undetected_downloaded_samples'][i].get('total')):
-                                print("".ljust(28), end=' ')
-                                print(("total: %s" % vttext['undetected_downloaded_samples'][i]['total']))
-                            if (vttext['undetected_downloaded_samples'][i].get('sha256')):
-                                print("".ljust(28), end=' ')
-                                print(("sha256: %s" % vttext['undetected_downloaded_samples'][i]['sha256']), end=' ')
-                            print("\n")
-                    except KeyError as e:
-                        pass
-
-            if (bkg == 0):
-                print(mycolors.foreground.purple + "\nDetected Downloaded Samples:  ".ljust(17))
-            else:
-                print(mycolors.foreground.orange + "\nDetected Downloaded Samples: ".ljust(17))
-
-            if 'detected_downloaded_samples' in vttext:
-                if (bool(vttext['detected_downloaded_samples'])):
-                    try:
-                        for i in range(len(vttext['detected_downloaded_samples'])):
-                            if (vttext['detected_downloaded_samples'][i].get('date')):
-                                print("".ljust(28), end=' ')
-                                print(("date: %s" % vttext['detected_downloaded_samples'][i]['date']))
-                            if (vttext['detected_downloaded_samples'][i].get('positives')):
-                                print("".ljust(28), end=' ')
-                                print(("positives: %s" % vttext['detected_downloaded_samples'][i]['positives']))
-                            if (vttext['detected_downloaded_samples'][i].get('total')):
-                                print("".ljust(28), end=' ')
-                                print(("total: %s" % vttext['detected_downloaded_samples'][i]['total']))
-                            if (vttext['detected_downloaded_samples'][i].get('sha256')):
-                                print("".ljust(28), end=' ')
-                                print(("sha256: %s" % vttext['detected_downloaded_samples'][i]['sha256']), end=' ')
-                            print("\n")
-                    except KeyError as e:
-                        pass
-
-            if (bkg == 0):
-                print(mycolors.foreground.red + "Resolutions:  ".ljust(17))
-            else:
-                print(mycolors.foreground.lightred + "Resolutions: ".ljust(17))
-
-            if 'resolutions' in vttext:
-                if (bool(vttext['resolutions'])):
-                    try:
-                        for i in range(len(vttext['resolutions'])):
-                            if (vttext['resolutions'][i].get('last_resolved')):
-                                print("".ljust(28), end=' ')
-                                print(("last resolved: %s" % vttext['resolutions'][i]['last_resolved']))
-                            if (vttext['resolutions'][i].get('ip_address')):
-                                print("".ljust(28), end=' ')
-                                print(("ip address:    %-18s" % vttext['resolutions'][i]['ip_address']), end=' ')
-                                print("\t(City:%s)" % (geocoder.ip(vttext['resolutions'][i]['ip_address'])).city)
-                            print("\n")
-                    except KeyError as e:
-                        pass
-
-            if (bkg == 0):
-                print(mycolors.foreground.green + "\nSubdomains:  ".ljust(17))
-            else:
-                print(mycolors.foreground.lightgreen + "\nSubdomains: ".ljust(17))
-
-            if 'subdomains' in vttext:
-                if (bool(vttext['subdomains'])):
-                    try:
-                        for i in range(len(vttext['subdomains'])):
-                            print("".ljust(28), end=' ') 
-                            print((vttext['subdomains'][i]))
-                    except KeyError as e:
-                        pass
-
-            if (bkg == 0):
-                print(mycolors.foreground.cyan + "\nCategories:  ".ljust(17))
-            else:
-                print(mycolors.foreground.lightcyan + "\nCategories: ".ljust(17))
-
-            if 'categories' in vttext:
-                if (bool(vttext['categories'])):
-                    try:
-                        for i in range(len(vttext['categories'])):
-                            print("".ljust(28), end=' ')
-                            print((vttext['categories'][i]))
-                    except KeyError as e:
-                        pass
-
-            if (bkg == 0):
-                print(mycolors.foreground.cyan + "\nDomain Siblings: ".ljust(17))
-            else:
-                print(mycolors.foreground.lightcyan + "\nDomain Siblings: ".ljust(17))
-
-            if 'domain_sublings' in vttext:
-                if (bool(vttext['domain_sublings'])):
-                    try:
-                        for i in range(len(vttext['domain_siblings'])):
-                            print("".ljust(28), end=' ')
-                            print((vttext['domain_siblings'][i]), end=' ')
-                        print("\n")
-                    except KeyError as e:
-                        pass
-
-            if (bkg == 0):
-                print(mycolors.foreground.red + "\nDetected URLs: ".ljust(17))
-            else:
-                print(mycolors.foreground.yellow + "\nDetected URLs: ".ljust(17))
-
-            if 'detected_urls' in vttext:
-                if (bool(vttext['detected_urls'])):
-                    try:
-                        for i in range(len(vttext['detected_urls'])):
-                            if (vttext['detected_urls'][i].get('url')):
-                                print("".ljust(28), end=' ')
-                                print(("url: %s" % vttext['detected_urls'][i]['url']))
-                            if (vttext['detected_urls'][i].get('positives')):
-                                print("".ljust(28), end=' ')
-                                print(("positives: %s" % vttext['detected_urls'][i]['positives']))
-                            if (vttext['detected_urls'][i].get('total')):
-                                print("".ljust(28), end=' ')
-                                print(("total: %s" % vttext['detected_urls'][i]['total']))
-                            if (vttext['detected_urls'][i].get('scan_date')):
-                                print("".ljust(28), end=' ')
-                                print(("scan_date: %s" % vttext['detected_urls'][i]['scan_date']), end=' ')
-                            print("\n")
-                    except KeyError as e:
-                        pass
-
-            if (bkg == 0):
-                print(mycolors.foreground.green + "\nUndetected URLs: ".ljust(17))
-            else:
-                print(mycolors.foreground.lightgreen + "\nUndetected URLs: ".ljust(17))
-
-            if 'undetected_urls' in vttext:
-                if (bool(vttext['undetected_urls'])):
-                    try:
-                        for i in range(len(vttext['undetected_urls'])):
-                            if (bkg == 0):
-                                print((mycolors.foreground.green + "".ljust(28)), end=' ')
-                                print(("data %s\n" % i))
-                            else:
-                                print((mycolors.foreground.lightgreen + "".ljust(28)), end=' ')
-                                print(("data %s\n" % i))
-                            for y in range(len(vttext['undetected_urls'][i])):
-                                if (bkg == 0):
-                                    print((mycolors.foreground.cyan + "".ljust(28)), end=' ')
-                                    if (y == 0):
-                                        print(("url:       "), end=' ')
-                                    if (y == 1):
-                                        print(("sha256:    "), end=' ')
-                                    if (y == 2):
-                                        print(("positives: "), end=' ')
-                                    if (y == 3):
-                                        print(("total:     "), end=' ')
-                                    if (y == 4):
-                                        print(("date:      "), end=' ')
-                                    print(("%s" % (vttext['undetected_urls'][i][y])))
-                                else:
-                                    print((mycolors.foreground.lightgreen + "".ljust(28)), end=' ')
-                                    if (y == 0):
-                                        print(("url:       "), end=' ')
-                                    if (y == 1):
-                                        print(("sha256:    "), end=' ')
-                                    if (y == 2):
-                                        print(("positives: "), end=' ')
-                                    if (y == 3):
-                                        print(("total:     "), end=' ')
-                                    if (y == 4):
-                                        print(("date:      "), end=' ')
-                                    print(("%s" % (vttext['undetected_urls'][i][y])))
-                            print("\n")
-                    except KeyError as e:
-                        pass
-
-    except ValueError:
-        if(bkg == 1):
-            print((mycolors.foreground.lightred + "Error while connecting to Virus Total!\n"))
+                print(mycolors.foreground.red + "\nDOMAIN NOT FOUND!")
         else:
-            print((mycolors.foreground.red + "Error while connecting to Virus Total!\n"))
-        print(mycolors.reset)
-        exit(3)
-
-
-def ipvtcheck(ipaddress, urlvtip):
-
-    pos = ''
-    total = ''
-    vttext = ''
-    response = ''
-    resource = ''
-    rc = ''
-    vxtext = ''
-
-    requestVTAPI()
-
-    try:
-
-        resource = ipaddress
-        params = {'apikey': VTAPI , 'ip': resource}
-        response = requests.get(urlvtip, params=params)
-        vttext = json.loads(response.text)
-
-        rc = (vttext['response_code'])
-        if (rc == 0):
-            final = 'Domain not found.'
-            if (bkg == 1):
-                print(mycolors.foreground.lightred + final)
-            else:
-                print(mycolors.foreground.red + final)
-            print(mycolors.reset)
-            exit(1)
-
-        if (rc == 1):
-
-            print(mycolors.reset)
-            print("\nIP ADDRESS SUMMARY REPORT")
-            print("-"*25,"\n")
-
-            if 'country' in vttext:
-                if (bkg == 0):
-                    print(mycolors.foreground.red + "Country:\t" + mycolors.reset + vttext['country'] + mycolors.reset, end='\n')
-                else:
-                    print(mycolors.foreground.orange + "Country:\t" + mycolors.reset + vttext['country'] + mycolors.reset, end='\n')
-            else:
-                if (bkg == 0):
-                    print(mycolors.foreground.red + "Country:\t" + mycolors.reset + "Not specified" + mycolors.reset, end='\n')
-                else:
-                    print(mycolors.foreground.red + "Country:\t" + mycolors.reset + "Not specified" + mycolors.reset, end='\n')
-
-            if 'asn' in vttext:
-                if (bkg == 0):
-                    print(mycolors.foreground.red + "ASN:\t\t", end='')
-                    print(mycolors.reset + str(vttext['asn']) + mycolors.reset, end='\n\n')
-                else:
-                    print(mycolors.foreground.orange + "ASN:\t\t", end='')
-                    print(mycolors.reset + str(vttext['asn']) + mycolors.reset, end='\n\n')
-            else:
-                if (bkg == 0):
-                    print(mycolors.foreground.red + "ASN:\t\t" + mycolors.reset + "Not specified" + mycolors.reset, end='\n\n')
-                else:
-                    print(mycolors.foreground.orange + "ASN:\t\t" + mycolors.reset + "Not specified" + mycolors.reset, end='\n\n')
-
-            print(mycolors.reset + "\nResolutions")
-            print("-" * 11)
-
-            if 'resolutions' in vttext:
-                if (vttext['resolutions']):
-                    for i in vttext['resolutions']:
-                        if (bkg == 0):
-                            print(mycolors.foreground.green + "\nLast Resolved:\t" + mycolors.reset + i['last_resolved'] + mycolors.reset)
-                            print(mycolors.foreground.green + "Hostname:\t" + mycolors.reset + i['hostname'] + mycolors.reset)
-                        else:
-                            print(mycolors.foreground.lightgreen + "\nLast Resolved:\t" + mycolors.reset + i['last_resolved'] + mycolors.reset)
-                            print(mycolors.foreground.lightgreen + "Hostname:\t" + mycolors.reset + i['hostname'] + mycolors.reset)
-
-            print(mycolors.reset + "\n\nDetected URLs")
-            print("-" * 13)
-
-            if 'detected_urls' in vttext:
-                for j in vttext['detected_urls']:
-                    if (bkg == 0):
-                        print(mycolors.foreground.cyan + "\nURL:\t\t", end='')
-                        print(mycolors.reset + ("\n".ljust(17)).join(textwrap.wrap(j['url'], width=100)), end='\n')
-                        print(mycolors.foreground.cyan+ "Scan Date:\t", end='')
-                        print(mycolors.reset + j['scan_date'] + mycolors.reset)
-                        print(mycolors.foreground.cyan + "Positives:\t", end='')
-                        print(mycolors.reset + str(j['positives']) + mycolors.reset)
-                        print(mycolors.foreground.cyan + "Total:\t\t", end='')
-                        print(mycolors.reset + str(j['total']) + mycolors.reset)
-                    else:
-                        print(mycolors.foreground.lightred + "\nURL:\t\t", end='')
-                        print(mycolors.reset + ("\n".ljust(17)).join(textwrap.wrap(j['url'], width=100)), end='\n')
-                        print(mycolors.foreground.lightred + "Scan Date:\t", end='')
-                        print(mycolors.reset + j['scan_date'] + mycolors.reset)
-                        print(mycolors.foreground.lightred + "Positives:\t", end='')
-                        print(mycolors.reset + str(j['positives']) + mycolors.reset)
-                        print(mycolors.foreground.lightred + "Total:\t\t", end='')
-                        print(mycolors.reset + str(j['total']) + mycolors.reset)
-                        
-            print(mycolors.reset + "\n\nDetected Downloaded Samples")
-            print("-" * 27)
-
-            if 'detected_downloaded_samples' in vttext:
-                for k in vttext['detected_downloaded_samples']:
-                    if (bkg == 0):
-                        print(mycolors.foreground.red + "\nSHA256:\t\t" + mycolors.reset, end='')
-                        print(mycolors.reset + k['sha256'] + mycolors.reset)
-                        print(mycolors.foreground.red + "Date:\t\t" + mycolors.reset, end='')
-                        print(mycolors.reset + k['date'] + mycolors.reset)
-                        print(mycolors.foreground.red + "Positives:\t" + mycolors.reset, end='')
-                        print(mycolors.reset + str(k['positives']) + mycolors.reset)
-                        print(mycolors.foreground.red + "Total:\t\t" + mycolors.reset, end='')
-                        print(mycolors.reset + str(k['total']) + mycolors.reset)
-                    else:
-                        print(mycolors.foreground.yellow + "\nSHA256:\t\t" + mycolors.reset, end='')
-                        print(mycolors.reset + k['sha256'] + mycolors.reset)
-                        print(mycolors.foreground.yellow + "Date:\t\t" + mycolors.reset, end='')
-                        print(mycolors.reset + k['date'] + mycolors.reset)
-                        print(mycolors.foreground.yellow + "Positives:\t" + mycolors.reset, end='')
-                        print(mycolors.reset + str(k['positives']) + mycolors.reset)
-                        print(mycolors.foreground.yellow + "Total:\t\t" + mycolors.reset, end='')
-                        print(mycolors.reset + str(k['total']) + mycolors.reset)
-
-            print(mycolors.reset + "\n\nUndetected Downloaded Samples")
-            print("-" * 27)
-
-            if 'undetected_downloaded_samples' in vttext:
-                for m in vttext['undetected_downloaded_samples']:
-                    if (bkg == 0):
-                        print(mycolors.foreground.purple + "\nSHA256:\t\t" + mycolors.reset, end='')
-                        print(mycolors.reset + m['sha256'] + mycolors.reset)
-                        print(mycolors.foreground.purple + "Date:\t\t" + mycolors.reset, end='')
-                        print(mycolors.reset + m['date'] + mycolors.reset)
-                        print(mycolors.foreground.purple + "Positives:\t" + mycolors.reset, end='')
-                        print(mycolors.reset + str(m['positives']) + mycolors.reset)
-                        print(mycolors.foreground.purple + "Total:\t\t" + mycolors.reset, end='')
-                        print(mycolors.reset + str(m['total']) + mycolors.reset)
-                    else:
-                        print(mycolors.foreground.lightcyan + "\nSHA256:\t\t" + mycolors.reset, end='')
-                        print(mycolors.reset + m['sha256'] + mycolors.reset)
-                        print(mycolors.foreground.lightcyan + "Date:\t\t" + mycolors.reset, end='')
-                        print(mycolors.reset + m['date'] + mycolors.reset)
-                        print(mycolors.foreground.lightcyan + "Positives:\t" + mycolors.reset, end='')
-                        print(mycolors.reset + str(m['positives']) + mycolors.reset)
-                        print(mycolors.foreground.lightcyan + "Total:\t\t" + mycolors.reset, end='')
-                        print(mycolors.reset + str(m['total']) + mycolors.reset)
-
-
-    except ValueError:
-        if(bkg == 1):
-            print((mycolors.foreground.lightred + "Error while connecting to Virus Total!\n"))
-        else:
-            print((mycolors.foreground.red + "Error while connecting to Virus Total!\n"))
-        print(mycolors.reset)
-        exit(3)
-
-
-def vtfilecheck(filename, urlfilevtcheck, param):
-
-    pos = ''
-    total = ''
-    vttext = ''
-    response = ''
-    resource = ''
-    dname = ''
-    fname = '' 
-
-    requestVTAPI()
-
-    try:
-
-        resource = {'file': (filename, open(filename,'rb'))}
-        mysha256hash = sha256hash(filename)
-        params = {'apikey': VTAPI}
-        response = requests.post(urlfilevtcheck, files = resource, params=params)
-        vttext = json.loads(response.text)
-        rc = (vttext['response_code'])
-        if (rc == 0):
-            final = 'Error during file checking on Virus Total'
             if(bkg == 1):
-                print(mycolors.foreground.lightred + final)
-            else:
-                print(mycolors.foreground.red + final)
-            exit(1)
-        if (rc == 1):
-            print(mycolors.reset)
-            print("\nFILE SUMMARY VT REPORT")
-            print("-"*25,"\n")
+                if('creation_date' in vttext['data']['attributes']):
+                    create_date = vttext['data']['attributes']['creation_date']
+                    print(mycolors.foreground.yellow + "\nCreation Date: ".ljust(26) + mycolors.reset + str(datetime.fromtimestamp(create_date)), end='')
+                if('last_update_date' in vttext['data']['attributes']):
+                    last_update_date = vttext['data']['attributes']['last_update_date']
+                    print(mycolors.foreground.yellow + "\nLast Update Date: ".ljust(26) + mycolors.reset + str(datetime.fromtimestamp(last_update_date)), end='')
+                if('registrar' in vttext['data']['attributes']):
+                    registrar = vttext['data']['attributes']['registrar']
+                    print(mycolors.foreground.yellow + "\nRegistrar: ".ljust(26) + mycolors.reset + registrar, end='')
+                if('reputation' in vttext['data']['attributes']):
+                    reputation = vttext['data']['attributes']['reputation']
+                    print(mycolors.foreground.yellow + "\nReputation: ".ljust(26) + mycolors.reset + str(reputation), end='')
+                if('whois' in vttext['data']['attributes']):
+                    whois = vttext['data']['attributes']['whois']
+                    print(mycolors.foreground.yellow + "\nWhois: ".ljust(26) + mycolors.reset + (mycolors.reset + "\n".ljust(26)).join(textwrap.wrap(" ".join(whois.split()),width=80)),end=' ')
+                if('whois_date' in vttext['data']['attributes']):
+                    whois_date = vttext['data']['attributes']['whois_date']
+                    print(mycolors.foreground.yellow + "\nWhois Date: ".ljust(26) + mycolors.reset + str(datetime.fromtimestamp(whois_date)), end='')
+                if('jarm' in vttext['data']['attributes']):
+                    jarm = vttext['data']['attributes']['jarm']
+                    print(mycolors.foreground.lightred + "\n\nJarm: ".ljust(27) + mycolors.reset + str(jarm), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('harmless' in vttext['data']['attributes']['last_analysis_stats']):
+                        harmless = vttext['data']['attributes']['last_analysis_stats']['harmless']
+                        print(mycolors.foreground.lightred + "\nHarmless: ".ljust(26) + mycolors.reset + str(harmless), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('malicious' in vttext['data']['attributes']['last_analysis_stats']):
+                        malicious = vttext['data']['attributes']['last_analysis_stats']['malicious']
+                        print(mycolors.foreground.lightred + "\nMalicious: ".ljust(26) + mycolors.reset + str(malicious), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('undetected' in vttext['data']['attributes']['last_analysis_stats']):
+                        undetected = vttext['data']['attributes']['last_analysis_stats']['undetected']
+                        print(mycolors.foreground.lightred + "\nUndetected: ".ljust(26) + mycolors.reset + str(undetected), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('suspicious' in vttext['data']['attributes']['last_analysis_stats']):
+                        suspicious = vttext['data']['attributes']['last_analysis_stats']['suspicious']
+                        print(mycolors.foreground.lightred + "\nSuspicious: ".ljust(26) + mycolors.reset + str(suspicious), end='')
 
-            if (bkg == 0):
-                print(mycolors.foreground.green + "Filename: ".ljust(17),os.path.basename(filename))
-                print(mycolors.foreground.blue + "Status: ".ljust(17),vttext['verbose_msg'])
-                print(mycolors.foreground.blue + "Resource: ".ljust(17),vttext['resource'])
-                print(mycolors.foreground.blue + "Scan ID: ".ljust(17),vttext['scan_id'])
-                print(mycolors.foreground.purple + "SHA256: ".ljust(17),vttext['sha256'])
-                print(mycolors.foreground.cyan + "Permanent Link: ".ljust(17),vttext['permalink'])
-                print(mycolors.foreground.red + "Result VT: ".ljust(17), end=' ')
-
-            else:
-                print(mycolors.foreground.yellow + "Filename: ".ljust(17),os.path.basename(filename))
-                print(mycolors.foreground.lightgreen + "Status: ".ljust(17),vttext['verbose_msg'])
-                print(mycolors.foreground.lightgreen + "Resource: ".ljust(17),vttext['resource'])
-                print(mycolors.foreground.lightgreen + "Scan ID: ".ljust(17),vttext['scan_id'])
-                print(mycolors.foreground.yellow + "SHA256: ".ljust(17),vttext['sha256'])
-                print(mycolors.foreground.lightcyan + "Permanent Link: ".ljust(17),vttext['permalink'])
-                print(mycolors.foreground.lightred + "Result VT: ".ljust(17), end=' ')
-
-            time.sleep(90)
-
-            try:
-
-                finalstatus = vtcheck(vttext['scan_id'], url, param)
-                print(finalstatus)
-                print ("\n")
-                print(mycolors.reset)
-                print("VIRUS TOTAL DETAILED REPORT")
-                print("-"*28,"\n")
-                time.sleep(5)
-                vtshow(vttext['scan_id'], url, param)
-                print(mycolors.reset + "\n")
-                exit(0)
+                vt_url_ip_domain_report_dark(vttext)
 
 
-            except ValueError:
-                if(bkg == 1):
-                    print(mycolors.foreground.lightred + "Error while connecting to Virus Total!\n")
-                else:
-                    print(mycolors.foreground.red + "Error while connecting to Virus Total!\n")
-                print(mycolors.reset)
-                exit(2)
+            if(bkg == 0):
+                if('creation_date' in vttext['data']['attributes']):
+                    create_date = vttext['data']['attributes']['creation_date']
+                    print(mycolors.foreground.green + "\nCreation Date: ".ljust(26) + mycolors.reset + str(datetime.fromtimestamp(create_date)), end='')
+                if('last_update_date' in vttext['data']['attributes']):
+                    last_update_date = vttext['data']['attributes']['last_update_date']
+                    print(mycolors.foreground.green + "\nLast Update Date: ".ljust(26) + mycolors.reset + str(datetime.fromtimestamp(last_update_date)), end='')
+                if('registrar' in vttext['data']['attributes']):
+                    registrar = vttext['data']['attributes']['registrar']
+                    print(mycolors.foreground.green + "\nRegistrar: ".ljust(26) + mycolors.reset + registrar, end='')
+                if('reputation' in vttext['data']['attributes']):
+                    reputation = vttext['data']['attributes']['reputation']
+                    print(mycolors.foreground.green + "\nReputation: ".ljust(26) + mycolors.reset + str(reputation), end='')
+                if('whois' in vttext['data']['attributes']):
+                    whois = vttext['data']['attributes']['whois']
+                    print(mycolors.foreground.green + "\nWhois: ".ljust(26) + mycolors.reset + (mycolors.reset + "\n".ljust(26)).join(textwrap.wrap(" ".join(whois.split()),width=80)),end=' ')
+                if('whois_date' in vttext['data']['attributes']):
+                    whois_date = vttext['data']['attributes']['whois_date']
+                    print(mycolors.foreground.green + "\nWhois Date: ".ljust(26) + mycolors.reset + str(datetime.fromtimestamp(whois_date)), end='')
+                if('jarm' in vttext['data']['attributes']):
+                    jarm = vttext['data']['attributes']['jarm']
+                    print(mycolors.foreground.red + "\n\nJarm: ".ljust(27) + mycolors.reset + str(jarm), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('harmless' in vttext['data']['attributes']['last_analysis_stats']):
+                        harmless = vttext['data']['attributes']['last_analysis_stats']['harmless']
+                        print(mycolors.foreground.red + "\nHarmless: ".ljust(26) + mycolors.reset + str(harmless), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('malicious' in vttext['data']['attributes']['last_analysis_stats']):
+                        malicious = vttext['data']['attributes']['last_analysis_stats']['malicious']
+                        print(mycolors.foreground.red + "\nMalicious: ".ljust(26) + mycolors.reset + str(malicious), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('undetected' in vttext['data']['attributes']['last_analysis_stats']):
+                        undetected = vttext['data']['attributes']['last_analysis_stats']['undetected']
+                        print(mycolors.foreground.red + "\nUndetected: ".ljust(26) + mycolors.reset + str(undetected), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('suspicious' in vttext['data']['attributes']['last_analysis_stats']):
+                        suspicious = vttext['data']['attributes']['last_analysis_stats']['suspicious']
+                        print(mycolors.foreground.red + "\nSuspicious: ".ljust(26) + mycolors.reset + str(suspicious), end='')
+
+                vt_url_ip_domain_report_light(vttext)
+
 
     except ValueError:
         if(bkg == 1):
@@ -1162,81 +772,119 @@ def vtfilecheck(filename, urlfilevtcheck, param):
         exit(3)
 
 
-def vtshow(filehash, url, param): 
-
-    vttext = ''
-    response = ''
- 
-    requestVTAPI()
+def vtipwork(myip, url):
 
     try:
-        resource=filehash
-        params = {'apikey': VTAPI , 'resource': resource}
-        response = requests.get(url, params=params)
+
+        finalurl = ''.join([url, "/", myip ])
+        requestsession = requests.Session( )
+        requestsession.headers.update({'x-apikey': VTAPI})
+        requestsession.headers.update({'content-type': 'application/json'})
+        response = requestsession.get(finalurl)
         vttext = json.loads(response.text)
 
-        rc = (vttext['response_code'])
-        if (rc == 0):
-            final = 'Not Found'
-            return final 
-
-        if (bkg == 0):
-            print(mycolors.foreground.cyan + "Scan date: ".ljust(13),vttext['scan_date'] + "\n")
+        if (response.status_code == 404):
+            if (bkg == 1):
+                print(mycolors.foreground.yellow + "\nIP ADDRESS NOT FOUND!")
+            if (bkg == 0):
+                print(mycolors.foreground.red + "\nIP ADDRESS NOT FOUND!")
         else:
-            print(mycolors.foreground.yellow + "Scan date: ".ljust(13),vttext['scan_date'] + "\n")
+            if(bkg == 1):
+                if('as_owner' in vttext['data']['attributes']):
+                    as_owner = vttext['data']['attributes']['as_owner']
+                    print(mycolors.foreground.yellow + "\nAS Owner: ".ljust(26) + mycolors.reset + as_owner, end='')
+                if('asn' in vttext['data']['attributes']):
+                    asn = vttext['data']['attributes']['asn']
+                    print(mycolors.foreground.yellow + "\nASN: ".ljust(26) + mycolors.reset + str(asn), end='')
+                if('whois_date' in vttext['data']['attributes']):
+                    whois_date = vttext['data']['attributes']['whois_date']
+                    print(mycolors.foreground.yellow + "\nWhois Date: ".ljust(26) + mycolors.reset + str(datetime.fromtimestamp(whois_date)), end='')
+                if('whois' in vttext['data']['attributes']):
+                    whois = vttext['data']['attributes']['whois']
+                    print(mycolors.foreground.yellow + "\nWhois: ".ljust(26) + mycolors.reset + (mycolors.reset + "\n".ljust(26)).join(textwrap.wrap(" ".join(whois.split()),width=80)),end=' ')
+                if('country' in vttext['data']['attributes']):
+                    country = vttext['data']['attributes']['country']
+                    print(mycolors.foreground.lightcyan + "\n\nCountry: ".ljust(27) + mycolors.reset + country, end='')
+                if('jarm' in vttext['data']['attributes']):
+                    jarm = vttext['data']['attributes']['jarm']
+                    print(mycolors.foreground.lightcyan + "\nJARM: ".ljust(26) + mycolors.reset + str(jarm), end='')
+                if('network' in vttext['data']['attributes']):
+                    network = vttext['data']['attributes']['network']
+                    print(mycolors.foreground.lightcyan + "\nNetwork: ".ljust(26) + mycolors.reset + str(network), end='')
+                if('regional_internet_registry' in vttext['data']['attributes']):
+                    rir = vttext['data']['attributes']['regional_internet_registry']
+                    print(mycolors.foreground.lightcyan + "\nR.I.R: ".ljust(26) + mycolors.reset + str(rir), end='')
+                if('reputation' in vttext['data']['attributes']):
+                    reputation = vttext['data']['attributes']['reputation']
+                    print(mycolors.foreground.lightred + "\n\nReputation: ".ljust(27) + mycolors.reset + str(reputation), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('harmless' in vttext['data']['attributes']['last_analysis_stats']):
+                        harmless = vttext['data']['attributes']['last_analysis_stats']['harmless']
+                        print(mycolors.foreground.lightred + "\nHarmless: ".ljust(26) + mycolors.reset + str(harmless), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('malicious' in vttext['data']['attributes']['last_analysis_stats']):
+                        malicious = vttext['data']['attributes']['last_analysis_stats']['malicious']
+                        print(mycolors.foreground.lightred + "\nMalicious: ".ljust(26) + mycolors.reset + str(malicious), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('undetected' in vttext['data']['attributes']['last_analysis_stats']):
+                        undetected = vttext['data']['attributes']['last_analysis_stats']['undetected']
+                        print(mycolors.foreground.lightred + "\nUndetected: ".ljust(26) + mycolors.reset + str(undetected), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('suspicious' in vttext['data']['attributes']['last_analysis_stats']):
+                        suspicious = vttext['data']['attributes']['last_analysis_stats']['suspicious']
+                        print(mycolors.foreground.lightred + "\nSuspicious: ".ljust(26) + mycolors.reset + str(suspicious), end='')
+                print(mycolors.foreground.lightred + "\nCity: ".ljust(26) + mycolors.reset + str(geocoder.ip(myip).city), end='')
 
-        if (bkg == 1):
-            print(mycolors.foreground.lightred)
-        else:
-            print(mycolors.foreground.red)
+                vt_url_ip_domain_report_dark(vttext)
 
-        if ('Avast' in vttext['scans']):
-            print("Avast:".ljust(13),vttext['scans']['Avast']['result'])
+            if(bkg == 0):
+                if('as_owner' in vttext['data']['attributes']):
+                    as_owner = vttext['data']['attributes']['as_owner']
+                    print(mycolors.foreground.yellow + "\nAS Owner: ".ljust(26) + mycolors.reset + as_owner, end='')
+                if('asn' in vttext['data']['attributes']):
+                    asn = vttext['data']['attributes']['asn']
+                    print(mycolors.foreground.yellow + "\nASN: ".ljust(26) + mycolors.reset + str(asn), end='')
+                if('whois_date' in vttext['data']['attributes']):
+                    whois_date = vttext['data']['attributes']['whois_date']
+                    print(mycolors.foreground.yellow + "\nWhois Date: ".ljust(26) + mycolors.reset + str(datetime.fromtimestamp(whois_date)), end='')
+                if('whois' in vttext['data']['attributes']):
+                    whois = vttext['data']['attributes']['whois']
+                    print(mycolors.foreground.yellow + "\nWhois: ".ljust(26) + mycolors.reset + (mycolors.reset + "\n".ljust(26)).join(textwrap.wrap(" ".join(whois.split()),width=80)),end=' ')
+                if('country' in vttext['data']['attributes']):
+                    country = vttext['data']['attributes']['country']
+                    print(mycolors.foreground.green + "\n\nCountry: ".ljust(27) + mycolors.reset + country, end='')
+                if('jarm' in vttext['data']['attributes']):
+                    jarm = vttext['data']['attributes']['jarm']
+                    print(mycolors.foreground.green + "\nJARM: ".ljust(26) + mycolors.reset + str(jarm), end='')
+                if('network' in vttext['data']['attributes']):
+                    network = vttext['data']['attributes']['network']
+                    print(mycolors.foreground.green + "\nNetwork: ".ljust(26) + mycolors.reset + str(network), end='')
+                if('regional_internet_registry' in vttext['data']['attributes']):
+                    rir = vttext['data']['attributes']['regional_internet_registry']
+                    print(mycolors.foreground.green + "\nR.I.R: ".ljust(26) + mycolors.reset + str(rir), end='')
+                if('reputation' in vttext['data']['attributes']):
+                    reputation = vttext['data']['attributes']['reputation']
+                    print(mycolors.foreground.red + "\n\nReputation: ".ljust(27) + mycolors.reset + str(reputation), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('harmless' in vttext['data']['attributes']['last_analysis_stats']):
+                        harmless = vttext['data']['attributes']['last_analysis_stats']['harmless']
+                        print(mycolors.foreground.red + "\nHarmless: ".ljust(26) + mycolors.reset + str(harmless), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('malicious' in vttext['data']['attributes']['last_analysis_stats']):
+                        malicious = vttext['data']['attributes']['last_analysis_stats']['malicious']
+                        print(mycolors.foreground.red + "\nMalicious: ".ljust(26) + mycolors.reset + str(malicious), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('undetected' in vttext['data']['attributes']['last_analysis_stats']):
+                        undetected = vttext['data']['attributes']['last_analysis_stats']['undetected']
+                        print(mycolors.foreground.red + "\nUndetected: ".ljust(26) + mycolors.reset + str(undetected), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('suspicious' in vttext['data']['attributes']['last_analysis_stats']):
+                        suspicious = vttext['data']['attributes']['last_analysis_stats']['suspicious']
+                print(mycolors.foreground.red + "\nCity: ".ljust(26) + mycolors.reset + str(geocoder.ip(myip).city), end='')
 
-        if ('Avira' in vttext['scans']):
-            print("Avira:".ljust(13),vttext['scans']['Avira']['result'])
+                vt_url_ip_domain_report_light(vttext)
 
-        if ('BitDefender' in vttext['scans']):
-            print("BitDefender:".ljust(13),vttext['scans']['BitDefender']['result'])
-
-        if ('ESET-NOD32' in vttext['scans']):
-            print("ESET-NOD32:".ljust(13),vttext['scans']['ESET-NOD32']['result'])
-
-        if ('F-Secure' in vttext['scans']):
-            print("F-Secure:".ljust(13),vttext['scans']['F-Secure']['result'])
-
-        if ('FireEye' in vttext['scans']):
-            print("FireEye:".ljust(13),vttext['scans']['FireEye']['result'])
-
-        if ('Fortinet' in vttext['scans']):
-            print("Fortinet:".ljust(13),vttext['scans']['Fortinet']['result'])
-
-        if ("Kaspersky" in vttext['scans']):
-            print("Kaspersky:".ljust(13),vttext['scans']['Kaspersky']['result'])
-
-        if ("MalwareBytes" in vttext['scans']):
-            print("MalwareBytes:".ljust(13),vttext['scans']['MalwareBytes']['result'])
-
-        if ("McAfee" in vttext['scans']):
-            print("McAfee:".ljust(13),vttext['scans']['McAfee']['result'])
-
-        if ("Microsoft" in vttext['scans']):
-            print("Microsoft:".ljust(13),vttext['scans']['Microsoft']['result'])
-
-        if ("Panda" in vttext['scans']):
-            print("Panda:".ljust(13),vttext['scans']['Panda']['result'])
-
-        if ("Sophos" in vttext['scans']):
-            print("Sophos:".ljust(13),vttext['scans']['Sophos']['result'])
-
-        if ("Symantec" in vttext['scans']):
-            print("Symantec:".ljust(13),vttext['scans']['Symantec']['result'])
-
-        if ("TrendMicro" in vttext['scans']):
-            print("TrendMicro:".ljust(13),vttext['scans']['TrendMicro']['result'])
-
-        if ("Zone-Alarm" in vttext['scans']):
-            print("Zone-Alarm:".ljust(13),vttext['scans']['Zone-Alarm']['result'])
+            print("\n")
 
     except ValueError:
         if(bkg == 1):
@@ -1244,6 +892,1276 @@ def vtshow(filehash, url, param):
         else:
             print((mycolors.foreground.red + "Error while connecting to Virus Total!\n"))
         print(mycolors.reset)
+        exit(3)
+
+
+def vturlwork(myurl, url):
+
+    try:
+
+        urlid = base64.urlsafe_b64encode(myurl.encode()).decode().strip("=")
+        finalurl = ''.join([url, "/", urlid ])
+        requestsession = requests.Session( )
+        requestsession.headers.update({'x-apikey': VTAPI})
+        requestsession.headers.update({'content-type': 'application/json'})
+        response = requestsession.get(finalurl)
+        vttext = json.loads(response.text)
+
+        if (response.status_code == 404):
+            if (bkg == 1):
+                print(mycolors.foreground.yellow + "\nURL NOT FOUND!")
+            if (bkg == 0):
+                print(mycolors.foreground.red + "\nURL NOT FOUND!")
+        else:
+            ok = "CLEAN"
+            if(bkg == 1):
+                if('last_final_url' in vttext['data']['attributes']):
+                    last_final_url = vttext['data']['attributes']['last_final_url']
+                    print(mycolors.foreground.lightred + "\nLast Final URL: ".ljust(26) + mycolors.reset + str(last_final_url), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('harmless' in vttext['data']['attributes']['last_analysis_stats']):
+                        harmless = vttext['data']['attributes']['last_analysis_stats']['harmless']
+                        print(mycolors.foreground.lightred + "\nHarmless: ".ljust(26) + mycolors.reset + str(harmless), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('malicious' in vttext['data']['attributes']['last_analysis_stats']):
+                        malicious = vttext['data']['attributes']['last_analysis_stats']['malicious']
+                        print(mycolors.foreground.lightred + "\nMalicious: ".ljust(26) + mycolors.reset + str(malicious), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('undetected' in vttext['data']['attributes']['last_analysis_stats']):
+                        undetected = vttext['data']['attributes']['last_analysis_stats']['undetected']
+                        print(mycolors.foreground.lightred + "\nUndetected: ".ljust(26) + mycolors.reset + str(undetected), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('suspicious' in vttext['data']['attributes']['last_analysis_stats']):
+                        suspicious = vttext['data']['attributes']['last_analysis_stats']['suspicious']
+                        print(mycolors.foreground.lightred + "\nSuspicious: ".ljust(26) + mycolors.reset + str(suspicious), end='')
+                if('last_http_response_content_sha256' in vttext['data']['attributes']):
+                    last_http_sha256 = vttext['data']['attributes']['last_http_response_content_sha256']
+                    print(mycolors.foreground.yellow + "\n\nLast SHA256 Content: ".ljust(27) + mycolors.reset + last_http_sha256, end='')
+                if('last_http_response_code' in vttext['data']['attributes']):
+                    last_http_response = vttext['data']['attributes']['last_http_response_code']
+                    print(mycolors.foreground.yellow + "\nLast HTTP Response Code: ".ljust(26) + mycolors.reset + str(last_http_response), end='')
+                if('last_analysis_date' in vttext['data']['attributes']):
+                    last_analysis_date = vttext['data']['attributes']['last_analysis_date']
+                    print(mycolors.foreground.yellow + "\nLast Analysis Date: ".ljust(26) + mycolors.reset + str(datetime.fromtimestamp(last_analysis_date)), end='')
+                if('times_submitted' in vttext['data']['attributes']):
+                    times_submitted = vttext['data']['attributes']['times_submitted']
+                    print(mycolors.foreground.yellow + "\nTimes Submitted: ".ljust(26) + mycolors.reset + str(times_submitted), end='')
+                if('reputation' in vttext['data']['attributes']):
+                    reputation = vttext['data']['attributes']['reputation']
+                    print(mycolors.foreground.yellow + "\nReputation: ".ljust(26) + mycolors.reset + str(reputation), end='')
+                if('threat_names' in vttext['data']['attributes']):
+                    print(mycolors.foreground.lightcyan + "\n\nThreat Names: ", end='')
+                    for name in vttext['data']['attributes']['threat_names']:
+                        print(mycolors.reset + "\n".ljust(26) + str(name),end='')
+                if('redirection_chain' in vttext['data']['attributes']):
+                    print(mycolors.foreground.lightcyan + "\n\nRedirection Chain: ", end='')
+                    for chain in vttext['data']['attributes']['redirection_chain']:
+                        print(mycolors.reset + "\n".ljust(26) + str(chain),end='')
+
+                vt_url_ip_domain_report_dark(vttext)
+
+
+            if(bkg == 0):
+                if('last_final_url' in vttext['data']['attributes']):
+                    last_final_url = vttext['data']['attributes']['last_final_url']
+                    print(mycolors.foreground.red + "\nLast Final URL: ".ljust(26) + mycolors.reset + str(last_final_url), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('harmless' in vttext['data']['attributes']['last_analysis_stats']):
+                        harmless = vttext['data']['attributes']['last_analysis_stats']['harmless']
+                        print(mycolors.foreground.red + "\nHarmless: ".ljust(26) + mycolors.reset + str(harmless), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('malicious' in vttext['data']['attributes']['last_analysis_stats']):
+                        malicious = vttext['data']['attributes']['last_analysis_stats']['malicious']
+                        print(mycolors.foreground.red + "\nMalicious: ".ljust(26) + mycolors.reset + str(malicious), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('undetected' in vttext['data']['attributes']['last_analysis_stats']):
+                        undetected = vttext['data']['attributes']['last_analysis_stats']['undetected']
+                        print(mycolors.foreground.red + "\nUndetected: ".ljust(26) + mycolors.reset + str(undetected), end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    if('suspicious' in vttext['data']['attributes']['last_analysis_stats']):
+                        suspicious = vttext['data']['attributes']['last_analysis_stats']['suspicious']
+                        print(mycolors.foreground.red + "\nSuspicious: ".ljust(26) + mycolors.reset + str(suspicious), end='')
+                if('last_http_response_content_sha256' in vttext['data']['attributes']):
+                    last_http_sha256 = vttext['data']['attributes']['last_http_response_content_sha256']
+                    print(mycolors.foreground.purple + "\n\nLast SHA256 Content: ".ljust(27) + mycolors.reset + last_http_sha256, end='')
+                if('last_http_response_code' in vttext['data']['attributes']):
+                    last_http_response = vttext['data']['attributes']['last_http_response_code']
+                    print(mycolors.foreground.purple + "\nLast HTTP Response Code: ".ljust(26) + mycolors.reset + str(last_http_response), end='')
+                if('last_analysis_date' in vttext['data']['attributes']):
+                    last_analysis_date = vttext['data']['attributes']['last_analysis_date']
+                    print(mycolors.foreground.purple + "\nLast Analysis Date: ".ljust(26) + mycolors.reset + str(datetime.fromtimestamp(last_analysis_date)), end='')
+                if('times_submitted' in vttext['data']['attributes']):
+                    times_submitted = vttext['data']['attributes']['times_submitted']
+                    print(mycolors.foreground.purple + "\nTimes Submitted: ".ljust(26) + mycolors.reset + str(times_submitted), end='')
+                if('reputation' in vttext['data']['attributes']):
+                    reputation = vttext['data']['attributes']['reputation']
+                    print(mycolors.foreground.purple + "\nReputation: ".ljust(26) + mycolors.reset + str(reputation), end='')
+                if('threat_names' in vttext['data']['attributes']):
+                    print(mycolors.foreground.green + "\n\nThreat Names: ", end='')
+                    for name in vttext['data']['attributes']['threat_names']:
+                        print(mycolors.reset + "\n".ljust(26) + str(name),end='')
+                if('redirection_chain' in vttext['data']['attributes']):
+                    print(mycolors.foreground.green + "\n\nRedirection Chain: ", end='')
+                    for chain in vttext['data']['attributes']['redirection_chain']:
+                        print(mycolors.reset + "\n".ljust(26) + str(chain),end='')
+
+                vt_url_ip_domain_report_light(vttext)
+
+            print("\n")
+
+    except ValueError:
+        if(bkg == 1):
+            print((mycolors.foreground.lightred + "Error while connecting to Virus Total!\n"))
+        else:
+            print((mycolors.foreground.red + "Error while connecting to Virus Total!\n"))
+        print(mycolors.reset)
+        exit(3)
+
+
+def vtuploadfile(file_item, url):
+
+    try:
+
+        finalurl = url
+        requestsession = requests.Session( )
+        requestsession.headers.update({'x-apikey': VTAPI})
+        files = {'file': (file_item, open(file_item, 'rb'))}
+        response = requestsession.post(finalurl, files=files)
+        vttext = json.loads(response.text)
+
+        if (response.status_code == 400):
+            if (bkg == 1):
+                print(mycolors.foreground.yellow + "\tThere was an issue while uploading the file.")
+            if (bkg == 0):
+                print(mycolors.foreground.blue + "\tThere was an issue while uploading the file.")
+        else:
+
+            if (bkg == 1):
+                print(mycolors.foreground.lightcyan + "\n\tFile Submitted!" + mycolors.reset)
+                print(mycolors.foreground.lightcyan + "\n\tid: " + mycolors.reset + vttext['data']['id'])
+                print(mycolors.foreground.yellow + "\n\tWait for 120 seconds (at least) before requesting the report using -v 1 or -v 8 options!" + mycolors.reset)
+            if (bkg == 0):
+                print(mycolors.foreground.green + "\n\tFile Submitted!" + mycolors.reset)
+                print(mycolors.foreground.green + "\n\tid: " + mycolors.reset + vttext['data']['id'])
+                print(mycolors.foreground.purple + "\n\tWait for 120 seconds (at least) before requesting the report using -v 1 or -v 8 options!" + mycolors.reset)
+
+    except ValueError as e:
+        if(bkg == 1):
+            print((mycolors.foreground.lightred + "Error while connecting to Virus Total!\n"))
+        else:
+            print((mycolors.foreground.red + "Error while connecting to Virus Total!\n"))
+        print(mycolors.reset)
+        exit(3)
+
+
+def vtreportwork(myhash, url, prolog):
+
+    try:
+
+        finalurl = ''.join([url, "/", myhash ])
+        requestsession = requests.Session( )
+        requestsession.headers.update({'x-apikey': VTAPI})
+        requestsession.headers.update({'content-type': 'application/json'})
+        response = requestsession.get(finalurl)
+        vttext = json.loads(response.text)
+
+        if (response.status_code == 404):
+            if (bkg == 1):
+                print(mycolors.foreground.yellow + "\nSAMPLE NOT FOUND!")
+            if (bkg == 0):
+                print(mycolors.foreground.red + "\nSAMPLE NOT FOUND!")
+        else:
+            if(bkg == 1):
+                if (prolog == 1):
+                    if('md5' in vttext['data']['attributes']):
+                        md5hash = vttext['data']['attributes']['md5']
+                        print(mycolors.foreground.lightcyan + "\nMD5 hash: ".ljust(22) + mycolors.reset + md5hash, end='')
+                    if('sha1' in vttext['data']['attributes']):
+                        sha1hash = vttext['data']['attributes']['sha1']
+                        print(mycolors.foreground.lightcyan + "\nSHA1 hash: ".ljust(22) + mycolors.reset + sha1hash, end='')
+                    if('sha256' in vttext['data']['attributes']):
+                        sha256hash = vttext['data']['attributes']['sha256']
+                        print(mycolors.foreground.lightcyan + "\nSHA256 hash: ".ljust(22) + mycolors.reset + sha256hash, end='')
+                    if('last_analysis_stats' in vttext['data']['attributes']):
+                        malicious =  vttext['data']['attributes']['last_analysis_stats']['malicious']
+                        undetected =  vttext['data']['attributes']['last_analysis_stats']['undetected']
+                        print(mycolors.foreground.lightred + "\n\nMalicious: ".ljust(23) + mycolors.reset + str(malicious), end='')
+                        print(mycolors.foreground.lightred + "\nUndetected: ".ljust(22) + mycolors.reset + str(undetected), end='\n')
+
+                print(mycolors.foreground.lightred + "\nAV Report:", end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    ok = "CLEAN"
+                    if('Avast' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Avast']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Avast: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Avast: ".ljust(15) + mycolors.reset + ok , end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Avira' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Avira']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Avira: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Avira: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('BitDefender' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['BitDefender']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "BitDefender: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "BitDefender: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('DrWeb' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['DrWeb']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "DrWeb: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "DrWeb: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Emsisoft' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Emsisoft']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Emsisoft: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Emsisoft: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('ESET-NOD32' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['ESET-NOD32']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "ESET-NOD32: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "ESET-NOD32: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('F-Secure' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['F-Secure']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "F-Secure: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "F-Secure: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('FireEye' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['FireEye']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "FireEye: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "FireEye: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Fortinet' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Fortinet']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Fortinet: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Fortinet: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Kaspersky' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Kaspersky']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Kaspersky: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Kaspersky: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('McAfee' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['McAfee']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "McAfee: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "McAfee: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Microsoft' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Microsoft']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Microsoft: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Microsoft: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Panda' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Panda']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Panda: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Panda: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Sophos' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Sophos']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Sophos: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Sophos: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Symantec' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Symantec']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Symantec: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "Symantec: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('TrendMicro' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['TrendMicro']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "TrendMicro: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "TrendMicro: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('ZoneAlarm' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['ZoneAlarm']['result']
+                        if(result):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "ZoneAlarm: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.lightcyan + "\n".ljust(22) + "ZoneAlarm: ".ljust(15) + mycolors.reset + ok, end='')
+
+            if(bkg == 0):
+                if (prolog == 1):
+                    if('md5' in vttext['data']['attributes']):
+                        md5hash = vttext['data']['attributes']['md5']
+                        print(mycolors.foreground.cyan + "\nMD5 hash: ".ljust(22) + mycolors.reset + md5hash, end='')
+                    if('sha1' in vttext['data']['attributes']):
+                        sha1hash = vttext['data']['attributes']['sha1']
+                        print(mycolors.foreground.cyan + "\nSHA1 hash: ".ljust(22) + mycolors.reset + sha1hash, end='')
+                    if('sha256' in vttext['data']['attributes']):
+                        sha256hash = vttext['data']['attributes']['sha256']
+                        print(mycolors.foreground.cyan + "\nSHA256 hash: ".ljust(22) + mycolors.reset + sha256hash, end='')
+                    if('last_analysis_stats' in vttext['data']['attributes']):
+                        malicious =  vttext['data']['attributes']['last_analysis_stats']['malicious']
+                        undetected =  vttext['data']['attributes']['last_analysis_stats']['undetected']
+                        print(mycolors.foreground.red + "\n\nMalicious: ".ljust(23) + mycolors.reset + str(malicious), end='')
+                        print(mycolors.foreground.red + "\nUndetected: ".ljust(22) + mycolors.reset + str(undetected), end='\n')
+
+                print(mycolors.foreground.red + "\nAV Report:", end='')
+                ok = "CLEAN"
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Avast' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Avast']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Avast: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Avast: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Avira' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Avira']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Avira: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Avira: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('BitDefender' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['BitDefender']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "BitDefender: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "BitDefender: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('DrWeb' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['DrWeb']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "DrWeb: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "DrWeb: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Emsisoft' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Emsisoft']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Emsisoft: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Emsisoft: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('ESET-NOD32' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['ESET-NOD32']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "ESET-NOD32: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "ESET-NOD32: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('F-Secure' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['F-Secure']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "F-Secure: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "F-Secure: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('FireEye' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['FireEye']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "FireEye: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "FireEye: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Fortinet' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Fortinet']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Fortinet: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Fortinet: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Kaspersky' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Kaspersky']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Kaspersky: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Kaspersky: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('McAfee' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['McAfee']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "McAfee: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "McAfee: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Microsoft' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Microsoft']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Microsoft: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Microsoft: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Panda' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Panda']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Panda: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Panda: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Sophos' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Sophos']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Sophos: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Sophos: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('Symantec' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['Symantec']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Symantec: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "Symantec: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('TrendMicro' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['TrendMicro']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "TrendMicro: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "TrendMicro: ".ljust(15) + mycolors.reset + ok, end='')
+                if('last_analysis_results' in vttext['data']['attributes']):
+                    if('ZoneAlarm' in vttext['data']['attributes']['last_analysis_results']):
+                        result = vttext['data']['attributes']['last_analysis_results']['ZoneAlarm']['result']
+                        if(result):
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "ZoneAlarm: ".ljust(15) + mycolors.reset + result, end='')
+                        else:
+                            print(mycolors.foreground.cyan + "\n".ljust(22) + "ZoneAlarm: ".ljust(15) + mycolors.reset + ok, end='')
+
+            print("\n")
+
+    except ValueError as e:
+        if(bkg == 1):
+            print((mycolors.foreground.lightred + "Error while connecting to Virus Total!\n"))
+        else:
+            print((mycolors.foreground.red + "Error while connecting to Virus Total!\n"))
+        print(mycolors.reset)
+        exit(3)
+
+
+def vthashwork(myhash, url, showreport):
+
+    try:
+
+        finalurl = ''.join([url, "/", myhash ])
+        requestsession = requests.Session( )
+        requestsession.headers.update({'x-apikey': VTAPI})
+        requestsession.headers.update({'content-type': 'application/json'})
+        response = requestsession.get(finalurl)
+        vttext = json.loads(response.text)
+
+        if (response.status_code == 404):
+            if (bkg == 1):
+                print(mycolors.foreground.yellow + "\nSAMPLE NOT FOUND!")
+            if (bkg == 0):
+                print(mycolors.foreground.red + "\nSAMPLE NOT FOUND!")
+        else:
+            if(bkg == 1):
+                if('md5' in vttext['data']['attributes']):
+                    md5hash = vttext['data']['attributes']['md5']
+                    print(mycolors.foreground.lightcyan + "\nMD5 hash: ".ljust(22) + mycolors.reset + md5hash, end='')
+                if('sha1' in vttext['data']['attributes']):
+                    sha1hash = vttext['data']['attributes']['sha1']
+                    print(mycolors.foreground.lightcyan + "\nSHA1 hash: ".ljust(22) + mycolors.reset + sha1hash, end='')
+                if('sha256' in vttext['data']['attributes']):
+                    sha256hash = vttext['data']['attributes']['sha256']
+                    print(mycolors.foreground.lightcyan + "\nSHA256 hash: ".ljust(22) + mycolors.reset + sha256hash, end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    malicious =  vttext['data']['attributes']['last_analysis_stats']['malicious']
+                    undetected =  vttext['data']['attributes']['last_analysis_stats']['undetected']
+                    print(mycolors.foreground.lightred + "\n\nMalicious: ".ljust(23) + mycolors.reset + str(malicious), end='')
+                    print(mycolors.foreground.lightred + "\nUndetected: ".ljust(22) + mycolors.reset + str(undetected), end='\n')
+                if('type_description' in vttext['data']['attributes']):
+                    type_description = vttext['data']['attributes']['type_description']
+                    print(mycolors.foreground.yellow + "\nType Description: ".ljust(22) + mycolors.reset + type_description, end='')
+                if('size' in vttext['data']['attributes']):
+                    size = vttext['data']['attributes']['size']
+                    print(mycolors.foreground.yellow + "\nSize: ".ljust(22) + mycolors.reset + str(size), end='')
+                if('last_analysis_date' in vttext['data']['attributes']):
+                    last_analysis_date = vttext['data']['attributes']['last_analysis_date']
+                    print(mycolors.foreground.yellow + "\nLast Analysis Date: ".ljust(22) + mycolors.reset + str(datetime.fromtimestamp(last_analysis_date)), end='')
+                if('type_tag' in vttext['data']['attributes']):
+                    type_tag = vttext['data']['attributes']['type_tag']
+                    print(mycolors.foreground.yellow + "\nType Tag: ".ljust(22) + mycolors.reset + type_tag, end='')
+                if('times_submitted' in vttext['data']['attributes']):
+                    times_submitted = vttext['data']['attributes']['times_submitted']
+                    print(mycolors.foreground.yellow + "\nTimes Submitted: ".ljust(22) + mycolors.reset + str(times_submitted), end='')
+                if('popular_threat_classification' in vttext['data']['attributes']):
+                    print(mycolors.foreground.lightred + "\n\nThreat Label: ".ljust(23), end='')
+                    if('suggested_threat_label' in vttext['data']['attributes']['popular_threat_classification']):
+                        threat_label = vttext['data']['attributes']['popular_threat_classification']['suggested_threat_label']
+                    else:
+                        threat_label = 'NO GIVEN NAME'
+                    print(mycolors.reset + str(threat_label),end='')
+                    if('popular_threat_category' in vttext['data']['attributes']['popular_threat_classification']):
+                        print(mycolors.foreground.lightred + "\nClassification: ", end='')
+                        for popular in vttext['data']['attributes']['popular_threat_classification']['popular_threat_category']:
+                            count = popular['count']
+                            value = popular['value'] 
+                            print(mycolors.reset + "\n".ljust(22) + "popular count: ".ljust(15) + str(count),end='')
+                            print(mycolors.reset + "\n".ljust(22) + "label: ".ljust(15) + str(value),end='\n')
+                if('trid' in vttext['data']['attributes']):
+                    print(mycolors.foreground.lightcyan + "\nTrid: ", end='')
+                    for trid in vttext['data']['attributes']['trid']:
+                        file_type = trid['file_type']
+                        probability = trid['probability'] 
+                        print(mycolors.reset + "\n".ljust(22) + "file_type: ".ljust(15) + str(file_type),end='')
+                        print(mycolors.reset + "\n".ljust(22) + "probability: ".ljust(15) + str(probability),end='\n')
+                if('names' in vttext['data']['attributes']):
+                    print(mycolors.foreground.lightcyan + "\nNames: ", end='')
+                    for name in vttext['data']['attributes']['names']:
+                        print(mycolors.reset + ("\n".ljust(22) + (mycolors.reset + "\n".ljust(22)).join(textwrap.wrap(" ".join(name.split()),width=80))),end=' ')
+                if('pe_info' in vttext['data']['attributes']):
+                    print(mycolors.foreground.lightred + "\n\nPE Info: ", end='')
+                    imphash = vttext['data']['attributes']['pe_info']['imphash']
+                    print(mycolors.foreground.yellow + "\n".ljust(22) + "Imphash: ".ljust(15) + mycolors.reset + str(imphash),end='')
+                    if('import_list' in vttext['data']['attributes']['pe_info']):
+                        print(mycolors.foreground.yellow + "\n".ljust(22) + "Libraries: ".ljust(15),end='')
+                        for lib in vttext['data']['attributes']['pe_info']['import_list']:
+                            print(mycolors.reset + "\n".ljust(37) + str(lib['library_name']),end='')
+                    if('sections' in vttext['data']['attributes']['pe_info']):
+                        print(mycolors.foreground.yellow + "\n".ljust(22) + "Sections: ",end='')
+                        for section in vttext['data']['attributes']['pe_info']['sections']:
+                            if('name' in section):
+                                section_name = section['name']
+                                print(mycolors.reset + "\n\n".ljust(38) + "section_name: ".ljust(14) + str(section_name),end=' ')
+                            if('virtual_size' in section):
+                                virtual_size = section['virtual_size']
+                                print(mycolors.reset + "\n".ljust(37) + "virtual_size: ".ljust(14) + str(virtual_size),end=' ')
+                            if('entropy' in section):
+                                entropy = section['entropy'] 
+                                print(mycolors.reset + "\n".ljust(37) + "entropy: ".ljust(14) + str(entropy),end=' ')
+                            if('flags' in section):
+                                flags = section['flags'] 
+                                print(mycolors.reset + "\n".ljust(37) + "flags: ".ljust(14) + str(flags),end=' ')
+                if('androguard' in vttext['data']['attributes']):
+                    print(mycolors.foreground.lightcyan + "\n\nAndroguard: ", end='')
+                    if('Activities' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.lightred + "\n".ljust(22) + "Activities: ".ljust(23), end='')
+                        for activity in vttext['data']['attributes']['androguard']['Activities']:
+                            print(mycolors.reset + "\n".ljust(37) + activity,end='')
+                    if('main_activity' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.lightred + "\n\n".ljust(23) + "MainActivity: ".ljust(15), end='')
+                        mainactivity = vttext['data']['attributes']['androguard']['main_activity']
+                        print(mycolors.reset + mainactivity,end='')
+                    if('Package' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.lightred + "\n".ljust(22) + "Package: ".ljust(15), end='')
+                        mainactivity = vttext['data']['attributes']['androguard']['Package']
+                        print(mycolors.reset + mainactivity,end='\n')
+                    if('Providers' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.lightred + "\n".ljust(22) + "Providers: ".ljust(23), end='')
+                        for provider in vttext['data']['attributes']['androguard']['Providers']:
+                            print(mycolors.reset + "\n".ljust(37) + provider,end='')
+                    if('Receivers' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.lightred + "\n".ljust(22) + "Receivers: ".ljust(23), end='')
+                        for receiver in vttext['data']['attributes']['androguard']['Receivers']:
+                            print(mycolors.reset + "\n".ljust(37) + receiver,end='')
+                    if('Libraries' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.lightred + "\n".ljust(22) + "Libraries: ".ljust(23), end='')
+                        for library in vttext['data']['attributes']['androguard']['Libraries']:
+                            print(mycolors.reset + "\n".ljust(37) + library,end='')
+                    if('Services' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.lightred + "\n".ljust(22) + "Services: ".ljust(23), end='')
+                        for service in vttext['data']['attributes']['androguard']['Services']:
+                            print(mycolors.reset + "\n".ljust(37) + service,end='')
+                    if('StringsInformation' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.lightred + "\n".ljust(22) + "StringsInfo: ".ljust(23), end='')
+                        for string in vttext['data']['attributes']['androguard']['StringsInformation']:
+                            print(mycolors.reset + "\n".ljust(37) + string,end='')
+                    if('certificate' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.lightred + "\n".ljust(22) + "Certificate: ", end='')
+                        if('Issuer' in vttext['data']['attributes']['androguard']['certificate']):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(37) + "Issuer: ".ljust(15), end=' ')
+                            if('DN' in vttext['data']['attributes']['androguard']['certificate']['Issuer']):
+                                dn = vttext['data']['attributes']['androguard']['certificate']['Issuer']['DN']
+                                print(mycolors.reset + "DN: " + dn,end='')
+                        if('Subject' in vttext['data']['attributes']['androguard']['certificate']):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(37) + "Subject: ".ljust(15), end=' ')
+                            if('DN' in vttext['data']['attributes']['androguard']['certificate']['Subject']):
+                                dn = vttext['data']['attributes']['androguard']['certificate']['Subject']['DN']
+                                print(mycolors.reset + "DN: " + dn,end='')
+                        if('serialnumber' in vttext['data']['attributes']['androguard']['certificate']):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(37) + "SerialNumber: ".ljust(15), end=' ')
+                            serialnumber = vttext['data']['attributes']['androguard']['certificate']['serialnumber']
+                            print(mycolors.reset + serialnumber,end='')
+                        if('validfrom' in vttext['data']['attributes']['androguard']['certificate']):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(37) + "ValidFrom: ".ljust(15), end=' ')
+                            validfrom = vttext['data']['attributes']['androguard']['certificate']['validfrom']
+                            print(mycolors.reset + validfrom,end='')
+                        if('validto' in vttext['data']['attributes']['androguard']['certificate']):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(37) + "ValidTo: ".ljust(15), end=' ')
+                            validto = vttext['data']['attributes']['androguard']['certificate']['validto']
+                            print(mycolors.reset + validto,end='')
+                        if('thumbprint' in vttext['data']['attributes']['androguard']['certificate']):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(37) + "Thumbprint: ".ljust(15), end=' ')
+                            thumbprint = vttext['data']['attributes']['androguard']['certificate']['thumbprint']
+                            print(mycolors.reset + thumbprint,end='')
+                    if('intent_filters' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.lightred + "\n".ljust(22) + "IntentFilters: ", end='')
+                        if('Activities' in vttext['data']['attributes']['androguard']['intent_filters']):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(37) + "Activities: ".ljust(15), end=' ')
+                            for key, value in (vttext['data']['attributes']['androguard']['intent_filters']['Activities']).items():
+                                print(mycolors.reset + "\n\n".ljust(54) + mycolors.foreground.yellow + "name: ".ljust(11) + mycolors.reset + key,end='')
+                                if('action' in value):
+                                    for action_item in value['action']:
+                                        print(mycolors.reset + "\n".ljust(53) + mycolors.foreground.lightcyan + "action: ".ljust(11) + mycolors.reset + action_item,end='')
+                                if('category' in value):
+                                    for category in value['category']:
+                                        print(mycolors.reset + "\n".ljust(53) + mycolors.foreground.lightcyan + "category: ".ljust(11) + mycolors.reset + category,end='')
+                        if('Receivers' in vttext['data']['attributes']['androguard']['intent_filters']):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(37) + "Receivers: ".ljust(15), end=' ')
+                            for key, value in (vttext['data']['attributes']['androguard']['intent_filters']['Receivers']).items():
+                                print(mycolors.reset + "\n\n".ljust(54) + mycolors.foreground.yellow + "name: ".ljust(11) + mycolors.reset + key,end='')
+                                if('action' in value):
+                                    for action_item in value['action']:
+                                        print(mycolors.reset + "\n".ljust(53) + mycolors.foreground.lightcyan + "action: ".ljust(11) + mycolors.reset + action_item,end='')
+                                if('category' in value):
+                                    for category in value['category']:
+                                        print(mycolors.reset + "\n".ljust(53) + mycolors.foreground.lightcyan + "category: ".ljust(11) + mycolors.reset + category,end='')
+                        if('Services' in vttext['data']['attributes']['androguard']['intent_filters']):
+                            print(mycolors.foreground.lightcyan + "\n".ljust(37) + "Services: ".ljust(15), end=' ')
+                            for key, value in (vttext['data']['attributes']['androguard']['intent_filters']['Services']).items():
+                                print(mycolors.reset + "\n\n".ljust(54) + mycolors.foreground.yellow + "name: ".ljust(11) + mycolors.reset + key,end='')
+                                if('action' in value):
+                                    for action_item in value['action']:
+                                        print(mycolors.reset + "\n".ljust(53) + mycolors.foreground.lightcyan + "action: ".ljust(11) + mycolors.reset + action_item,end='')
+                                if('category' in value):
+                                    for category in value['category']:
+                                        print(mycolors.reset + "\n".ljust(53) + mycolors.foreground.lightcyan + "category: ".ljust(11) + mycolors.reset + category,end='')
+                    if('permission_details' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.lightred + "\n".ljust(22) + "Permissions: ", end='')
+                        for key, value in (vttext['data']['attributes']['androguard']['permission_details']).items():
+                            print(mycolors.reset + "\n\n".ljust(54) + mycolors.foreground.yellow + "name: ".ljust(11) + mycolors.reset + key,end='')
+                            if('full_description' in value):
+                                print(mycolors.reset + ("\n".ljust(53) + mycolors.foreground.lightcyan + "details: ".ljust(11) + mycolors.reset + (mycolors.reset + "\n".ljust(64)).join(textwrap.wrap(" ".join(value['full_description'].split()),width=80))),end=' ')
+                            if('permission_type' in value):
+                                print(mycolors.reset + "\n".ljust(53) + mycolors.foreground.lightcyan + "type: ".ljust(11) + mycolors.reset + value['permission_type'],end='')
+                            if('short_description' in value):
+                                print(mycolors.reset + ("\n".ljust(53) + mycolors.foreground.lightcyan + "info: ".ljust(11) + mycolors.reset + ("\n" + mycolors.reset + "".ljust(63)).join(textwrap.wrap(value['short_description'],width=80))),end=' ')
+
+                print("\n")
+
+                if(showreport == 1):
+                    vtreportwork(myhash, url, 0)
+
+            if(bkg == 0):
+                if('md5' in vttext['data']['attributes']):
+                    md5hash = vttext['data']['attributes']['md5']
+                    print(mycolors.foreground.cyan + "\nMD5 hash: ".ljust(22) + mycolors.reset + md5hash, end='')
+                if('sha1' in vttext['data']['attributes']):
+                    sha1hash = vttext['data']['attributes']['sha1']
+                    print(mycolors.foreground.cyan + "\nSHA1 hash: ".ljust(22) + mycolors.reset + sha1hash, end='')
+                if('sha256' in vttext['data']['attributes']):
+                    sha256hash = vttext['data']['attributes']['sha256']
+                    print(mycolors.foreground.cyan + "\nSHA256 hash: ".ljust(22) + mycolors.reset + sha256hash, end='')
+                if('last_analysis_stats' in vttext['data']['attributes']):
+                    malicious =  vttext['data']['attributes']['last_analysis_stats']['malicious']
+                    undetected =  vttext['data']['attributes']['last_analysis_stats']['undetected']
+                    print(mycolors.foreground.red + "\n\nMalicious: ".ljust(23) + mycolors.reset + str(malicious), end='')
+                    print(mycolors.foreground.red + "\nUndetected: ".ljust(22) + mycolors.reset + str(undetected), end='\n')
+                if('type_description' in vttext['data']['attributes']):
+                    type_description = vttext['data']['attributes']['type_description']
+                    print(mycolors.foreground.purple + "\nType Description: ".ljust(22) + mycolors.reset + type_description, end='')
+                if('size' in vttext['data']['attributes']):
+                    size = vttext['data']['attributes']['size']
+                    print(mycolors.foreground.purple + "\nSize: ".ljust(22) + mycolors.reset + str(size), end='')
+                if('last_analysis_date' in vttext['data']['attributes']):
+                    last_analysis_date = vttext['data']['attributes']['last_analysis_date']
+                    print(mycolors.foreground.purple + "\nLast Analysis Date: ".ljust(22) + mycolors.reset + str(datetime.fromtimestamp(last_analysis_date)), end='')
+                if('type_tag' in vttext['data']['attributes']):
+                    type_tag = vttext['data']['attributes']['type_tag']
+                    print(mycolors.foreground.cyan + "\nType Tag: ".ljust(22) + mycolors.reset + type_tag, end='')
+                if('times_submitted' in vttext['data']['attributes']):
+                    times_submitted = vttext['data']['attributes']['times_submitted']
+                    print(mycolors.foreground.cyan + "\nTimes Submitted: ".ljust(22) + mycolors.reset + str(times_submitted), end='')
+                if('popular_threat_classification' in vttext['data']['attributes']):
+                    print(mycolors.foreground.red + "\n\nThreat Label: ".ljust(23), end='')
+                    if('suggested_threat_label' in vttext['data']['attributes']['popular_threat_classification']):
+                        threat_label = vttext['data']['attributes']['popular_threat_classification']['suggested_threat_label']
+                    else:
+                        threat_label = 'NO GIVEN NAME'
+                    print(mycolors.reset + str(threat_label),end='')
+                    if('popular_threat_category' in vttext['data']['attributes']['popular_threat_classification']):
+                        print(mycolors.foreground.red + "\nClassification: ", end='')
+                        for popular in vttext['data']['attributes']['popular_threat_classification']['popular_threat_category']:
+                            count = popular['count']
+                            value = popular['value'] 
+                            print(mycolors.reset + "\n".ljust(22) + "popular count: ".ljust(15) + str(count),end='')
+                            print(mycolors.reset + "\n".ljust(22) + "label: ".ljust(15) + str(value),end='\n')
+                if('trid' in vttext['data']['attributes']):
+                    print(mycolors.foreground.cyan + "\nTrid: ", end='')
+                    for trid in vttext['data']['attributes']['trid']:
+                        file_type = trid['file_type']
+                        probability = trid['probability'] 
+                        print(mycolors.reset + "\n".ljust(22) + "file_type: ".ljust(15) + str(file_type),end='')
+                        print(mycolors.reset + "\n".ljust(22) + "probability: ".ljust(15) + str(probability),end='\n')
+                if('names' in vttext['data']['attributes']):
+                    print(mycolors.foreground.cyan + "\nNames: ", end='')
+                    for name in vttext['data']['attributes']['names']:
+                        print(mycolors.reset + ("\n".ljust(22) + (mycolors.reset + "\n".ljust(22)).join(textwrap.wrap(" ".join(name.split()),width=80))),end=' ')
+                if('pe_info' in vttext['data']['attributes']):
+                    print(mycolors.foreground.red + "\n\nPE Info: ", end='')
+                    imphash = vttext['data']['attributes']['pe_info']['imphash']
+                    print(mycolors.foreground.blue + "\n".ljust(22) + "Imphash: ".ljust(15) + mycolors.reset + str(imphash),end='')
+                    if('import_list' in vttext['data']['attributes']['pe_info']):
+                        print(mycolors.foreground.blue + "\n".ljust(22) + "Libraries: ".ljust(15),end='')
+                        for lib in vttext['data']['attributes']['pe_info']['import_list']:
+                            print(mycolors.reset + "\n".ljust(37) + str(lib['library_name']),end='')
+                    if('sections' in vttext['data']['attributes']['pe_info']):
+                        print(mycolors.foreground.blue + "\n".ljust(22) + "Sections: ",end='')
+                        for section in vttext['data']['attributes']['pe_info']['sections']:
+                            if('name' in section):
+                                section_name = section['name']
+                                print(mycolors.reset + "\n\n".ljust(38) + "section_name: ".ljust(14) + str(section_name),end=' ')
+                            if('virtual_size' in section):
+                                virtual_size = section['virtual_size']
+                                print(mycolors.reset + "\n".ljust(37) + "virtual_size: ".ljust(14) + str(virtual_size),end=' ')
+                            if('entropy' in section):
+                                entropy = section['entropy'] 
+                                print(mycolors.reset + "\n".ljust(37) + "entropy: ".ljust(14) + str(entropy),end=' ')
+                            if('flags' in section):
+                                flags = section['flags'] 
+                                print(mycolors.reset + "\n".ljust(37) + "flags: ".ljust(14) + str(flags),end=' ')
+                if('androguard' in vttext['data']['attributes']):
+                    print(mycolors.foreground.cyan + "\n\nAndroguard: ", end='')
+                    if('Activities' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.red + "\n".ljust(22) + "Activities: ".ljust(23), end='')
+                        for activity in vttext['data']['attributes']['androguard']['Activities']:
+                            print(mycolors.reset + "\n".ljust(37) + activity,end='')
+                    if('main_activity' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.red + "\n\n".ljust(23) + "MainActivity: ".ljust(15), end='')
+                        mainactivity = vttext['data']['attributes']['androguard']['main_activity']
+                        print(mycolors.reset + mainactivity,end='')
+                    if('Package' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.red + "\n".ljust(22) + "Package: ".ljust(15), end='')
+                        mainactivity = vttext['data']['attributes']['androguard']['Package']
+                        print(mycolors.reset + mainactivity,end='\n')
+                    if('Providers' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.red + "\n".ljust(22) + "Providers: ".ljust(23), end='')
+                        for provider in vttext['data']['attributes']['androguard']['Providers']:
+                            print(mycolors.reset + "\n".ljust(37) + provider,end='')
+                    if('Receivers' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.red + "\n".ljust(22) + "Receivers: ".ljust(23), end='')
+                        for receiver in vttext['data']['attributes']['androguard']['Receivers']:
+                            print(mycolors.reset + "\n".ljust(37) + receiver,end='')
+                    if('Libraries' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.red + "\n".ljust(22) + "Libraries: ".ljust(23), end='')
+                        for library in vttext['data']['attributes']['androguard']['Libraries']:
+                            print(mycolors.reset + "\n".ljust(37) + library,end='')
+                    if('Services' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.red + "\n".ljust(22) + "Services: ".ljust(23), end='')
+                        for service in vttext['data']['attributes']['androguard']['Services']:
+                            print(mycolors.reset + "\n".ljust(37) + service,end='')
+                    if('StringsInformation' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.red + "\n".ljust(22) + "StringsInfo: ".ljust(23), end='')
+                        for string in vttext['data']['attributes']['androguard']['StringsInformation']:
+                            print(mycolors.reset + "\n".ljust(37) + string,end='')
+                    if('certificate' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.red + "\n".ljust(22) + "Certificate: ", end='')
+                        if('Issuer' in vttext['data']['attributes']['androguard']['certificate']):
+                            print(mycolors.foreground.blue + "\n".ljust(37) + "Issuer: ".ljust(15), end=' ')
+                            if('DN' in vttext['data']['attributes']['androguard']['certificate']['Issuer']):
+                                dn = vttext['data']['attributes']['androguard']['certificate']['Issuer']['DN']
+                                print(mycolors.reset + "DN: " + dn,end='')
+                        if('Subject' in vttext['data']['attributes']['androguard']['certificate']):
+                            print(mycolors.foreground.blue + "\n".ljust(37) + "Subject: ".ljust(15), end=' ')
+                            if('DN' in vttext['data']['attributes']['androguard']['certificate']['Subject']):
+                                dn = vttext['data']['attributes']['androguard']['certificate']['Subject']['DN']
+                                print(mycolors.reset + "DN: " + dn,end='')
+                        if('serialnumber' in vttext['data']['attributes']['androguard']['certificate']):
+                            print(mycolors.foreground.blue + "\n".ljust(37) + "SerialNumber: ".ljust(15), end=' ')
+                            serialnumber = vttext['data']['attributes']['androguard']['certificate']['serialnumber']
+                            print(mycolors.reset + serialnumber,end='')
+                        if('validfrom' in vttext['data']['attributes']['androguard']['certificate']):
+                            print(mycolors.foreground.blue + "\n".ljust(37) + "ValidFrom: ".ljust(15), end=' ')
+                            validfrom = vttext['data']['attributes']['androguard']['certificate']['validfrom']
+                            print(mycolors.reset + validfrom,end='')
+                        if('validto' in vttext['data']['attributes']['androguard']['certificate']):
+                            print(mycolors.foreground.blue + "\n".ljust(37) + "ValidTo: ".ljust(15), end=' ')
+                            validto = vttext['data']['attributes']['androguard']['certificate']['validto']
+                            print(mycolors.reset + validto,end='')
+                        if('thumbprint' in vttext['data']['attributes']['androguard']['certificate']):
+                            print(mycolors.foreground.blue + "\n".ljust(37) + "Thumbprint: ".ljust(15), end=' ')
+                            thumbprint = vttext['data']['attributes']['androguard']['certificate']['thumbprint']
+                            print(mycolors.reset + thumbprint,end='')
+                    if('intent_filters' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.red + "\n".ljust(22) + "IntentFilters: ", end='')
+                        if('Activities' in vttext['data']['attributes']['androguard']['intent_filters']):
+                            print(mycolors.foreground.blue + "\n".ljust(37) + "Activities: ".ljust(15), end=' ')
+                            for key, value in (vttext['data']['attributes']['androguard']['intent_filters']['Activities']).items():
+                                print(mycolors.reset + "\n\n".ljust(54) + mycolors.foreground.purple + "name: ".ljust(11) + mycolors.reset + key,end='')
+                                if('action' in value):
+                                    for action_item in value['action']:
+                                        print(mycolors.reset + "\n".ljust(53) + mycolors.foreground.cyan + "action: ".ljust(11) + mycolors.reset + action_item,end='')
+                                if('category' in value):
+                                    for category in value['category']:
+                                        print(mycolors.reset + "\n".ljust(53) + mycolors.foreground.cyan + "category: ".ljust(11) + mycolors.reset + category,end='')
+                        if('Receivers' in vttext['data']['attributes']['androguard']['intent_filters']):
+                            print(mycolors.foreground.blue + "\n".ljust(37) + "Receivers: ".ljust(15), end=' ')
+                            for key, value in (vttext['data']['attributes']['androguard']['intent_filters']['Receivers']).items():
+                                print(mycolors.reset + "\n\n".ljust(54) + mycolors.foreground.purple + "name: ".ljust(11) + mycolors.reset + key,end='')
+                                if('action' in value):
+                                    for action_item in value['action']:
+                                        print(mycolors.reset + "\n".ljust(53) + mycolors.foreground.cyan + "action: ".ljust(11) + mycolors.reset + action_item,end='')
+                                if('category' in value):
+                                    for category in value['category']:
+                                        print(mycolors.reset + "\n".ljust(53) + mycolors.foreground.cyan + "category: ".ljust(11) + mycolors.reset + category,end='')
+                        if('Services' in vttext['data']['attributes']['androguard']['intent_filters']):
+                            print(mycolors.foreground.blue + "\n".ljust(37) + "Services: ".ljust(15), end=' ')
+                            for key, value in (vttext['data']['attributes']['androguard']['intent_filters']['Services']).items():
+                                print(mycolors.reset + "\n\n".ljust(54) + mycolors.foreground.purple + "name: ".ljust(11) + mycolors.reset + key,end='')
+                                if('action' in value):
+                                    for action_item in value['action']:
+                                        print(mycolors.reset + "\n".ljust(53) + mycolors.foreground.cyan + "action: ".ljust(11) + mycolors.reset + action_item,end='')
+                                if('category' in value):
+                                    for category in value['category']:
+                                        print(mycolors.reset + "\n".ljust(53) + mycolors.foreground.cyan + "category: ".ljust(11) + mycolors.reset + category,end='')
+                    if('permission_details' in vttext['data']['attributes']['androguard']):
+                        print(mycolors.foreground.red + "\n".ljust(22) + "Permissions: ", end='')
+                        for key, value in (vttext['data']['attributes']['androguard']['permission_details']).items():
+                            print(mycolors.reset + "\n\n".ljust(54) + mycolors.foreground.purple + "name: ".ljust(11) + mycolors.reset + key,end='')
+                            if('full_description' in value):
+                                print(mycolors.reset + ("\n".ljust(53) + mycolors.foreground.cyan + "details: ".ljust(11) + mycolors.reset + (mycolors.reset + "\n".ljust(64)).join(textwrap.wrap(" ".join(value['full_description'].split()),width=80))),end=' ')
+                            if('permission_type' in value):
+                                print(mycolors.reset + "\n".ljust(53) + mycolors.foreground.cyan + "type: ".ljust(11) + mycolors.reset + value['permission_type'],end='')
+                            if('short_description' in value):
+                                print(mycolors.reset + ("\n".ljust(53) + mycolors.foreground.cyan + "info: ".ljust(11) + mycolors.reset + ("\n" + mycolors.reset + "".ljust(63)).join(textwrap.wrap(value['short_description'],width=80))),end=' ')
+
+                print("\n")
+
+                if(showreport == 1):
+                    vtreportwork(myhash, url, 0)
+
+
+    except ValueError as e:
+        if(bkg == 1):
+            print((mycolors.foreground.lightred + "Error while connecting to Virus Total!\n"))
+        else:
+            print((mycolors.foreground.red + "Error while connecting to Virus Total!\n"))
+        print(mycolors.reset)
+        exit(3)
+
+
+def vtlargefile(file_item, url):
+
+    try:
+
+        finalurl = ''.join([url, "/upload_url" ])
+        requestsession = requests.Session( )
+        requestsession.headers.update({'x-apikey': VTAPI})
+        requestsession.headers.update({'content-type': 'application/json'})
+        response = requestsession.get(finalurl)
+        vttext = json.loads(response.text)
+
+        if (response.status_code == 404):
+            if (bkg == 1):
+                print(mycolors.foreground.yellow + "\tThere was an issue while getting a URL for uploading the file.")
+            if (bkg == 0):
+                print(mycolors.foreground.blue + "\tThere was an issue while getting a URL for uploading the file.")
+        else:
+            if (bkg == 1):
+                print(mycolors.foreground.yellow + "\n\tUploading file...")
+                vtuploadfile(file_item, vttext['data'])
+            if (bkg == 0):
+                print(mycolors.foreground.blue + "\n\tUploading file...")
+                vtuploadfile(file_item, vttext['data'])
+
+    except ValueError as e:
+        if(bkg == 1):
+            print((mycolors.foreground.lightred + "Error while connecting to Virus Total!\n"))
+        else:
+            print((mycolors.foreground.red + "Error while connecting to Virus Total!\n"))
+        print(mycolors.reset)
+        exit(3)
+
+
+def vtbatchwork(myhash, url):
+    
+    type_description = 'NOT FOUND'
+    threat_label = 'NOT FOUND'
+    malicious = 'NOT FOUND'
+
+    try:
+
+        finalurl = ''.join([url, "/", myhash ])
+        requestsession = requests.Session( )
+        requestsession.headers.update({'x-apikey': VTAPI})
+        requestsession.headers.update({'content-type': 'application/json'})
+        response = requestsession.get(finalurl)
+        vttext = json.loads(response.text)
+
+        if (response.status_code == 404):
+            return (type_description, threat_label, malicious)
+        else:
+            if('type_description' in vttext['data']['attributes']):
+                type_description = vttext['data']['attributes']['type_description']
+            else:
+                type_description = 'NO DESCRIPTION'
+            if('popular_threat_classification' in vttext['data']['attributes']):
+                if('suggested_threat_label' in vttext['data']['attributes']['popular_threat_classification']):
+                    threat_label = vttext['data']['attributes']['popular_threat_classification']['suggested_threat_label']
+            else:
+                threat_label = 'NO GIVEN NAME'
+            if('last_analysis_stats' in vttext['data']['attributes']):
+                if('malicious' in vttext['data']['attributes']['last_analysis_stats']):
+                    malicious = vttext['data']['attributes']['last_analysis_stats']['malicious']
+            else:
+                malicious = 'NOT FOUND'
+
+            return (type_description, threat_label, malicious)
+
+    except ValueError as e:
+        if(bkg == 1):
+            print((mycolors.foreground.lightred + "Error while connecting to Virus Total!\n"))
+        else:
+            print((mycolors.foreground.red + "Error while connecting to Virus Total!\n"))
+        print(mycolors.reset)
+        exit(3)
+
+
+def vtbatchcheck(filename, url, apitype):
+
+    type_description = ''
+    threat_label = ''
+    malicious = ''
+    apitype_var = apitype
+
+    try:
+
+        print("\nSample".center(10) + "Hash".center(72) + "Description".center(26) + "Threat Label".center(26) + "AV Detection".center(24))
+        print('-' * 152, end="\n\n")
+
+        fh = open(filename,'r')
+        filelines = fh.readlines()
+
+        hashnumber = 0
+        for hashitem in filelines:
+            hashnumber = hashnumber + 1
+            (type_description, threat_label, malicious) = vtbatchwork(hashitem,url)
+            if (bkg == 1):
+                print(mycolors.foreground.lightcyan + "hash_" + str(hashnumber) + "\t   " +  mycolors.reset + (hashitem.strip()).ljust(68) + mycolors.foreground.yellow + (type_description).ljust(30) + mycolors.foreground.lightcyan + (threat_label).ljust(34) +  mycolors.foreground.lightred + str(malicious))
+            if (bkg == 0):
+                print(mycolors.foreground.purple + "hash_" + str(hashnumber) + "\t   " +  mycolors.reset + (hashitem.strip()).ljust(72) + mycolors.foreground.cyan + (type_description).ljust(30) + mycolors.foreground.blue + (threat_label).ljust(34) +  mycolors.foreground.red + str(malicious))
+            if (apitype_var == 1):
+                if ((hashnumber % 4) == 0):
+                    time.sleep(61)
+        fh.close()
+
+    except OSError:
+        if(bkg == 1):
+            print((mycolors.foreground.lightred + "The provided file doesn't exist!\n"))
+        else:
+            print((mycolors.foreground.red + "The provided file doesn't exist!\n"))
+        print(mycolors.reset)
+        exit(3)
+
+
+def vtbehavior(myhash, url):
+
+    try:
+
+        finalurl = ''.join([url, "/", myhash, "/behaviour_summary" ])
+        requestsession = requests.Session( )
+        requestsession.headers.update({'x-apikey': VTAPI})
+        requestsession.headers.update({'content-type': 'application/json'})
+        response = requestsession.get(finalurl)
+        vttext = json.loads(response.text)
+
+        if (response.status_code == 404):
+            if (bkg == 1):
+                print(mycolors.foreground.yellow + "\tReport not found for the provided hash!")
+            if (bkg == 0):
+                print(mycolors.foreground.blue + "\tReport not found for the provided hash!")
+        else:
+            if(bkg == 1):
+                finalhash = myhash
+                print(mycolors.foreground.lightred + "\nProvided Hash: ".ljust(24) + mycolors.reset + finalhash)
+                if('verdicts' in vttext['data']):
+                    print(mycolors.foreground.yellow + "Verdicts: ".ljust(22) + mycolors.reset, end=' ')
+                    for verdict in vttext['data']['verdicts']:
+                        print(mycolors.reset + (verdict),end=' | ')
+                if('verdict_confidence' in vttext['data']):
+                    print(mycolors.foreground.yellow + "\nVerdict Confidence: ".ljust(24) + mycolors.reset + str(vttext['data']['verdict_confidence']) + mycolors.reset, end=' ')
+                if('verdict_labels' in vttext['data']):
+                    print(mycolors.foreground.yellow + "\nVerdict Labels: ".ljust(23) + mycolors.reset, end=' ')
+                    for label in vttext['data']['verdict_labels']:
+                        print(mycolors.reset + (label),end=' ')
+                if('processes_injected' in vttext['data']):
+                    print(mycolors.foreground.lightred + "\n\nProcesses Injected: ", end='')
+                    for injected in vttext['data']['processes_injected']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(injected,width=120))),end=' ')
+                if('calls_highlighted' in vttext['data']):
+                    print(mycolors.foreground.lightred + "\n\nCalls Highlighted: ", end='')
+                    for calls in vttext['data']['calls_highlighted']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(calls,width=120))),end=' ')
+                if('processes_tree' in vttext['data']):
+                    print(mycolors.foreground.lightcyan + "\n\nProcesses Tree: ", end='')
+                    for process in vttext['data']['processes_tree']:
+                        print("\n")
+                        print(mycolors.reset + " ".ljust(23) + "process_id: ".ljust(15) + process['process_id'],end='')
+                        print(mycolors.reset + ("\n".ljust(24) + "process_name: ".ljust(15) + mycolors.reset + (mycolors.reset + "\n".ljust(39)).join(textwrap.wrap(" ".join(process['name'].split()),width=80))),end=' ')
+                        if('children' in process):
+                            print(mycolors.reset + "\n".ljust(24) + "children: ".ljust(15),end='')
+                            for child in process['children']:
+                                print(mycolors.reset + "\n".ljust(28) + "process_id: ".ljust(15) + child['process_id'],end='')
+                                print(mycolors.reset + ("\n".ljust(28) + "process_name: ".ljust(15) + mycolors.reset + (mycolors.reset + "\n".ljust(43)).join(textwrap.wrap(" ".join(child['name'].split()),width=80))),end=' ')
+                if('processes_terminated' in vttext['data']):
+                    print(mycolors.foreground.lightcyan + "\n\nProcesses Terminated: ", end='\n')
+                    for process_term in vttext['data']['processes_terminated']:
+                        print(mycolors.reset + "".ljust(23) + process_term,end='\n')
+                if('processes_killed' in vttext['data']):
+                    print(mycolors.foreground.lightcyan + "\n\nProcesses Killed: ", end='\n')
+                    for process_kill in vttext['data']['processes_killed']:
+                        print(mycolors.reset + "".ljust(23) + process_kill,end='\n')
+                if('services_created' in vttext['data']):
+                    print(mycolors.foreground.lightred + "\n\nServices Created: ", end='\n')
+                    for services_created in vttext['data']['services_created']:
+                        print(mycolors.reset + "".ljust(23) + services_created,end='\n')
+                if('services_deleted' in vttext['data']):
+                    print(mycolors.foreground.lightred + "\n\nServices Deleted: ", end='\n')
+                    for services_deleted in vttext['data']['services_deleted']:
+                        print(mycolors.reset + "".ljust(23) + services_deleted,end='\n')
+                if('services_started' in vttext['data']):
+                    print(mycolors.foreground.lightred + "\n\nServices Started: ", end='\n')
+                    for services_started in vttext['data']['services_started']:
+                        print(mycolors.reset + "".ljust(23) + services_started,end='\n')
+                if('services_stopped' in vttext['data']):
+                    print(mycolors.foreground.lightred + "\n\nServices Stopped: ", end='\n')
+                    for services_stopped in vttext['data']['services_stopped']:
+                        print(mycolors.reset + "".ljust(23) + services_stopped,end='\n')
+                if('dns_lookups' in vttext['data']):
+                    print(mycolors.foreground.yellow + "\nDNS Lookups: ", end='')
+                    for lookup in vttext['data']['dns_lookups']:
+                        if('resolved_ips' in lookup):
+                            print(mycolors.reset + "\n".ljust(24) + "resolved_ips: ",end='')
+                            for ip in (lookup['resolved_ips']):
+                                print(ip,end=' | ')
+                        if('hostname' in lookup):
+                            print(mycolors.reset + "\n".ljust(24) + "hostname: ".ljust(14) + lookup['hostname'],end='\n')
+                if('ja3_digests' in vttext['data']):
+                    print(mycolors.foreground.yellow + "\n\nJA3 Digests: ", end='\n')
+                    for ja3 in vttext['data']['ja3_digests']:
+                        print(mycolors.reset + "".ljust(23) + ja3,end='\n')
+                if('modules_loaded' in vttext['data']):
+                    print(mycolors.foreground.yellow + "\nModules Loaded: ", end='')
+                    for module in vttext['data']['modules_loaded']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(module,width=120))),end=' ')
+                if('registry_keys_opened' in vttext['data']):
+                    print(mycolors.foreground.yellow + "\n\nRegistry Keys Opened: ", end='')
+                    for key in vttext['data']['registry_keys_opened']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(key,width=120))),end=' ')
+                if('files_opened' in vttext['data']):
+                    print(mycolors.foreground.lightcyan + "\n\nFiles Opened: ", end='')
+                    for filename in vttext['data']['files_opened']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(filename,width=120))),end=' ')
+                if('files_written' in vttext['data']):
+                    print(mycolors.foreground.lightcyan + "\n\nFiles Written: ", end='')
+                    for filewritten in vttext['data']['files_written']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(filewritten,width=120))),end=' ')
+                if('files_deleted' in vttext['data']):
+                    print(mycolors.foreground.lightcyan + "\n\nFiles Deleted: ", end='')
+                    for filedeleted in vttext['data']['files_deleted']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(filedeleted,width=120))),end=' ')
+                if('command_executions' in vttext['data']):
+                    print(mycolors.foreground.yellow + "\n\nCommand Executions: ", end='')
+                    for command in vttext['data']['command_executions']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(command,width=120))),end=' ')
+                if('mutexes_created' in vttext['data']):
+                    print(mycolors.foreground.yellow + "\n\nMutex Created: ", end='')
+                    for mutex in vttext['data']['mutexes_created']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(mutex,width=120))),end=' ')
+                if('windows_hidden' in vttext['data']):
+                    print(mycolors.foreground.yellow + "\n\nWindows Hidden: ", end='\n')
+                    for windows_hidden in vttext['data']['windows_hidden']:
+                        print(mycolors.reset + "".ljust(23) + windows_hidden,end='\n')
+
+            if(bkg == 0):
+                finalhash = myhash
+                print(mycolors.foreground.red + "\nProvided Hash: ".ljust(24) + mycolors.reset + finalhash)
+                if('verdicts' in vttext['data']):
+                    print(mycolors.foreground.purple + "Verdicts: ".ljust(22) + mycolors.reset, end=' ')
+                    for verdict in vttext['data']['verdicts']:
+                        print(mycolors.reset + (verdict),end=' | ')
+                if('verdict_confidence' in vttext['data']):
+                    print(mycolors.foreground.purple + "\nVerdict Confidence: ".ljust(24) + mycolors.reset + str(vttext['data']['verdict_confidence']) + mycolors.reset, end=' ')
+                if('verdict_labels' in vttext['data']):
+                    print(mycolors.foreground.purple + "\nVerdict Labels: ".ljust(23) + mycolors.reset, end=' ')
+                    for label in vttext['data']['verdict_labels']:
+                        print(mycolors.reset + (label),end=' ')
+                if('processes_injected' in vttext['data']):
+                    print(mycolors.foreground.red + "\n\nProcesses Injected: ", end='')
+                    for injected in vttext['data']['processes_injected']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(injected,width=120))),end=' ')
+                if('calls_highlighted' in vttext['data']):
+                    print(mycolors.foreground.red + "\n\nCalls Highlighted: ", end='')
+                    for calls in vttext['data']['calls_highlighted']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(calls,width=120))),end=' ')
+                if('processes_tree' in vttext['data']):
+                    print(mycolors.foreground.blue + "\n\nProcesses Tree: ", end='')
+                    for process in vttext['data']['processes_tree']:
+                        print("\n")
+                        print(mycolors.reset + " ".ljust(23) + "process_id: ".ljust(15) + process['process_id'],end='')
+                        print(mycolors.reset + ("\n".ljust(24) + "process_name: ".ljust(15) + mycolors.reset + (mycolors.reset + "\n".ljust(39)).join(textwrap.wrap(" ".join(process['name'].split()),width=80))),end=' ')
+                        if('children' in process):
+                            print(mycolors.reset + "\n".ljust(24) + "children: ".ljust(15),end='')
+                            for child in process['children']:
+                                print(mycolors.reset + "\n".ljust(28) + "process_id: ".ljust(15) + child['process_id'],end='')
+                                print(mycolors.reset + ("\n".ljust(28) + "process_name: ".ljust(15) + mycolors.reset + (mycolors.reset + "\n".ljust(43)).join(textwrap.wrap(" ".join(child['name'].split()),width=80))),end=' ')
+                if('processes_terminated' in vttext['data']):
+                    print(mycolors.foreground.blue + "\n\nProcesses Terminated: ", end='\n')
+                    for process_term in vttext['data']['processes_terminated']:
+                        print(mycolors.reset + "".ljust(23) + process_term,end='\n')
+                if('processes_killed' in vttext['data']):
+                    print(mycolors.foreground.blue + "\n\nProcesses Killed: ", end='\n')
+                    for process_kill in vttext['data']['processes_killed']:
+                        print(mycolors.reset + "".ljust(23) + process_kill,end='\n')
+                if('services_created' in vttext['data']):
+                    print(mycolors.foreground.blue + "\n\nServices Created: ", end='\n')
+                    for services_created in vttext['data']['services_created']:
+                        print(mycolors.reset + "".ljust(23) + services_created,end='\n')
+                if('services_deleted' in vttext['data']):
+                    print(mycolors.foreground.blue + "\n\nServices Deleted: ", end='\n')
+                    for services_deleted in vttext['data']['services_deleted']:
+                        print(mycolors.reset + "".ljust(23) + services_deleted,end='\n')
+                if('services_started' in vttext['data']):
+                    print(mycolors.foreground.blue + "\n\nServices Started: ", end='\n')
+                    for services_started in vttext['data']['services_started']:
+                        print(mycolors.reset + "".ljust(23) + services_started,end='\n')
+                if('services_stopped' in vttext['data']):
+                    print(mycolors.foreground.blue + "\n\nServices Stopped: ", end='\n')
+                    for services_stopped in vttext['data']['services_stopped']:
+                        print(mycolors.reset + "".ljust(23) + services_stopped,end='\n')
+                if('dns_lookups' in vttext['data']):
+                    print(mycolors.foreground.blue + "\nDNS Lookups: ", end='')
+                    for lookup in vttext['data']['dns_lookups']:
+                        if('resolved_ips' in lookup):
+                            print(mycolors.reset + "\n".ljust(24) + "resolved_ips: ",end='')
+                            for ip in (lookup['resolved_ips']):
+                                print(ip,end=' | ')
+                        if('hostname' in lookup):
+                            print(mycolors.reset + "\n".ljust(24) + "hostname: ".ljust(14) + lookup['hostname'],end='\n')
+                if('ja3_digests' in vttext['data']):
+                    print(mycolors.foreground.blue + "\n\nJA3 Digests: ", end='\n')
+                    for ja3 in vttext['data']['ja3_digests']:
+                        print(mycolors.reset + "".ljust(23) + ja3,end='\n')
+                if('modules_loaded' in vttext['data']):
+                    print(mycolors.foreground.blue + "\nModules Loaded: ", end='')
+                    for module in vttext['data']['modules_loaded']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(module,width=120))),end=' ')
+                if('registry_keys_opened' in vttext['data']):
+                    print(mycolors.foreground.blue + "\n\nRegistry Keys Opened: ", end='')
+                    for key in vttext['data']['registry_keys_opened']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(key,width=120))),end=' ')
+                if('files_opened' in vttext['data']):
+                    print(mycolors.foreground.blue + "\n\nFiles Opened: ", end='')
+                    for filename in vttext['data']['files_opened']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(filename,width=120))),end=' ')
+                if('files_written' in vttext['data']):
+                    print(mycolors.foreground.blue + "\n\nFiles Written: ", end='')
+                    for filewritten in vttext['data']['files_written']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(filewritten,width=120))),end=' ')
+                if('files_deleted' in vttext['data']):
+                    print(mycolors.foreground.blue + "\n\nFiles Deleted: ", end='')
+                    for filedeleted in vttext['data']['files_deleted']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(filedeleted,width=120))),end=' ')
+                if('command_executions' in vttext['data']):
+                    print(mycolors.foreground.purple + "\n\nCommand Executions: ", end='')
+                    for command in vttext['data']['command_executions']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(command,width=120))),end=' ')
+                if('mutexes_created' in vttext['data']):
+                    print(mycolors.foreground.purple + "\n\nMutex Created: ", end='')
+                    for mutex in vttext['data']['mutexes_created']:
+                        print(mycolors.reset + ("\n".ljust(24) + ("\n" + "".ljust(24)).join(textwrap.wrap(mutex,width=120))),end=' ')
+                if('windows_hidden' in vttext['data']):
+                    print(mycolors.foreground.purple + "\n\nWindows Hidden: ", end='\n')
+                    for windows_hidden in vttext['data']['windows_hidden']:
+                        print(mycolors.reset + "".ljust(23) + windows_hidden,end='\n')
+
+    except ValueError as e:
+        if(bkg == 1):
+            print((mycolors.foreground.lightred + "Error while connecting to Virus Total!\n"))
+        else:
+            print((mycolors.foreground.red + "Error while connecting to Virus Total!\n"))
+        print(mycolors.reset)
+        exit(3)
+
+
+def vtdirchecking(repo2, url, apitype):
+
+    type_description = ''
+    threat_label = ''
+    malicious = ''
+    apitype_var = apitype
+
+    directory = repo2
+    if os.path.isabs(directory) == False:
+        directory = os.path.abspath('.') + "/" + directory
+    os.chdir(directory)
+
+    try:
+        
+        for filen in os.listdir(directory):
+            try:
+                filename = str(filen)
+                if(os.path.isdir(filename) == True):
+                    continue
+                targetfile = ftype(filename)
+                F.append(filename)
+                H.append(sha256hash(filename))
+
+            except (AttributeError, NameError) as e:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightred + "\An error has occured while reading the %s file." % filename)
+                else:
+                    print(mycolors.foreground.red + "\nAn error has occured while reading the %s file." % filename)
+                print(mycolors.reset)
+
+        file_hash_dict = dict(list(zip(F,H)))
+
+        print("\nSample".center(10) + "Filename".center(72) + "Description".center(26) + "Threat Label".center(28) + "AV Detection".center(26))
+        print('-' * 154, end="\n\n")
+
+        hashnumber = 0
+
+        for key,value in file_hash_dict.items(): 
+            hashnumber = hashnumber + 1
+            (type_description, threat_label, malicious) = vtbatchwork(value,url)
+            if (bkg == 1):
+                print(mycolors.foreground.lightcyan + "file_" + str(hashnumber) + "\t   " +  mycolors.reset + (key.strip()).ljust(71) + mycolors.foreground.yellow + (type_description).ljust(30) + mycolors.foreground.lightcyan + (threat_label).ljust(34) +  mycolors.foreground.lightred + str(malicious))
+            if (bkg == 0):
+                print(mycolors.foreground.blue + "file_" + str(hashnumber) + "\t   " +  mycolors.reset + (key.strip()).ljust(71) + mycolors.foreground.cyan + (type_description).ljust(30) + mycolors.foreground.blue + (threat_label).ljust(34) +  mycolors.foreground.red + str(malicious))
+            if (apitype_var == 1):
+                if ((hashnumber % 4) == 0):
+                    time.sleep(61)
+
+    except OSError:
+        if(bkg == 1):
+            print((mycolors.foreground.lightred + "The provided file doesn't exist!\n"))
+        else:
+            print((mycolors.foreground.red + "The provided file doesn't exist!\n"))
+        print(mycolors.reset)
+        exit(3)
 
 
 def hashow(filehash):
@@ -1436,11 +2354,11 @@ def hashow(filehash):
             print(i, end=' ') 
 
         if (bkg == 1):
-            print((mycolors.foreground.pink))
+            print((mycolors.foreground.lightcyan))
         else:
             print((mycolors.foreground.purple))
 
-        print("\nCertificates:\n", end=' ')
+        print("\nCertificates:\n", end='\n')
         for i in certificates:
             print("".ljust(20), end=' ')
             print(("owner: %s" % i['owner']))
@@ -1452,7 +2370,7 @@ def hashow(filehash):
             print(("valid_until: %s\n" % i['valid_until']))
 
         if (bkg == 1):
-            print(mycolors.foreground.lightgreen)
+            print(mycolors.foreground.lightcyan)
         else:
             print(mycolors.foreground.purple)
 
@@ -1488,7 +2406,7 @@ def polymetasearch(poly, metainfo):
     requestPOLYAPI()
     polyswarm = PolyswarmAPI(key=POLYAPI)
 
-    if (metainfo == 0):
+    if (metainfo == 4):
         targetfile = poly 
         mysha256hash=''
         dname = str(os.path.dirname(targetfile))
@@ -1503,7 +2421,6 @@ def polymetasearch(poly, metainfo):
                 fmype = pefile.PE(targetfile)
                 mymd5hash = md5hash(targetfile)
                 mysha256hash = sha256hash(targetfile)
-                GS = generalstatus(targetfile)
                 fimph = fmype.get_imphash()
             else:
                 if (bkg == 1):
@@ -1527,7 +2444,7 @@ def polymetasearch(poly, metainfo):
 
     try:
 
-        if (metainfo == 0):
+        if (metainfo == 4):
             metaresults = polyswarm.search_by_metadata("pefile.imphash:" + fimph)
             for x in metaresults:
                 if (bkg == 1):
@@ -1536,9 +2453,9 @@ def polymetasearch(poly, metainfo):
                     else:
                         print(mycolors.reset + "\nSHA256: " +  mycolors.foreground.lightred + "%s" + "None", end=' ') 
                     if(x.md5):
-                        print(mycolors.reset + "MD5: " + mycolors.foreground.lightgreen + "%s" % x.md5, end=' ')
+                        print(mycolors.reset + "MD5: " + mycolors.foreground.lightcyan + "%s" % x.md5, end=' ')
                     else:
-                        print(mycolors.reset + "MD5: " + mycolors.foreground.lightgreen + "%s" + "None", end=' ')
+                        print(mycolors.reset + "MD5: " + mycolors.foreground.lightcyan + "%s" + "None", end=' ')
                 else: 
                     if(x.sha256):
                         print(mycolors.reset + "\nSHA256: " +  mycolors.foreground.red + "%s" % x.sha256, end=' ') 
@@ -1551,25 +2468,25 @@ def polymetasearch(poly, metainfo):
             print(mycolors.reset + "\n")
             sys.exit(0)
 
-        if (metainfo == 1):
+        if (metainfo == 5):
             metaresults = polyswarm.search_by_metadata("strings.ipv4:" + poly)
-        if (metainfo == 2):
+        if (metainfo == 6):
             metaresults = polyswarm.search_by_metadata("strings.domains:" + poly)
-        if (metainfo == 3):
+        if (metainfo == 7):
             poly = (r'"' + poly + r'"')
             metaresults = polyswarm.search_by_metadata("strings.urls:" + poly)
-        if (metainfo == 4):
+        if (metainfo == 8):
             poly = ('scan.latest_scan.\*.metadata.malware_family:' + poly)
             metaresults = polyswarm.search_by_metadata(poly)
         for y in metaresults:
             if (bkg == 1):
                 if (y.sha256):
-                    print(mycolors.reset + "\nSHA256: " +  mycolors.foreground.lightgreen + "%s" % y.sha256, end=' ') 
+                    print(mycolors.reset + "\nSHA256: " +  mycolors.foreground.lightcyan + "%s" % y.sha256, end=' ') 
                 else:
                     print(mycolors.reset + "Result: " + mycolors.foreground.yellow + "Sample not found!", end=' ')
                     exit(0)
                 score = next(polyswarm.search(y.sha256))
-                print(mycolors.reset + "Polyscore: " +  mycolors.foreground.blue + "%20s" % score.polyscore, end=' ') 
+                print(mycolors.reset + "Polyscore: " +  mycolors.foreground.yellow + "%20s" % score.polyscore, end=' ') 
                 if (str(y.scan.get('detections',{}).get('malicious'))) != 'None':
                     print(mycolors.reset + "scan: " + mycolors.foreground.yellow + "%s" % y.scan.get('detections', {}).get('malicious'), end=' ') 
                     print("/ " + "%2s malicious" % y.scan.get('detections',{}).get('total'), end=' ')
@@ -1582,7 +2499,7 @@ def polymetasearch(poly, metainfo):
                     print(mycolors.reset + "scan: " + mycolors.foreground.purple + "Sample not found!", end=' ')
                     exit(0)
                 score = next(polyswarm.search(y.sha256))
-                print(mycolors.reset + "Polyscore: " +  mycolors.foreground.blue + "%20s" % score.polyscore, end=' ') 
+                print(mycolors.reset + "Polyscore: " +  mycolors.foreground.red + "%20s" % score.polyscore, end=' ') 
                 if (str(y.scan.get('detections',{}).get('malicious'))) != 'None':
                     print(mycolors.reset + "scan: " + mycolors.foreground.red + "%s" % y.scan.get('detections', {}).get('malicious'), end=' ') 
                     print("/ " + "%2s malicious" % y.scan.get('detections',{}).get('total'), end=' ')
@@ -1629,10 +2546,10 @@ def polyfile(poly):
         print('-' * 25, end="\n\n")
         for assertion in result.assertions:
             if (bkg == 1):
-                print(mycolors.reset + "Engine: " + mycolors.foreground.lightgreen + "%-12s" % assertion.author_name, end='')
+                print(mycolors.reset + "Engine: " + mycolors.foreground.lightcyan + "%-25s" % assertion.author_name, end='')
                 print(mycolors.reset + "\tVerdict:" + mycolors.foreground.lightred + " ", "Malicious" if assertion.verdict else "Clean")
             else:
-                print(mycolors.reset + "Engine: " + mycolors.foreground.green + "%-12s" % assertion.author_name, end='')
+                print(mycolors.reset + "Engine: " + mycolors.foreground.green + "%-25s" % assertion.author_name, end='')
                 print(mycolors.reset + "\tVerdict:" + mycolors.foreground.red + " ", "Malicious" if assertion.verdict else "Clean")
 
         results = polyswarm.search(myhash)
@@ -1651,24 +2568,24 @@ def polyfile(poly):
 
         if (bkg == 1):
             if(sha256):
-                print(mycolors.foreground.lightcyan + "\nSHA256: \t%s" % sha256)
+                print(mycolors.foreground.lightred + "\nSHA256: \t%s" % sha256)
             if(filetype):
                 print(mycolors.foreground.lightred + "File Type: \t%s" % filetype)
             if(extended):
                 print(mycolors.foreground.lightred + "Extended Info: \t%s" % extended)
             if(firstseen):
-                print(mycolors.foreground.pink + "First seen: \t%s" % firstseen)
+                print(mycolors.foreground.lightred + "First seen: \t%s" % firstseen)
             if (score is not None):
                 print(mycolors.foreground.yellow + "\nPolyscore: \t%f" % score)
         else:
             if(sha256):
                 print(mycolors.foreground.cyan + "\nSHA256: \t%s" % sha256)
             if(filetype):
-                print(mycolors.foreground.purple + "File Type: \t%s" % filetype)
+                print(mycolors.foreground.cyan + "File Type: \t%s" % filetype)
             if(extended):
-                print(mycolors.foreground.purple + "Extended Info: \t%s" % extended)
+                print(mycolors.foreground.cyan + "Extended Info: \t%s" % extended)
             if(firstseen):
-                print(mycolors.foreground.blue + "First seen: \t%s" % firstseen)
+                print(mycolors.foreground.cyan + "First seen: \t%s" % firstseen)
             if (score is not None):
                 print(mycolors.foreground.red + "\nPolyscore: \t%f" % score)
         print(mycolors.reset)
@@ -1681,7 +2598,7 @@ def polyfile(poly):
             print(mycolors.reset)
             exit(1)
 
-def polyhashsearch(poly):
+def polyhashsearch(poly, download):
 
 
     sha256 = '' 
@@ -1689,6 +2606,7 @@ def polyhashsearch(poly):
     extended = ''
     firstseen = ''
     score = 0
+    down = download
     DOWN_DIR = '.'
 
     requestPOLYAPI()
@@ -1724,19 +2642,19 @@ def polyhashsearch(poly):
             results = myhashes.assertions
             for i in results:
                 if (bkg == 1):
-                    print(mycolors.foreground.lightgreen + "%s" % i)
+                    print(mycolors.foreground.lightcyan + "%s" % i)
                 else:
                     print(mycolors.foreground.green + "%s" % i)
 
         if (bkg == 1):
             if(sha256):
-                print(mycolors.foreground.lightcyan + "\nSHA256: \t%s" % sha256)
+                print(mycolors.foreground.lightred + "\nSHA256: \t%s" % sha256)
             if(filetype):
                 print(mycolors.foreground.lightred + "File Type: \t%s" % filetype)
             if(extended):
                 print(mycolors.foreground.lightred + "Extended Info: \t%s" % extended)
             if(firstseen):
-                print(mycolors.foreground.pink + "First seen: \t%s" % firstseen)
+                print(mycolors.foreground.lightred + "First seen: \t%s" % firstseen)
             if (score is not None):
                 print(mycolors.foreground.yellow + "\nPolyscore: \t%f" % score)
             if (down == 1):
@@ -1746,11 +2664,11 @@ def polyhashsearch(poly):
             if(sha256):
                 print(mycolors.foreground.cyan + "\nSHA256: \t%s" % sha256)
             if(filetype):
-                print(mycolors.foreground.purple + "File Type: \t%s" % filetype)
+                print(mycolors.foreground.cyan + "File Type: \t%s" % filetype)
             if(extended):
-                print(mycolors.foreground.purple + "Extended Info: \t%s" % extended)
+                print(mycolors.foreground.cyan + "Extended Info: \t%s" % extended)
             if(firstseen):
-                print(mycolors.foreground.blue + "First seen: \t%s" % firstseen)
+                print(mycolors.foreground.cyan + "First seen: \t%s" % firstseen)
             if (score is not None):
                 print(mycolors.foreground.red + "\nPolyscore: \t%f" % score)
             if (down == 1):
@@ -1860,60 +2778,6 @@ def hafilecheck(filenameha):
         print((mycolors.reset))
 
 
-def checkreportha(jobid):
-
-    hatext = ''
-    haresponse = ''
-
-    requestHAAPI()
-
-    try:
-
-        resource = jobid
-        requestsession = requests.Session( )
-        requestsession.headers.update({'user-agent': user_agent})
-        requestsession.headers.update({'api-key': HAAPI})
-        requestsession.headers.update({'content-type': 'application/json'})
-
-        finalurl = '/'.join([haurl,'report', resource , 'state'])
-
-        haresponse = requestsession.get(url=finalurl)
-        hatext = json.loads(haresponse.text)
-
-        job_id = jobid
-
-        if ("state" in haresponse.text):
-            if (bkg == 1):
-                print((mycolors.foreground.yellow + "\nThe report status related to the provided job ID follows below:"))
-                print(("\nThe job ID is: ").ljust(31), end=' ')
-                print(("%s" % job_id))
-                print(("The report status is: ").ljust(30), end=' ')
-                print(("%s" % str(hatext['state'])))
-                print((mycolors.reset + "\n"))
-            else:
-                print((mycolors.foreground.purple + "\nThe report status related to the provided job ID follows below:"))
-                print(("\nThe job ID is: ").ljust(31), end=' ')
-                print(("%s" % job_id))
-                print(("The report status is: ").ljust(30), end=' ')
-                print(("%s" % str(hatext['state'])))
-                print((mycolors.reset + "\n"))
-        else:
-            if (bkg == 1):
-                print((mycolors.foreground.lightred + "\nThere isn't any report associated to this job ID, unfortunately."))
-                print((mycolors.reset + "\n"))
-            else:
-                print((mycolors.foreground.red + "\nThere isn't any report associated to ths job ID, unfortunately"))
-                print((mycolors.reset + "\n"))
-
-    except ValueError as e:
-        print(e)
-        if (bkg == 1):
-            print((mycolors.foreground.lightred + "Error while connecting to Hybrid-Analysis!\n"))
-        else:
-            print((mycolors.foreground.red + "Error while connecting to Hybrid-Analysis!\n"))
-        print((mycolors.reset))
-
-
 def downhash(filehash):
 
     hatext = ''
@@ -1983,9 +2847,9 @@ def overextract(fname):
     with open(fname + ".overlay", "wb") as t:
         t.write(r[offset:])
     if (bkg == 1):
-        print((mycolors.foreground.lightgreen + "\nOverlay extracted: %s.overlay\n"  % fname))
+        print((mycolors.foreground.yellow + "\n\nOverlay extracted:   " + mycolors.reset + "%s.overlay"  % fname))
     else:
-        print((mycolors.foreground.red + "\nOverlay extracted: %s.overlay\n"  % fname))
+        print((mycolors.foreground.green + "\n\nOverlay extracted:   " + mycolors.reset + "%s.overlay"  % fname))
     print(mycolors.reset)
 
 
@@ -1993,169 +2857,87 @@ def keysort(item):
     return item[1]
 
 
-def generalstatus(key):
-
-    vtfinal = ''
-    result = ' '
-    ovr = ''
-    entr = ''
-    G = []
-
-    if (vt>=1):
-        myfilehash = sha256hash(key)
-        vtfinal = vtcheck(myfilehash, url, param)
-    G.append(vtfinal)
-    mype2 = pefile.PE(key)
-    over = mype2.get_overlay_data_start_offset()
-    if over == None:
-        ovr =  ""
-    else:
-        ovr =  "OVERLAY"
-    G.append(ovr)
-    rf = mype2.write()
-    entr = mype2.sections[0].entropy_H(rf)
-    G.append(entr)
-    pack = packed(mype2)
-    if pack == False:
-        result = "no    "
-    elif pack == True:
-        result = "PACKED"
-    else:
-        result = "Likely"
-    G.append(result)
-    return G
-
-
-def hashchecking( ):
-
-    print ("\n")
-    print(mycolors.reset)
-    print("Main Antivirus Reports")
-    print("-" * 25 + "\n")
-
-    vtresult = vtshow(hashtemp,url,param)
-
-    if vtresult == 'Not Found':
-        if(bkg == 1):
-            print(mycolors.foreground.lightred + "Malware sample was not found in Virus Total.")
-        else:
-            print(mycolors.foreground.red + "Malware sample was not found in Virus Total.")
-
-    print(mycolors.reset)
-
-    hashow(hashtemp)
-    if (down == 1):
-         downhash(hashtemp)
-    print(mycolors.reset)
-    exit(0)
-
-
-def filechecking(ffpname2):
-    GS = []
+def calchash(ffpname2):
     targetfile = ffpname2
-    mymd5hash=''
     mysha256hash=''
     dname = str(os.path.dirname(targetfile))
     if os.path.abspath(dname) == False:
         dname = os.path.abspath('.') + "/" + dname
     fname = os.path.basename(targetfile)
-    magictype = ftype(targetfile)
 
     print(mycolors.reset, end=' ')
 
     try:
 
-        if re.match(r'^PE[0-9]{2}|^MS-DOS', magictype):
-            fmype = pefile.PE(targetfile)
-            mymd5hash = md5hash(targetfile)
-            mysha256hash = sha256hash(targetfile)
-            GS = generalstatus(targetfile)
-            fimph = fmype.get_imphash()
-            S = []
-            if (bkg == 1):
-                print((mycolors.foreground.lightcyan), end = '')
-            else:
-                print((mycolors.foreground.blue), end = '')
-            print(("\nFile Name:   %s" % targetfile))
-            print(("File Type:   %s\n" % magictype))
-            print(("MD5:         %s" % mymd5hash))
-            print(("SHA256:      %s" % mysha256hash))
-            print(("Imphash:     %s\n" % fimph))
-            if (bkg == 1):
-                print((mycolors.foreground.lightred + "entropy: %8.2f" % GS[2]))
-            else:
-                print((mycolors.foreground.red + "entropy: %8.2f" % GS[2]))
-            print(("Packed?: %10s" % GS[3]))
-            print(("Overlay?: %10s" % GS[1]))
-            print(("VirusTotal: %6s" % GS[0]))
-            print(mycolors.reset)
-            if(bkg == 1):
-                print((mycolors.foreground.yellow + ""))
-            else:
-                print((mycolors.foreground.green + ""))
+        mysha256hash = sha256hash(targetfile)
+        return mysha256hash
 
-            listsections(targetfile)
-
-            if (showreport == 1):
-                print(mycolors.reset)
-                print("\nMain Antivirus Reports:")
-                print((40*'-').ljust(40))
-                vtshow(mysha256hash,url,param)
-
-            if (ha == 1):
-                hashow(mysha256hash)
-
-            if (ie == 1):
-                impext(targetfile)
-
-            print(mycolors.reset)
-
-            if (ovrly == 1):
-                status_over = overextract(targetfile)
-
-            listdlls(targetfile)
-
-            print(mycolors.reset)
-            exit(0)
-
+    except:
+        if (bkg == 1):
+            print((mycolors.foreground.lightred + "Error while calculing the hash!\n"))
         else:
-            vtfinal = ''
-            mymd5hash = md5hash(targetfile)
-            mysha256hash = sha256hash(targetfile)
-            if (bkg == 1):
-                print((mycolors.foreground.yellow + "\nFile Name:   %s" % targetfile))
-            else:
-                print((mycolors.foreground.purple + "\nFile Name:   %s" % targetfile))
-            print(("File Type:   %s" % magictype))
-            if (bkg == 1):
-                print((mycolors.foreground.lightcyan + "MD5:         %s" % mymd5hash))
-                print(("SHA256:      %s" % mysha256hash))
-            else:
-                print((mycolors.foreground.cyan + "MD5:         %s" % mymd5hash))
-                print(("SHA256:      %s" % mysha256hash))
-            print(mycolors.reset)
-            if (vt>=1):
-                vtfinal = vtcheck(mysha256hash, url, param)
-            if(bkg == 1):
-                print((mycolors.foreground.lightred + "VirusTotal: %6s\n" % vtfinal))
-            else:
-                print((mycolors.foreground.red + "VirusTotal: %6s\n" % vtfinal))
-            if (showreport == 1):
-                print(mycolors.reset)
-                print("\nMain Antivirus Reports:")
-                print((40*'-').ljust(40))
-                vtshow(mysha256hash,url,param)
-            if (ha == 1):
-                hashow(mysha256hash)
-            print(mycolors.reset)
-            exit(0)
+            print((mycolors.foreground.red + "Error while calculating the hash\n"))
+        print(mycolors.reset)
+
+def isoverlay(file_item):
+
+    mype2 = pefile.PE(file_item)
+    over = mype2.get_overlay_data_start_offset()
+    if over == None:
+        ovr =  "NO"
+    else:
+        ovr =  "YES"
+    return ovr
+
+
+def filechecking_v3(ffpname2, url, showreport, impexp, ovrly):
+
+    targetfile = ffpname2
+    mysha256hash=''
+    dname = str(os.path.dirname(targetfile))
+    if os.path.abspath(dname) == False:
+        dname = os.path.abspath('.') + "/" + dname
+    fname = os.path.basename(targetfile)
+
+    try:
+        mysha256hash = sha256hash(targetfile)
+
+        magictype = ftype(targetfile)
+        if re.match(r'^PE[0-9]{2}|^MS-DOS', magictype):
+            ret_overlay = isoverlay(targetfile) 
+
+        if(showreport == 0):
+            vthashwork(mysha256hash, url, showreport)
+
+            if re.match(r'^PE[0-9]{2}|^MS-DOS', magictype):
+                if(bkg == 1):
+                    print(mycolors.foreground.lightred + "Overlay: ".ljust(21) + mycolors.reset + ret_overlay, end='\n')
+            if re.match(r'^PE[0-9]{2}|^MS-DOS', magictype):
+                if(bkg == 0):
+                    print(mycolors.foreground.red + "Overlay: ".ljust(21) + mycolors.reset + ret_overlay, end='\n')
+        else:
+            vtreportwork(mysha256hash, url, 1)
+
+            if re.match(r'^PE[0-9]{2}|^MS-DOS', magictype):
+                if(bkg == 1):
+                    print(mycolors.foreground.lightred + "Overlay: ".ljust(21) + mycolors.reset + ret_overlay, end='\n')
+            if re.match(r'^PE[0-9]{2}|^MS-DOS', magictype):
+                if(bkg == 0):
+                    print(mycolors.foreground.red + "Overlay: ".ljust(21) + mycolors.reset + ret_overlay, end='\n')
+
+        if (impexp == 1):
+            list_imports_exports(targetfile)
+        
+        if (ovrly == 1):
+                overextract(targetfile)
 
     except (AttributeError, NameError) as e:
+        print(e)
         if (bkg == 1):
-            print((mycolors.foreground.yellow + "\t\tThe file %s seems not having a valid Import Table.\n" % targetfile))
+            print((mycolors.foreground.yellow + "\nAn error has occured while handling the %s file.\n" % targetfile))
             pass
         else:
-            print((mycolors.foreground.red + "\t\tThe file %s seems not having a valid Import Table.\n" % targetfile))
+            print((mycolors.foreground.red + "\nAn error has occured while handling the %s file.\n" % targetfile))
         print(mycolors.reset)
         exit(1)
 
@@ -2247,224 +3029,6 @@ def quickhashow(filehash):
         print(mycolors.reset)
 
 
-def nothreadworks(key, value, tm, n, result, prev1, prev2):
-
-    key1 = key
-    value1 = value
-    tm1 = tm
-    n1 = n
-    result1 = result
-    prev1a = prev1
-    prev2a = prev2
-
-    if (vt==1):
-        if (gt == 1):
-            tm1 = tm1 + 1
-            if tm1 % 4 == 0:
-                time.sleep(61)
-            myhashdir = sha256hash(key1)
-            vtfinal = vtcheck(myhashdir, url, param)
-        else:
-            myhashdir = sha256hash(key1)
-            vtfinal = vtcheck(myhashdir, url, param)
-
-    myfiletype = magic.from_file(key1)
-
-    if myfiletype is None:
-
-        ovr = '-'
-        result1 = '-'
-        entr = 0.00
-
-    elif (('PE32' or 'PE32+') in myfiletype):
-
-        mype2 = pefile.PE(key1)
-        over = mype2.get_overlay_data_start_offset()
-        if over == None:
-            ovr =  ""
-        else:
-            ovr =  "OVERLAY"
-        rf = mype2.write()
-        entr = mype2.sections[0].entropy_H(rf)
-        pack = packed(mype2)
-        if pack == False:
-            result1 = "no"
-        elif pack == True:
-            result1 = "PACKED"
-        else:
-            result1 = "Likely"
-
-    else:
-
-        ovr = '-'.center(7)
-        result1 = 'no'
-        entr = 0.00
-        width = 32
-        value1 = (myfiletype[:32]) if len(myfiletype) > 30 else f'{myfiletype: <{width}}'
-        
-
-    if (bkg == 1):
-        if ((prev2a == prev1a) and (n1 < 97)):
-            print(("\033[%dm" % n1 + "%-68s" % key1), end=' ')
-            print(("\033[%dm" % n1 + "  %-2s" % value1), end=' ')
-            print(("\033[%dm" % n1 + "  %-6s" % result1), end=' ')
-            print(("\033[%dm" % n1 + "  %7s" % ovr), end=' ')
-            print(("\033[%dm" % n1 + "      %4.2f" % entr) + mycolors.reset, end=' ')
-            if (vt == 1):
-                print(("\033[%dm" % n1 + "  %8s" % vtfinal) + mycolors.reset)
-            else:
-                print(("\033[%dm" % n1 + "  %8s" % '     ') + mycolors.reset)
-        else:
-            if ((n1 > 96) and (prev1a != prev2a)):
-                n1 = 90
-            elif (n1 > 96):
-                n1 = 96
-            n1 = n1 + 1
-            print(("\033[%dm" % n1 + "%-68s" % key1), end=' ')
-            print(("\033[%dm" % n1 + "  %-2s" % value1), end=' ')
-            print(("\033[%dm" % n1 + "  %-6s" % result1), end=' ')
-            print(("\033[%dm" % n1 + "  %7s" % ovr), end=' ')
-            print(("\033[%dm" % n1 + "      %4.2f" % entr) + mycolors.reset, end =' ')
-            if (vt == 1):
-                print(("\033[%dm" % n1 + "  %8s" % vtfinal) + mycolors.reset)
-            else:
-                print(("\033[%dm" % n1 + "  %8s" % '     ') + mycolors.reset)
-
-            prev2a = value1
-
-    else:
-        if ((prev2a == prev1a) and (n1 < 96)):
-            print(("\033[%dm" % n1 + "%-68s" % key1), end=' ')
-            print(("\033[%dm" % n1 + "  %-2s" % value1), end=' ')
-            print(("\033[%dm" % n1 + "  %-6s" % result1), end=' ')
-            print(("\033[%dm" % n1 + "  %7s" % ovr), end=' ')
-            print(("\033[%dm" % n1 + "      %4.2f" % entr) + mycolors.reset, end=' ')
-            if (vt == 1):
-                print(("\033[%dm" % n1 + "  %8s" % vtfinal) + mycolors.reset)
-            else:
-                print(("\033[%dm" % n1 + "  %8s" % '     ') + mycolors.reset)
-        else:
-            if ((n1 > 95) and (prev1a != prev2a)):
-                n1 = 89
-            elif (n1 > 95):
-                n1 = 95
-            n1 = n1 + 1
-            print(("\033[%dm" % n1 + "%-68s" % key1), end=' ')
-            print(("\033[%dm" % n1 + "  %-2s" % value1), end=' ')
-            print(("\033[%dm" % n1 + "  %-6s" % result1), end=' ')
-            print(("\033[%dm" % n1 + "  %7s" % ovr), end=' ')
-            print(("\033[%dm" % n1 + "      %4.2f" % entr) + mycolors.reset, end=' ')
-            if (vt == 1):
-                print(("\033[%dm" % n1 + "  %8s" % vtfinal) + mycolors.reset)
-            else:
-                print(("\033[%dm" % n1 + "  %8s" % '     ') + mycolors.reset)
-
-            prev2a = value1
-
-    prev1 = prev1a
-    prev2 = prev2a
-    n = n1
-    result = result1
-    tm = tm1
-    return (prev1, prev2, n, result, tm)
-
-
-class abThread(threading.Thread):
-
-    def __init__(self, key, value):
-
-        threading.Thread.__init__(self)
-        self.key = key
-        self.value = value
-
-    def run(self):
-
-        key1 = self.key
-        value1 = self.value
-
-        if (vt==1):
-            myhashdir = sha256hash(key1)
-            vtfinal = vtcheck(myhashdir, url, param)
-
-        myfiletype = magic.from_file(key1)
-
-        if myfiletype is None:
-
-            ovr = '-'
-            result1 = '-'
-            entr = 0.00
-
-        elif (('PE32' or 'PE32+') in myfiletype):
-
-            mype2 = pefile.PE(key1)
-            over = mype2.get_overlay_data_start_offset()
-            if over == None:
-                 ovr =  ""
-            else:
-                ovr =  "OVERLAY"
-            rf = mype2.write()
-            entr = mype2.sections[0].entropy_H(rf)
-            pack = packed(mype2)
-            if pack == False:
-                result1 = "no"
-            elif pack == True:
-                result1 = "PACKED"
-            else:
-                result1 = "Likely"
-
-        else:
-
-            ovr = '-'.center(7)
-            result1 = 'no'
-            entr = 0.00
-            width = 32
-            value1 = (myfiletype[:32]) if len(myfiletype) > 30 else f'{myfiletype: <{width}}'
-
-
-        if (bkg == 1):
-            print((mycolors.foreground.yellow + "%-68s" % key1), end=' ')
-            print((mycolors.foreground.lightcyan + "  %-2s" % value1), end=' ')
-            print((mycolors.foreground.lightred + "  %-6s" % result1), end=' ')
-            print((mycolors.foreground.pink + "  %7s" % ovr), end=' ')
-            print((mycolors.foreground.lightgreen + "      %4.2f" % entr) + mycolors.reset, end=' ')
-            if (vt == 1):
-                print((mycolors.foreground.yellow + "  %8s" % vtfinal + mycolors.reset))
-            else:
-                print(("  %8s" % '     ') + mycolors.reset)
-        else:
-            print((mycolors.foreground.red + "%-68s" % key1), end=' ')
-            print((mycolors.foreground.cyan + "  %-2s" % value1), end=' ')
-            print((mycolors.foreground.blue + "  %-6s" % result1), end=' ')
-            print((mycolors.foreground.purple + "  %7s" % ovr), end=' ')
-            print((mycolors.foreground.green + "      %4.2f" % entr) + mycolors.reset, end =' ')
-            if (vt == 1):
-                print((mycolors.foreground.red + "  %8s" % vtfinal + mycolors.reset))
-            else:
-                print(("  %8s" % '     ') + mycolors.reset)
-
-
-class quickVTThread(threading.Thread):
-
-    def __init__(self, key):
-
-        threading.Thread.__init__(self)
-        self.key = key
-
-    def run(self):
-
-        key1 = self.key
-
-        myhashdir = sha256hash(key1)
-        vtfinal = vtcheck(myhashdir, url, param)
-
-        if (bkg == 1):
-            print((mycolors.foreground.orange +  "%-68s" % key1), end=' ')
-            print((mycolors.reset + "|" + mycolors.foreground.lightgreen + "%8s" % vtfinal + mycolors.reset))
-        else:
-            print((mycolors.foreground.cyan + "%-68s" % key1), end=' ')
-            print((mycolors.reset + "|" + mycolors.foreground.red + "%8s" % vtfinal + mycolors.reset))
-
-
 class quickHAThread(threading.Thread):
 
     def __init__(self, key):
@@ -2480,7 +3044,7 @@ class quickHAThread(threading.Thread):
         (final, verdict, avdetect, totalsignatures, threatscore, totalprocesses, networkconnections) =  quickhashow(myhashdir)
 
         if (bkg == 1):
-            print((mycolors.foreground.orange + "%-70s" % key1), end=' ')
+            print((mycolors.foreground.yellow + "%-70s" % key1), end=' ')
             print((mycolors.foreground.lightcyan + "%9s" % final), end='')
             print((mycolors.foreground.lightred + "%11s" % verdict), end='')
             if(avdetect == 'None'):
@@ -2492,10 +3056,10 @@ class quickHAThread(threading.Thread):
                 print((mycolors.foreground.lightred + "%12s" % threatscore), end='')
             else:
                 print((mycolors.foreground.lightred + "%8s/100" % threatscore), end='')
-            print((mycolors.foreground.lightgreen + "%6s" % totalprocesses), end='')
-            print((mycolors.foreground.lightgreen + "%6s" % networkconnections + mycolors.reset))
+            print((mycolors.foreground.lightcyan + "%6s" % totalprocesses), end='')
+            print((mycolors.foreground.lightcyan + "%6s" % networkconnections + mycolors.reset))
         else:
-            print((mycolors.foreground.lightcyan + "%-70s" % key1), end=' ')
+            print((mycolors.foreground.cyan + "%-70s" % key1), end=' ')
             print((mycolors.foreground.cyan + "%9s" % final), end='')
             print((mycolors.foreground.red + "%11s" % verdict), end='')
             if (avdetect == 'None'):
@@ -2509,70 +3073,6 @@ class quickHAThread(threading.Thread):
                 print((mycolors.foreground.red + "%8s/100" % threatscore), end='')
             print((mycolors.foreground.blue + "%6s" % totalprocesses), end='')
             print((mycolors.foreground.blue + "%6s" % networkconnections + mycolors.reset))
-
-
-def dirwork(d):
-
-    x = d
-    global n
-    n = 90
-    global prev1
-    prev1 = 0
-    global prev2
-    prev2 = 0
-    global result
-    result = ""
-    global tm
-    tm = 0
-    global value
-
-    for key,value in sorted(iter(x.items()), key=lambda k_v:(k_v[1],k_v[0])):
-
-        vtfinal=''
-
-        if (T == 1):
-            if (windows == 1):
-                thread = abThread(key, value)
-                thread.start()
-                thread.join()
-            else:
-                thread = abThread(key, value)
-                thread.start()
-        else:
-            prev1 = value
-            (prev1, prev2, n, result, tm) = nothreadworks(key, value, tm, n, result, prev1, prev2)
-
-
-def dirquick(d):
-
-    y = d
-
-    if (vt == 1):
-        print("FileName".center(70) +  "VT".center(12))
-        print((83*'-').center(41))
-    if (ha >= 1):
-        print("FileName".center(70) + "Found?".center(10) + "Verdict".center(14) + "AVdet".center(6) + "Sigs".center(5) + "Score".center(14) + "Procs".center(6) + "Conns".center(6))
-        print((130*'-').center(60))
-
-    for key,value in sorted(iter(y.items()), key=lambda k_v:(k_v[1],k_v[0])):
-
-        if (ha >= 1):
-            if (windows == 1):
-                thread = quickHAThread(key)
-                thread.start()
-                thread.join()
-            else:
-                thread = quickHAThread(key)
-                thread.start()
-
-        if (vt == 1):
-            if (windows == 1):
-                thread = quickVTThread(key)
-                thread.start()
-                thread.join()
-            else:
-                thread = quickVTThread(key)
-                thread.start()
 
 
 def malsharedown(filehash):
@@ -2636,72 +3136,6 @@ def urltoip(urltarget):
         print(mycolors.reset)
 
 
-def malsharehashsearch(filehash):
-
-    maltext2 = ''
-    malresponse2 = ''
-    resource = ''
-
-    requestMALSHAREAPI()
-
-    try:
-        
-        print("\n")
-        print((mycolors.reset + "MALSHARE REPORT ".center(74)), end='')
-        print("\n" + (74*'-').center(37))
-        print((mycolors.reset))
-
-        resource = filehash
-        requestsession2 = requests.Session( )
-        requestsession2.headers.update({'accept': 'application/json'})
-        finalurl2 = ''.join([urlmalshare, MALSHAREAPI, '&action=search&query=', resource])
-        malresponse2 = requestsession2.get(url=finalurl2)
-        if (malresponse2.text == ''):
-            if(bkg == 1):
-               print(mycolors.foreground.lightred + "This sample couldn't be found on Malshare.\n" + mycolors.reset) 
-               exit(1)
-            else:
-               print(mycolors.foreground.red + "This sample couldn't be found on Malshare.\n" + mycolors.reset) 
-               exit(1)
-
-        maltext2 = json.loads(malresponse2.text)
-        if (maltext2):
-            try:
-                if ((maltext2[0])['sha256']):
-                    urltemp = (maltext2[0])['source']
-                    if (validators.url(urltemp)) == True:
-                        loc = urltoip(urltemp)
-                    else:
-                        loc = ''
-                    if (bkg == 1):
-                        print((mycolors.reset + "sha256: " + mycolors.foreground.yellow + "%s\n" % (maltext2[0])['sha256'] + mycolors.reset + "sha1:   " + mycolors.foreground.yellow + "%s\n" % (maltext2[0])['sha1'] + mycolors.reset + "md5:    " + mycolors.foreground.yellow + "%s\n" %  (maltext2[0])['md5'] + mycolors.reset + "type:   " + mycolors.foreground.lightcyan + "%s\n" % (maltext2[0])['type'] + mycolors.reset + "source: " + mycolors.foreground.lightred + "%s\n" % (maltext2[0])['source'] + mycolors.reset + "city:   " + mycolors.foreground.lightgreen + "%s" % loc))
-                        if (maltext2[0]['yarahits'] is not None):
-                            for k in (maltext2[0])['yarahits']['yara']:
-                                print(mycolors.reset + "Yara Hits: " + mycolors.foreground.lightgreen + str(k))
-                    else:
-                        print((mycolors.reset + "sha256: " + mycolors.foreground.green + "%s\n" % (maltext2[0])['sha256'] + mycolors.reset + "sha1:   " + mycolors.foreground.green + "%s\n" % (maltext2[0])['sha1'] + mycolors.reset + "md5:    " + mycolors.foreground.green +"%s\n" %  (maltext2[0])['md5'] + mycolors.reset + "type:   " + mycolors.foreground.cyan + "%s\n" % (maltext2[0])['type'] + mycolors.reset + "source: " + mycolors.foreground.red + "%s\n" % (maltext2[0])['source'] + mycolors.reset + "city:   " + mycolors.foreground.blue + "%s" % loc))
-                        if (maltext2[0]['yarahits'] is not None):
-                            for k in (maltext2[0])['yarahits']['yara']:
-                                print(mycolors.reset + "Yara Hits: " + mycolors.foreground.purple + str(k))
-
-                if (maldownload == 1):
-                    malsharedown(filehash)
-
-            except KeyError as e:
-                pass
-
-            except (BrokenPipeError, IOError):
-                print(mycolors.reset , file=sys.stderr)
-                exit(1)
-    except ValueError as e:
-        print(e)
-        if(bkg == 1):
-            print((mycolors.foreground.lightred + "Error while connecting to Malshare.com!\n"))
-        else:
-            print((mycolors.foreground.red + "Error while connecting to Malshare.com!\n"))
-        print(mycolors.reset)
-
-
 class LocationThread(threading.Thread):
 
     def __init__(self, key):
@@ -2731,31 +3165,13 @@ def malsharelastlist(typex):
 
     requestMALSHAREAPI()
 
-    if (maltype == 1):
+    if (maltype == 2):
         filetype = 'PE32'
-    elif (maltype == 2):
-        filetype = 'Dalvik'
     elif (maltype == 3):
         filetype = 'ELF'
     elif (maltype == 4):
-        filetype = 'HTML'
-    elif (maltype == 5):
-        filetype = 'ASCII'
-    elif (maltype == 6):
-        filetype = 'PHP'
-    elif (maltype == 7):
         filetype = 'Java'
-    elif (maltype == 8):
-        filetype = 'RAR'
-    elif (maltype == 9):
-        filetype = 'Zip'
-    elif (maltype == 10):
-        filetype = 'UTF-8'
-    elif (maltype == 11):
-        filetype = 'MS-DOS'
-    elif (maltype == 12):
-        filetype = 'data'
-    elif (maltype == 13):
+    elif (maltype == 5):
         filetype = 'PDF'
     else:
         filetype = 'Composite'
@@ -2780,7 +3196,7 @@ def malsharelastlist(typex):
                 for i in range(0, len(maltext)):
                     if (maltext[i].get('sha256')):
                         if (bkg == 1):
-                            print((mycolors.reset + "sha256: " + mycolors.foreground.yellow + "%s" % maltext[i]['sha256'] + mycolors.reset + "  md5: " + mycolors.foreground.lightgreen + "%s" % maltext[i]['md5'] + mycolors.reset + "  type: " + mycolors.foreground.lightred + "%s" % filetype))
+                            print((mycolors.reset + "sha256: " + mycolors.foreground.yellow + "%s" % maltext[i]['sha256'] + mycolors.reset + "  md5: " + mycolors.foreground.lightcyan + "%s" % maltext[i]['md5'] + mycolors.reset + "  type: " + mycolors.foreground.lightred + "%s" % filetype))
                         else:
                             print((mycolors.reset + "sha256: " + mycolors.foreground.red + "%s" % maltext[i]['sha256'] + mycolors.reset + "  md5: " + mycolors.foreground.blue + "%s" % maltext[i]['md5'] + mycolors.reset + "   type: " + mycolors.foreground.purple + "%s" % filetype))
 
@@ -2831,12 +3247,12 @@ def urlhauscheck(urlx, haus):
 
         if 'query_status' in haustext:
             if (bkg == 1):
-                print(mycolors.foreground.lightgreen + "Is available?: \t"  +  haustext.get('query_status').upper())
+                print(mycolors.foreground.lightcyan + "Is available?: \t"  +  haustext.get('query_status').upper())
             else:
                 print(mycolors.foreground.purple + "Is available?: \t"  +  haustext.get('query_status').upper())
         else:
             if (bkg == 1):
-                print(mycolors.foreground.lightgreen + 'Is availble?: ')
+                print(mycolors.foreground.lightcyan + 'Is availble?: ')
             else:
                 print(mycolors.foreground.purple + 'Is available: ')
 
@@ -2848,23 +3264,23 @@ def urlhauscheck(urlx, haus):
             else:
                 urlcity = 'Not found' 
             if (bkg == 1):
-                print(mycolors.foreground.lightgreen + "URL: \t\t"  +  haustext.get('url') + "  (city: " +  urlcity + ")" )
+                print(mycolors.foreground.lightcyan + "URL: \t\t"  +  haustext.get('url') + "  (city: " +  urlcity + ")" )
             else:
                 print(mycolors.foreground.purple + "URL: \t\t"  +  haustext.get('url') + "  (city: " +  urlcity + ")" )
         else:
             if (bkg == 1):
-                print(mycolors.foreground.lightgreen + 'URL: ')
+                print(mycolors.foreground.lightcyan + 'URL: ')
             else:
                 print(mycolors.foreground.purple + 'URL: ')
         
         if 'url_status' in haustext:
             if (bkg == 1):
                 if(haustext.get('url_status') == 'online'):
-                    print(mycolors.foreground.lightgreen + "Status: \t"  + mycolors.reverse + haustext.get('url_status') + mycolors.reset)
+                    print(mycolors.foreground.lightcyan + "Status: \t"  + mycolors.reverse + haustext.get('url_status') + mycolors.reset)
                 if(haustext.get('url_status') == 'offline'):
                     print(mycolors.foreground.lightred + "Status: \t"  +  mycolors.reverse + haustext.get('url_status') + mycolors.reset)
                 if(haustext.get('url_status') == ''):
-                    print(mycolors.foreground.lightblue + "Status: \t"  +  mycolors.reverse + "unknown" + mycolors.reset)
+                    print(mycolors.foreground.yellow + "Status: \t"  +  mycolors.reverse + "unknown" + mycolors.reset)
             else:
                 if(haustext.get('url_status') == 'online'):
                     print(mycolors.foreground.green + "Status: \t"  + mycolors.reverse + haustext.get('url_status') + mycolors.reset)
@@ -2943,25 +3359,25 @@ def urlhauscheck(urlx, haus):
         if 'reporter' in haustext:
             if haustext.get('reporter') is not None:
                 if (bkg == 1):
-                    print(mycolors.foreground.lightblue + "Reporter: \t"  +  haustext.get('reporter'))
+                    print(mycolors.foreground.lightcyan + "Reporter: \t"  +  haustext.get('reporter'))
                 else:
                     print(mycolors.foreground.blue + "Reporter: \t"  +  haustext.get('reporter'))
             else:
                 if (bkg == 1):
-                    print(mycolors.foreground.lightblue + 'Reporter: ')
+                    print(mycolors.foreground.lightcyan + 'Reporter: ')
                 else:
                     print(mycolors.foreground.blue + 'Reporter: ')
 
         if 'larted' in haustext:
             if haustext.get('larted') is not None:
                 if (bkg == 1):
-                    print(mycolors.foreground.lightblue + "Larted: \t" + haustext.get('larted'))
+                    print(mycolors.foreground.lightcyan + "Larted: \t" + haustext.get('larted'))
                 else:
                     print(mycolors.foreground.blue + "Larted: \t" + haustext.get('larted'))
 
             else:
                 if (bkg == 1):
-                    print(mycolors.foreground.lightblue + "Larted: ")
+                    print(mycolors.foreground.lightcyan + "Larted: ")
                 else:
                     print(mycolors.foreground.blue + "Larted: ")
 
@@ -3002,18 +3418,18 @@ def urlhauscheck(urlx, haus):
                     if (bkg == 1):
                         print(mycolors.reset + "Payload_%d:\t" % x, end='')
                         print(mycolors.foreground.pink + "firstseen:%12s" % i['firstseen'], end = '     ' )
-                        print(mycolors.foreground.yellow + "filename: %-30s" % i['filename'], end = ' ' + "\t")
-                        print(mycolors.foreground.lightred + "filetype: %s" % i['file_type'] + Fore.WHITE, end= ' ' + "\t")
+                        print(mycolors.foreground.yellow + "filename: %-30s" % i['filename'].ljust(40), end = ' ' + "")
+                        print(mycolors.foreground.lightred + "filetype: %s" % i['file_type'].ljust(10) + Fore.WHITE, end= ' ' + "")
                         results = i['virustotal']
                         if (results) is not None:
-                            print(mycolors.foreground.lightgreen + "VirusTotal: %s" % results['result'] + Fore.WHITE)
+                            print(mycolors.foreground.lightcyan + "VirusTotal: %s" % results['result'] + Fore.WHITE)
                         else:
-                            print(mycolors.foreground.lightgreen + "VirusTotal: Not Found" + Fore.WHITE)
+                            print(mycolors.foreground.lightcyan + "VirusTotal: Not Found" + Fore.WHITE)
                     else:
                         print(mycolors.reset + "Payload_%d:\t" % x, end='')
                         print(mycolors.foreground.purple + "firstseen:%12s" % i['firstseen'], end = '     ')
-                        print(mycolors.foreground.green + "filename: %-30s" % i['filename'], end = ' ' + "\t")
-                        print(mycolors.foreground.red + "filetype: %s" % i['file_type'] + Fore.BLACK, end = '' + "\t")
+                        print(mycolors.foreground.green + "filename: %-30s" % i['filename'].ljust(40), end = ' ' + "")
+                        print(mycolors.foreground.red + "filetype: %s" % i['file_type'].ljust(10) + Fore.BLACK, end = '' + "")
                         results = i['virustotal']
                         if (results) is not None:
                             print(mycolors.foreground.blue + "VirusTotal: %s" % results['result'] + Fore.BLACK)
@@ -3027,7 +3443,7 @@ def urlhauscheck(urlx, haus):
                     z = z + 1
                     if (bkg == 1):
                         print(mycolors.reset + "Payload_%d:\t" % z, end='')
-                        print(mycolors.foreground.lightgreen + j['response_sha256'])
+                        print(mycolors.foreground.lightcyan + j['response_sha256'])
                     else:
                         print(mycolors.reset + "Payload_%d:\t" % z, end='')
                         print(mycolors.foreground.blue + j['response_sha256'])
@@ -3082,12 +3498,12 @@ def haushashsearch(hashx, haus):
 
         if 'query_status' in haustext:
             if (bkg == 1):
-                print(mycolors.foreground.lightgreen + "Is available?: \t"  +  haustext.get('query_status').upper())
+                print(mycolors.foreground.lightcyan + "Is available?: \t"  +  haustext.get('query_status').upper())
             else:
                 print(mycolors.foreground.green + "Is available?: \t"  +  haustext.get('query_status').upper())
         else:
             if (bkg == 1):
-                print(mycolors.foreground.lightgreen + 'Is availble?: Not available')
+                print(mycolors.foreground.lightcyan + 'Is availble?: Not available')
             else:
                 print(mycolors.foreground.green + 'Is available?: Not available')
 
@@ -3199,24 +3615,24 @@ def haushashsearch(hashx, haus):
                 for w in allurls:
                     if (bkg == 1):
                         if(w['url_status'] == 'online'):
-                            print(mycolors.foreground.lightgreen + mycolors.reverse + w['url_status'] + " " + mycolors.reset, end=' ')
+                            print(mycolors.foreground.lightcyan + mycolors.reverse + w['url_status'] + " " + mycolors.reset, end=' ')
                         if(w['url_status'] == 'offline'):
                             print(mycolors.foreground.lightred + mycolors.reverse + w['url_status'] + mycolors.reset, end=' ')
                         if(w['url_status'] == ''):
-                            print(mycolors.foreground.lightblue + mycolors.reverse + "unknown" + mycolors.reset, end=' ')
+                            print(mycolors.foreground.yellow + mycolors.reverse + "unknown" + mycolors.reset, end=' ')
                         if w['filename'] is not None:
                             print(mycolors.foreground.pink + "%-36s" % w['filename'] + mycolors.reset, end=' ')
                         else:
                             print(mycolors.foreground.pink + "%-36s" % "Filename not reported!" + mycolors.reset, end=' ')
                         if (w['url'] is not None):
                             if(validators.url(w['url'])):
-                                print(mycolors.foreground.lightgreen + urltoip((w['url'])).ljust(20) + mycolors.reset, end=' ')
+                                print(mycolors.foreground.lightcyan + urltoip((w['url'])).ljust(20) + mycolors.reset, end=' ')
                             else:
-                                print(mycolors.foreground.lightgreen + "Not located".center(20) + mycolors.reset, end=' ')
+                                print(mycolors.foreground.lightcyan + "Not located".center(20) + mycolors.reset, end=' ')
                             print(mycolors.foreground.yellow + w['url'] + mycolors.reset)
                         else:
-                            print(mycolors.foreground.lightgreen + "Not located".center(20) + mycolors.reset, end=' ')
-                            print(mycolors.foreground.lightgreen + "URL not provided".center(20) + mycolors.reset, end=' ')
+                            print(mycolors.foreground.lightcyan + "Not located".center(20) + mycolors.reset, end=' ')
+                            print(mycolors.foreground.lightcyan + "URL not provided".center(20) + mycolors.reset, end=' ')
 
                     else:
                         if(w['url_status'] == 'online'):
@@ -3236,8 +3652,8 @@ def haushashsearch(hashx, haus):
                                 print(mycolors.foreground.green + "Not located".center(20) + mycolors.reset, end=' ')
                             print(mycolors.foreground.blue + w['url'] + mycolors.reset)
                         else:
-                            print(mycolors.foreground.lightgreen + "Not located".center(20) + mycolors.reset, end=' ')
-                            print(mycolors.foreground.lightgreen + "URL not provided".center(20) + mycolors.reset, end=' ')
+                            print(mycolors.foreground.lightcyan + "Not located".center(20) + mycolors.reset, end=' ')
+                            print(mycolors.foreground.lightcyan + "URL not provided".center(20) + mycolors.reset, end=' ')
 
         print(mycolors.reset)
 
@@ -3295,74 +3711,74 @@ def bazaar_hash(bazaarx, bazaar):
                             y = d.keys()    
                             if ("sha256_hash" in y):
                                 if d['sha256_hash']:
-                                    print(mycolors.foreground.lightgreen + "\nsha256_hash: ".ljust(15) + mycolors.reset + d['sha256_hash'],end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nsha256_hash: ".ljust(15) + mycolors.reset + d['sha256_hash'],end=' ')
 
                             if ("sha1_hash" in y):
                                 if d['sha1_hash']:
-                                    print(mycolors.foreground.lightgreen + "\nsha1_hash: ".ljust(15) + mycolors.reset + d['sha1_hash'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nsha1_hash: ".ljust(15) + mycolors.reset + d['sha1_hash'], end=' ')
 
                             if ("md5_hash" in y):
                                 if d['md5_hash']:
-                                    print(mycolors.foreground.lightgreen + "\nmd5_hash: ".ljust(15) + mycolors.reset + d['md5_hash'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nmd5_hash: ".ljust(15) + mycolors.reset + d['md5_hash'], end=' ')
 
                             if ("first_seen" in y):
                                 if d['first_seen']:
-                                    print(mycolors.foreground.lightgreen + "\nfirst_seen: ".ljust(15) + mycolors.reset + d['first_seen'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nfirst_seen: ".ljust(15) + mycolors.reset + d['first_seen'], end=' ')
 
                             if ("last_seen" in y):
                                 if d['last_seen']:
-                                    print(mycolors.foreground.lightgreen + "\nlast_seen: ".ljust(15) + mycolors.reset + d['last_seen'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nlast_seen: ".ljust(15) + mycolors.reset + d['last_seen'], end=' ')
 
                             if ("file_name" in y):
                                 if d['file_name']:
-                                    print(mycolors.foreground.lightgreen + "\nfile_name: ".ljust(15) + mycolors.reset + d['file_name'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nfile_name: ".ljust(15) + mycolors.reset + d['file_name'], end=' ')
 
                             if ("file_size" in y):
                                 if d['file_size']:
-                                    print(mycolors.foreground.lightgreen + "\nfile_size: ".ljust(15) + mycolors.reset + str(d['file_size']) + " bytes", end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nfile_size: ".ljust(15) + mycolors.reset + str(d['file_size']) + " bytes", end=' ')
 
                             if ("file_type" in y):
                                 if d['file_type']:
-                                    print(mycolors.foreground.lightgreen + "\nfile_type: ".ljust(15) + mycolors.reset + str(d['file_type']), end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nfile_type: ".ljust(15) + mycolors.reset + str(d['file_type']), end=' ')
 
                             if ("file_type_mime" in y):
                                 if d['file_type_mime']:
-                                    print(mycolors.foreground.lightgreen + "\nmime_type: ".ljust(15) + mycolors.reset + str(d['file_type_mime']), end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nmime_type: ".ljust(15) + mycolors.reset + str(d['file_type_mime']), end=' ')
                             if ("origin_country" in y):
                                 if d['origin_country']:
-                                    print(mycolors.foreground.lightgreen + "\ncountry: ".ljust(15) + mycolors.reset + d['origin_country'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\ncountry: ".ljust(15) + mycolors.reset + d['origin_country'], end=' ')
 
                             if ("imphash" in y):
                                 if d['imphash']:
-                                    print(mycolors.foreground.lightgreen + "\nimphash: ".ljust(15) + mycolors.reset + d['imphash'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nimphash: ".ljust(15) + mycolors.reset + d['imphash'], end=' ')
 
                             if ("tlsh" in y):
                                 if d['tlsh']:
-                                    print(mycolors.foreground.lightgreen + "\ntlsh: ".ljust(15) + mycolors.reset + d['tlsh'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\ntlsh: ".ljust(15) + mycolors.reset + d['tlsh'], end=' ')
 
                             if ("comment" in y):
                                 if d['comment']:
-                                    print(mycolors.foreground.lightgreen + "\ncomments: ".ljust(15) + mycolors.reset, end='')
+                                    print(mycolors.foreground.lightcyan + "\ncomments: ".ljust(15) + mycolors.reset, end='')
                                     s = d['comment'].split('\n')
                                     for n in range(len(s)):
                                         print("\n".ljust(15) + s[n], end=' ')
 
                             if ("reporter" in y):
                                 if d['reporter']:
-                                    print(mycolors.foreground.lightgreen + "\nreporter: ".ljust(15) + mycolors.reset + d['reporter'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nreporter: ".ljust(15) + mycolors.reset + d['reporter'], end=' ')
 
                             if ("oleinformation" in y):
-                                print(mycolors.foreground.lightgreen + "\noleinformation: ".ljust(15),end='') 
+                                print(mycolors.foreground.lightcyan + "\noleinformation: ".ljust(15),end='') 
                                 for t in d['oleinformation']:
                                     print(mycolors.reset + t, end=' ')
 
                             if ("delivery_method" in y):
                                 if d['delivery_method']:
-                                    print(mycolors.foreground.lightgreen + "\ndelivery: ".ljust(15) + mycolors.reset + d['delivery_method'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\ndelivery: ".ljust(15) + mycolors.reset + d['delivery_method'], end=' ')
 
                             if ("tags" in y):
                                 if d['tags']:
-                                    print(mycolors.foreground.lightgreen + "\ntags: ".ljust(15),end='') 
+                                    print(mycolors.foreground.lightcyan + "\ntags: ".ljust(15),end='') 
                                     for t in d['tags']:
                                         print(mycolors.reset + t, end=' ')
 
@@ -3371,15 +3787,15 @@ def bazaar_hash(bazaarx, bazaar):
                                     for x in d['file_information']:
                                         if ("context" in x):
                                             if (x['context'] == "twitter"):
-                                                print(mycolors.foreground.orange + "\nTwitter: ".ljust(15) + mycolors.reset + x['value'], end=' ')
+                                                print(mycolors.foreground.yellow + "\nTwitter: ".ljust(15) + mycolors.reset + x['value'], end=' ')
                                             if (x['context'] == "cape"):
-                                                print(mycolors.foreground.orange + "\nCape: ".ljust(15) + mycolors.reset + x['value'], end=' ')
+                                                print(mycolors.foreground.yellow + "\nCape: ".ljust(15) + mycolors.reset + x['value'], end=' ')
 
                             if ("vendor_intel" in y):
                                 if (d['vendor_intel'] is not None):
                                     if ("UnpacMe" in d['vendor_intel']):
                                         if (d['vendor_intel']['UnpacMe']):
-                                            print(mycolors.foreground.orange + "\nUnpacMe: ".ljust(15) + mycolors.reset, end=' ')
+                                            print(mycolors.foreground.yellow + "\nUnpacMe: ".ljust(15) + mycolors.reset, end=' ')
                                             filtered_list = []
                                             for j in d['vendor_intel']['UnpacMe']:
                                                     if ("link" in j):
@@ -3389,7 +3805,7 @@ def bazaar_hash(bazaarx, bazaar):
                                                                 print('\n'.ljust(15) + h, end=' ')
 
                                     if ("ANY.RUN" in d['vendor_intel']):
-                                        print(mycolors.foreground.orange + "\nAny.Run: ".ljust(15) + mycolors.reset, end=' ')
+                                        print(mycolors.foreground.yellow + "\nAny.Run: ".ljust(15) + mycolors.reset, end=' ')
                                         for j in d['vendor_intel']['ANY.RUN']:
                                             if ("analysis_url" in j):
                                                 print("\n".ljust(15) + j['analysis_url'], end=' ')
@@ -3397,10 +3813,10 @@ def bazaar_hash(bazaarx, bazaar):
                                     if ("Triage" in d['vendor_intel']):
                                         for j in d['vendor_intel']['Triage']:
                                             if ("link" in j):
-                                                print(mycolors.foreground.orange + "\n\nTriage: ".ljust(16) + mycolors.reset + d['vendor_intel']['Triage']['link'], end=' ')
+                                                print(mycolors.foreground.yellow + "\n\nTriage: ".ljust(16) + mycolors.reset + d['vendor_intel']['Triage']['link'], end=' ')
 
                                         if (d['vendor_intel']['Triage']['signatures']):
-                                            print(mycolors.foreground.orange + "\nTriage sigs: ".ljust(15) + mycolors.reset,end='\n')
+                                            print(mycolors.foreground.yellow + "\nTriage sigs: ".ljust(15) + mycolors.reset,end='\n')
                                             for m in d['vendor_intel']['Triage']['signatures']:
                                                 if ("signature" in m):
                                                     print(mycolors.reset + "".ljust(14) + m['signature'])
@@ -3408,7 +3824,7 @@ def bazaar_hash(bazaarx, bazaar):
                                     if ("vxCube" in d['vendor_intel']):
                                         for j in d['vendor_intel']['vxCube']:
                                             if ("behaviour" in j):
-                                                print(mycolors.foreground.orange + "\nDr.Web rules: ".ljust(15) + mycolors.reset)
+                                                print(mycolors.foreground.yellow + "\nDr.Web rules: ".ljust(15) + mycolors.reset)
                                                 for m in d['vendor_intel']['vxCube']['behaviour']:
                                                     if ("rule" in m):
                                                         print(mycolors.reset + "".ljust(14) + m['rule'])
@@ -3609,37 +4025,99 @@ def triage_search(triagex, triage):
                             y = d.keys()    
                             if ("id" in y):
                                 if d['id']:
-                                    print(mycolors.foreground.lightgreen + "\nid: ".ljust(12) + mycolors.reset + d['id'],end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nid: ".ljust(12) + mycolors.reset + d['id'],end=' ')
 
                             if ("status" in y):
                                 if d['status']:
-                                    print(mycolors.foreground.lightgreen + "\nstatus: ".ljust(12) + mycolors.reset + d['status'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nstatus: ".ljust(12) + mycolors.reset + d['status'], end=' ')
 
                             if ("kind" in y):
                                 if d['kind']:
-                                    print(mycolors.foreground.lightgreen + "\nkind: ".ljust(12) + mycolors.reset + d['kind'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nkind: ".ljust(12) + mycolors.reset + d['kind'], end=' ')
 
                             if ("filename" in y):
                                 if d['filename']:
-                                    print(mycolors.foreground.lightgreen + "\nfilename: ".ljust(12) + mycolors.reset + d['filename'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nfilename: ".ljust(12) + mycolors.reset + d['filename'], end=' ')
 
                             if ("submitted" in y):
                                 if d['submitted']:
-                                    print(mycolors.foreground.lightgreen + "\nsubmitted: ".ljust(12) + mycolors.reset + d['submitted'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nsubmitted: ".ljust(12) + mycolors.reset + d['submitted'], end=' ')
 
                             if ("completed" in y):
                                 if d['completed']:
-                                    print(mycolors.foreground.lightgreen + "\ncompleted: ".ljust(12) + mycolors.reset + d['completed'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\ncompleted: ".ljust(12) + mycolors.reset + d['completed'], end=' ')
 
                             if ("private" in y):
                                 if d['private']:
-                                    print(mycolors.foreground.lightgreen + "\nprivate: ".ljust(12) + mycolors.reset + d['private'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nprivate: ".ljust(12) + mycolors.reset + d['private'], end=' ')
 
                             for x in triagetext['data'][0].keys():
                                 if (x == "tasks"):
                                     if (triagetext['data'][0]['tasks'] is not None):
                                         for d in triagetext['data'][0]['tasks']:
-                                            print(mycolors.foreground.lightgreen + "\ntasks: " + mycolors.reset, end=' ')
+                                            print(mycolors.foreground.lightcyan + "\ntasks: " + mycolors.reset, end=' ')
+                                            z = d.keys()    
+                                            if ("id" in z):
+                                                if d['id']:
+                                                    print(mycolors.foreground.lightcyan + "\n\t   id: ".ljust(13) + mycolors.reset + d['id'], end=' ')
+
+                                            if ("status" in z):
+                                                if d['status']:
+                                                    print(mycolors.foreground.lightcyan + "\n\t   status: ".ljust(12) + mycolors.reset + d['status'], end=' ')
+
+                                            if ("target" in z):
+                                                if d['target']:
+                                                    print(mycolors.foreground.lightcyan + "\n\t   target: ".ljust(12) + mycolors.reset + d['target'], end=' ')
+                                            
+                                            if ("pick" in z):
+                                                if d['pick']:
+                                                    print(mycolors.foreground.lightcyan + "\n\t   pick: ".ljust(13) + mycolors.reset + d['pick'], end=' ')
+
+                            print("\n" + (90*'-').center(45),end='')
+
+                if (i == "next"):
+                    if (triagetext['next'] is not None):
+                        print(mycolors.foreground.lightcyan + "\nnext: ".ljust(12) + mycolors.reset + triagetext['next'], end=' ')
+
+        if (bkg == 0):
+            for i in triagetext.keys():
+                if (i == "data"):
+                    if (triagetext['data'] is not None):
+                        for d in triagetext['data']:
+                            y = d.keys()    
+                            if ("id" in y):
+                                if d['id']:
+                                    print(mycolors.foreground.cyan + "\nid: ".ljust(12) + mycolors.reset + d['id'],end=' ')
+
+                            if ("status" in y):
+                                if d['status']:
+                                    print(mycolors.foreground.cyan + "\nstatus: ".ljust(12) + mycolors.reset + d['status'], end=' ')
+
+                            if ("kind" in y):
+                                if d['kind']:
+                                    print(mycolors.foreground.cyan + "\nkind: ".ljust(12) + mycolors.reset + d['kind'], end=' ')
+
+                            if ("filename" in y):
+                                if d['filename']:
+                                    print(mycolors.foreground.cyan + "\nfilename: ".ljust(12) + mycolors.reset + d['filename'], end=' ')
+
+                            if ("submitted" in y):
+                                if d['submitted']:
+                                    print(mycolors.foreground.cyan + "\nsubmitted: ".ljust(12) + mycolors.reset + d['submitted'], end=' ')
+
+                            if ("completed" in y):
+                                if d['completed']:
+                                    print(mycolors.foreground.cyan + "\ncompleted: ".ljust(12) + mycolors.reset + d['completed'], end=' ')
+
+                            if ("private" in y):
+                                if d['private']:
+                                    print(mycolors.foreground.cyan + "\nprivate: ".ljust(12) + mycolors.reset + d['private'], end=' ')
+
+                            for x in triagetext['data'][0].keys():
+                                if (x == "tasks"):
+                                    if (triagetext['data'][0]['tasks'] is not None):
+                                        for d in triagetext['data'][0]['tasks']:
+                                            print(mycolors.foreground.purple + "\ntasks: " + mycolors.reset, end=' ')
                                             z = d.keys()    
                                             if ("id" in z):
                                                 if d['id']:
@@ -3656,68 +4134,6 @@ def triage_search(triagex, triage):
                                             if ("pick" in z):
                                                 if d['pick']:
                                                     print(mycolors.foreground.purple + "\n\t   pick: ".ljust(13) + mycolors.reset + d['pick'], end=' ')
-
-                            print("\n" + (90*'-').center(45),end='')
-
-                if (i == "next"):
-                    if (triagetext['next'] is not None):
-                        print(mycolors.foreground.lightgreen + "\nnext: ".ljust(12) + mycolors.reset + triagetext['next'], end=' ')
-
-        if (bkg == 0):
-            for i in triagetext.keys():
-                if (i == "data"):
-                    if (triagetext['data'] is not None):
-                        for d in triagetext['data']:
-                            y = d.keys()    
-                            if ("id" in y):
-                                if d['id']:
-                                    print(mycolors.foreground.purple + "\nid: ".ljust(12) + mycolors.reset + d['id'],end=' ')
-
-                            if ("status" in y):
-                                if d['status']:
-                                    print(mycolors.foreground.purple + "\nstatus: ".ljust(12) + mycolors.reset + d['status'], end=' ')
-
-                            if ("kind" in y):
-                                if d['kind']:
-                                    print(mycolors.foreground.purple + "\nkind: ".ljust(12) + mycolors.reset + d['kind'], end=' ')
-
-                            if ("filename" in y):
-                                if d['filename']:
-                                    print(mycolors.foreground.purple + "\nfilename: ".ljust(12) + mycolors.reset + d['filename'], end=' ')
-
-                            if ("submitted" in y):
-                                if d['submitted']:
-                                    print(mycolors.foreground.purple + "\nsubmitted: ".ljust(12) + mycolors.reset + d['submitted'], end=' ')
-
-                            if ("completed" in y):
-                                if d['completed']:
-                                    print(mycolors.foreground.purple + "\ncompleted: ".ljust(12) + mycolors.reset + d['completed'], end=' ')
-
-                            if ("private" in y):
-                                if d['private']:
-                                    print(mycolors.foreground.purple + "\nprivate: ".ljust(12) + mycolors.reset + d['private'], end=' ')
-
-                            for x in triagetext['data'][0].keys():
-                                if (x == "tasks"):
-                                    if (triagetext['data'][0]['tasks'] is not None):
-                                        for d in triagetext['data'][0]['tasks']:
-                                            print(mycolors.foreground.purple + "\ntasks: " + mycolors.reset, end=' ')
-                                            z = d.keys()    
-                                            if ("id" in z):
-                                                if d['id']:
-                                                    print(mycolors.foreground.cyan + "\n\t   id: ".ljust(13) + mycolors.reset + d['id'], end=' ')
-
-                                            if ("status" in z):
-                                                if d['status']:
-                                                    print(mycolors.foreground.cyan + "\n\t   status: ".ljust(12) + mycolors.reset + d['status'], end=' ')
-
-                                            if ("target" in z):
-                                                if d['target']:
-                                                    print(mycolors.foreground.cyan + "\n\t   target: ".ljust(12) + mycolors.reset + d['target'], end=' ')
-                                            
-                                            if ("pick" in z):
-                                                if d['pick']:
-                                                    print(mycolors.foreground.cyan + "\n\t   pick: ".ljust(13) + mycolors.reset + d['pick'], end=' ')
 
                             print("\n" + (90*'-').center(45),end='')
 
@@ -3787,50 +4203,50 @@ def triage_summary(triagex, triage):
                     if (triagetext['sample'] is not None):
                         y = triagetext['sample'].keys()    
                         if ("id" in y):
-                            print(mycolors.foreground.lightgreen + "\n\nid: ".ljust(13) + mycolors.reset + triagetext['sample']['id'],end=' ')
+                            print(mycolors.foreground.lightcyan + "\n\nid: ".ljust(13) + mycolors.reset + triagetext['sample']['id'],end=' ')
 
                         if ("target" in y):
-                            print(mycolors.foreground.lightgreen + "\ntarget: ".ljust(12) + mycolors.reset + triagetext['sample']['target'], end=' ')
+                            print(mycolors.foreground.lightcyan + "\ntarget: ".ljust(12) + mycolors.reset + triagetext['sample']['target'], end=' ')
 
                         if ("size" in y):
-                            print((mycolors.foreground.lightgreen + "\nsize: ".ljust(12) + mycolors.reset + "%d") % int(triagetext['sample']['size']), end=' ')
+                            print((mycolors.foreground.lightcyan + "\nsize: ".ljust(12) + mycolors.reset + "%d") % int(triagetext['sample']['size']), end=' ')
 
                         if ("md5" in y):
-                            print(mycolors.foreground.lightgreen + "\nmd5: ".ljust(12) + mycolors.reset + triagetext['sample']['md5'], end=' ')
+                            print(mycolors.foreground.lightcyan + "\nmd5: ".ljust(12) + mycolors.reset + triagetext['sample']['md5'], end=' ')
 
                         if ("sha1" in y):
-                            print(mycolors.foreground.lightgreen + "\nsha1: ".ljust(12) + mycolors.reset + triagetext['sample']['sha1'], end=' ')
+                            print(mycolors.foreground.lightcyan + "\nsha1: ".ljust(12) + mycolors.reset + triagetext['sample']['sha1'], end=' ')
 
                         if ("sha256" in y):
-                            print(mycolors.foreground.lightgreen + "\nsha256: ".ljust(12) + mycolors.reset + triagetext['sample']['sha256'], end=' ')
+                            print(mycolors.foreground.lightcyan + "\nsha256: ".ljust(12) + mycolors.reset + triagetext['sample']['sha256'], end=' ')
 
                         if ("completed" in y):
-                            print(mycolors.foreground.lightgreen + "\ncompleted: ".ljust(12) + mycolors.reset + triagetext['sample']['completed'], end=' ')
+                            print(mycolors.foreground.lightcyan + "\ncompleted: ".ljust(12) + mycolors.reset + triagetext['sample']['completed'], end=' ')
 
                 if (i == "analysis"):
                     if (triagetext['analysis'] is not None):
                         if ("score" in triagetext['analysis']):
-                            print(mycolors.foreground.lightgreen + "\nscore: ".ljust(12) + mycolors.reset + str(triagetext['analysis']['score']),end=' ')
+                            print(mycolors.foreground.lightcyan + "\nscore: ".ljust(12) + mycolors.reset + str(triagetext['analysis']['score']),end=' ')
 
                 if (i == "tasks"):
                     if (triagetext[i] is not None):
-                        print(mycolors.foreground.lightgreen + "\n\ntasks: ".ljust(11) + mycolors.reset,end=' ')
+                        print(mycolors.foreground.lightcyan + "\n\ntasks: ".ljust(11) + mycolors.reset,end=' ')
                         for d in (triagetext[i].keys()):
                             print("\n".ljust(12) + mycolors.foreground.lightcyan + "* " + d + ": \n" + mycolors.reset,end=' ')
                             if ("kind" in triagetext[i][d]):
-                                print(mycolors.foreground.orange + "\n".ljust(12) + "kind: ".ljust(10)+ mycolors.reset + triagetext[i][d]['kind'], end=' ')
+                                print(mycolors.foreground.yellow + "\n".ljust(12) + "kind: ".ljust(10)+ mycolors.reset + triagetext[i][d]['kind'], end=' ')
                             if ("status" in triagetext[i][d]):
-                                print(mycolors.foreground.orange + "\n".ljust(12) + "status: ".ljust(10) + mycolors.reset + triagetext[i][d]['status'], end=' ')
+                                print(mycolors.foreground.yellow + "\n".ljust(12) + "status: ".ljust(10) + mycolors.reset + triagetext[i][d]['status'], end=' ')
                             if ("score" in triagetext[i][d]):
-                                print(mycolors.foreground.orange + "\n".ljust(12) + "score: ".ljust(10) + mycolors.reset + str(triagetext[i][d]['score']), end=' ')
+                                print(mycolors.foreground.yellow + "\n".ljust(12) + "score: ".ljust(10) + mycolors.reset + str(triagetext[i][d]['score']), end=' ')
                             if ("target" in triagetext[i][d]):
-                                print(mycolors.foreground.orange + "\n".ljust(12) + "target: ".ljust(10) + mycolors.reset + triagetext[i][d]['target'], end=' ')
+                                print(mycolors.foreground.yellow + "\n".ljust(12) + "target: ".ljust(10) + mycolors.reset + triagetext[i][d]['target'], end=' ')
                             if ("resource" in triagetext[i][d]):
-                                print(mycolors.foreground.orange + "\n".ljust(12) + "resource: ".ljust(8) + mycolors.reset + triagetext[i][d]['resource'], end=' ')
+                                print(mycolors.foreground.yellow + "\n".ljust(12) + "resource: ".ljust(8) + mycolors.reset + triagetext[i][d]['resource'], end=' ')
                             if ("platform" in triagetext[i][d]):
-                                print(mycolors.foreground.orange + "\n".ljust(12) + "platform: ".ljust(8) + mycolors.reset + triagetext[i][d]['platform'], end=' ')
+                                print(mycolors.foreground.yellow + "\n".ljust(12) + "platform: ".ljust(8) + mycolors.reset + triagetext[i][d]['platform'], end=' ')
 
-                            print(mycolors.foreground.orange + "\n".ljust(12) + "tags: ".ljust(10) + mycolors.reset, end=' ')
+                            print(mycolors.foreground.yellow + "\n".ljust(12) + "tags: ".ljust(10) + mycolors.reset, end=' ')
                             if ("tags" in triagetext[i][d]):
                                 for j in triagetext[i][d]['tags']:
                                     print("\n".ljust(22) +  mycolors.reset + j, end=' ')
@@ -3839,35 +4255,35 @@ def triage_summary(triagex, triage):
 
                 if (i == "targets"):
                     if (triagetext['targets'] is not None):
-                        print(mycolors.foreground.lightgreen + "\ntargets: ".ljust(12) + mycolors.reset,end=' ')
+                        print(mycolors.foreground.lightcyan + "\ntargets: ".ljust(12) + mycolors.reset,end=' ')
                         for k in range(len(triagetext['targets'])):
                             for m in (triagetext['targets'][k]):
                                 if ("tasks" == m):
-                                    print(mycolors.foreground.orange + "\n".ljust(12) + "tasks: ".ljust(9) + mycolors.reset,end=' ')
+                                    print(mycolors.foreground.yellow + "\n".ljust(12) + "tasks: ".ljust(9) + mycolors.reset,end=' ')
                                     for i in range(len(triagetext['targets'][k][m])):
                                         print(str(triagetext['targets'][k][m][i]),end=' ')
                                 if ("score" == m):
-                                    print(mycolors.foreground.orange + "\n".ljust(12) + "score: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
+                                    print(mycolors.foreground.yellow + "\n".ljust(12) + "score: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
                                 if ("target" == m):
-                                    print(mycolors.foreground.orange + "\n".ljust(12) + "target: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
+                                    print(mycolors.foreground.yellow + "\n".ljust(12) + "target: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
                                 if ("size" == m):
-                                    print(mycolors.foreground.orange + "\n".ljust(12) + "size: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]) + "bytes",end=' ')
+                                    print(mycolors.foreground.yellow + "\n".ljust(12) + "size: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]) + "bytes",end=' ')
                                 if ("md5" == m):
-                                    print(mycolors.foreground.orange + "\n".ljust(12) + "md5: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
+                                    print(mycolors.foreground.yellow + "\n".ljust(12) + "md5: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
                                 if ("sha1" == m):
-                                    print(mycolors.foreground.orange + "\n".ljust(12) + "sha1: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
+                                    print(mycolors.foreground.yellow + "\n".ljust(12) + "sha1: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
                                 if ("sha256" == m):
-                                    print(mycolors.foreground.orange + "\n".ljust(12) + "sha256: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
+                                    print(mycolors.foreground.yellow + "\n".ljust(12) + "sha256: ".ljust(10) + mycolors.reset + str(triagetext['targets'][k][m]),end=' ')
                                 if ("tags" == m):
-                                    print(mycolors.foreground.orange + "\n".ljust(12) + "tags: ".ljust(10) + mycolors.reset,end=' ')
+                                    print(mycolors.foreground.yellow + "\n".ljust(12) + "tags: ".ljust(10) + mycolors.reset,end=' ')
                                     for j in (triagetext['targets'][k][m]):
                                         print("\n".ljust(22) + mycolors.reset + j,end=' ')
                                 if ("family" == m):
-                                    print(mycolors.foreground.orange + "\n".ljust(12) + "family: ".ljust(9) + mycolors.reset,end=' ')
+                                    print(mycolors.foreground.yellow + "\n".ljust(12) + "family: ".ljust(9) + mycolors.reset,end=' ')
                                     for n in range(len(triagetext['targets'][k][m])):
                                         print(mycolors.reset + str(triagetext['targets'][k][m][n]),end=' ')
                                 if ("iocs" == m):
-                                    print(mycolors.foreground.orange + "\n".ljust(12) + "iocs: ",end=' ')
+                                    print(mycolors.foreground.yellow + "\n".ljust(12) + "iocs: ",end=' ')
                                     for j in (triagetext['targets'][k][m]):
                                         if ('ips' == j):
                                             for i in range(len(triagetext['targets'][k][m][j])):
@@ -3881,50 +4297,50 @@ def triage_summary(triagex, triage):
 
                 if (i == "signatures"):
                     if (triagetext[i] is not None):
-                        print(mycolors.foreground.lightgreen + "\nsignatures: ".ljust(12) + mycolors.reset,end=' ')
+                        print(mycolors.foreground.lightcyan + "\nsignatures: ".ljust(12) + mycolors.reset,end=' ')
                         for y in range(len(triagetext[i])):
                             for d in (triagetext[i][y]).keys():
                                 if (d == 'name'):
-                                    print(mycolors.foreground.orange + "\n".ljust(12) + mycolors.reset + str(triagetext[i][y][d]),end=' ')
+                                    print(mycolors.foreground.yellow + "\n".ljust(12) + mycolors.reset + str(triagetext[i][y][d]),end=' ')
 
                         print(mycolors.reset + "")
 
                 if (i == "extracted"):
                     if (triagetext['extracted'] is not None):
-                        print(mycolors.foreground.lightgreen + "\nextracted: ".ljust(12) + mycolors.reset,end=' ')
+                        print(mycolors.foreground.lightcyan + "\nextracted: ".ljust(12) + mycolors.reset,end=' ')
                         for k in range(len(triagetext['extracted'])):
                             for m in (triagetext['extracted'][k]):
                                 if ("tasks" == m):
-                                    print(mycolors.foreground.orange + "\n".ljust(12) + "tasks: ".ljust(9) + mycolors.reset,end=' ')
+                                    print(mycolors.foreground.yellow + "\n".ljust(12) + "tasks: ".ljust(9) + mycolors.reset,end=' ')
                                     for i in range(len(triagetext['extracted'][k][m])):
                                         print(str(triagetext['extracted'][k][m][i]),end=' ')
                                 if ("resource" == m):
-                                    print(mycolors.foreground.orange + "\n".ljust(12) + "resource: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m]),end=' ')
+                                    print(mycolors.foreground.yellow + "\n".ljust(12) + "resource: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m]),end=' ')
                                 if ("dumped_file" == m):
-                                    print(mycolors.foreground.orange + "\n".ljust(12) + "dumped: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m]),end=' ')
+                                    print(mycolors.foreground.yellow + "\n".ljust(12) + "dumped: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m]),end=' ')
                                 if ("config" == m):
                                     for x in ((triagetext['extracted'][k][m]).keys()):
                                         if ('family' == x):
-                                            print(mycolors.foreground.orange + "\n".ljust(12) + "family: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x]),end=' ')
+                                            print(mycolors.foreground.yellow + "\n".ljust(12) + "family: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x]),end=' ')
                                         if ('rule' == x):
-                                            print(mycolors.foreground.orange + "\n".ljust(12) + "rule: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x]),end=' ')
+                                            print(mycolors.foreground.yellow + "\n".ljust(12) + "rule: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x]),end=' ')
                                         if ("extracted_pe" == x):
-                                            print(mycolors.foreground.orange + "\n".ljust(12) + "extracted_pe: ".ljust(9) + mycolors.reset,end=' ')
+                                            print(mycolors.foreground.yellow + "\n".ljust(12) + "extracted_pe: ".ljust(9) + mycolors.reset,end=' ')
                                             for i in range(len(triagetext['extracted'][k][m][x])):
                                                 print("\n".ljust(22) + str(triagetext['extracted'][k][m][x][i]),end=' ')
                                         if ('c2' == x):
-                                            print(mycolors.foreground.orange + "\n".ljust(12) + "c2: ".ljust(9) + mycolors.reset,end=' ')
+                                            print(mycolors.foreground.yellow + "\n".ljust(12) + "c2: ".ljust(9) + mycolors.reset,end=' ')
                                             for z in range(len(triagetext['extracted'][k][m][x])):
                                                 print("\n".ljust(22) + mycolors.reset + str(triagetext['extracted'][k][m][x][z]),end=' ')
                                         if ("botnet" == x):
-                                            print(mycolors.foreground.orange + "\n".ljust(12) + "botnet: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x]),end=' ')
+                                            print(mycolors.foreground.yellow + "\n".ljust(12) + "botnet: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x]),end=' ')
                                         if ("keys" == x):
                                             for p in range(len(triagetext['extracted'][k][m][x])):
                                                 for q in (triagetext['extracted'][k][m][x][p]).keys():
                                                     if ('key' == q):
-                                                        print(mycolors.foreground.orange + "\n".ljust(12) + "key: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x][p][q]),end=' ')
+                                                        print(mycolors.foreground.yellow + "\n".ljust(12) + "key: ".ljust(10) + mycolors.reset + str(triagetext['extracted'][k][m][x][p][q]),end=' ')
                                                     if ('value' == q):
-                                                        print(mycolors.foreground.orange + "\n".ljust(12) + "value:".ljust(10) + mycolors.reset,end='')
+                                                        print(mycolors.foreground.yellow + "\n".ljust(12) + "value:".ljust(10) + mycolors.reset,end='')
                                                         print(mycolors.reset + (("\n" + "".ljust(21)).join(textwrap.wrap((triagetext['extracted'][k][m][x][p][q]),width=80))),end=' ')
 
 
@@ -4414,37 +4830,37 @@ def triage_dynamic(triagex, triage):
                     if (triagetext['sample'] is not None):
                         y = triagetext['sample'].keys()    
                         if ("id" in y):
-                            print(mycolors.foreground.lightgreen + "\nid: ".ljust(12) + mycolors.reset + triagetext['sample']['id'],end=' ')
+                            print(mycolors.foreground.lightcyan + "\nid: ".ljust(12) + mycolors.reset + triagetext['sample']['id'],end=' ')
 
                         if ("target" in y):
-                            print(mycolors.foreground.lightgreen + "\ntarget: ".ljust(12) + mycolors.reset + triagetext['sample']['target'], end=' ')
+                            print(mycolors.foreground.lightcyan + "\ntarget: ".ljust(12) + mycolors.reset + triagetext['sample']['target'], end=' ')
 
                         if ("score" in y):
-                            print(mycolors.foreground.lightgreen + "\nscore: ".ljust(12) + mycolors.reset + str(triagetext['sample']['score']), end=' ')
+                            print(mycolors.foreground.lightcyan + "\nscore: ".ljust(12) + mycolors.reset + str(triagetext['sample']['score']), end=' ')
 
                         if ("submitted" in y):
-                            print(mycolors.foreground.lightgreen + "\nsubmitted: ".ljust(12) + mycolors.reset + triagetext['sample']['submitted'], end=' ')
+                            print(mycolors.foreground.lightcyan + "\nsubmitted: ".ljust(12) + mycolors.reset + triagetext['sample']['submitted'], end=' ')
 
                         if ("size" in y):
-                            print(mycolors.foreground.lightgreen + "\nsize: ".ljust(12) + mycolors.reset + str(triagetext['sample']['size']), end=' ')
+                            print(mycolors.foreground.lightcyan + "\nsize: ".ljust(12) + mycolors.reset + str(triagetext['sample']['size']), end=' ')
 
                         if ("md5" in y):
-                            print(mycolors.foreground.lightgreen + "\nmd5: ".ljust(12) + mycolors.reset + triagetext['sample']['md5'], end=' ')
+                            print(mycolors.foreground.lightcyan + "\nmd5: ".ljust(12) + mycolors.reset + triagetext['sample']['md5'], end=' ')
 
                         if ("sha1" in y):
-                            print(mycolors.foreground.lightgreen + "\nsha1: ".ljust(12) + mycolors.reset + triagetext['sample']['sha1'], end=' ')
+                            print(mycolors.foreground.lightcyan + "\nsha1: ".ljust(12) + mycolors.reset + triagetext['sample']['sha1'], end=' ')
 
                         if ("sha256" in y):
-                            print(mycolors.foreground.lightgreen + "\nsha256: ".ljust(12) + mycolors.reset + triagetext['sample']['sha256'], end=' ')
+                            print(mycolors.foreground.lightcyan + "\nsha256: ".ljust(12) + mycolors.reset + triagetext['sample']['sha256'], end=' ')
 
-                        print(mycolors.foreground.lightgreen + "\nstatic_tags: ".ljust(12) + mycolors.reset, end=' ')
+                        print(mycolors.foreground.lightcyan + "\nstatic_tags: ".ljust(12) + mycolors.reset, end=' ')
                         if ("static_tags" in triagetext[i]):
                             for j in triagetext[i]['static_tags']:
                                 print("\n".ljust(12) +  mycolors.reset + j, end=' ')
 
                 if (i == "analysis"):
                     if (triagetext[i] is not None):
-                        print(mycolors.foreground.lightgreen + "\n\nanalysis: ".ljust(11) + mycolors.reset,end=' ')
+                        print(mycolors.foreground.lightcyan + "\n\nanalysis: ".ljust(11) + mycolors.reset,end=' ')
                         if ("score" in triagetext[i]):
                             print(mycolors.foreground.lightred + "\n".ljust(12) + "score: ".ljust(10)+ mycolors.reset + str(triagetext[i]['score']), end=' ')
                         if ("reported" in triagetext[i]):
@@ -4478,7 +4894,7 @@ def triage_dynamic(triagex, triage):
 
                 if (i == "processes"):
                     if (triagetext[i] is not None):
-                        print(mycolors.foreground.lightgreen + "\nprocesses: ".ljust(12) + mycolors.reset,end=' ')
+                        print(mycolors.foreground.lightcyan + "\nprocesses: ".ljust(12) + mycolors.reset,end=' ')
                         for k in range(len(triagetext[i])):
                             for m in (triagetext[i][k]):
                                 if ("pid" == m):
@@ -4497,7 +4913,7 @@ def triage_dynamic(triagex, triage):
 
                 if (i == "signatures"):
                     if (triagetext[i] is not None):
-                        print(mycolors.foreground.lightgreen + "\nsignatures: ".ljust(12) + mycolors.reset,end=' ')
+                        print(mycolors.foreground.lightcyan + "\nsignatures: ".ljust(12) + mycolors.reset,end=' ')
                         for y in range(len(triagetext[i])):
                             for d in (triagetext[i][y]).keys():
                                 if (d == 'name'):
@@ -4507,7 +4923,7 @@ def triage_dynamic(triagex, triage):
                     if (triagetext[i] is not None):
                         list_1 = []
                         set_1 = ()
-                        print(mycolors.foreground.lightgreen + "\n".ljust(12) + "iocs: ".ljust(10) + mycolors.reset,end='')
+                        print(mycolors.foreground.lightcyan + "\n".ljust(12) + "iocs: ".ljust(10) + mycolors.reset,end='')
                         for y in range(len(triagetext[i])):
                             for d in (triagetext[i][y]).keys():
                                 if (d == 'indicators'):
@@ -4523,7 +4939,7 @@ def triage_dynamic(triagex, triage):
                 if (i == "network"):
                         list_1 = []
                         set_1 = ()
-                        print(mycolors.foreground.lightgreen + "\nnetwork: ".ljust(12) + mycolors.reset,end='')
+                        print(mycolors.foreground.lightcyan + "\nnetwork: ".ljust(12) + mycolors.reset,end='')
                         for d in (triagetext[i]).keys():
                             if (d == 'flows'):
                                 for z in range(len(triagetext[i][d])):
@@ -4620,7 +5036,7 @@ def triage_dynamic(triagex, triage):
                                 if ("procid_parent" == m):
                                     print(mycolors.foreground.red + "\n".ljust(12) + "procid_p: ".ljust(10) + mycolors.reset + str(triagetext[i][k][m]),end=' ')
                                 if ("cmd" == m):
-                                    print(mycolors.foreground.lightred + "\n".ljust(12) + "cmd: ".ljust(10) + mycolors.reset + (("\n".ljust(22)).join(textwrap.wrap(str(triagetext[i][k][m]),width=90))),end=' ')
+                                    print(mycolors.foreground.red + "\n".ljust(12) + "cmd: ".ljust(10) + mycolors.reset + (("\n".ljust(22)).join(textwrap.wrap(str(triagetext[i][k][m]),width=90))),end=' ')
                                 if ("image" == m):
                                     print(mycolors.foreground.red + "\n".ljust(12) + "image: ".ljust(10) + mycolors.reset + str(triagetext[i][k][m]),end=' ')
                             print(mycolors.reset + "")
@@ -5098,62 +5514,62 @@ def bazaar_lastsamples(bazaarx, bazaar):
                             print("\n" + (90*'-').center(45), end=' ')
                             if ("sha256_hash" in y):
                                 if d['sha256_hash']:
-                                    print(mycolors.foreground.orange + "\nsha256_hash: ".ljust(15) + mycolors.reset + d['sha256_hash'],end=' ')
+                                    print(mycolors.foreground.yellow + "\nsha256_hash: ".ljust(15) + mycolors.reset + d['sha256_hash'],end=' ')
 
                             if ("sha1_hash" in y):
                                 if d['sha1_hash']:
-                                    print(mycolors.foreground.orange + "\nsha1_hash: ".ljust(15) + mycolors.reset + d['sha1_hash'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nsha1_hash: ".ljust(15) + mycolors.reset + d['sha1_hash'], end=' ')
 
                             if ("md5_hash" in y):
                                 if d['md5_hash']:
-                                    print(mycolors.foreground.orange + "\nmd5_hash: ".ljust(15) + mycolors.reset + d['md5_hash'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nmd5_hash: ".ljust(15) + mycolors.reset + d['md5_hash'], end=' ')
 
                             if ("first_seen" in y):
                                 if d['first_seen']:
-                                    print(mycolors.foreground.orange + "\nfirst_seen: ".ljust(15) + mycolors.reset + d['first_seen'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nfirst_seen: ".ljust(15) + mycolors.reset + d['first_seen'], end=' ')
 
                             if ("last_seen" in y):
                                 if d['last_seen']:
-                                    print(mycolors.foreground.orange + "\nlast_seen: ".ljust(15) + mycolors.reset + d['last_seen'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nlast_seen: ".ljust(15) + mycolors.reset + d['last_seen'], end=' ')
 
                             if ("file_name" in y):
                                 if d['file_name']:
-                                    print(mycolors.foreground.orange + "\nfile_name: ".ljust(15) + mycolors.reset + d['file_name'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nfile_name: ".ljust(15) + mycolors.reset + d['file_name'], end=' ')
 
                             if ("file_size" in y):
                                 if d['file_size']:
-                                    print(mycolors.foreground.orange + "\nfile_size: ".ljust(15) + mycolors.reset + str(d['file_size']) + " bytes", end=' ')
+                                    print(mycolors.foreground.yellow + "\nfile_size: ".ljust(15) + mycolors.reset + str(d['file_size']) + " bytes", end=' ')
 
                             if ("file_type" in y):
                                 if d['file_type']:
-                                    print(mycolors.foreground.orange + "\nfile_type: ".ljust(15) + mycolors.reset + str(d['file_type']), end=' ')
+                                    print(mycolors.foreground.yellow + "\nfile_type: ".ljust(15) + mycolors.reset + str(d['file_type']), end=' ')
 
                             if ("file_type_mime" in y):
                                 if d['file_type_mime']:
-                                    print(mycolors.foreground.orange + "\nmime_type: ".ljust(15) + mycolors.reset + str(d['file_type_mime']), end=' ')
+                                    print(mycolors.foreground.yellow + "\nmime_type: ".ljust(15) + mycolors.reset + str(d['file_type_mime']), end=' ')
                             if ("origin_country" in y):
                                 if d['origin_country']:
-                                    print(mycolors.foreground.orange + "\ncountry: ".ljust(15) + mycolors.reset + d['origin_country'], end=' ')
+                                    print(mycolors.foreground.yellow + "\ncountry: ".ljust(15) + mycolors.reset + d['origin_country'], end=' ')
 
                             if ("imphash" in y):
                                 if d['imphash']:
-                                    print(mycolors.foreground.orange + "\nimphash: ".ljust(15) + mycolors.reset + d['imphash'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nimphash: ".ljust(15) + mycolors.reset + d['imphash'], end=' ')
 
                             if ("tlsh" in y):
                                 if d['tlsh']:
-                                    print(mycolors.foreground.orange + "\ntlsh: ".ljust(15) + mycolors.reset + d['tlsh'], end=' ')
+                                    print(mycolors.foreground.yellow + "\ntlsh: ".ljust(15) + mycolors.reset + d['tlsh'], end=' ')
 
                             if ("reporter" in y):
                                 if d['reporter']:
-                                    print(mycolors.foreground.orange + "\nreporter: ".ljust(15) + mycolors.reset + d['reporter'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nreporter: ".ljust(15) + mycolors.reset + d['reporter'], end=' ')
 
                             if ("signature" in y):
                                 if d['signature']:
-                                    print(mycolors.foreground.orange + "\nsignature: ".ljust(15) + mycolors.reset + d['signature'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nsignature: ".ljust(15) + mycolors.reset + d['signature'], end=' ')
 
                             if ("tags" in y):
                                 if d['tags']:
-                                    print(mycolors.foreground.orange + "\ntags: ".ljust(15),end='') 
+                                    print(mycolors.foreground.yellow + "\ntags: ".ljust(15),end='') 
                                     for t in d['tags']:
                                         print(mycolors.reset + t, end=' ')
 
@@ -5319,67 +5735,67 @@ def threatfox_listiocs(bazaarx, bazaar):
                             print("\n" + (90*'-').center(45), end=' ')
                             if ("ioc" in y):
                                 if d['ioc']:
-                                    print(mycolors.foreground.orange + "\nioc: ".ljust(16) + mycolors.reset + d['ioc'],end=' ')
+                                    print(mycolors.foreground.yellow + "\nioc: ".ljust(16) + mycolors.reset + d['ioc'],end=' ')
 
                             if ("id" in y):
                                 if d['id']:
-                                    print(mycolors.foreground.orange + "\nid: ".ljust(16) + mycolors.reset + d['id'],end=' ')
+                                    print(mycolors.foreground.yellow + "\nid: ".ljust(16) + mycolors.reset + d['id'],end=' ')
 
                             if ("threat_type" in y):
                                 if d['threat_type']:
-                                    print(mycolors.foreground.orange + "\nthreat_type: ".ljust(16) + mycolors.reset + d['threat_type'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nthreat_type: ".ljust(16) + mycolors.reset + d['threat_type'], end=' ')
 
                             if ("threat_type_desc" in y):
                                 if d['threat_type_desc']:
-                                    print(mycolors.foreground.orange + "\nthreat_desc: ".ljust(16) + mycolors.reset + d['threat_type_desc'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nthreat_desc: ".ljust(16) + mycolors.reset + d['threat_type_desc'], end=' ')
 
                             if ("ioc_type" in y):
                                 if d['ioc_type']:
-                                    print(mycolors.foreground.orange + "\nioc_type: ".ljust(16) + mycolors.reset + d['ioc_type'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nioc_type: ".ljust(16) + mycolors.reset + d['ioc_type'], end=' ')
 
                             if ("ioc_type_desc" in y):
                                 if d['ioc_type_desc']:
-                                    print(mycolors.foreground.orange + "\nioc_desc: ".ljust(16) + mycolors.reset + d['ioc_type_desc'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nioc_desc: ".ljust(16) + mycolors.reset + d['ioc_type_desc'], end=' ')
 
                             if ("malware" in y):
                                 if d['malware']:
-                                    print(mycolors.foreground.orange + "\nmalware: ".ljust(16) + mycolors.reset + d['malware'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nmalware: ".ljust(16) + mycolors.reset + d['malware'], end=' ')
 
                             if ("malware_printable" in y):
                                 if d['malware_printable']:
-                                    print(mycolors.foreground.orange + "\nmalware_desc: ".ljust(16) + mycolors.reset + d['malware_printable'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nmalware_desc: ".ljust(16) + mycolors.reset + d['malware_printable'], end=' ')
 
                             if ("malware_alias" in y):
                                 if d['malware_alias']:
-                                    print(mycolors.foreground.orange + "\nmalware_alias: ".ljust(16) + mycolors.reset + d['malware_alias'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nmalware_alias: ".ljust(16) + mycolors.reset + d['malware_alias'], end=' ')
 
                             if ("malware_malpedia" in y):
                                 if d['malware_malpedia']:
-                                    print(mycolors.foreground.orange + "\nmalpedia: ".ljust(16) + mycolors.reset + d['malware_malpedia'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nmalpedia: ".ljust(16) + mycolors.reset + d['malware_malpedia'], end=' ')
 
                             if ("confidence_level" in y):
                                 if d['confidence_level']:
-                                    print(mycolors.foreground.orange + "\nconfidence: ".ljust(16) + mycolors.reset + str(d['confidence_level']), end=' ')
+                                    print(mycolors.foreground.yellow + "\nconfidence: ".ljust(16) + mycolors.reset + str(d['confidence_level']), end=' ')
 
                             if ("first_seen" in y):
                                 if d['first_seen']:
-                                    print(mycolors.foreground.orange + "\nfirst_seen: ".ljust(16) + mycolors.reset + str(d['first_seen']), end=' ')
+                                    print(mycolors.foreground.yellow + "\nfirst_seen: ".ljust(16) + mycolors.reset + str(d['first_seen']), end=' ')
 
                             if ("last_seen" in y):
                                 if d['last_seen']:
-                                    print(mycolors.foreground.orange + "\nlast_seen: ".ljust(16) + mycolors.reset + str(d['last_seen']), end=' ')
+                                    print(mycolors.foreground.yellow + "\nlast_seen: ".ljust(16) + mycolors.reset + str(d['last_seen']), end=' ')
 
                             if ("reporter" in y):
                                 if d['reporter']:
-                                    print(mycolors.foreground.orange + "\nreporter: ".ljust(16) + mycolors.reset + str(d['reporter']), end=' ')
+                                    print(mycolors.foreground.yellow + "\nreporter: ".ljust(16) + mycolors.reset + str(d['reporter']), end=' ')
 
                             if ("reference" in y):
                                 if d['reference']:
-                                    print(mycolors.foreground.orange + "\nreference: ".ljust(16) + mycolors.reset + d['reference'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nreference: ".ljust(16) + mycolors.reset + d['reference'], end=' ')
 
                             if ("tags" in y):
                                 if d['tags']:
-                                    print(mycolors.foreground.orange + "\ntags: ".ljust(16),end='') 
+                                    print(mycolors.foreground.yellow + "\ntags: ".ljust(16),end='') 
                                     for t in d['tags']:
                                         print(mycolors.reset + t, end=' ')
 
@@ -5510,67 +5926,67 @@ def threatfox_searchiocs(bazaarx, bazaar):
                             print("\n" + (90*'-').center(45), end=' ')
                             if ("ioc" in y):
                                 if d['ioc']:
-                                    print(mycolors.foreground.orange + "\nioc: ".ljust(16) + mycolors.reset + d['ioc'],end=' ')
+                                    print(mycolors.foreground.yellow + "\nioc: ".ljust(16) + mycolors.reset + d['ioc'],end=' ')
 
                             if ("id" in y):
                                 if d['ioc']:
-                                    print(mycolors.foreground.orange + "\nid: ".ljust(16) + mycolors.reset + d['id'],end=' ')
+                                    print(mycolors.foreground.yellow + "\nid: ".ljust(16) + mycolors.reset + d['id'],end=' ')
 
                             if ("threat_type" in y):
                                 if d['threat_type']:
-                                    print(mycolors.foreground.orange + "\nthreat_type: ".ljust(16) + mycolors.reset + d['threat_type'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nthreat_type: ".ljust(16) + mycolors.reset + d['threat_type'], end=' ')
 
                             if ("threat_type_desc" in y):
                                 if d['threat_type_desc']:
-                                    print(mycolors.foreground.orange + "\nthreat_desc: ".ljust(16) + mycolors.reset + d['threat_type_desc'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nthreat_desc: ".ljust(16) + mycolors.reset + d['threat_type_desc'], end=' ')
 
                             if ("ioc_type" in y):
                                 if d['ioc_type']:
-                                    print(mycolors.foreground.orange + "\nioc_type: ".ljust(16) + mycolors.reset + d['ioc_type'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nioc_type: ".ljust(16) + mycolors.reset + d['ioc_type'], end=' ')
 
                             if ("ioc_type_desc" in y):
                                 if d['ioc_type_desc']:
-                                    print(mycolors.foreground.orange + "\nioc_desc: ".ljust(16) + mycolors.reset + d['ioc_type_desc'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nioc_desc: ".ljust(16) + mycolors.reset + d['ioc_type_desc'], end=' ')
 
                             if ("malware" in y):
                                 if d['malware']:
-                                    print(mycolors.foreground.orange + "\nmalware: ".ljust(16) + mycolors.reset + d['malware'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nmalware: ".ljust(16) + mycolors.reset + d['malware'], end=' ')
 
                             if ("malware_printable" in y):
                                 if d['malware_printable']:
-                                    print(mycolors.foreground.orange + "\nmalware_desc: ".ljust(16) + mycolors.reset + d['malware_printable'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nmalware_desc: ".ljust(16) + mycolors.reset + d['malware_printable'], end=' ')
 
                             if ("malware_alias" in y):
                                 if d['malware_alias']:
-                                    print(mycolors.foreground.orange + "\nmalware_alias: ".ljust(16) + mycolors.reset + d['malware_alias'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nmalware_alias: ".ljust(16) + mycolors.reset + d['malware_alias'], end=' ')
 
                             if ("malware_malpedia" in y):
                                 if d['malware_malpedia']:
-                                    print(mycolors.foreground.orange + "\nmalpedia: ".ljust(16) + mycolors.reset + d['malware_malpedia'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nmalpedia: ".ljust(16) + mycolors.reset + d['malware_malpedia'], end=' ')
 
                             if ("confidence_level" in y):
                                 if d['confidence_level']:
-                                    print(mycolors.foreground.orange + "\nconfidence: ".ljust(16) + mycolors.reset + str(d['confidence_level']), end=' ')
+                                    print(mycolors.foreground.yellow + "\nconfidence: ".ljust(16) + mycolors.reset + str(d['confidence_level']), end=' ')
 
                             if ("first_seen" in y):
                                 if d['first_seen']:
-                                    print(mycolors.foreground.orange + "\nfirst_seen: ".ljust(16) + mycolors.reset + str(d['first_seen']), end=' ')
+                                    print(mycolors.foreground.yellow + "\nfirst_seen: ".ljust(16) + mycolors.reset + str(d['first_seen']), end=' ')
 
                             if ("last_seen" in y):
                                 if d['last_seen']:
-                                    print(mycolors.foreground.orange + "\nlast_seen: ".ljust(16) + mycolors.reset + str(d['last_seen']), end=' ')
+                                    print(mycolors.foreground.yellow + "\nlast_seen: ".ljust(16) + mycolors.reset + str(d['last_seen']), end=' ')
 
                             if ("reporter" in y):
                                 if d['reporter']:
-                                    print(mycolors.foreground.orange + "\nreporter: ".ljust(16) + mycolors.reset + str(d['reporter']), end=' ')
+                                    print(mycolors.foreground.yellow + "\nreporter: ".ljust(16) + mycolors.reset + str(d['reporter']), end=' ')
 
                             if ("reference" in y):
                                 if d['reference']:
-                                    print(mycolors.foreground.orange + "\nreference: ".ljust(16) + mycolors.reset + d['reference'], end=' ')
+                                    print(mycolors.foreground.yellow + "\nreference: ".ljust(16) + mycolors.reset + d['reference'], end=' ')
 
                             if ("tags" in y):
                                 if d['tags']:
-                                    print(mycolors.foreground.orange + "\ntags: ".ljust(16),end='') 
+                                    print(mycolors.foreground.yellow + "\ntags: ".ljust(16),end='') 
                                     for t in d['tags']:
                                         print(mycolors.reset + t, end=' ')
 
@@ -5708,67 +6124,67 @@ def threatfox_searchtags(bazaarx, bazaar):
                             print("\n" + (90*'-').center(45), end=' ')
                             if ("ioc" in y):
                                 if d['ioc']:
-                                    print(mycolors.foreground.lightgreen + "\nioc: ".ljust(16) + mycolors.reset + d['ioc'],end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nioc: ".ljust(16) + mycolors.reset + d['ioc'],end=' ')
 
                             if ("id" in y):
                                 if d['ioc']:
-                                    print(mycolors.foreground.lightgreen + "\nid: ".ljust(16) + mycolors.reset + d['id'],end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nid: ".ljust(16) + mycolors.reset + d['id'],end=' ')
 
                             if ("threat_type" in y):
                                 if d['threat_type']:
-                                    print(mycolors.foreground.lightgreen + "\nthreat_type: ".ljust(16) + mycolors.reset + d['threat_type'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nthreat_type: ".ljust(16) + mycolors.reset + d['threat_type'], end=' ')
 
                             if ("threat_type_desc" in y):
                                 if d['threat_type_desc']:
-                                    print(mycolors.foreground.lightgreen + "\nthreat_desc: ".ljust(16) + mycolors.reset + d['threat_type_desc'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nthreat_desc: ".ljust(16) + mycolors.reset + d['threat_type_desc'], end=' ')
 
                             if ("ioc_type" in y):
                                 if d['ioc_type']:
-                                    print(mycolors.foreground.lightgreen + "\nioc_type: ".ljust(16) + mycolors.reset + d['ioc_type'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nioc_type: ".ljust(16) + mycolors.reset + d['ioc_type'], end=' ')
 
                             if ("ioc_type_desc" in y):
                                 if d['ioc_type_desc']:
-                                    print(mycolors.foreground.lightgreen + "\nioc_desc: ".ljust(16) + mycolors.reset + d['ioc_type_desc'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nioc_desc: ".ljust(16) + mycolors.reset + d['ioc_type_desc'], end=' ')
 
                             if ("malware" in y):
                                 if d['malware']:
-                                    print(mycolors.foreground.lightgreen + "\nmalware: ".ljust(16) + mycolors.reset + d['malware'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nmalware: ".ljust(16) + mycolors.reset + d['malware'], end=' ')
 
                             if ("malware_printable" in y):
                                 if d['malware_printable']:
-                                    print(mycolors.foreground.lightgreen + "\nmalware_desc: ".ljust(16) + mycolors.reset + d['malware_printable'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nmalware_desc: ".ljust(16) + mycolors.reset + d['malware_printable'], end=' ')
 
                             if ("malware_alias" in y):
                                 if d['malware_alias']:
-                                    print(mycolors.foreground.lightgreen + "\nmalware_alias: ".ljust(16) + mycolors.reset + d['malware_alias'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nmalware_alias: ".ljust(16) + mycolors.reset + d['malware_alias'], end=' ')
 
                             if ("malware_malpedia" in y):
                                 if d['malware_malpedia']:
-                                    print(mycolors.foreground.lightgreen + "\nmalpedia: ".ljust(16) + mycolors.reset + d['malware_malpedia'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nmalpedia: ".ljust(16) + mycolors.reset + d['malware_malpedia'], end=' ')
 
                             if ("confidence_level" in y):
                                 if d['confidence_level']:
-                                    print(mycolors.foreground.lightgreen + "\nconfidence: ".ljust(16) + mycolors.reset + str(d['confidence_level']), end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nconfidence: ".ljust(16) + mycolors.reset + str(d['confidence_level']), end=' ')
 
                             if ("first_seen" in y):
                                 if d['first_seen']:
-                                    print(mycolors.foreground.lightgreen + "\nfirst_seen: ".ljust(16) + mycolors.reset + str(d['first_seen']), end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nfirst_seen: ".ljust(16) + mycolors.reset + str(d['first_seen']), end=' ')
 
                             if ("last_seen" in y):
                                 if d['last_seen']:
-                                    print(mycolors.foreground.lightgreen + "\nlast_seen: ".ljust(16) + mycolors.reset + str(d['last_seen']), end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nlast_seen: ".ljust(16) + mycolors.reset + str(d['last_seen']), end=' ')
 
                             if ("reporter" in y):
                                 if d['reporter']:
-                                    print(mycolors.foreground.lightgreen + "\nreporter: ".ljust(16) + mycolors.reset + str(d['reporter']), end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nreporter: ".ljust(16) + mycolors.reset + str(d['reporter']), end=' ')
 
                             if ("reference" in y):
                                 if d['reference']:
-                                    print(mycolors.foreground.lightgreen + "\nreference: ".ljust(16) + mycolors.reset + d['reference'], end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nreference: ".ljust(16) + mycolors.reset + d['reference'], end=' ')
 
                             if ("tags" in y):
                                 if d['tags']:
-                                    print(mycolors.foreground.lightgreen + "\ntags: ".ljust(16),end='') 
+                                    print(mycolors.foreground.lightcyan + "\ntags: ".ljust(16),end='') 
                                     for t in d['tags']:
                                         print(mycolors.reset + t, end=' ')
 
@@ -6112,7 +6528,6 @@ def threatfox_listmalware(bazaarx, bazaar):
         print(mycolors.reset)
 
 
-
 def haussigsearchroutine(payloadtagx, haus):
 
     haustext = ''
@@ -6135,12 +6550,12 @@ def haussigsearchroutine(payloadtagx, haus):
 
         if 'query_status' in haustext:
             if (bkg == 1):
-                print(mycolors.foreground.lightgreen + "Is available?: \t"  +  haustext.get('query_status').upper())
+                print(mycolors.foreground.lightcyan + "Is available?: \t"  +  haustext.get('query_status').upper())
             else:
                 print(mycolors.foreground.green + "Is available?: \t"  +  haustext.get('query_status').upper())
         else:
             if (bkg == 1):
-                print(mycolors.foreground.lightgreen + 'Is availble?: Not available')
+                print(mycolors.foreground.lightcyan + 'Is availble?: Not available')
             else:
                 print(mycolors.foreground.green + 'Is available?: Not available')
 
@@ -6193,22 +6608,22 @@ def haussigsearchroutine(payloadtagx, haus):
                     print(mycolors.foreground.red + 'Payload count: ')
 
         if (bkg == 1):
-            print(mycolors.foreground.orange + "Tag:\t\t%s" %  payloadtagx)
+            print(mycolors.foreground.yellow + "Tag:\t\t%s" %  payloadtagx)
         else:
             print(mycolors.foreground.pink + "Tag:\t\t%s" %  payloadtagx)
 
         if 'urls' in haustext:
             if ('url_id' in haustext['urls']) is not None:
-                print(mycolors.reset + "\nStatus".center(9) + " " * 2 + "FType".ljust(7) + " SHA256 Hash".center(64) + " " * 5 + "Virus Total".ljust(14) + ' ' * 2 + "URL to Payload".center(45))
-                print("-" * 150 + "\n")
+                print(mycolors.reset + "\nStatus".center(9) + " " * 2 + "FType".ljust(7) + " SHA256 Hash".center(64) + " " * 4 + "Virus Total".ljust(14) + ' ' * 2 + "URL to Payload".center(34))
+                print("-" * 140 + "\n")
                 for w in haustext['urls']:
                     if (bkg == 1):
                         if(w['url_status'] == 'online'):
-                            print(mycolors.foreground.lightgreen + mycolors.reverse + w['url_status'] + " " + mycolors.reset, end=' ')
+                            print(mycolors.foreground.lightcyan + mycolors.reverse + w['url_status'] + " " + mycolors.reset, end=' ')
                         if(w['url_status'] == 'offline'):
                             print(mycolors.foreground.lightred + mycolors.reverse + w['url_status'] + mycolors.reset, end=' ')
                         if(w['url_status'] == ''):
-                            print(mycolors.foreground.lightblue + mycolors.reverse + "unknown" + mycolors.reset, end=' ')
+                            print(mycolors.foreground.yellow + mycolors.reverse + "unknown" + mycolors.reset, end=' ')
                         if w['file_type']:
                             print(mycolors.foreground.lightcyan + ' ' * 2 + "%-6s" % w['file_type'] + mycolors.reset, end=' ')
                         else:
@@ -6216,13 +6631,13 @@ def haussigsearchroutine(payloadtagx, haus):
                         if w['sha256_hash']:
                             print(mycolors.foreground.yellow + w['sha256_hash'] + mycolors.reset, end= ' ')
                         if w['virustotal']:
-                            print(mycolors.foreground.lightgreen + ' ' * 2 + "%-9s" % w['virustotal'].get('result') + mycolors.reset, end='\t  ')
+                            print(mycolors.foreground.lightcyan + ' ' * 2 + "%-9s" % w['virustotal'].get('result') + mycolors.reset, end='\t  ')
                         else:
-                            print(mycolors.foreground.lightgreen + ' ' * 2 + "%-9s" % "Not Found" + mycolors.reset, end= '\t  ')
+                            print(mycolors.foreground.lightcyan + ' ' * 2 + "%-9s" % "Not Found" + mycolors.reset, end= '\t  ')
                         if (w['url']):
-                            print(mycolors.foreground.red + (("\n" + " ".ljust(98)).join(textwrap.wrap(w['url'],width=40))), end="\n")
+                            print(mycolors.foreground.lightred + (("\n" + " ".ljust(98)).join(textwrap.wrap(w['url'],width=35))), end="\n")
                         else:
-                            print(mycolors.foreground.pink + ' ' * 2 + "URL not provided".center(20) + mycolors.reset)
+                            print(mycolors.foreground.lightred + ' ' * 2 + "URL not provided".center(20) + mycolors.reset)
 
                     else:
                         if(w['url_status'] == 'online'):
@@ -6242,7 +6657,7 @@ def haussigsearchroutine(payloadtagx, haus):
                         else:
                             print(mycolors.foreground.cyan + ' ' * 2 + "%-9s" % "Not Found" + mycolors.reset, end= ' ')
                         if (w['url']):
-                            print(mycolors.foreground.green + (("\n" + " ".ljust(98)).join(textwrap.wrap(w['url'],width=40))), end="\n")
+                            print(mycolors.foreground.green + (("\n" + " ".ljust(98)).join(textwrap.wrap(w['url'],width=35))), end="\n")
                         else:
                             print(mycolors.foreground.green + ' ' * 2 + "URL not provided".center(20) + mycolors.reset)
 
@@ -6282,12 +6697,12 @@ def haustagsearchroutine(haustag, hausurltag):
 
         if 'query_status' in haustext:
             if (bkg == 1):
-                print(mycolors.foreground.lightgreen + "Is available?: \t"  +  haustext.get('query_status').upper())
+                print(mycolors.foreground.lightcyan + "Is available?: \t"  +  haustext.get('query_status').upper())
             else:
                 print(mycolors.foreground.green + "Is available?: \t"  +  haustext.get('query_status').upper())
         else:
             if (bkg == 1):
-                print(mycolors.foreground.lightgreen + 'Is availble?: Not available')
+                print(mycolors.foreground.lightcyan + 'Is availble?: Not available')
             else:
                 print(mycolors.foreground.green + 'Is available?: Not available')
 
@@ -6328,7 +6743,7 @@ def haustagsearchroutine(haustag, hausurltag):
                     print(mycolors.foreground.red + 'URL count: \tNot Found')
 
         if (bkg == 1):
-            print(mycolors.foreground.orange + "Tag:\t\t%s" %  haustag)
+            print(mycolors.foreground.yellow + "Tag:\t\t%s" %  haustag)
         else:
             print(mycolors.foreground.pink + "Tag:\t\t%s" %  haustag)
 
@@ -6341,11 +6756,11 @@ def haustagsearchroutine(haustag, hausurltag):
                 for w in haustext['urls']:
                     if (bkg == 1):
                         if(w['url_status'] == 'online'):
-                            print(mycolors.foreground.lightgreen + mycolors.reverse + w['url_status'] + " " + mycolors.reset, end=' ')
+                            print(mycolors.foreground.lightcyan + mycolors.reverse + w['url_status'] + " " + mycolors.reset, end=' ')
                         if(w['url_status'] == 'offline'):
                             print(mycolors.foreground.lightred + mycolors.reverse + w['url_status'] + mycolors.reset, end=' ')
                         if(w['url_status'] == ''):
-                            print(mycolors.foreground.lightblue + mycolors.reverse + "unknown" + mycolors.reset, end=' ')
+                            print(mycolors.foreground.yellow + mycolors.reverse + "unknown" + mycolors.reset, end=' ')
                         if (w['url']):
                             if (w['dateadded']):
                                 print(mycolors.foreground.lightcyan + " " * 2 + (w['dateadded']).ljust(22) + mycolors.reset, end=' ')
@@ -6478,11 +6893,11 @@ def hausgetbatch(haus):
                     if 'url' in haustext['urls'][i]:
                         if (bkg == 1):
                             if(haustext['urls'][i].get('url_status') == 'online'):
-                                print(mycolors.foreground.lightgreen + haustext['urls'][i].get('url_status') + " " + mycolors.reset, end=' ')
+                                print(mycolors.foreground.lightcyan + haustext['urls'][i].get('url_status') + " " + mycolors.reset, end=' ')
                             if(haustext['urls'][i].get('url_status') == 'offline'):
                                 print(mycolors.foreground.lightred + haustext['urls'][i].get('url_status') + mycolors.reset, end=' ')
                             if(haustext['urls'][i].get('url_status')  == ''):
-                                print(mycolors.foreground.lightblue + "unknown" + mycolors.reset, end=' ')
+                                print(mycolors.foreground.yellow + "unknown" + mycolors.reset, end=' ')
                             if 'tags' in haustext['urls'][i]:
                                 print(mycolors.foreground.yellow, end='')
                                 if haustext['urls'][i].get('tags') is not None:
@@ -6490,10 +6905,10 @@ def hausgetbatch(haus):
                                     for t in alltags:
                                         print("%s" % t, end=' ')
                                         l += len(t)
-                                    print(" " * ((28 - l) - len(alltags)) , end=' ')
+                                    print(" " * ((45 - l) - len(alltags)) , end=' ')
                                 else:
-                                    print(" " * 28, end=' ')
-                            print(mycolors.reset + ("\n".ljust(38)).join(textwrap.wrap((haustext['urls'][i].get('url')).ljust(14), width=90)), end='\n')
+                                    print(" " * 45, end=' ')
+                            print(mycolors.reset + ("\n".ljust(55)).join(textwrap.wrap((haustext['urls'][i].get('url')).ljust(14), width=75)), end='\n')
                             l = 0
                         else:
                             if(haustext['urls'][i].get('url_status') == 'online'):
@@ -6509,10 +6924,10 @@ def hausgetbatch(haus):
                                     for t in alltags:
                                         print("%s" % t, end=' ')
                                         l += len(t)
-                                    print(" " * ((28 - l) - len(alltags)) , end=' ')
+                                    print(" " * ((45 - l) - len(alltags)) , end=' ')
                                 else:
-                                    print(" " * 28, end=' ')
-                            print(mycolors.reset + ("\n".ljust(38)).join(textwrap.wrap((haustext['urls'][i].get('url')).ljust(14), width=90)), end='\n')
+                                    print(" " * 45, end=' ')
+                            print(mycolors.reset + ("\n".ljust(55)).join(textwrap.wrap((haustext['urls'][i].get('url')).ljust(14), width=75)), end='\n')
                             l = 0
 
                 print(mycolors.reset , file=sys.stderr)
@@ -6566,7 +6981,7 @@ def hauspayloadslist(haus):
                     if 'sha256_hash' in haustext['payloads'][i]:
                         if (bkg == 1):
                             print(mycolors.foreground.lightred + "%-8s" % haustext['payloads'][i].get('file_type'), end=' ')
-                            print(mycolors.foreground.lightgreen + haustext['payloads'][i].get('firstseen'), end=" ")
+                            print(mycolors.foreground.lightcyan + haustext['payloads'][i].get('firstseen'), end=" ")
                             results = haustext['payloads'][i]['virustotal']
                             if (results) is not None:
                                 print(mycolors.foreground.yellow + (results['result']).center(9), end=' ')
@@ -6609,63 +7024,6 @@ def hauspayloadslist(haus):
         print(mycolors.reset)
 
 
-def urlhauspost(urlx, haus, mytags):
-
-    haustext = ''
-    hausresponse = ''
-    finalurl6 = ''
-
-    requestHAUSSUBMITAPI()
-
-    try:
-
-        print("\n")
-        print((mycolors.reset + "URLhaus Submission Report".center(100)), end='')
-        print((mycolors.reset + "".center(28)), end='')
-        print("\n" + (100*'-').center(40))
-
-        postdata = { 
-                'token' : HAUSSUBMITAPI,
-                'anonymous': '0',
-                'submission' : [
-                    {
-                        'url' : urlx,
-                        'threat' : "malware_download",
-                        'tags': mytags  
-                    }
-                ]
-            }
-
-        requestsession6 = requests.Session()
-        requestsession6.headers.update({'Content-Type': 'application/json'})
-        requestsession6.headers.update({'user-agent': 'URLhaus Malwoverview'})
-        params = {"url": urlx}
-        hausresponse = requests.post(haus, json=postdata, timeout=15)
-        if(bkg == 1):
-            print(mycolors.foreground.lightgreen + "URLhaus Submission Status: " + hausresponse.text)
-        else:
-            print(mycolors.foreground.red + "URLhaus Submission Status: " + hausresponse.text)
-
-        print(mycolors.reset , file=sys.stderr)
-        exit(1)
-
-    except KeyError as e:
-        pass
-
-    except (BrokenPipeError, IOError, TypeError):
-
-        print(mycolors.reset , file=sys.stderr)
-        exit(1)
-
-    except ValueError as e:
-        print(e)
-        if (bkg == 1):
-            print((mycolors.foreground.lightred + "Error while connecting to URLhaus!\n"))
-        else:
-            print((mycolors.foreground.red + "Error while connecting to URLhaus!\n"))
-        print(mycolors.reset)
-
-
 def alien_subscribed(url, arg1):
 
     requestALIENAPI()
@@ -6693,7 +7051,7 @@ def alien_subscribed(url, arg1):
                 c = 1
                 for d in hatext['results']:
                     print(mycolors.reset)
-                    print(mycolors.foreground.cyan + "INFORMATION: %d" % c)
+                    print(mycolors.foreground.lightcyan + "INFORMATION: %d" % c)
                     print(mycolors.reset + '-' * 15 + "\n")
                     if d['name']:
                         print(mycolors.foreground.yellow + "Headline:".ljust(13) + mycolors.reset + hatext['results'][x]['name'], end='\n')
@@ -6836,11 +7194,11 @@ def alien_ipv4(url, arg1):
             if 'sections' in hatext:
                 print(mycolors.reset)
                 if hatext['asn']:
-                    print(mycolors.foreground.lightgreen + "ASN:".ljust(13) + mycolors.reset + hatext['asn'], end='\n')
+                    print(mycolors.foreground.lightcyan + "ASN:".ljust(13) + mycolors.reset + hatext['asn'], end='\n')
                 if hatext['city']:
-                    print(mycolors.foreground.lightgreen + "City:".ljust(13) + mycolors.reset + hatext['city'], end='\n')
+                    print(mycolors.foreground.lightcyan + "City:".ljust(13) + mycolors.reset + hatext['city'], end='\n')
                 if hatext['country_name']:
-                    print(mycolors.foreground.lightgreen + "Country:".ljust(13) + mycolors.reset + hatext['country_name'], end='\n')
+                    print(mycolors.foreground.lightcyan + "Country:".ljust(13) + mycolors.reset + hatext['country_name'], end='\n')
                 if hatext['pulse_info']:
                     if 'count' in (hatext['pulse_info']):
                         if ((hatext['pulse_info']['count']) == 0):
@@ -6853,11 +7211,11 @@ def alien_ipv4(url, arg1):
                             while i < len(hatext['pulse_info'][key]):
                                 if(isinstance(hatext['pulse_info'][key][i], dict)):
                                     if 'malware_families' in hatext['pulse_info'][key][i]:
-                                        print(mycolors.foreground.lightgreen + "\nMalware:".ljust(13) + mycolors.reset)
+                                        print(mycolors.foreground.lightcyan + "\nMalware:".ljust(13) + mycolors.reset)
                                         for z in hatext['pulse_info'][key][i]['malware_families']:
                                             print("".ljust(13) + z['display_name'])
                                     if 'tags' in hatext['pulse_info'][key][i]:
-                                        print(mycolors.foreground.lightgreen + "Tags:".ljust(12) + mycolors.reset, end=' ')
+                                        print(mycolors.foreground.lightcyan + "Tags:".ljust(12) + mycolors.reset, end=' ')
                                         if (hatext['pulse_info'][key][i]['tags']):
                                             b = 0
                                             for z in hatext['pulse_info'][key][i]['tags']:
@@ -6874,17 +7232,17 @@ def alien_ipv4(url, arg1):
                         i = 0
                         while (i < len(hatext['pulse_info']['pulses'])):
                             if "modified" in (hatext['pulse_info']['pulses'][i]):
-                                print(mycolors.foreground.lightgreen + "\nModified:".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['modified']), end='')
+                                print(mycolors.foreground.lightcyan + "\nModified:".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['modified']), end='')
                             if "name" in (hatext['pulse_info']['pulses'][i]):
-                                print(mycolors.foreground.lightgreen + "\nNews:".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['name']), end='')
+                                print(mycolors.foreground.lightcyan + "\nNews:".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['name']), end='')
                             if "created" in (hatext['pulse_info']['pulses'][i]):
-                                print(mycolors.foreground.lightgreen + "\nCreated:".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['created']), end='')
+                                print(mycolors.foreground.lightcyan + "\nCreated:".ljust(14) + mycolors.reset + (hatext['pulse_info']['pulses'][i]['created']), end='')
                                 break
                             else:
                                 i = i + i
 
                         k = 0
-                        print(mycolors.foreground.lightgreen + "\n\nDescription:" + mycolors.reset, end='')
+                        print(mycolors.foreground.lightcyan + "\n\nDescription:" + mycolors.reset, end='')
                         while (k < len(hatext['pulse_info']['pulses'])):
                             for key in hatext['pulse_info']['pulses'][k]:
                                 if (key == 'description'):
@@ -6895,7 +7253,7 @@ def alien_ipv4(url, arg1):
 
                 if hatext['pulse_info']:
                     if hatext['pulse_info']['references']:
-                        print(mycolors.foreground.lightgreen + "\nReferences: ".ljust(14) + mycolors.reset, end=' ')
+                        print(mycolors.foreground.lightcyan + "\nReferences: ".ljust(14) + mycolors.reset, end=' ')
                         for r in hatext['pulse_info']['references']:
                             print("\n".ljust(14) + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(r,width=100)), end='\n')
         else:
@@ -7460,35 +7818,35 @@ def malpedia_families(urlx, arg1):
         hatext = json.loads(haresponse.text)
 
         if(not '200' in str(haresponse)):
-           print(mycolors.foreground.red + "\nAn error has occured while accessing Malpedia.\n", mycolors.reset) 
+           print(mycolors.foreground.red + "\nThe search key couldn't be found on Malpedia.\n", mycolors.reset) 
            exit(1)
 
         if(bkg == 1):
             for key,value in hatext.items():
-                print(mycolors.foreground.orange + "Family:".ljust(13) + mycolors.reset + key)
-                print(mycolors.foreground.lightgreen + "\nUpdated:".ljust(14) + mycolors.reset + value['updated'], end=' ')
+                print(mycolors.foreground.yellow + "Family:".ljust(13) + mycolors.reset + key)
+                print(mycolors.foreground.lightcyan + "\nUpdated:".ljust(14) + mycolors.reset + value['updated'], end=' ')
                 if (value['attribution']):
-                    print(mycolors.foreground.lightgreen + "\nAttribution:".ljust(13), end=' ')
+                    print(mycolors.foreground.lightcyan + "\nAttribution:".ljust(13), end=' ')
                     for i in value['attribution']:
                         print(mycolors.reset + str(i), end=' ')
                 if (value['alt_names']):
-                    print(mycolors.foreground.lightgreen + "\nAliases:".ljust(13), end=' ')
+                    print(mycolors.foreground.lightcyan + "\nAliases:".ljust(13), end=' ')
                     for i in value['alt_names']:
                         print(mycolors.reset + i, end=' ')
                 if (value['common_name']):
-                    print(mycolors.foreground.lightgreen + "\nCommon Name: ".ljust(13) + mycolors.reset + value['common_name'], end=' ')
+                    print(mycolors.foreground.lightcyan + "\nCommon Name: ".ljust(13) + mycolors.reset + value['common_name'], end=' ')
                 if (value['description']):
-                    print(mycolors.foreground.lightgreen + "\nDescription: ".ljust(13) + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(value['description'],width=110)), end=' ')
+                    print(mycolors.foreground.lightcyan + "\nDescription: ".ljust(13) + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(value['description'],width=110)), end=' ')
 
                 if (value['urls']):
                     j = 0
                     for i in value['urls']:
                         if (j < 10):
-                            print(mycolors.foreground.lightgreen + "\nURL_%d:".ljust(15) % j + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(i,width=110)), end=' ')
+                            print(mycolors.foreground.lightcyan + "\nURL_%d:".ljust(15) % j + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(i,width=110)), end=' ')
                         if (j > 9 and j < 100):
-                            print(mycolors.foreground.lightgreen + "\nURL_%d:".ljust(14) % j + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(i,width=110)), end=' ')
+                            print(mycolors.foreground.lightcyan + "\nURL_%d:".ljust(14) % j + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(i,width=110)), end=' ')
                         if (j > 99):
-                            print(mycolors.foreground.lightgreen + "\nURL_%d:".ljust(13) % j + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(i,width=110)), end=' ')
+                            print(mycolors.foreground.lightcyan + "\nURL_%d:".ljust(13) % j + mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(i,width=110)), end=' ')
                         j = j + 1
 
                 print(mycolors.reset + "\n" + "-" * 123)
@@ -7551,11 +7909,11 @@ def malpedia_actors(urlx, arg1):
         hatext = json.loads(haresponse.text)
 
         if(not '200' in str(haresponse)):
-           print(mycolors.foreground.red + "\nAn error has occured while accessing Malpedia.\n", mycolors.reset) 
+           print(mycolors.foreground.red + "\nThe search key couldn't be found on Malpedia.\n", mycolors.reset) 
            exit(1)
 
         if(bkg == 1):
-            print(mycolors.foreground.lightgreen + "\nActors:".ljust(13), end='\n'.ljust(11))
+            print(mycolors.foreground.lightcyan + "\nActors:".ljust(13), end='\n'.ljust(11))
             j = 1
             for i in hatext:
                 if (j < 10):
@@ -7606,24 +7964,24 @@ def malpedia_payloads(urlx, arg1):
         hatext = json.loads(haresponse.text)
 
         if(not '200' in str(haresponse)):
-           print(mycolors.foreground.red + "\nAn error has occured while accessing Malpedia.\n", mycolors.reset) 
+           print(mycolors.foreground.red + "\nThe search key couldn't be found on Malpedia.\n", mycolors.reset) 
            exit(1)
 
         if(bkg == 1):
             for key,value in hatext.items():
-                print(mycolors.foreground.orange + "Family:".ljust(11) + mycolors.reset + key, end=' ')
+                print(mycolors.foreground.yellow + "Family:".ljust(11) + mycolors.reset + key, end=' ')
                 for i in value:
                     for j in i.items():
                         for k in i.keys():
                             if (k == 'status'):
                                 if (i['status']):
-                                    print(mycolors.foreground.lightgreen + "\n\nStatus:".ljust(13) + mycolors.reset + str(i['status']), end='')
+                                    print(mycolors.foreground.lightcyan + "\n\nStatus:".ljust(13) + mycolors.reset + str(i['status']), end='')
                             if (k == 'sha256'):
                                 if (i['sha256']):
-                                    print(mycolors.foreground.lightgreen + "\nHash:".ljust(12) + mycolors.reset + str(i['sha256']), end='')
+                                    print(mycolors.foreground.lightcyan + "\nHash:".ljust(12) + mycolors.reset + str(i['sha256']), end='')
                             if (k == 'version'):
                                 if (i['version']):
-                                    print(mycolors.foreground.lightgreen + "\nVersion:".ljust(12) + mycolors.reset + str(i['version']), end=' ')
+                                    print(mycolors.foreground.lightcyan + "\nVersion:".ljust(12) + mycolors.reset + str(i['version']), end=' ')
                 print("\n" + '-' * 75)
 
         if(bkg == 0):
@@ -7682,7 +8040,7 @@ def malpedia_get_actor(urlx, arg1):
                 exit(1)
         
         if(not '200' in str(haresponse)):
-            print(mycolors.foreground.red + "\nAn error has occured while accessing Malpedia.\n", mycolors.reset) 
+            print(mycolors.foreground.red + "\nThe search key couldn't be found on Malpedia.\n", mycolors.reset) 
             exit(1)
 
         if(bkg == 1):
@@ -7698,45 +8056,45 @@ def malpedia_get_actor(urlx, arg1):
                                 print(mycolors.foreground.yellow + "\n\nCountry:".ljust(12) + mycolors.reset + str(value['country']), end='\n')
                         if (key2 == 'synonyms'):
                             if (value['synonyms']):
-                                print(mycolors.foreground.lightgreen + "\n\nSynonyms:".ljust(11), end=' ')
+                                print(mycolors.foreground.lightcyan + "\n\nSynonyms:".ljust(11), end=' ')
                                 for x in value['synonyms']:
                                     print(mycolors.reset + str(x), end=' ')
                         if (key2 == 'refs'):
                             if (value['refs']):
                                 for x in value['refs']:
-                                    print(mycolors.foreground.lightgreen + "\nREFs:".ljust(11) + mycolors.reset + ("\n".ljust(11)).join(wrapper.wrap(str(x))).ljust(11), end=" ")
+                                    print(mycolors.foreground.lightcyan + "\nREFs:".ljust(11) + mycolors.reset + ("\n".ljust(11)).join(wrapper.wrap(str(x))).ljust(11), end=" ")
                 if(key == 'families'):
                     for key3,value3 in value.items():
                         print("\n" + '-' * 112, end='')
                         print(mycolors.foreground.yellow + "\nFamily: ".ljust(11) + mycolors.reset  + key3)
                         if 'updated' in value3.keys():
                             if(value3['updated']):
-                                print(mycolors.foreground.lightgreen + "Updated: ".ljust(10) + mycolors.reset + value3['updated' ])
+                                print(mycolors.foreground.lightcyan + "Updated: ".ljust(10) + mycolors.reset + value3['updated' ])
                         if 'attribution' in value3.keys():
                             if(len(value3['attribution']) > 0):
-                                print(mycolors.foreground.lightgreen + "Attrib.: ".ljust(9), end=' ')
+                                print(mycolors.foreground.lightcyan + "Attrib.: ".ljust(9), end=' ')
                                 for y in value3['attribution']:
                                     print(mycolors.reset + y, end=' ')
                         if 'alt_names' in value3.keys():
                             if(len(value3['alt_names']) > 0):
-                                print(mycolors.foreground.lightgreen + "\nAliases: ".ljust(10), end=' ')
+                                print(mycolors.foreground.lightcyan + "\nAliases: ".ljust(10), end=' ')
                                 for y in value3['alt_names']:
                                     print(mycolors.reset + y, end=' ')
                         if 'common_name' in value3.keys():
                             if(value3['common_name']):
-                                print(mycolors.foreground.lightgreen + "\nCommon: ".ljust(11) + mycolors.reset + value3['common_name' ], end=' ')
+                                print(mycolors.foreground.lightcyan + "\nCommon: ".ljust(11) + mycolors.reset + value3['common_name' ], end=' ')
                         if 'sources' in value3.keys():
                             if(len(value3['sources']) > 0):
-                                print(mycolors.foreground.lightgreen + "\nSources: ".ljust(11), end=' ')
+                                print(mycolors.foreground.lightcyan + "\nSources: ".ljust(11), end=' ')
                                 for y in value3['sources']:
                                     print(mycolors.reset + y, end=' ')
                         if 'description' in value3.keys():
                             if value3['description']:
-                                print(mycolors.foreground.lightgreen + "\nDescr.: ".ljust(11) + mycolors.reset + ("\n".ljust(11)).join(textwrap.wrap(str(value3['description']),width=100)), end=' ')
+                                print(mycolors.foreground.lightcyan + "\nDescr.: ".ljust(11) + mycolors.reset + ("\n".ljust(11)).join(textwrap.wrap(str(value3['description']),width=100)), end=' ')
                         if 'urls' in value3.keys():
                             if(len(value3['urls']) > 0):
                                 for y in value3['urls']:
-                                    print(mycolors.foreground.lightgreen + "\nURLs: ".ljust(11) + mycolors.reset + ("\n".ljust(11)).join(wrapper.wrap(str(y))).ljust(11), end=" ")
+                                    print(mycolors.foreground.lightcyan + "\nURLs: ".ljust(11) + mycolors.reset + ("\n".ljust(11)).join(wrapper.wrap(str(y))).ljust(11), end=" ")
 
         if(bkg == 0):
             if (hatext['value']):
@@ -7820,7 +8178,7 @@ def malpedia_families(urlx, arg1):
         hatext = json.loads(haresponse.text)
         
         if(not '200' in str(haresponse)):
-            print(mycolors.foreground.red + "\nAn error has occured while accessing Malpedia.\n", mycolors.reset) 
+            print(mycolors.foreground.red + "\nThe search key couldn't be found on Malpedia.\n", mycolors.reset) 
             exit(1)
         
         if(bkg == 1):
@@ -7890,7 +8248,7 @@ def malpedia_get_family(urlx, arg1):
                 exit(1)
         
         if(not '200' in str(haresponse)):
-            print(mycolors.foreground.red + "\nAn error has occured while accessing Malpedia.\n", mycolors.reset) 
+            print(mycolors.foreground.red + "\nThe search key couldn't be found on Malpedia.\n", mycolors.reset) 
             exit(1)
 
         if(bkg == 1):
@@ -7985,13 +8343,13 @@ def malpedia_get_sample(urlx, arg1):
                 exit(1)
         
         if(not '200' in str(haresponse)):
-            print(mycolors.foreground.red + "\nAn error has occured while accessing Malpedia.\n", mycolors.reset) 
+            print(mycolors.foreground.red + "\nThe search key couldn't be found on Malpedia.\n", mycolors.reset) 
             exit(1)
 
         if('200' in str(haresponse)):
             if (bkg == 1):
                 open(myargs+".zip", 'wb').write(base64.b64decode(hatext['zipped']))
-                print(mycolors.foreground.lightgreen + "\nSample successfuly downloaded from Malpedia!\n", mycolors.reset) 
+                print(mycolors.foreground.lightcyan + "\nSample successfuly downloaded from Malpedia!\n", mycolors.reset) 
             else:
                 open(myargs+".zip", 'wb').write(base64.b64decode(hatext['zipped']))
                 print(mycolors.foreground.green + "\nSample successfuly downloaded from Malpedia!\n", mycolors.reset) 
@@ -8033,13 +8391,13 @@ def malpedia_get_yara(urlx, arg1):
                 exit(1)
         
         if(not '200' in str(haresponse)):
-            print(mycolors.foreground.red + "\nAn error has occured while accessing Malpedia.\n", mycolors.reset) 
+            print(mycolors.foreground.red + "\nThe search key couldn't be found on Malpedia.\n", mycolors.reset) 
             exit(1)
 
         if('200' in str(haresponse)):
             if (bkg == 1):
                 open(myargs+".zip", 'wb').write(haresponse.content)
-                print(mycolors.foreground.lightgreen + "\nA zip file named %s.zip containing Yara rules has been SUCCESSFULLY downloaded from Malpedia!\n" % myargs, mycolors.reset) 
+                print(mycolors.foreground.lightcyan + "\nA zip file named %s.zip containing Yara rules has been SUCCESSFULLY downloaded from Malpedia!\n" % myargs, mycolors.reset) 
             else:
                 open(myargs+".zip", 'wb').write(haresponse.content)
                 print(mycolors.foreground.green + "\nA zip file named %s.zip containing Yara rules has been SUCCESSFULLY downloaded from Malpedia!\n" % myargs, mycolors.reset) 
@@ -8078,21 +8436,21 @@ def threatcrowd_email(urlx, arg1):
 
         if(not '200' in str(haresponse)):
             if (bkg == 1):
-                print(mycolors.foreground.lightred + "\nAn error has occured while accessing ThreatCrowd.\n", mycolors.reset) 
+                print(mycolors.foreground.lightred + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
                 exit(1)
             if (bkg == 0):
-                print(mycolors.foreground.red + "\nAn error has occured while accessing ThreatCrowd.\n", mycolors.reset) 
+                print(mycolors.foreground.red + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
                 exit(1)
 
         if(bkg == 1):
             print(mycolors.foreground.yellow + "\nEmail:".ljust(12) + mycolors.reset + myargs)
             if (hatext['domains']):
-                print(mycolors.foreground.purple + "\nDomains:".ljust(13) + mycolors.reset, end=' ')
+                print(mycolors.foreground.lightcyan + "\nDomains:".ljust(13) + mycolors.reset, end=' ')
                 print(mycolors.reset + "\n".ljust(12), end='')
                 for i in sorted(hatext['domains']):
                     print(mycolors.reset + str(i).ljust(12), end='\n'.ljust(12))
             if (hatext['references']):
-                print(mycolors.foreground.purple + "\nReferences:".ljust(13) + mycolors.reset, end=' ')
+                print(mycolors.foreground.lightcyan + "\nReferences:".ljust(13) + mycolors.reset, end=' ')
                 print(mycolors.reset + "\n".ljust(12), end='')
                 for i in hatext['references']:
                     print(mycolors.reset + str(i).ljust(12), end='\n'.ljust(12))
@@ -8143,21 +8501,21 @@ def threatcrowd_ip(urlx, arg1):
 
         if(not '200' in str(haresponse)):
             if (bkg == 1):
-                print(mycolors.foreground.lightred + "\nAn error has occured while accessing ThreatCrowd.\n", mycolors.reset) 
+                print(mycolors.foreground.lightred + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
                 exit(1)
             if (bkg == 0):
-                print(mycolors.foreground.red + "\nAn error has occured while accessing ThreatCrowd.\n", mycolors.reset) 
+                print(mycolors.foreground.red + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
                 exit(1)
 
         if(bkg == 1):
             print(mycolors.foreground.yellow + "\nIP:".ljust(14) + mycolors.reset + myargs + mycolors.foreground.yellow + "  City: " + mycolors.reset + (geocoder.ip(myargs)).city)
             if (hatext['resolutions']):
-                print(mycolors.foreground.lightgreen + "\nResolutions:".ljust(14) + mycolors.reset, end=' ')
+                print(mycolors.foreground.lightcyan + "\nResolutions:".ljust(14) + mycolors.reset, end=' ')
                 for i in sorted(hatext['resolutions'], key=itemgetter('last_resolved')):
                     print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.pink + "Last Resolved: " + mycolors.reset +  i['last_resolved'], end='  ')
                     print(mycolors.reset + mycolors.foreground.pink + "Domain: " + mycolors.reset +  i['domain'], end="")
             if (hatext['hashes']):
-                print(mycolors.foreground.lightgreen + "\n\nHashes:".ljust(13) + mycolors.reset, end=' ')
+                print(mycolors.foreground.lightcyan + "\n\nHashes:".ljust(13) + mycolors.reset, end=' ')
                 print(mycolors.reset + "\n".ljust(14), end='')
                 for i in hatext['hashes']:
                     print(mycolors.reset + str(i).ljust(14), end='\n'.ljust(14))
@@ -8208,10 +8566,10 @@ def threatcrowd_domain(urlx, arg1):
 
         if(not '200' in str(haresponse)):
             if (bkg == 1):
-                print(mycolors.foreground.lightred + "\nAn error has occured while accessing ThreatCrowd.\n", mycolors.reset) 
+                print(mycolors.foreground.lightred + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
                 exit(1)
             if (bkg == 0):
-                print(mycolors.foreground.red + "\nAn error has occured while accessing ThreatCrowd.\n", mycolors.reset) 
+                print(mycolors.foreground.red + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
                 exit(1)
         
         if(bkg == 1):
@@ -8219,8 +8577,8 @@ def threatcrowd_domain(urlx, arg1):
             if (hatext['resolutions']):
                 print(mycolors.foreground.lightcyan + "\nResolutions:".ljust(14) + mycolors.reset, end=' ')
                 for i in sorted(hatext['resolutions'], key=itemgetter('last_resolved')):
-                    print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.lightgreen + "Last Resolved: " + mycolors.reset +  i['last_resolved'], end='  ')
-                    print(mycolors.reset + mycolors.foreground.lightgreen + "IP Address: " + mycolors.reset +  i['ip_address'], end="")
+                    print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.lightcyan + "Last Resolved: " + mycolors.reset +  i['last_resolved'], end='  ')
+                    print(mycolors.reset + mycolors.foreground.lightcyan + "IP Address: " + mycolors.reset +  i['ip_address'], end="")
 
             if (hatext['hashes']):
                 print(mycolors.foreground.lightcyan + "\n\nHashes:".ljust(13) + mycolors.reset, end=' ')
@@ -8311,45 +8669,45 @@ def threatcrowd_hash(urlx, arg1):
 
         if(not '200' in str(haresponse)):
             if (bkg == 1):
-                print(mycolors.foreground.lightred + "\nAn error has occured while accessing ThreatCrowd.\n", mycolors.reset) 
+                print(mycolors.foreground.lightred + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
                 exit(1)
             if (bkg == 0):
-                print(mycolors.foreground.red + "\nAn error has occured while accessing ThreatCrowd.\n", mycolors.reset) 
+                print(mycolors.foreground.red + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
                 exit(1)
 
         if(bkg == 1):
             print(mycolors.foreground.yellow + "\nHash:".ljust(14) + mycolors.reset + myargs)
 
             if (hatext['md5']):
-                print(mycolors.foreground.lightgreen + "\nMD5:".ljust(14) + mycolors.reset + hatext['md5'], end=' ')
+                print(mycolors.foreground.lightcyan + "\nMD5:".ljust(14) + mycolors.reset + hatext['md5'], end=' ')
 
             if (hatext['sha1']):
-                print(mycolors.foreground.lightgreen + "\nSHA1:".ljust(14) + mycolors.reset + hatext['sha1'], end=' ')
-                print(mycolors.foreground.lightgreen + "\nScans:".ljust(14) + mycolors.reset)
+                print(mycolors.foreground.lightcyan + "\nSHA1:".ljust(14) + mycolors.reset + hatext['sha1'], end=' ')
+                print(mycolors.foreground.lightcyan + "\nScans:".ljust(14) + mycolors.reset)
 
             if (hatext['scans']):
-                print(mycolors.foreground.lightgreen + "\nAntivirus:".ljust(14) + mycolors.reset, end=' ')
+                print(mycolors.foreground.lightcyan + "\nAntivirus:".ljust(14) + mycolors.reset, end=' ')
                 for i in sorted(hatext['scans']):
                     print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.lightcyan + mycolors.reset +  i, end='  ')
 
             if (hatext['ips']):
-                print(mycolors.foreground.lightgreen + "\nIPs:".ljust(14) + mycolors.reset, end=' ')
+                print(mycolors.foreground.lightcyan + "\nIPs:".ljust(14) + mycolors.reset, end=' ')
                 for i in sorted(hatext['ips']):
                     print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.lightcyan + mycolors.reset +  i, end='  ')
 
             if (hatext['domains']):
-                print(mycolors.foreground.lightgreen + "\n\nDomains:".ljust(14) + mycolors.reset, end=' ')
+                print(mycolors.foreground.lightcyan + "\n\nDomains:".ljust(14) + mycolors.reset, end=' ')
                 for i in sorted(hatext['domains']):
                     print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.lightcyan + mycolors.reset +  i, end='  ')
 
             if (hatext['references']):
-                print(mycolors.foreground.lightgreen + "\n\nReferences:".ljust(13) + mycolors.reset, end=' ')
+                print(mycolors.foreground.lightcyan + "\n\nReferences:".ljust(13) + mycolors.reset, end=' ')
                 print(mycolors.reset + "\n".ljust(14), end='')
                 for i in hatext['references']:
                     print(mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(str(i),width=110)).ljust(14), end="\n".ljust(14))
 
         if(bkg == 0):
-            print(mycolors.foreground.yellow + "\nHash:".ljust(14) + mycolors.reset + myargs)
+            print(mycolors.foreground.red + "\nHash:".ljust(14) + mycolors.reset + myargs)
 
             if (hatext['md5']):
                 print(mycolors.foreground.green + "\nMD5:".ljust(14) + mycolors.reset + hatext['md5'], end=' ')
@@ -8414,25 +8772,25 @@ def threatcrowd_antivirus(urlx, arg1):
 
         if(not '200' in str(haresponse)):
             if (bkg == 1):
-                print(mycolors.foreground.lightred + "\nAn error has occured while accessing ThreatCrowd.\n", mycolors.reset) 
+                print(mycolors.foreground.lightred + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
                 exit(1)
             if (bkg == 0):
-                print(mycolors.foreground.red + "\nAn error has occured while accessing ThreatCrowd.\n", mycolors.reset) 
+                print(mycolors.foreground.red + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
                 exit(1)
 
         if(bkg == 1):
             print(mycolors.foreground.yellow + "\nName:".ljust(14) + mycolors.reset + myargs)
 
             if (hatext['hashes']):
-                print(mycolors.foreground.lightgreen + "\nHashes:".ljust(14) + mycolors.reset, end='\n'.ljust(14))
+                print(mycolors.foreground.lightcyan + "\nHashes:".ljust(14) + mycolors.reset, end='\n'.ljust(14))
                 for k,i in enumerate(sorted(hatext['hashes']),-1):
                     if k % 3 == 2:
-                        print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.lightblue + f"{k+2:03}: " + mycolors.reset + i, end='  ')
+                        print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.lightcyan + f"{k+2:03}: " + mycolors.reset + i, end='  ')
                     else:
-                        print(mycolors.reset + mycolors.foreground.lightblue + f"{k+2:03}: " + mycolors.reset + i, end='  ')
+                        print(mycolors.reset + mycolors.foreground.lightcyan + f"{k+2:03}: " + mycolors.reset + i, end='  ')
 
             if (hatext['references']):
-                print(mycolors.foreground.lightgreen + "\n\nReferences:".ljust(13) + mycolors.reset, end=' ')
+                print(mycolors.foreground.lightcyan + "\n\nReferences:".ljust(13) + mycolors.reset, end=' ')
                 print(mycolors.reset + "\n".ljust(14), end='')
                 for i in hatext['references']:
                     print(mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(str(i),width=110)).ljust(14), end="\n".ljust(14))
@@ -8460,264 +8818,6 @@ def threatcrowd_antivirus(urlx, arg1):
             print((mycolors.foreground.lightred + "Error while connecting to ThreatCrowd!\n"))
         else:
             print((mycolors.foreground.red + "Error while connecting to ThreatCrowd!\n"))
-        print(mycolors.reset)
-
-
-def valhalla_service(argx, arg1, VALHALLAPIx):
-
-    hatext = ''
-    haresponse = ''
-    myarg0 = argx
-    myarg1 = arg1
-
-    try:
-
-        vll = ValhallaAPI(api_key=VALHALLAAPIx)
-
-        if (argx == 1):
-            vllresponse = vll.get_rules_text(search=arg1)
-        elif (argx == 2):
-            vllresponse = vll.get_rules_text(score=int(arg1))
-        elif (argx == 3):
-            vllresponse = vll.get_rules_text(product=arg1)
-        elif(argx == 4):
-            vllresponse = vll.get_hash_info(hash=arg1)
-        elif(argx == 5):
-            vllresponse = vll.get_rule_info(rulename=arg1)
-        else:
-            print(mycolors.foreground.red + "\n\nYou haven't provided a valid value for the Valhalla service!\n" + mycolors.reset,end="\n")
-            exit(1)
-
-        if (argx < 4):
-            if "Number of Rules: 0" in (vllresponse):
-                if(bkg==1):
-                    print(mycolors.foreground.yellow + "\nYara rules for the provided argument haven't been found on Valhalla!\n" + mycolors.reset,end="\n")
-                    exit(0)
-                else:
-                    print(mycolors.foreground.blue + "\nYara rules for the provided argument haven't been found on Valhalla!\n" + mycolors.reset,end="\n")
-                    exit(0)
-
-        if (argx < 4):
-            with open('valhalla-rules.yar', 'w') as fh:
-                fh.write(vllresponse)
-
-        if((argx == 2) or (argx == 3)):
-            with open('valhalla-rules.yar','r') as fr: 
-                for x in range(28):
-                    z = fr.readline()
-                    y = re.search("^rule", z)
-                    if (y is not None):
-                        if(bkg == 1):
-                            print(mycolors.foreground.lightgreen + z,end='')
-                        else:
-                            print(mycolors.foreground.cyan + z,end='')
-                    else:
-                        print(mycolors.reset + z,end='')
-                
-                print("\n......further content can be found in the valhalla-rules.yar file......")
-            fr.close()
-
-        if((argx == 1)):
-            with open('valhalla-rules.yar','r') as fr: 
-                for x in fr:
-                    z = fr.readline()
-                    y = re.search("^rule", z)
-                    if (y is not None):
-                        if(bkg == 1):
-                            print(mycolors.foreground.lightgreen + z,end='')
-                        else:
-                            print(mycolors.foreground.cyan + z,end='')
-                    else:
-                        print(mycolors.reset + z,end='')
-
-            fr.close()
-
-        if(argx == 4):
-            if (vllresponse['status'] == "empty"): 
-                if(bkg == 1):
-                    print(mycolors.foreground.lightred + "\n\nThere isn't any rule associated to this hash on Valhalla service.\n" + mycolors.reset, end="\n")
-                else:
-                    print(mycolors.foreground.red + "\n\nThere isn't any rule associated to this hash on Valhalla service.\n" + mycolors.reset, end="\n")
-                exit(0)
-
-            if (vllresponse['status'] != "empty"):
-                j = 0
-
-                if(bkg == 1):
-                    while j < len(vllresponse['results']):
-                        if 'rulename' in vllresponse['results'][j]:
-                            print(mycolors.foreground.yellow + "\nRulename:".ljust(13) + mycolors.reset + str(vllresponse['results'][j]['rulename']))
-                        if 'positives' in vllresponse['results'][j]:
-                            print(mycolors.foreground.lightgreen + "Positives:".ljust(12) + mycolors.reset + str(vllresponse['results'][j]['positives']))
-                        if 'timestamp' in vllresponse['results'][j]:
-                            print(mycolors.foreground.lightgreen + "Timestamp:".ljust(12) + mycolors.reset + str(vllresponse['results'][j]['timestamp']))
-                        if 'total' in vllresponse['results'][j]:
-                            print(mycolors.foreground.lightgreen + "Total:".ljust(12) + mycolors.reset + str(vllresponse['results'][j]['total']))
-                        if 'tags' in vllresponse['results'][j]:
-                            print(mycolors.foreground.lightgreen + "Tags:".ljust(12), end='')
-                            for i in vllresponse['results'][j]['tags']: 
-                                print(mycolors.reset + i, end=' ')
-                            print(mycolors.reset)
-
-                        j = j + 1
-
-                    print(mycolors.reset)
-                    exit(0)
-
-                if(bkg == 0):
-                    while j < len(vllresponse['results']):
-                        if 'rulename' in vllresponse['results'][j]:
-                            print(mycolors.foreground.red + "\nRulename:".ljust(13) + mycolors.reset + str(vllresponse['results'][j]['rulename']))
-                        if 'positives' in vllresponse['results'][j]:
-                            print(mycolors.foreground.cyan + "Positives:".ljust(12) + mycolors.reset + str(vllresponse['results'][j]['positives']))
-                        if 'timestamp' in vllresponse['results'][j]:
-                            print(mycolors.foreground.cyan + "Timestamp:".ljust(12) + mycolors.reset + str(vllresponse['results'][j]['timestamp']))
-                        if 'total' in vllresponse['results'][j]:
-                            print(mycolors.foreground.cyan + "Total:".ljust(12) + mycolors.reset + str(vllresponse['results'][j]['total']))
-                        if 'tags' in vllresponse['results'][j]:
-                            print(mycolors.foreground.cyan + "Tags:".ljust(12), end='')
-                            for i in vllresponse['results'][j]['tags']: 
-                                print(mycolors.reset + i, end=' ')
-                            print(mycolors.reset)
-
-                        j = j + 1
-
-                    print(mycolors.reset)
-                    exit(0)
-
-        if(argx == 5):
-            if ('status' in vllresponse): 
-                if (vllresponse['status'] == 'error'):
-                    if(bkg == 1):
-                        print(mycolors.foreground.lightred + "\n\nThere isn't any information associated to this rule name on Valhalla service.\n" + mycolors.reset, end="\n")
-                    else:
-                        print(mycolors.foreground.red + "\n\nThere isn't any information associated to this rule name on Valhalla service.\n" + mycolors.reset, end="\n")
-                print(mycolors.reset)
-                exit(0)
-
-            if ("name" in vllresponse):
-                j = 0
-
-                if(bkg == 1):
-                    if 'description' in vllresponse:
-                        print(mycolors.foreground.yellow + "\nDescription:".ljust(15) + mycolors.reset + str(vllresponse['description']))
-                    if 'author' in vllresponse:
-                        print(mycolors.foreground.lightcyan + "Author:".ljust(14) + mycolors.reset + str(vllresponse['author']))
-                    if 'date' in vllresponse:
-                        print(mycolors.foreground.lightcyan + "Date:".ljust(14) + mycolors.reset + str(vllresponse['date']))
-                    if 'reference' in vllresponse:
-                        print(mycolors.foreground.lightcyan + "Reference:".ljust(14) + mycolors.reset + str(vllresponse['reference']))
-                    if 'minimum_yara' in vllresponse:
-                        print(mycolors.foreground.lightcyan + "Minimum_Yara:".ljust(14) + mycolors.reset + str(vllresponse['minimum_yara']))
-                    if 'required_modules' in vllresponse:
-                        print(mycolors.foreground.lightcyan + "Modules: ".ljust(14), end='')
-                        for n in vllresponse['required_modules']:
-                            print(mycolors.reset + n, end=' ')
-                        print(mycolors.reset)
-                    if 'score' in vllresponse:
-                        print(mycolors.foreground.lightgreen + "Score:".ljust(14) + mycolors.reset + str(vllresponse['score']))
-                    if 'tags' in vllresponse:
-                        print(mycolors.foreground.lightgreen + "Tags: ".ljust(14), end='')
-                        for m in vllresponse['tags']:
-                            print(mycolors.reset + m, end=' ')
-                        print(mycolors.reset)
-                    if 'av_ratio' in vllresponse:
-                        print(mycolors.foreground.lightgreen + "AV_ratio:".ljust(14) + mycolors.reset + str(vllresponse['av_ratio']))
-                    if 'av_verdicts' in vllresponse:
-                        print(mycolors.foreground.lightgreen + "\nAV_verdicts:".ljust(14) + mycolors.reset, end='')
-                        if 'clean' in vllresponse['av_verdicts']:
-                            print(mycolors.foreground.pink + "\n".ljust(15) + "clean:".ljust(14) + mycolors.reset + str(vllresponse['av_verdicts']['clean']), end='')
-                        if 'malicious' in vllresponse['av_verdicts']:
-                            print(mycolors.foreground.pink + "\n".ljust(15) + "malicious:".ljust(14) + mycolors.reset + str(vllresponse['av_verdicts']['malicious']), end='')
-                        if 'suspicious' in vllresponse['av_verdicts']:
-                            print(mycolors.foreground.pink + "\n".ljust(15) + "suspicious:".ljust(14) + mycolors.reset + str(vllresponse['av_verdicts']['suspicious']))
-                    if 'rule_matches' in vllresponse:
-                        print(mycolors.foreground.lightgreen + "\nRule_matches:".ljust(14) + mycolors.reset, end='')
-                        k = 0
-                        while k < len(vllresponse['rule_matches']):
-                            if ('hash' in vllresponse['rule_matches'][k]):
-                                print(mycolors.foreground.pink + "\n\n".ljust(16) + "hash:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['hash']), end='')
-                            if ('positives' in vllresponse['rule_matches'][k]):
-                                print(mycolors.foreground.pink + "\n".ljust(15) + "positives:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['positives']), end='')
-                            if ('size' in vllresponse['rule_matches'][k]):
-                                print(mycolors.foreground.pink + "\n".ljust(15) + "size:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['size']), end='')
-                            if ('timestamp' in vllresponse['rule_matches'][k]):
-                                print(mycolors.foreground.pink + "\n".ljust(15) + "timestamp:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['timestamp']), end='')
-                            if ('total' in vllresponse['rule_matches'][k]):
-                                print(mycolors.foreground.pink + "\n".ljust(15) + "total:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['total']), end='')
-
-                            k = k + 1
-
-                    print(mycolors.reset)
-                    exit(0)
-
-                if(bkg == 0):
-                    if 'description' in vllresponse:
-                        print(mycolors.foreground.red + "\nDescription:".ljust(15) + mycolors.reset + str(vllresponse['description']))
-                    if 'author' in vllresponse:
-                        print(mycolors.foreground.blue + "Author:".ljust(14) + mycolors.reset + str(vllresponse['author']))
-                    if 'date' in vllresponse:
-                        print(mycolors.foreground.blue + "Date:".ljust(14) + mycolors.reset + str(vllresponse['date']))
-                    if 'reference' in vllresponse:
-                        print(mycolors.foreground.blue + "Reference:".ljust(14) + mycolors.reset + str(vllresponse['reference']))
-                    if 'minimum_yara' in vllresponse:
-                        print(mycolors.foreground.blue + "Minimum_Yara:".ljust(14) + mycolors.reset + str(vllresponse['minimum_yara']))
-                    if 'required_modules' in vllresponse:
-                        print(mycolors.foreground.blue + "Modules: ".ljust(14), end='')
-                        for n in vllresponse['required_modules']:
-                            print(mycolors.reset + n, end=' ')
-                        print(mycolors.reset)
-                    if 'score' in vllresponse:
-                        print(mycolors.foreground.green + "Score:".ljust(14) + mycolors.reset + str(vllresponse['score']))
-                    if 'tags' in vllresponse:
-                        print(mycolors.foreground.green + "Tags: ".ljust(14), end='')
-                        for m in vllresponse['tags']:
-                            print(mycolors.reset + m, end=' ')
-                        print(mycolors.reset)
-                    if 'av_ratio' in vllresponse:
-                        print(mycolors.foreground.green + "AV_ratio:".ljust(14) + mycolors.reset + str(vllresponse['av_ratio']))
-                    if 'av_verdicts' in vllresponse:
-                        print(mycolors.foreground.green + "\nAV_verdicts:".ljust(14) + mycolors.reset, end='')
-                        if 'clean' in vllresponse['av_verdicts']:
-                            print(mycolors.foreground.purple + "\n".ljust(15) + "clean:".ljust(14) + mycolors.reset + str(vllresponse['av_verdicts']['clean']), end='')
-                        if 'malicious' in vllresponse['av_verdicts']:
-                            print(mycolors.foreground.purple + "\n".ljust(15) + "malicious:".ljust(14) + mycolors.reset + str(vllresponse['av_verdicts']['malicious']), end='')
-                        if 'suspicious' in vllresponse['av_verdicts']:
-                            print(mycolors.foreground.purple + "\n".ljust(15) + "suspicious:".ljust(14) + mycolors.reset + str(vllresponse['av_verdicts']['suspicious']))
-                    if 'rule_matches' in vllresponse:
-                        print(mycolors.foreground.green + "\nRule_matches:".ljust(14) + mycolors.reset, end='')
-                        k = 0
-                        while k < len(vllresponse['rule_matches']):
-                            if ('hash' in vllresponse['rule_matches'][k]):
-                                print(mycolors.foreground.purple + "\n\n".ljust(16) + "hash:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['hash']), end='')
-                            if ('positives' in vllresponse['rule_matches'][k]):
-                                print(mycolors.foreground.purple + "\n".ljust(15) + "positives:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['positives']), end='')
-                            if ('size' in vllresponse['rule_matches'][k]):
-                                print(mycolors.foreground.purple + "\n".ljust(15) + "size:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['size']), end='')
-                            if ('timestamp' in vllresponse['rule_matches'][k]):
-                                print(mycolors.foreground.purple + "\n".ljust(15) + "timestamp:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['timestamp']), end='')
-                            if ('total' in vllresponse['rule_matches'][k]):
-                                print(mycolors.foreground.purple + "\n".ljust(15) + "total:".ljust(14) + mycolors.reset + str(vllresponse['rule_matches'][k]['total']), end='')
-
-                            k = k + 1
-
-                    print(mycolors.reset)
-                    exit(0)
-
-        if(bkg==1):
-            print(mycolors.foreground.yellow + "\n\nThe Yara rules have been saved into the \"valhalla-rules.yar\" file.\n" + mycolors.reset,end="\n")
-            exit(0)
-        else:
-            print(mycolors.foreground.purple + "\n\nThe Yara rules have been saved into the \"valhalla-rules.yar\" file.\n" + mycolors.reset,end="\n")
-            exit(0)
-
-
-    except ValueError as e:
-        print(e)
-        if (bkg == 1):
-            print((mycolors.foreground.lightred + "Error while connecting to Valhalla!\n"))
-        else:
-            print((mycolors.foreground.red + "Error while connecting to Valhalla!\n"))
         print(mycolors.reset)
 
 
@@ -8858,12 +8958,12 @@ class androidVTThread(threading.Thread):
         package1 = self.package
 
         myhash = key1
-        vtfinal = vtcheck(myhash, url, param)
+        vtfinal = vtcheck(myhash, urlfilevt3, 0)
     
         if (bkg == 1):
-            print((mycolors.foreground.orange +  "%-70s" % package1), end=' ')
+            print((mycolors.foreground.yellow +  "%-70s" % package1), end=' ')
             print((mycolors.foreground.lightcyan +  "%-32s" % key1), end=' ')
-            print((mycolors.reset + mycolors.foreground.lightgreen + "%8s" % vtfinal + mycolors.reset))
+            print((mycolors.reset + mycolors.foreground.lightcyan + "%8s" % vtfinal + mycolors.reset))
         else:
             print((mycolors.foreground.green + "%-70s" % package1), end=' ')
             print((mycolors.foreground.cyan + "%-32s" % key1), end=' ')
@@ -8887,24 +8987,29 @@ class quickHAAndroidThread(threading.Thread):
         (final, verdict, avdetect, totalsignatures, threatscore, totalprocesses, networkconnections) =  quickhashowAndroid(myhash)
 
         if (bkg == 1):
-            print((mycolors.foreground.lightgreen + "%-70s" % package1), end=' ')
+            print((mycolors.foreground.lightcyan + "%-70s" % package1), end=' ')
             print((mycolors.foreground.yellow + "%-34s" % key1), end=' ')
             print((mycolors.foreground.lightcyan + "%9s" % final), end='')
             if(avdetect == 'None'):
                 print((mycolors.foreground.lightcyan + "%7s" % avdetect), end='')
             else:
                 print((mycolors.foreground.lightcyan + "%6s%%" % avdetect), end='')
-            print((mycolors.foreground.orange + "%7s" % totalsignatures), end='')
+            print((mycolors.foreground.yellow + "%7s" % totalsignatures), end='')
             if(threatscore == 'None'):
                 print((mycolors.foreground.lightred + "%12s" % threatscore), end='')
             else:
                 print((mycolors.foreground.lightred + "%8s/100" % threatscore), end='')
             if (verdict == "malicious"):
-                print((mycolors.foreground.lightred + "%20s" % verdict), end='')
-            else:
+                print((mycolors.foreground.lightred + "%20s" % verdict), end='\n')
+            elif (verdict == "suspicious"):
                 print((mycolors.foreground.yellow + "%20s" % verdict), end='\n')
+            elif (verdict == "no specific threat"):
+                print((mycolors.foreground.lightcyan + "%20s" % verdict), end='\n')
+            else:
+                verdict = 'not analyzed yet'
+                print((mycolors.reset + "%20s" % verdict), end='\n')
         else:
-            print((mycolors.foreground.lightcyan + "%-70s" % package1), end=' ')
+            print((mycolors.foreground.cyan + "%-70s" % package1), end=' ')
             print((mycolors.foreground.green + "%-34s" % key1), end=' ')
             print((mycolors.foreground.cyan + "%9s" % final), end='')
             if (avdetect == 'None'):
@@ -8917,9 +9022,14 @@ class quickHAAndroidThread(threading.Thread):
             else:
                 print((mycolors.foreground.red + "%8s/100" % threatscore), end='')
             if (verdict == "malicious"):
-                print((mycolors.foreground.lightred + "%20s" % verdict), end='')
+                print((mycolors.foreground.red + "%20s" % verdict), end='\n')
+            elif (verdict == "suspicious"):
+                print((mycolors.foreground.cyan + "%20s" % verdict), end='\n')
+            elif (verdict == "no specific threat"):
+                print((mycolors.foreground.green + "%20s" % verdict), end='\n')
             else:
-                print((mycolors.foreground.yellow + "%20s" % verdict), end='\n')
+                verdict = 'not analyzed yet'
+                print((mycolors.reset + "%20s" % verdict), end='\n')
 
 
 def checkandroidha(key, package):
@@ -8936,11 +9046,11 @@ def checkandroidha(key, package):
 def checkandroidvt(key, package):
 
     key1 = key
-    vtfinal = vtcheck(key1, url, param)
+    vtfinal = vtcheck(key1, urlfilevt3, 0)
     if (bkg == 1):
-        print((mycolors.foreground.orange +  "%-70s" % package), end=' ')
+        print((mycolors.foreground.yellow +  "%-70s" % package), end=' ')
         print((mycolors.foreground.lightcyan +  "%-32s" % key1), end=' ')
-        print((mycolors.reset + mycolors.foreground.lightgreen + "%8s" % vtfinal + mycolors.reset))
+        print((mycolors.foreground.lightred + "%8s" % vtfinal + mycolors.reset))
     else:
         print((mycolors.foreground.green + "%-70s" % package), end=' ')
         print((mycolors.foreground.cyan + "%-32s" % key1), end=' ')
@@ -8974,7 +9084,7 @@ def checkandroid(engine):
 
     try:
         for i in myconn2.split('\n'):
-            for j in i.split('base.apk='):
+            for j in i.split("base.apk"):
                 if 'package' in j:
                     key, value = j.split('package:')
                     key2, value2 = value.split('/data/app/')
@@ -9010,24 +9120,48 @@ def checkandroid(engine):
         print("Package".center(70) + "Hash".center(34) + "Found?".center(12) + "AVdet".center(10) + "Sigs".center(5) + "Score".center(14) + "Verdict".center(14))
         print((162*'-').center(81))
         for key, value in dictAndroid.items():
-            checkandroidha(value, key)
+            try:
+                key1a = (key.split("==/",1)[1])
+            except IndexError:
+                key1a = key
+            try:
+                key1b = (key1a.split("-",1)[0]) 
+            except IndexError:
+                key1b = key1a
+            checkandroidha(value, key1b)
 
     if(engine == 2):
         print(mycolors.reset + "\n")
         print("Package".center(70) +  "Hash".center(36) + "Virus Total".center(12))
         print((118*'-').center(59))
         for key, value in dictAndroid.items():
+            try:
+                key1a = (key.split("==/",1)[1])
+            except IndexError:
+                key1a = key
+            try:
+                key1b = (key1a.split("-",1)[0])
+            except IndexError:
+                key1b = key1a
             tm1 = tm1 + 1
             if tm1 % 4 == 0:
                 time.sleep(61)
-            checkandroidvt(value, key)
+            checkandroidvt(value, key1b)
 
     if(engine == 3):
         print(mycolors.reset + "\n")
         print("Package".center(70) +  "Hash".center(36) + "Virus Total".center(12))
         print((118*'-').center(59))
         for key, value in dictAndroid.items():
-            checkandroidvtx(value, key)
+            try:
+                key1a = (key.split("==/",1)[1])
+            except IndexError:
+                key1a = key
+            try:
+                key1b = (key1a.split("-",1)[0])
+            except IndexError:
+                key1b = key1a
+            checkandroidvtx(value, key1b)
 
 def sendandroidha(package):
 
@@ -9043,7 +9177,7 @@ def sendandroidha(package):
 
     try:
         for i in myconn2.split('\n'):
-            for j in i.split('base.apk='):
+            for j in i.split('base.apk'):
                 if 'package' in j:
                     key, value = j.split('package:')
                     key2, value2 = value.split('/data/app/')
@@ -9058,14 +9192,15 @@ def sendandroidha(package):
         for j in results2:
             if (package in j):
                 myconn3 = subprocess.run([adb_comm, "pull", j], capture_output=True)
-                newname = j[10:-9]
+                newname = j[10:]
 
     except AttributeError:
         pass
 
     try:
-        targetfile = newname + ".apk"
-        os.rename(r'base.apk',targetfile)
+        targetfile1 = newname.split('==/',1)[1]
+        targetfile = targetfile1.split('-',1)[0]
+        os.rename('base.apk', targetfile)
         hafilecheck(targetfile)
     
     except FileNotFoundError:
@@ -9089,6 +9224,7 @@ def sendandroidvt(package):
     final1 = list()
     final2 = list()
     newname= ''
+    targefile = ''
 
     myconn = subprocess.run([adb_comm, "shell", "pm", "list", "packages", "-f", "-3"], capture_output=True)
     myconn2 = myconn.stdout.decode()
@@ -9110,15 +9246,24 @@ def sendandroidvt(package):
         for j in results2:
             if (package in j):
                 myconn3 = subprocess.run([adb_comm, "pull", j], capture_output=True)
-                newname = j[10:-9]
+                newname = j[10:]
 
     except AttributeError:
         pass
 
     try:
-        targetfile = newname + ".apk"
+        targetfile1 = newname.split('==/',1)[1]
+        targetfile = targetfile1.split('-',1)[0]
         os.rename(r'base.apk',targetfile)
-        vtfilecheck(targetfile, urlfilevtcheck, param)
+        myhash = sha256hash(targetfile)
+        vtuploadfile(targetfile, urlfilevt3)
+        if(bkg == 1):
+            print(mycolors.foreground.yellow + "\tWaiting for 120 seconds...\n")
+        if(bkg == 0):
+            print(mycolors.foreground.purple + "\tWaiting for 120 seconds...\n")
+        time.sleep(120)
+        vthashwork(myhash, urlfilevt3, 1)
+
 
     except FileNotFoundError:
         
@@ -9132,57 +9277,6 @@ def sendandroidvt(package):
     finally:
         if (targetfile != ".apk"):
             os.remove(targetfile)
-
-
-def dirchecking(repo2):
-
-    directory = repo2
-    if os.path.isabs(directory) == False:
-        directory = os.path.abspath('.') + "/" + directory
-    os.chdir(directory)
-
-    for filen in os.listdir(directory):
-        try:
-
-            filename = str(filen)
-            if(os.path.isdir(filename) == True):
-                continue
-            targetfile = ftype(filename)
-            if re.match(r'^PE[0-9]{2}|^MS-DOS', targetfile):
-                mype = pefile.PE(filename)
-                imph = mype.get_imphash()
-                F.append(filename)
-                H.append(imph)
-            else:
-                F.append(filename)
-                H.append("IT IS NOT A KNOW FORMAT")
-
-        except (AttributeError, NameError) as e:
-            if (bkg == 1):
-                print(mycolors.foreground.lightred + "\nThe file %s doesn't respect some PE format rules. Skipping this file..." % filename)
-            else:
-                print(mycolors.foreground.red + "\nThe file %s doesn't respect some PE format rules. Skipping this file..." % filename)
-            print(mycolors.reset)
-            pass
-
-
-    d = dict(list(zip(F,H)))
-    n = 30
-    prev1 = 0
-    prev2 = 0
-    result = ""
-    tm = 0
-
-    print((mycolors.reset + "\n"))
-
-    if(Q == 1):
-        dirquick(d)
-        exit(0)
-
-    print("FileName".center(65) +  "ImpHash(PE32/PE32+) or Type".center(40) + "Packed?".center(9) + "Overlay?".center(10) + ".text_entropy".center(13) + "VT".center(8))
-    print((32*'-').center(32) +  (36*'-').center(35) + (11*'-').center(10) + (10*'-').ljust(10) + (13*'-').center(13) + (42*'-').center(22))
-
-    dirwork(d)
 
 
 if __name__ == "__main__":
@@ -9217,31 +9311,14 @@ if __name__ == "__main__":
     filetemp = ''
     download = 0
     sysenviron = 0
-    filenameha = ''
-    fileha = ''
-    reportha = ''
-    multithread = 0
+    vtpubpremiumx = 0
     malsharelist = 0
     malsharehash = ''
-    urlhaussubmit = ''
-    urlhausquery = ''
-    hausbatch = 0
-    hauspayloadbatch = 0
-    haushash = ''
-    hausdownloadpayload = ''
+    hausoptionx = 0
     filecheckpoly = 0
     polycheck = 0
-    polyswarmscan = ''
-    polyswarmhash = ''
-    polyswarmmeta = ''
-    androidha = 0
-    androidsendha = ''  
-    androidsendvt = ''  
-    androidvtx = 0  
-    androidvttx = 0  
-    haustagsearch = ''
-    haussigsearch = ''
-    ipaddrvt = ''
+    androidoption = 0
+    androidargx = ''
     metatype = 0
     alienvault = 0
     alienvaultargs = ''
@@ -9253,59 +9330,40 @@ if __name__ == "__main__":
     malpediaargx = ''
     threadcrowd = 0
     threatcrowdarg = 0
-    valhalla = 0
-    valhallaarg = ''
-    VALHALLAAPIx = ''
     bazaar = 0
     bazaararg = ''
     triage = 0
     triagearg = ''
+    virustotalarg = ''
+    ipaddrvtx = ''
+    ffpname = ''
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 4.4.2", usage= "python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> -o <0|1> -v <0-4> -a <0-5> -w <0|1> -u <url> -H <hash file> -V <filename> -D <0|1> -e <0-4> -A <filename> -g <job_id> -r <domain> -t <0|1> -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> -P <filename> -R <PE file, IP address, domain or URL> -G <0-4> -y <0|1|2|3> -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address> -n <1-5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> -E <1-5> -C <argument> -b <'1-10> -B <arg> -x <1-7> -X <arg>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 5.0.0", usage= "python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-6> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -q <1-5> -Q <argument> -b <1-10> -B <arg> -x <1-7> -X <arg>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s.')
-    parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples.')
-    parser.add_argument('-f', '--filename', dest='fpname',type=str, metavar = "FILENAME", default = '', help='Specifies a full path to a malware sample. It returns general information about the file (any filetype).')
-    parser.add_argument('-o', '--background', dest='backg', type=int,default = 1, metavar = "BACKGROUND", help='Adapts the output colors to a white terminal. The default is black terminal.')
-    parser.add_argument('-v', '--virustotal', dest='virustotal', type=int,default = 0, metavar = "VIRUSTOTAL", help='If using "-v 1", so it queries the Virus Total database for positives and totals. If "-v 2" (which can be used only together with -f option), so it shows antivirus reports from the main players. If "-v 3", so the binary\'s IAT and EAT are also shown; If "-v 4" it extracts the overlay (it must be used with -f option).')
-    parser.add_argument('-a', '--hybrid', dest='hybridanalysis', type=int,default = 0, metavar = "HYBRID_ANALYSIS", help='Queries the Hybrid Analysis database for getting a general report. Possible values are: 1: Windows 7 32-bit; 2: Windows 7 32-bit (HWP Support); 3: Windows 64-bit; 4: Android; 5: Linux 64-bit.')
-    parser.add_argument('-u', '--vturl', dest='urlx', type=str, metavar = "URL_VT", help='SUBMITS a URL to the Virus Total scanning.')
-    parser.add_argument('-I', '--ipaddrvt', dest='ipaddrvt', type=str, metavar = "IP_VT", help='This option checks an IP address on Virus Total.')
-    parser.add_argument('-r', '--urldomain', dest='domainx', type=str, metavar = "URL_DOMAIN", help='This option gets a domain\'s report from Virus Total.')
-    parser.add_argument('-H', '--hash', dest='filehash', type=str, metavar = "FILE_HASH", help='This option specifies the hash to be checked on Virus Total and Hybrid Analysis. For the Hybrid Analysis report you must use it with the -e option.')
-    parser.add_argument('-V', '--vtsubmit', dest='filenamevt', type=str, metavar = "FILENAME_VT", help='Submits a file(up to 32MB) for Virus Total scanning and gets the report. Attention: use forward slash to specify the target file even on Windows systems. Furthermore, the minimum waiting time is set up in 90 seconds because the Virus Total waiting queue. If an error occurs, so wait few minutes and try to access the report by using -f option.')
-    parser.add_argument('-A', '--submitha', dest='filenameha', type=str, metavar = "SUBMIT_HA", help='Submits a file(up to 32MB) to be scanned by the Hybrid Analysis engine. Use the -e option to specify the best environment to run the suspicious file.')
-    parser.add_argument('-g', '--hastatus', dest='reportha', type=str, metavar = "HA_STATUS",  help='Checks the report\'s status of submitted samples to Hybrid Analysis engine by providing the job ID. Possible returned status values are: IN_QUEUE, SUCCESS, ERROR, IN_PROGRESS and PARTIAL_SUCCESS.')
-    parser.add_argument('-D', '--download', dest='download', type=int,default = 0, metavar = "DOWNLOAD", help='Downloads the sample from Hybrid Analysis, Malshare and Polyswarm. Options -H or -L (Hybrid Analysis and Malshare, respectively) must be specified as well -O option for Polyswarm engine.')
-    parser.add_argument('-e', '--haenv', dest='sysenviron', type=int,default = 0, metavar = "HA_ENVIRONMENT", help='This option specifies the used environment to be used to test the samlple on Hybrid Analysis: <0> Windows 7 32-bits; <1> Windows 7 32-bits (with HWP Support); <2> Windows 7 64-bits; <3> Android; <4> Linux 64-bits environment. This option is used together either -H option or the -A option.')
-    parser.add_argument('-t', '--thread', dest='multithread', type=int,default = 0, metavar = "MULTITHREAD", help='(optional) This option has several different meanings according to chosen the value. Possible values: <1>: This value is used to force multithreads on Linux whether: the -d option is specified AND you have a PAID Virus Total API or you are NOT checking the VT while using the -d option. PS1: using this option causes Imphashes not to be grouped anymore; PS2: it also works on Windows, but there is not gain in performance; <2>: This value should be used with -d option in two scenarios: 1) either including the "-v 1" option (Virus Total -- you\'ll see a complete VT response whether you have the private API) for a multithread searching and reduced output; 2) or including the -a option (Hybrid Analysis) for a multithread searching to get a complete and amazing output. If you are using the -a option, so you should pickup the right number represening the testing environment to adjust the output to your sample types. PS1: certainly, if you have a directory holding many malware samples, so you will want to test this option with -a option; PS2: it also works on Windows, but there is not gain in performance; <3>: You should use this value with -v option if you have a public Virus Total API. It forces a one minute wait every 4 malware samples, but allows obtaining a complete evaluation of the malware repository.')
-    parser.add_argument('-l', '--malsharelist', dest='malsharelist', type=int,default = 0, metavar = "MALSHARE_HASHES", help='This option shows hashes of a specific type from the last 24 hours from Malshare repository. Possible values are:  1: PE32 (default) ; 2: Dalvik ; 3: ELF ; 4: HTML ; 5: ASCII ; 6: PHP ; 7: Java ; 8: RAR ; 9: Zip ; 10: UTF-8 ; 11: MS-DOS ; 12: data ; 13: PDF ; 14: Composite(OLE).')
-    parser.add_argument('-L', '--malsharehash', dest='malsharehash', type=str, metavar = "MALSHARE_HASH_SEARCH", help='Searches for the provided hash on the  Malshare repository.')
-    parser.add_argument('-K', '--haus_payloadbatch', dest='hauspayloadbatch', type=int, default = 0, metavar = "HAUS_PAYLOAD_URL", help='THis option has few possible values: <1> Retrieves a list of downloadable links of recent PAYLOADS (last 3 days, limited to 1000 entries) from URLHaus website; <2>: Retrieves a list of recent URLs (last 3 days, limited to 1000 entries) from URLHaus website. Take care: each link take you to download a passworless zip file containing a malware, so your AV can generate alerts!')
-    parser.add_argument('-U', '--haus_query', dest='urlhausquery', type=str, metavar = "URL_HAUS_QUERY", help='Queries a URL on the URLHaus website.')
-    parser.add_argument('-j', '--haus_hash', dest='haushash', type=str, metavar = "HAUS_HASH", help='Queries information about a provided payload\'s hash (md5 or sha256) on the URLHaus website.')
-    parser.add_argument('-S', '--haus_submission', dest='urlhaussubmit', type=str, metavar = "URL_HAUS_SUB", help='Submits a URL used to distribute malware (executable, script, document) to the URLHaus website. Pay attention: Any other submission will be ignored/deleted from URLhaus.')
-    parser.add_argument('-z', '--haustag', dest='tag', type=str, default='', metavar = "HAUSTAG", nargs = "*", help='Associates tags (separated by spaces) to the specified URL. Please, only upper case, lower case, \'-\' and \'.\' are allowed. This parameter is optional, which could be used with the -S option.')
-    parser.add_argument('-W', '--haustagsearch', dest='haustagsearch', type=str, default='', metavar = "HAUSTAGSEARCH", nargs = "*", help='This option is for searching malicious URLs by tag on URLhaus. Tags are case-senstive and only upper case, lower case, \'-\' and \'.\' are allowed.')
-    parser.add_argument('-k', '--haussigsearch', dest='haussigsearch', type=str, default='', metavar = "HAUSSIGSEARCH", nargs = "*", help='This option is for searching malicious payload by tag on URLhaus. Tags are case-sensitive and only  upper case, lower case, \'-\' and \'.\' are allowed.')
-    parser.add_argument('-J', '--haus_download', dest='hausdownloadpayload', type=str, metavar = "HAUS_DOWNLOAD", help='Downloads a malware sample (if it is available) from the URLHaus repository. It is necessary to provide the SHA256 hash.')
-    parser.add_argument('-P', '--polyswarm_scan', dest='polyswarmscan', type=str, metavar = "POLYSWARMFILE", help='(Only for Linux) Submits a sample to Polyswarm engine and performs a file scan.')
-    parser.add_argument('-O', '--polyswarm_hash', dest='polyswarmhash', type=str, metavar = "POLYSWARMHASH", help='(Only for Linux) Performs a hash scanning using the Polyswarm engine. Optionally, you can specify -D option to download the sample. Take care: Polyswarm enforces a restriction to number of downloaded samples in 20/month.')
-    parser.add_argument('-R', '--polyswarm_meta', dest='polyswarmmeta', type=str, metavar = "POLYSWARMMETA", help='(Only for Linux) Provides the argument value for searches on Polyswarm engine through imphash (the PE file must be provided), ipv4, domain, URL and family. This argument must be used with -G option, so check it, please. Pay attention: you should check your metadata search limit on your Polyswarm account because once you have got the limit, so you will got an error.')
-    parser.add_argument('-G', '--metatype', dest='metatype', type=int, default = 0, metavar = "METATYPE", help='(Only for Linux) This parameter specifies search type for arguments provided by -R option (above) while searching on Polyswarm engine. Thus, the following values are valid -- 0: PE Executable (look for samples with the same ImpHash); 1: IP Address ; 2: Domain ; 3. URL; 4. Family .')
-    parser.add_argument('-y', '--androidha', dest='androidha', type=int, default = 0, metavar = "ANDROID_HA", help='This option has multiple options: <1>: Check all third-party APK packages from the USB-connected Android device against Hybrid Analysis using multithreads. The Android device does not need to be rooted and the system does need to have the adb tool in the PATH environment variable; <2>: Check all third-party APK packages from the USB-connected Android device against VirusTotal using Public API (slower because of 60 seconds delay for each 4 hashes). The Android device does not need to be rooted and the system does need to have adb tool in the PATH environment variable; <3>: Check all third-party APK packages from the USB-connected Android device against VirusTotal using multithreads (only for Private Virus API). The Android device does not need to be rooted and the system needs to have adb tool in the PATH environment variable.')
-    parser.add_argument('-Y', '--androidsendha', dest='androidsendha', type=str, metavar = "ANDROID_SEND_HA", help='Sends an third-party APK package from your USB-connected Android device to Hybrid Analysis. The Android device does not need to be rooted and the system needs to have adb tool in the PATH environment variable.')
-    parser.add_argument('-T', '--androidsendvt', dest='androidsendvt', type=str, metavar = "ANDROID_SEND_VT", help='Sends an third-party APK package from your USB-connected Android device to Virus Total. The Android device does not need be rooted and the system needis to have the adb tool in the PATH environment variable.')
-    parser.add_argument('-n', '--alienvault', dest='alienvault', type=int, default = 0, metavar = "ALIENVAULT", help='Checks multiple information from AlienVault. The possible values are: 1: Get the subscribed pulses ; 2: Get information about an IP address; 3: Get information about a domain; 4: Get information about a hash; 5: Get information about a URL.')
-    parser.add_argument('-N', '--alienvaultargs', dest='alienvaultargs', type=str, metavar = "ALIENVAULT_ARGS", help='Provides argument to AlienVault -n option.')
-    parser.add_argument('-M', '--malpedia', dest='malpedia', type=int, default = 0, metavar = "MALPEDIA", help='This option is related to MALPEDIA and presents different meanings depending on the chosen value. Thus, 1: List meta information for all families ; 2: List all actors ID ; 3: List all available payloads organized by family from Malpedia; 4: Get meta information from an specific actor, so it is necessary to use the -m option. Additionally, try to confirm the correct actor ID by executing malwoverview with option -M 3; 5: List all families IDs; 6: Get meta information from an specific family, so it is necessary to use the -m option. Additionally, try to confirm the correct family ID by executing malwoverview with option -M 5; 7: Get a malware sample from malpedia (zip format -- password: infected). It is necessary to specify the requested hash by using -m option; 8: Get a zip file containing Yara rules for a specific family (get the possible families using -M 5), which must be specified by using -m option.')
-    parser.add_argument('-m', '--malpediarg', dest='malpediaarg', type=str, metavar = "MALPEDIAARG", help='This option provides an argument to the -M option, which is related to MALPEDIA.')
-    parser.add_argument('-Q', '--threatcrowd', dest='threatcrowd', type=int, default = 0, metavar = "THREATCROWD", help='Checks multiple information from ThreatCrowd. The possible values are: 1: Get information about the provided e-mail ; 2: Get information about an IP address; 3: Get information about a domain; 4: Get information about a provided MD5 hash; 5: Get information about a specific malware family.')
-    parser.add_argument('-q', '--threatcrowdarg', dest='threatcrowdarg', type=str, metavar = "THREATCROWDARG", help='This option provides an argument to the -Q option, which is related to THREATCROWD.')
-    parser.add_argument('-E', '--valhalla', dest='valhalla', type=int, default = 0, metavar = "VALHALLA", help='This option is used for getting Yara rules from the Valhalla service given an argument (-C option below). Valid values are 1: searches for Yara rules matching the provided keyword; 2: search for Yara rules matching a minimal score (40-49: anomaly and threat hunting rules / 60-74: rules for suspicious objects / 75-100: hard malicious matches); 3: Look for Yara rules to the following products, which must be specified using the -C option: FireEyeAX, FireEyeNX, FireEyeEX, CarbonBlack, Tanium, Tenable, SymantecMAA, GRR, osquery, McAfeeATD3 and McAfeeATD4; 4: Given the hash (SHA 256) through -C option, show associated Yara rules; 5: Shows information about a specific Yara rule provided through the -C option.')
-    parser.add_argument('-C', '--valhallaarg', dest='valhallaarg', type=str, metavar = "VALHALLAARG", help='This option is used for providing argument to the  Vahalla service (-E option).')
-    parser.add_argument('-b', '--bazaar', dest='bazaar', type=int, default = 0, metavar = "BAZAAR", help='Checks multiple information from Malware Bazaar and ThreatFox. The possible values are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar) Get information and a list of malware samples associated and according to a specific tag; 3: (Bazaar) Get a list of malware samples according to a given imphash; 4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample from Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped using the following password: infected; 6: (ThreatFox) Get current IOC dataset from last x days given by option -B; 7: (ThreatFox) Search for the specified IOC on ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified tag given by option -B; 9: (ThreatFox) Search IOCs according to the specified malware family provided by option -B; 10. (ThreatFox) List all available malware families.')
-    parser.add_argument('-B', '--bazaararg', dest='bazaararg', type=str, metavar = "BAZAAR_ARG", help='Provides argument to -b Bazaar and ThreatFox option. If you specified "-b 1" then the -B\'s argument must be a hash; If you specified "-b 2" then -B\'s argument must be a malware tag; If you specified "-b 3" then the argument must be a imphash; If you specified "-b 4", so the argument must be "100 or time", where "100" lists last "100 samples" and "time" lists last samples added to Malware Bazaar in the last 60 minutes; If you specified "-b 5" then the -B\'s argument must be a SHA256 hash; If you specified "-b 6", so the -B\'s value is the number of DAYS to filter IOCs. The default (and max) is 90 (days); If you used "-b 7" so the -B\'s argument is the IOC you want to search for; If you used "-b 8", so the -B\'s argument is the TAG you want search for; If you used "-b 9", so the -B argument is the malware family you want to search for;')
-    parser.add_argument('-x', '--triage', dest='triage', type=int,default = 0, metavar = "TRIAGE", help='Provides information from Triage according to the specified value: <1> this option gets sample\'s general information by providing an argument with -B option in the following possible formats: sha256:<value>, sha1:<value>, md5:<value>, family:<value>, score:<value>, tag:<value>, url:<value>, wallet:<value>, ip:<value>; <2> Get a sumary report for a given Triage ID (got from option -x 1) ; <3> Submit a sample for analysis ; <4> Submit a sample through a URL for analysis ; <5> Download sample specified by the Triage ID; <6> Download pcapng file from sample associated to given Triage ID; <7> Get a dynamic report for the given Triage ID (got from option -x 1);')
+    parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples to be checked against VIRUS TOTAL. Use the option -D to decide whether you are being using a public VT API or a Premium VT API.')
+    parser.add_argument('-o', '--background', dest='backg', type=int,default = 1, metavar = "BACKGROUND", help='Adapts the output colors to a light background color terminal. The default is dark background color terminal.')
+    parser.add_argument('-v', '--virustotal_option', dest='virustotaloption', type=int,default = 0, metavar = "VIRUSTOTAL", help='-v 1: given a file using -V option, it queries the VIRUS TOTAL database (API v.3) to get the report for the given file through -V option.; -v 2: it shows an antivirus report for a given file using -V option (API v.3); -v 3: equal to -v2, but the binary\'s IAT and EAT are also shown (API v.3); -v 4: it extracts the overlay; -v 5: submits an URL to VT scanning; -v 6: submits an IP address to Virus Total; -v 7: this options gets a report on the provided domain from Virus Total; -v 8: verifies a given hash against Virus Total; -v 9: submits a sample to VT (up to 32 MB). Use forward slash to specify the target file on Windows systems. Demands passing sample file with -V option; -v 10: verifies hashes from a provided file through option -V. This option uses public VT API v.3; -v 11: verifies hashes from a provided file through option -V. This option uses Premium API v.3; -v 12: it shows behaviour information of a sample given a hash through option -V. This option uses VT API v.3; -v 13: it submits LARGE files (above 32 MB) to VT using API v.3;')
+    parser.add_argument('-V', '--virustotal_arg', dest='virustotalarg', type=str, metavar = "VIRUSTOTAL_ARG", help='Provides arguments for -v option.')
+    parser.add_argument('-a', '--hybrid_option', dest='haoption', type=int,default = 0, metavar = "HYBRID_ANALYSIS", help='This parameter fetches reports from HYBRID ANALYSIS, download samples and submits samples to be analyzed. The possible values are: 1: gets a report for a sample from a Windows 7 32-bit environment; 2: gets a report for a sample from a Windows 7 32-bit environment (HWP Support); 3: gets a report for from a Windows 64-bit environment; 4: gets a report for from an Android environment; 5: gets a report for a sample from a Linux 64-bit environment; 6: submits a sample to Windows 7 32-bit environment; 7. submits a sample to Windows 7 32-bit environment with HWP support environment; 8. submits a sample to Windows 7 64-bit environment ; 9. submits a sample to an Android environment ; 10. submits a sample to a Linux 64-bit environment; 11. downloads a sample from a Windows 7 32-bit environment; 12. downloads a sample from a Windows 7 32-bit HWP environment; 13. downloads a sample from a Windows 7 64-bit environment; 14. downloads a sample from an Android environment; 15. downloads a sample from a Linux 64-bit environment.')
+    parser.add_argument('-A', '--ha_arg', dest='haarg', type=str, metavar = "SUBMIT_HA", help='Provides an argument for -a option from HYBRID ANALYSIS.')
+    parser.add_argument('-D', '--vtpubpremium', dest='vtpubpremium', type=int,default = 0, metavar = "VT_PUBLIC_PREMIUM", help='This option must be used with -d option. Possible values: <0> it uses the Premium VT API v3 (default); <1> it uses the Public VT API v3.')
+    parser.add_argument('-l', '--malsharelist', dest='malsharelist', type=int,default = 0, metavar = "MALSHARE_HASHES", help='This option performs download a sample and shows hashes of a specific type from the last 24 hours from MALSHARE repository. Possible values are: 1: Download a sample; 2: PE32 (default) ; 3: ELF ; 4: Java; 5: PDF ; 6: Composite(OLE).')
+    parser.add_argument('-L', '--malshare_hash', dest='malsharehash', type=str, metavar = "MALSHARE_HASH_SEARCH", help='Provides a hash as argument for downloading a sample from MALSHARE repository.')
+    parser.add_argument('-j', '--haus_option', dest='hausoption', type=int, default = 0,  metavar = "HAUS_OPTION", help='This option fetches information from URLHaus depending of the value passed as argument: 1: performs download of the given sample; 2: queries information about a provided hash ; 3: searches information about a given URL; 4: searches a malicious URL by a given tag (case sensitive); 5: searches for payloads given a tag; 6: retrives a list of downloadable links to recent payloads; 7: retrives a list of recent malicious URLs.')
+    parser.add_argument('-J', '--haus_arg', dest='hausarg', type=str, metavar = "HAUS_ARG", help='Provides argument to -j option from URLHaus.')
+    parser.add_argument('-p', '--poly_option', dest='polyoption', type=int,default = 0, metavar = "POLY_OPTION", help='(Only for Linux) This option is related to POLYSWARM operations: 1. searches information related to a given hash provided using -P option; 2. submits a sample provided by -P option to be analyzed by Polyswarm engine ; 3. Downloads a sample from Polyswarm by providing the hash throught option -P .Attention: Polyswarm enforces a maximum of 20 samples per month; 4. searches for similar samples given a sample file thought option -P; 5. searches for samples related to a provided IP address through option -P; 6. searches for samples related to a given domain provided by option -P; 7. searches for samples related to a provided URL throught option -P; 8. searches for samples related to a provided malware family given by option -P.')
+    parser.add_argument('-P', '--poly_arg', dest='polyarg', type=str, metavar = "POLYSWARM_ARG", help='(Only for Linux) Provides an argument for -p option from POLYSWARM.')
+    parser.add_argument('-y', '--android_option', dest='androidoption', type=int, default = 0, metavar = "ANDROID_OPTION", help='This ANDROID option has multiple possible values: <1>: Check all third-party APK packages from the USB-connected Android device against Hybrid Analysis using multithreads. Notes: the Android device does not need to be rooted and the system does need to have the adb tool in the PATH environment variable; <2>: Check all third-party APK packages from the USB-connected Android device against VirusTotal using Public API (slower because of 60 seconds delay for each 4 hashes). Notes: the Android device does not need to be rooted and the system does need to have adb tool in the PATH environment variable; <3>: Check all third-party APK packages from the USB-connected Android device against VirusTotal using multithreads (only for Private Virus API). Notes: the Android device does not need to be rooted and the system needs to have adb tool in the PATH environment variable; <4> Sends an third-party APK from your USB-connected Android device to Hybrid Analysis; 5. Sends an third-party APK from your USB-connected Android device to Virus-Total.')
+    parser.add_argument('-Y', '--android_arg', dest='androidarg', type=str, metavar = "ANDROID_ARG", help='This option provides the argument for -y from ANDROID.')
+    parser.add_argument('-n', '--alienvault', dest='alienvault', type=int, default = 0, metavar = "ALIENVAULT", help='Checks multiple information from ALIENVAULT. The possible values are: 1: Get the subscribed pulses ; 2: Get information about an IP address; 3: Get information about a domain; 4: Get information about a hash; 5: Get information about a URL.')
+    parser.add_argument('-N', '--alienvaultargs', dest='alienvaultargs', type=str, metavar = "ALIENVAULT_ARGS", help='Provides argument to ALIENVAULT -n option.')
+    parser.add_argument('-m', '--malpedia', dest='malpedia', type=int, default = 0, metavar = "MALPEDIA", help='This option is related to MALPEDIA and presents different meanings depending on the chosen value. Thus, 1: List meta information for all families ; 2: List all actors ID ; 3: List all available payloads organized by family from Malpedia; 4: Get meta information from an specific actor, so it is necessary to use the -M option. Additionally, try to confirm the correct actor ID by executing malwoverview with option -m 3; 5: List all families IDs; 6: Get meta information from an specific family, so it is necessary to use the -M option. Additionally, try to confirm the correct family ID by executing malwoverview with option -m 5; 7: Get a malware sample from malpedia (zip format -- password: infected). It is necessary to specify the requested hash by using -M option; 8: Get a zip file containing Yara rules for a specific family (get the possible families using -m 5), which must be specified by using -M option.')
+    parser.add_argument('-M', '--malpediarg', dest='malpediaarg', type=str, metavar = "MALPEDIAARG", help='This option provides an argument to the -m option, which is related to MALPEDIA.')
+    parser.add_argument('-q', '--threatcrowd', dest='threatcrowd', type=int, default = 0, metavar = "THREATCROWD", help='Checks multiple information from THREATCROWD. The possible values are: 1: Get information about the provided e-mail ; 2: Get information about an IP address; 3: Get information about a domain; 4: Get information about a provided MD5 hash; 5: Get information about a specific malware family.')
+    parser.add_argument('-Q', '--threatcrowdarg', dest='threatcrowdarg', type=str, metavar = "THREATCROWDARG", help='This option provides an argument to the -Q option, which is related to THREATCROWD.')
+    parser.add_argument('-b', '--bazaar', dest='bazaar', type=int, default = 0, metavar = "BAZAAR", help='Checks multiple information from MALWARE BAZAAR and THREATFOX. The possible values are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar) Get information and a list of malware samples associated and according to a specific tag; 3: (Bazaar) Get a list of malware samples according to a given imphash; 4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample from Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped using the following password: infected; 6: (ThreatFox) Get current IOC dataset from last x days given by option -B; 7: (ThreatFox) Search for the specified IOC on ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified tag given by option -B; 9: (ThreatFox) Search IOCs according to the specified malware family provided by option -B; 10. (ThreatFox) List all available malware families.')
+    parser.add_argument('-B', '--bazaararg', dest='bazaararg', type=str, metavar = "BAZAAR_ARG", help='Provides argument to -b MALWARE BAZAAR and THREAT FOX option. If you specified "-b 1" then the -B\'s argument must be a hash; If you specified "-b 2" then -B\'s argument must be a malware tag; If you specified "-b 3" then the argument must be a imphash; If you specified "-b 4", so the argument must be "100 or time", where "100" lists last "100 samples" and "time" lists last samples added to Malware Bazaar in the last 60 minutes; If you specified "-b 5" then the -B\'s argument must be a SHA256 hash; If you specified "-b 6", so the -B\'s value is the number of DAYS to filter IOCs. The default (and max) is 90 (days); If you used "-b 7" so the -B\'s argument is the IOC you want to search for; If you used "-b 8", so the -B\'s argument is the TAG you want search for; If you used "-b 9", so the -B argument is the malware family you want to search for;')
+    parser.add_argument('-x', '--triage', dest='triage', type=int,default = 0, metavar = "TRIAGE", help='Provides information from TRIAGE according to the specified value: <1> this option gets sample\'s general information by providing an argument with -X option in the following possible formats: sha256:<value>, sha1:<value>, md5:<value>, family:<value>, score:<value>, tag:<value>, url:<value>, wallet:<value>, ip:<value>; <2> Get a sumary report for a given Triage ID (got from option -x 1) ; <3> Submit a sample for analysis ; <4> Submit a sample through a URL for analysis ; <5> Download sample specified by the Triage ID; <6> Download pcapng file from sample associated to given Triage ID; <7> Get a dynamic report for the given Triage ID (got from option -x 1);')
     parser.add_argument('-X', '--triagearg', dest='triagearg', type=str, metavar = "TRIAGE_ARG", help='Provides argument for options especified by -x option. Pay attention: the format of this argument depends on provided -x value.')
 
 
@@ -9322,7 +9380,6 @@ if __name__ == "__main__":
         POLYAPI = config_file['POLYSWARM']['POLYAPI']
         ALIENAPI = config_file['ALIENVAULT']['ALIENAPI']
         MALPEDIAAPI = config_file['MALPEDIA']['MALPEDIAAPI']
-        VALHALLAAPI = config_file['VALHALLA']['VALHALLAAPI']
         TRIAGEAPI = config_file['TRIAGE']['TRIAGEAPI']
 
     except KeyError:
@@ -9332,83 +9389,120 @@ if __name__ == "__main__":
     optval = [0,1]
     optval1 = [0,1,2]
     optval2 = [0,1,2,3,4]
-    optval3 = [0,1,2,3,4,5,6, 7, 8, 9, 10, 11, 12, 13, 14]
+    optval3 = [0,1,2,3,4,5,6]
     optval4 = [0, 1, 2, 3]
     optval5 = [0, 1, 2, 3, 4, 5]
     optval6 = [0, 1, 2, 3, 4, 5, 6, 7, 8]
     optval7 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     optval8 = [0, 1, 2, 3, 4, 5, 6, 7]
+    optval9 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    optval10 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     repo = args.direct
     bkg = args.backg
-    vt = args.virustotal
-    ffpname = args.fpname
-    ha = args.hybridanalysis
-    urltemp = args.urlx
-    domaintemp = args.domainx
-    hashtemp = args.filehash
-    filetemp = args.filenamevt
-    down = args.download
-    xx = args.sysenviron
-    fileha = args.filenameha
-    repoha = args.reportha
-    T = args.multithread
+    virustotaloptionx = args.virustotaloption
+    haoptionx = args.haoption
+    haargx = args.haarg
+    vtpubpremiumx = args.vtpubpremium
     mallist = args.malsharelist
     maltype = args.malsharelist
     malhash = args.malsharehash
-    maldownload = args.download
-    hausfinalurl2 = args.urlhaussubmit
-    hausfinalurl = args.urlhausquery
-    haustag = args.tag
-    haustagsearchx = args.haustagsearch
-    haussigsearchx = args.haussigsearch
-    hauspayloads = args.hauspayloadbatch
-    hauspayloadhash = args.haushash
-    hausdownload = args.hausdownloadpayload
-    polyscan = args.polyswarmscan
-    polyhash = args.polyswarmhash
-    polymeta = args.polyswarmmeta
-    androidx = args.androidha
-    androidsendhax = args.androidsendha
-    androidsendvtx = args.androidsendvt
-    ipaddrvtx = args.ipaddrvt
-    metatypex = args.metatype
+    hausoptionx = args.hausoption
+    hausargx = args.hausarg
+    polyoptionx = args.polyoption
+    polyargx = args.polyarg
+    androidoptionx = args.androidoption
+    androidargx = args.androidarg
     alienx = args.alienvault
     alienargsx = args.alienvaultargs
     malpediax = args.malpedia
     malpediaargx = args.malpediaarg
     threatcrowdx = args.threatcrowd
     threatcrowdargx = args.threatcrowdarg
-    valhallax = args.valhalla
-    valhallaargx = args.valhallaarg
     bazaarx = args.bazaar
     bazaarargx = args.bazaararg
     triagex = args.triage
     triageargx = args.triagearg
+    virustotalargx = args.virustotalarg
     config = args.config
 
-    if (vt == 2):
+    if (virustotaloptionx == 1):
+        ffpname = virustotalargx
+        filetemp = virustotalargx
+
+    if (virustotaloptionx == 2):
         showreport = 1
+        ffpname = virustotalargx
+        filetemp = virustotalargx
 
-    if (vt == 3):
+    if (virustotaloptionx == 3):
         ie = 1
+        ffpname = virustotalargx
+        filetemp = virustotalargx
 
-    if (vt == 4):
+    if (virustotaloptionx == 4):
         ovrly = 1
+        ffpname = virustotalargx
+        filetemp = virustotalargx
 
-    if (T == 2):
-        Q = 1
+    if (virustotaloptionx == 5):
+        urltemp = virustotalargx
 
-    if (T == 3):
-        gt = 1
+    if (virustotaloptionx == 6):
+        ipaddrvtx = virustotalargx
+    
+    if (virustotaloptionx == 7):
+        domaintemp = virustotalargx
 
-    if (hauspayloads == 2):
-        hausbatch = 1
+    if (virustotaloptionx == 8):
+        hashtemp = virustotalargx
 
-    if (androidx == 2):
-        androidvtx = 1
+    if (virustotaloptionx == 9):
+        filetemp = virustotalargx
+    
+    if (virustotaloptionx == 10):
+        hash_file = virustotalargx
 
-    if (androidx == 3):
-        androidvttx = 1
+    if (virustotaloptionx == 11):
+        hash_file = virustotalargx
+    
+    if (virustotaloptionx == 12):
+        hash_value = virustotalargx
+
+    if (virustotaloptionx == 13):
+        file_item = virustotalargx
+
+    if (haoptionx == 1):
+        ffpname = haargx
+
+    if (haoptionx == 2):
+        ffpname = haargx
+
+    if (haoptionx == 3):
+        ffpname = haargx
+
+    if (haoptionx == 4):
+        ffpname = haargx
+
+    if (haoptionx == 5):
+        ffpname = haargx
+
+    if (haoptionx == 6):
+        ffpname = haargx
+
+    if (haoptionx == 7):
+        ffpname = haargx
+
+    if (haoptionx == 8):
+        ffpname = haargx
+
+    if (haoptionx == 9):
+        ffpname = haargx
+    
+    if (haoptionx == 10):
+        ffpname = haargx
+
+    if (haoptionx == 11):
+        filecheckha = 1
 
     if ((ha != 0) and (ha < 6)):
         xx = ha - 1
@@ -9425,12 +9519,7 @@ if __name__ == "__main__":
             print(mycolors.reset)
             exit(0)
 
-    if (args.hauspayloadbatch) not in optval1:
-        parser.print_help()
-        print(mycolors.reset)
-        exit(0)
-    
-    if (args.hybridanalysis) not in optval5:
+    if (args.haoption) not in optval10:
         parser.print_help()
         print(mycolors.reset)
         exit(0)
@@ -9441,22 +9530,22 @@ if __name__ == "__main__":
             exit(0)
 
     if (showreport == 1):
-        if (fprovided == 0 or vt == 0):
+        if (fprovided == 0 or virustotaloptionx == 0):
             parser.print_help()
             print(mycolors.reset)
             exit(0)
 
-    if (args.androidha) not in optval4:
-        parser.print_help()
-        print(mycolors.reset)
-        exit(0)
-
-    if (args.metatype) not in optval2:
-        parser.print_help()
-        print(mycolors.reset)
-        exit(0)
-
     if (args.alienvault) not in optval5:
+        parser.print_help()
+        print(mycolors.reset)
+        exit(0)
+
+    if (args.hausoption) not in optval8:
+        parser.print_help()
+        print(mycolors.reset)
+        exit(0)
+
+    if (args.polyoption) not in optval6:
         parser.print_help()
         print(mycolors.reset)
         exit(0)
@@ -9476,27 +9565,18 @@ if __name__ == "__main__":
         print(mycolors.reset)
         exit(0)
 
-    if (args.valhalla) not in optval5:
-        parser.print_help()
-        print(mycolors.reset)
-        exit(0)
-
     if (args.triage) not in optval8:
         parser.print_help()
         print(mycolors.reset)
         exit(0)
 
-    if ((not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not fileha) and (not repoha) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (not args.urlhausquery) and (not args.urlhaussubmit) and (hausbatch == 0) and (hauspayloads == 0) and (not args.haushash) and (not args.hausdownloadpayload) and (not args.polyswarmscan) and (not args.polyswarmhash) and (not args.polyswarmmeta) and (androidx == 0) and (not androidsendhax) and (androidvtx == 0) and (androidvttx == 0) and (not androidsendvtx) and (not haustagsearchx) and (not haussigsearchx) and (not ipaddrvtx) and (metatype == 0) and (alienx == 0) and (not alienargsx) and (not malpediaargx) and (malpediax ==0) and (not args.threatcrowd) and (not args.valhalla) and (bazaarx == 0) and (not bazaarargx) and (triagex == 0) and (not triageargx)):
+    if ((not virustotalargx) and (virustotaloptionx == 0) and (not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not haargx) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (args.hausoption == 0) and (polyoptionx == 0) and (not polyargx) and (androidoptionx == 0) and (not androidargx) and (alienx == 0) and (not alienargsx) and (not malpediaargx) and (malpediax == 0) and (threatcrowdx == 0) and (not threatcrowdargx) and (bazaarx == 0) and (not bazaarargx) and (triagex == 0) and (not triageargx)):
+
         parser.print_help()
         print(mycolors.reset)
         exit(0)
 
     if (args.backg) not in optval:
-        parser.print_help()
-        print(mycolors.reset)
-        sys.exit(0)
-
-    if (args.download) not in optval:
         parser.print_help()
         print(mycolors.reset)
         sys.exit(0)
@@ -9507,7 +9587,7 @@ if __name__ == "__main__":
         sys.exit(0)
 
     if (Q == 1):
-        if ((vt == 0) and (ha == 0)):
+        if ((virustotaloptionx == 0) and (haoptionx == 0)):
             parser.print_help()
             print(mycolors.reset)
             sys.exit(0)
@@ -9516,17 +9596,12 @@ if __name__ == "__main__":
             parser.print_help()
             print(mycolors.reset)
             sys.exit(0)
-    if (args.multithread) not in optval4:
+    if (args.vtpubpremium) not in optval:
         parser.print_help()
         print(mycolors.reset)
         sys.exit(0)
-    elif (T == 1):
-        if((not args.direct) and Q == 0):
-            parser.print_help()
-            print(mycolors.reset)
-            sys.exit(0)
 
-    if (args.virustotal) not in optval2:
+    if (args.virustotaloption) not in optval9:
         parser.print_help()
         print(mycolors.reset)
         sys.exit(0)
@@ -9536,11 +9611,6 @@ if __name__ == "__main__":
             print(mycolors.reset)
             exit(0)
 
-    if (args.sysenviron) not in optval2:
-        parser.print_help()
-        print(mycolors.reset)
-        sys.exit(0)
-
     if (windows == 1):
         init(convert = True)
 
@@ -9549,39 +9619,41 @@ if __name__ == "__main__":
             if (fprovided == 0 ):
                 if (not hashtemp):
                     if (not filetemp):
-                        if (not fileha):
-                            if (not repoha):
-                                if (not domaintemp):
-                                    if (args.malsharelist == 0):
-                                        if (not args.malsharehash):
-                                            if (not args.urlhausquery):
-                                                if (not args.urlhaussubmit):
-                                                    if (args.hauspayloadbatch == 0):
-                                                        if (not args.haushash):
-                                                            if (not args.hausdownloadpayload):
-                                                                if (not args.polyswarmscan):
-                                                                    if (not args.polyswarmhash):
-                                                                        if (not args.polyswarmmeta):
-                                                                            if (args.androidha == 0):
-                                                                                if (not args.androidsendha):
-                                                                                    if (not args.androidsendvt):
-                                                                                        if (not args.haustagsearch):
-                                                                                            if (not args.haussigsearch):
-                                                                                                if (not args.ipaddrvt):
-                                                                                                    if (args.metatype == 0):
-                                                                                                        if (args.alienvault == 0):
-                                                                                                            if (not args.alienvaultargs):
-                                                                                                                if (args.bazaar == 0):
-                                                                                                                    if (not args.bazaararg):
-                                                                                                                        if (not malpediaargx):
-                                                                                                                            if (malpediax == 0):
-                                                                                                                                if(not args.threatcrowd):
-                                                                                                                                    if(not args.valhalla):
-                                                                                                                                        if (triagex == 0):
-                                                                                                                                            if (not args.triagearg):
-                                                                                                                                                parser.print_help()
-                                                                                                                                                print(mycolors.reset)
-                                                                                                                                                exit(0)
+                        if (not haargx):
+                            if (not domaintemp):
+                                if (args.malsharelist == 0):
+                                    if (not args.malsharehash):
+                                        if (not args.hausoption):
+                                            if (args.androidoption == 0):
+                                                if (not args.androidarg):
+                                                    if (not ipaddrvtx):
+                                                        if (args.alienvault == 0):
+                                                            if (not args.alienvaultargs):
+                                                                if (args.bazaar == 0):
+                                                                    if (not args.bazaararg):
+                                                                        if (not malpediaargx):
+                                                                            if (malpediax == 0):
+                                                                                if(not args.threatcrowd):
+                                                                                    if (triagex == 0):
+                                                                                        if (not args.triagearg):
+                                                                                            if (args.polyoption == 0):
+                                                                                                if (virustotaloptionx == 0):
+                                                                                                    parser.print_help()
+                                                                                                    print(mycolors.reset)
+                                                                                                    exit(0)
+
+    if (hashtemp):
+        if ((len(hashtemp)==32) or (len(hashtemp)==40) or (len(hashtemp)==64)):
+            hashcheck = 1
+
+        elif (bkg == 0):
+            print(mycolors.foreground.red + "\nYou didn't provided a valid hash.\n")
+            print(mycolors.reset)
+            exit(1)
+        else:
+            print(mycolors.foreground.yellow + "\nYou didn't provided a valid hash.\n")
+            print(mycolors.reset)
+            exit(1)
 
     if (urltemp):
         if (validators.url(urltemp)) == True:
@@ -9594,48 +9666,6 @@ if __name__ == "__main__":
             print(mycolors.foreground.yellow + "\nYou didn't provided a valid URL.\n")
             print(mycolors.reset)
             exit(1)
-
-    if (hausfinalurl):
-        if (validators.url(hausfinalurl)) == True:
-            hauscheck = 1
-        elif (bkg == 0): 
-            print(mycolors.foreground.red + "\nYou didn't provided a valid URL.\n")
-            print(mycolors.reset)
-            exit(1)
-        else:
-            print(mycolors.foreground.yellow + "\nYou didn't provided a valid URL.\n")
-            print(mycolors.reset)
-            exit(1)
-
-        if ((args.urlhausquery) and (hauscheck == 1)):
-            urlhauscheck(hausfinalurl, hausq)
-            print(mycolors.reset)
-            exit(0)
-
-    if(hausbatch == 1):
-        hausgetbatch(hausb)
-        print(mycolors.reset)
-
-    if(hauspayloads == 1):
-        hauspayloadslist(hausp)
-        print(mycolors.reset)
-
-    if (hausfinalurl2):
-        if (validators.url(hausfinalurl2)) == True:
-            hauscheck = 1
-        elif (bkg == 0): 
-            print(mycolors.foreground.red + "\nYou didn't provided a valid URL.\n")
-            print(mycolors.reset)
-            exit(1)
-        else:
-            print(mycolors.foreground.yellow + "\nYou didn't provided a valid URL.\n")
-            print(mycolors.reset)
-            exit(1)
-
-        if ((args.urlhaussubmit) and (hauscheck == 1)):
-            urlhauspost(hausfinalurl2, hauss, haustag)
-            print(mycolors.reset)
-            exit(0)
 
     if (domaintemp):
         if (validators.domain(domaintemp)) == True:
@@ -9660,10 +9690,34 @@ if __name__ == "__main__":
             print(mycolors.foreground.yellow + "\nYou didn't provided a valid file.\n")
             print(mycolors.reset)
             exit(1)
+   
+    if (haoptionx <= 10):
+        if (haargx):
+            if (os.path.isfile(haargx)) == True:
+                filecheckha = 1
+            elif (bkg == 0):
+                print(mycolors.foreground.red + "\nYou didn't provided a valid file.\n")
+                print(mycolors.reset)
+                exit(1)
+            else:
+                print(mycolors.foreground.yellow + "\nYou didn't provided a valid file.\n")
+                print(mycolors.reset)
+                exit(1)
 
-    if (fileha):
-        if (os.path.isfile(fileha)) == True:
-            filecheckha = 1
+    if (polyoptionx == 1 or polyoptionx == 3):
+        if ((len(polyargx)==32) or (len(polyargx)==40) or (len(polyargx)==64)):
+            if (polyoptionx == 1):
+                polyhashsearch(polyargx, 0)
+            if (polyoptionx == 3):
+                polyhashsearch(polyargx, 1)
+            print(mycolors.reset)
+            exit(0)
+
+    if (polyoptionx == 2):
+        if (os.path.isfile(polyargx)) == True:
+            polyfile(polyargx)
+            print(mycolors.reset)
+            exit(0)
         elif (bkg == 0):
             print(mycolors.foreground.red + "\nYou didn't provided a valid file.\n")
             print(mycolors.reset)
@@ -9673,20 +9727,8 @@ if __name__ == "__main__":
             print(mycolors.reset)
             exit(1)
 
-    if (polyscan):
-        if (os.path.isfile(polyscan)) == True:
-            filecheckpoly = 1
-        elif (bkg == 0):
-            print(mycolors.foreground.red + "\nYou didn't provided a valid file.\n")
-            print(mycolors.reset)
-            exit(1)
-        else:
-            print(mycolors.foreground.yellow + "\nYou didn't provided a valid file.\n")
-            print(mycolors.reset)
-            exit(1)
-
-    if (urlcheck == 1):
-        vturlcheck(urltemp,param)
+    if (polyoptionx >=4):
+        polymetasearch(polyargx, polyoptionx)
         print(mycolors.reset)
         exit(0)
 
@@ -9913,151 +9955,275 @@ if __name__ == "__main__":
         print(mycolors.reset)
         exit(0)
 
-    if (valhallax > 0):
-        argx = valhallaargx
-        requestVALHALLAAPI()
-        valhalla_service(valhallax,argx,VALHALLAAPI)
+    if (polyoptionx == 2):
+        if (filecheckpoly == 1):
+            polyfile(polyargx)
+            print(mycolors.reset)
+            exit(0)
+
+    if (virustotaloptionx == 1):
+        if (filecheck == 1):
+            filechecking_v3(virustotalargx, urlfilevt3, 0, 0, 0)
+            print(mycolors.reset)
+            exit(0)
+    
+    if (virustotaloptionx == 2):
+        if (filecheck == 1):
+            filechecking_v3(virustotalargx, urlfilevt3, 1, 0, 0)
+            print(mycolors.reset)
+            exit(0)
+    
+    if (virustotaloptionx == 3):
+        if (filecheck == 1):
+            filechecking_v3(virustotalargx, urlfilevt3, 1, 1, 0)
+            print(mycolors.reset)
+            exit(0)
+    
+    if (virustotaloptionx == 4):
+        if (filecheck == 1):
+            filechecking_v3(virustotalargx, urlfilevt3, 1, 0, 1)
+            print(mycolors.reset)
+            exit(0)
+        
+    if (virustotaloptionx == 5):
+        if (urlcheck == 1):
+            vturlwork(urltemp,urlurlvt3)
+            print(mycolors.reset)
+            exit(0)
+
+    if (virustotaloptionx == 6):
+        if (ipaddrvtx):
+            vtipwork(ipaddrvtx, urlipvt3)
+            print(mycolors.reset)
+            exit(0)
+
+    if (virustotaloptionx == 7):
+        if (domaincheck == 1):
+            vtdomainwork(domaintemp,urldomainvt3)
+            print(mycolors.reset)
+            exit(0)
+
+    if (virustotaloptionx == 8):
+        vthashwork(hashtemp, urlfilevt3, 1)
         print(mycolors.reset)
         exit(0)
 
-    if (polyhash):
-        if (polyhash):
-            if ((len(polyhash)==32) or (len(polyhash)==40) or (len(polyhash)==64)):
-                polycheck = 1
-        if (polycheck == 1):
-            polyhashsearch(polyhash)
+    if (virustotaloptionx == 9):
+        vtuploadfile(filetemp, urlfilevt3)
         print(mycolors.reset)
         exit(0)
 
-    if (domaincheck == 1):
-        vtdomaincheck(domaintemp,param)
+    if (virustotaloptionx == 10):
+        apitype = 1
+        vtbatchcheck(hash_file, urlfilevt3, apitype)
         print(mycolors.reset)
         exit(0)
 
-    if (filecheck == 1):
-        vtfilecheck(filetemp, urlfilevtcheck, param)
+    if (virustotaloptionx == 11):
+        apitype = 0
+        vtbatchcheck(hash_file, urlfilevt3, apitype)
         print(mycolors.reset)
         exit(0)
 
-    if (filecheckha == 1):
-        hafilecheck(fileha)
+    if (virustotaloptionx == 12):
+        vtbehavior(hash_value, urlfilevt3)
         print(mycolors.reset)
         exit(0)
 
-    if (filecheckpoly == 1):
-        polyfile(polyscan)
+    if (virustotaloptionx == 13):
+        vtlargefile(file_item, urlfilevt3)
+        print(mycolors.reset)
+        exit(0)
+
+    if (haoptionx == 1):
+        xx = 0
+        hashow(calchash(haargx))
         print(mycolors.reset)
         exit(0)
     
-    if (androidsendhax):
+    if (haoptionx == 2):
+        xx = 1
+        hashow(calchash(haargx))
+        print(mycolors.reset)
+        exit(0)
+
+    if (haoptionx == 3):
+        xx = 2
+        hashow(calchash(haargx))
+        print(mycolors.reset)
+        exit(0)
+
+    if (haoptionx == 4):
         xx = 3
-        sendandroidha(androidsendhax)
+        hashow(calchash(haargx))
         print(mycolors.reset)
         exit(0)
 
-    if (androidsendvtx):
-        sendandroidvt(androidsendvtx)
+    if (haoptionx == 5):
+        xx = 4
+        hashow(calchash(haargx))
         print(mycolors.reset)
         exit(0)
 
-    if (polymeta):
-        polymetasearch(polymeta, metatypex)
+    if (haoptionx == 6):
+        xx = 0
+        hafilecheck(haargx)
+        print(mycolors.reset)
+        exit(0)
+    
+    if (haoptionx == 7):
+        xx = 1
+        hafilecheck(haargx)
+        print(mycolors.reset)
+        exit(0)
+    
+    if (haoptionx == 8):
+        xx = 2
+        hafilecheck(haargx)
+        print(mycolors.reset)
+        exit(0)
+    
+    if (haoptionx == 9):
+        xx = 3
+        hafilecheck(haargx)
+        print(mycolors.reset)
+        exit(0)
+    
+    if (haoptionx == 10):
+        xx = 4
+        hafilecheck(haargx)
         print(mycolors.reset)
         exit(0)
 
-    if (hashtemp):
-        if ((len(hashtemp)==32) or (len(hashtemp)==40) or (len(hashtemp)==64)):
-            hashcheck = 1
-
-        elif (bkg == 0):
-            print(mycolors.foreground.red + "\nYou didn't provided a valid hash.\n")
-            print(mycolors.reset)
-            exit(1)
-        else:
-            print(mycolors.foreground.yellow + "\nYou didn't provided a valid hash.\n")
-            print(mycolors.reset)
-            exit(1)
-
-    if (hashcheck == 1):
-        hashchecking()
+    if (haoptionx == 11):
+        xx = 0
+        hashow(haargx)
+        downhash(haargx)
+        print(mycolors.reset)
+        exit(0)
+    
+    if (haoptionx == 12):
+        xx = 1
+        hashow(haargx)
+        downhash(haargx)
         print(mycolors.reset)
         exit(0)
 
-    if (mallist != 0):
+    if (haoptionx == 13):
+        xx = 2
+        hashow(haargx)
+        downhash(haargx)
+        print(mycolors.reset)
+        exit(0)
+
+    if (haoptionx == 14):
+        xx = 3
+        hashow(haargx)
+        downhash(haargx)
+        print(mycolors.reset)
+        exit(0)
+
+    if (haoptionx == 15):
+        xx = 4
+        hashow(haargx)
+        downhash(haargx)
+        print(mycolors.reset)
+        exit(0)
+
+    if (mallist != 0 and mallist >= 2):
         malsharelastlist(maltype)
         print(mycolors.reset)
         exit(0)
 
-    if (malhash):
+    if (malhash and mallist == 1):
         if (malhash):
             if ((len(malhash)==32) or (len(malhash)==40) or (len(malhash)==64)):
                 hashcheck = 1
         if (hashcheck == 1):
-            malsharehashsearch(malhash)
+            malsharedown(malhash)
         print(mycolors.reset)
         exit(0)
 
-    if (androidx == 1):
+    if (androidoptionx == 1):
         engine = 1
         checkandroid(engine)
         print(mycolors.reset)
         exit(0)
 
-    if (androidvtx):
+    if (androidoptionx == 2):
         engine = 2
         checkandroid(engine)
         print(mycolors.reset)
         exit(0)
     
-    if (androidvttx):
+    if (androidoptionx == 3):
         engine = 3
         checkandroid(engine)
         print(mycolors.reset)
         exit(0)
+    
+    if (androidoptionx == 4):
+        xx = 3
+        sendandroidha(androidargx)
+        print(mycolors.reset)
+        exit(0)
+    
+    if (androidoptionx == 5):
+        sendandroidvt(androidargx)
+        print(mycolors.reset)
+        exit(0)
 
-    if (hauspayloadhash):
-        if (hauspayloadhash):
-            if ((len(hauspayloadhash)==32) or (len(hauspayloadhash)==64)):
+    if (hausoptionx == 1):
+        if (len(hausargx)==64):
                 hashcheck = 1
         if (hashcheck == 1):
-            haushashsearch(hauspayloadhash, hausph)
+            haussample(hausargx, hausd)
         print(mycolors.reset)
         exit(0)
 
-    if (haustagsearchx):
-        haustagsearchroutine(haustagsearchx, haust)
-        print(mycolors.reset)
-        exit(0)
-
-    if (haussigsearchx):
-        haussigsearchroutine(haussigsearchx, haussig)
-        print(mycolors.reset)
-        exit(0)
-
-    if (ipaddrvtx):
-        ipvtcheck(ipaddrvtx, ipvt)
-        print(mycolors.reset)
-        exit(0)
-
-    if (hausdownload):
-        if (len(hausdownload)==64):
-                hashcheck = 1
+    if (hausoptionx == 2):
+        if ((len(hausargx)==32) or (len(hausargx)==64)):
+            hashcheck = 1
         if (hashcheck == 1):
-            haussample(hausdownload, hausd)
+            haushashsearch(hausargx, hausph)
         print(mycolors.reset)
         exit(0)
 
-    if (fprovided == 1):
-        filenamecheck = ffpname
-        filechecking(filenamecheck)
+    if (hausoptionx == 3):
+        if (validators.url(hausargx)) == True:
+            hauscheck = 1
+        elif (bkg == 0): 
+            print(mycolors.foreground.red + "\nYou didn't provided a valid URL.\n")
+            print(mycolors.reset)
+            exit(1)
+        else:
+            print(mycolors.foreground.yellow + "\nYou didn't provided a valid URL.\n")
+            print(mycolors.reset)
+            exit(1)
+
+        if ((hausargx) and (hauscheck == 1)):
+            urlhauscheck(hausargx, hausq)
+            print(mycolors.reset)
+            exit(0)
+
+    if (hausoptionx == 4):
+        haustagsearchroutine(hausargx, haust)
         print(mycolors.reset)
         exit(0)
 
-    if (repoha):
-        checkreportha(repoha)
+    if (hausoptionx == 5):
+        haussigsearchroutine(hausargx, haussig)
         print(mycolors.reset)
         exit(0)
+    
+    if(hausoptionx == 6):
+        hauspayloadslist(hausp)
+        print(mycolors.reset)
+    
+    if(hausoptionx == 7):
+        hausgetbatch(hausb)
+        print(mycolors.reset)
 
     if (repo is not None):
         repository = repo
-        dirchecking(repository)
+        vtdirchecking(repository, urlfilevt3, vtpubpremiumx)

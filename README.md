@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/4.4.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/5.0.0) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
 [<img alt="PayPal" src="https://img.shields.io/badge/Donate-Paypal-brightgreen?style=for-the-badge&logo=appveyor">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M8F458EZH8UZE&source=url)
 
@@ -47,69 +47,8 @@
 ![Alt text](pictures/picture_41.jpg?raw=true "Title")
 ![Alt text](pictures/picture_42.jpg?raw=true "Title")
 ![Alt text](pictures/picture_43.jpg?raw=true "Title")
-![Alt text](pictures/picture_44.jpg?raw=true "Title")
-![Alt text](pictures/picture_45.jpg?raw=true "Title")
-![Alt text](pictures/picture_46.jpg?raw=true "Title")
-![Alt text](pictures/picture_47.jpg?raw=true "Title")
-![Alt text](pictures/picture_48.jpg?raw=true "Title")
-![Alt text](pictures/picture_49.jpg?raw=true "Title")
-![Alt text](pictures/picture_50.jpg?raw=true "Title")
-![Alt text](pictures/picture_51.jpg?raw=true "Title")
-![Alt text](pictures/picture_52.jpg?raw=true "Title")
-![Alt text](pictures/picture_53.jpg?raw=true "Title")
-![Alt text](pictures/picture_54.jpg?raw=true "Title")
-![Alt text](pictures/picture_55.jpg?raw=true "Title")
-![Alt text](pictures/picture_56.jpg?raw=true "Title")
-![Alt text](pictures/picture_57.jpg?raw=true "Title")
-![Alt text](pictures/picture_58.jpg?raw=true "Title")
-![Alt text](pictures/picture_59.jpg?raw=true "Title")
-![Alt text](pictures/picture_60.jpg?raw=true "Title")
-![Alt text](pictures/picture_61.jpg?raw=true "Title")
-![Alt text](pictures/picture_62.jpg?raw=true "Title")
-![Alt text](pictures/picture_63.jpg?raw=true "Title")
-![Alt text](pictures/picture_64.jpg?raw=true "Title")
-![Alt text](pictures/picture_65.jpg?raw=true "Title")
-![Alt text](pictures/picture_66.jpg?raw=true "Title")
-![Alt text](pictures/picture_67.jpg?raw=true "Title")
-![Alt text](pictures/picture_68.jpg?raw=true "Title")
-![Alt text](pictures/picture_69.jpg?raw=true "Title")
-![Alt text](pictures/picture_70.jpg?raw=true "Title")
-![Alt text](pictures/picture_71.jpg?raw=true "Title")
-![Alt text](pictures/picture_72.jpg?raw=true "Title")
-![Alt text](pictures/picture_73.jpg?raw=true "Title")
-![Alt text](pictures/picture_74.jpg?raw=true "Title")
-![Alt text](pictures/picture_75.jpg?raw=true "Title")
-![Alt text](pictures/picture_76.jpg?raw=true "Title")
-![Alt text](pictures/picture_77.jpg?raw=true "Title")
-![Alt text](pictures/picture_78.jpg?raw=true "Title")
-![Alt text](pictures/picture_79.jpg?raw=true "Title")
-![Alt text](pictures/picture_80.jpg?raw=true "Title")
-![Alt text](pictures/picture_81.jpg?raw=true "Title")
-![Alt text](pictures/picture_82.jpg?raw=true "Title")
-![Alt text](pictures/picture_83.jpg?raw=true "Title")
-![Alt text](pictures/picture_84.jpg?raw=true "Title")
-![Alt text](pictures/picture_85.jpg?raw=true "Title")
-![Alt text](pictures/picture_86.jpg?raw=true "Title")
-![Alt text](pictures/picture_87.jpg?raw=true "Title")
-![Alt text](pictures/picture_88.jpg?raw=true "Title")
-![Alt text](pictures/picture_89.jpg?raw=true "Title")
-![Alt text](pictures/picture_90.jpg?raw=true "Title")
-![Alt text](pictures/picture_91.jpg?raw=true "Title")
-![Alt text](pictures/picture_92.jpg?raw=true "Title")
-![Alt text](pictures/picture_93.jpg?raw=true "Title")
-![Alt text](pictures/picture_94.jpg?raw=true "Title")
-![Alt text](pictures/picture_95.jpg?raw=true "Title")
-![Alt text](pictures/picture_96.jpg?raw=true "Title")
-![Alt text](pictures/picture_97.jpg?raw=true "Title")
-![Alt text](pictures/picture_98.jpg?raw=true "Title")
-![Alt text](pictures/picture_99.jpg?raw=true "Title")
-![Alt text](pictures/picture_100.jpg?raw=true "Title")
-![Alt text](pictures/picture_101.jpg?raw=true "Title")
-![Alt text](pictures/picture_102.jpg?raw=true "Title")
-![Alt text](pictures/picture_103.jpg?raw=true "Title")
-![Alt text](pictures/picture_104.jpg?raw=true "Title")
 
-      Copyright (C)  2018-2021 Alexandre Borges <alexandreborges at blackstormsecurity dot com>
+      Copyright (C)  2018-2022 Alexandre Borges <alexandreborges at blackstormsecurity dot com>
 
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
@@ -124,19 +63,19 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 4.4.2
+# Current Version: 5.0.0
 
-     Important note:  By default Malwoverview does NOT submit samples to Virus Total or Hybrid 
-     Analysis, so it only submits hashes and respects possible Non-Disclosure Agreements (NDAs).
-     There're specific options that explicitly submit samples, but these options are explained 
-     on help.   
+     Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
+     so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
+     that explicitly submit samples, but these options are explained in the help.
 
 
 # ABOUT
 
 Malwoverview.py is a first response tool for threat hunting, which performs an initial and quick 
 triage of malware samples, URLs, IP addresses, domains, malware families, IOCs and hashes. Additionally,
-Malwoverview is able to submit and download samples from several endpoints.
+Malwoverview is able to get dynamic and static behavior reports, submit and download samples
+from several endpoints.
 
 This tool aims to : 
 
@@ -167,11 +106,12 @@ This tool aims to :
 22. Gather threat hunting information from AlienVault using different criteria. 
 23. Gather threat hunting information from Malpedia using different criteria. 
 24. Gather threat hunting information from ThreatCrowd using different criteria. 
-25. Provide Yara rules and associated information from Valhalla. 
-26. Gather threat hunting information from Malware Bazaar using different criteria. 
-27. Gather IOC information from ThreatFox using different criteria. 
-28. Gather threat hunting information from Triage using different criteria. 
-
+25. Gather threat hunting information from Malware Bazaar using different criteria. 
+26. Gather IOC information from ThreatFox using different criteria. 
+27. Gather threat hunting information from Triage using different criteria. 
+28. Get evaluation to hashes from a given file against Virus Total. 
+29. Submit large files (>= 32 MB) to Virus Total. 
+30. Malwoverview uses Virus Total API v.3, so there isn't longer any option using v.2.
 
 
 # CONTRIBUTORS:
@@ -182,7 +122,7 @@ This tool aims to :
 
 # INSTALLATION 
 
-This tool has been tested on Ubuntu, Kali Linux 2021, REMnux, Windows 8.1 and 10. Malwoverview 
+This tool has been tested on REMnux, Ubuntu and Kali Linux only. Malwoverview 
 can be installed by executing the following command:
 
       pip3.9 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
@@ -193,16 +133,16 @@ can be installed by executing the following command:
 
 
 To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm,
-Alien Vault, Malpedia APIs, Valhalla and Triage into the .malwapi.conf configuration file 
+Alien Vault, Malpedia  and Triage into the .malwapi.conf configuration file 
 (the default one at the home directory (/home/[username] or /root) -- if the file doesn't exist,
 so you should create it) or you could create a custom configuration file and indicate it by 
 using the -c option. 
 
-Nonetheless, starting on version 4.4.2, it isn't necessary to insert all APIs into .malwapi.conf
-before using Malwoverview anymore. Therefore, users can only insert few APIs and use options 
-respective to these APIs. 
+Nonetheless, starting on version 4.4.2, it isn't longer necessary to insert all APIs into .malwapi.conf
+before using Malwoverview. Therefore, users can only insert few APIs and use the respective options 
+to these APIs. 
 
-A special note about the Alien Vault: it is necessary to subscribe to pulses on Alien Vault 
+* A special note about the Alien Vault: it is necessary to subscribe to pulses on Alien Vault 
 website before using -n 1 option.  
 
 The .malwapi.conf configuration file (from the the home directory -- /home/[username] or /root) 
@@ -229,9 +169,6 @@ has the following format:
       [MALPEDIA]
       MALPEDIAAPI =
 
-      [VALHALLA]
-      VALHALLAAPI =
-
       [TRIAGE]
       TRIAGEAPI =
 
@@ -245,13 +182,12 @@ The APIs can be requested on the respective service websites:
 5. Polyswarm: https://docs.polyswarm.io/consumers
 6. Alien Vault: https://otx.alienvault.com/api
 7. Malpedia: It doesn't offer open registration, but you can request an user account 
-directly through Twitter (DM) or feedback e-email. The Malpedia Twitter handle is @malpedia.
-8. Valhalla: You can use a demo API key or contract the Valhalla service for a private key.
-Valhalla demo-API key is: 1111111111111111111111111111111111111111111111111111111111111111.
-9. ThreatCrowd: It isn't necessary an API.
-10. Malware Bazaar: It isn't necessary an API.
-11. ThreatFox: It isn't necessary an API.
-12. Triage: https://tria.ge/signup.
+   directly through Twitter (DM) or feedback e-email. The Malpedia Twitter 
+   handle is @malpedia.
+8. ThreatCrowd: It isn't necessary an API.
+9. Malware Bazaar: It isn't necessary an API.
+10. ThreatFox: It isn't necessary an API.
+11. Triage: https://tria.ge/signup.
  
 ----------------------------------------------------
 A special note about API requests to the MALPEDIA:
@@ -277,9 +213,21 @@ further threat hunting information from Triage endpoint.
 
 -----------------------------------------------------
 
-In Windows systems, create the .malwapi.conf file in the C:\Users\\[username\] directory 
-(Windows home user directory). In Linux systems, create the .malwapi.conf file in 
-/home/\[username\] directory (Linux home user directory -- /home/[username] or /root).
+----------------------------------------------------
+Note about background color of the terminal:
+----------------------------------------------------
+
+Malwoverview has been written to produce outputs to 
+dark background terminal. However, there's the -o 
+option, which changes and adapts output's colors to 
+light background.
+
+-----------------------------------------------------
+
+Just in case you install it on Windows systems, you should create the .malwapi.conf 
+file in the C:\Users\\[username\] directory (Windows home user directory). In Linux
+systems, create the .malwapi.conf file within /home/\[username\] directory 
+(Linux home user directory -- /home/[username] or /root).
 
 Additionally, you don't need to specify "-w 1" option while using malwoverview.py on Windows
 anymore. 
@@ -293,7 +241,8 @@ Further information is available on:
        (PYPI.org repository) https://pypi.org/project/malwoverview/
        (Github) https://github.com/alexandreborges/malwoverview
 
-If you want to perform the manual steps (usually, it is not necessary), so few steps will be necessary:
+If you want to perform the manual steps (usually, it is not necessary), so few steps 
+should be executed:
 
 ## Kali Linux (manual steps)
 
@@ -334,8 +283,7 @@ If you want to perform the manual steps (usually, it is not necessary), so few s
        $ pip3.9 install -U polyswarm-api
        $ pip3.9 install -U pathlib
        $ pip3.9 install -U configparser
-       $ pip3.9 install -U valhallaAPI
-       
+
 4. To check an Android mobile you need to install the "adb" program by executing the following command:
 
        # apt get install adb
@@ -392,12 +340,12 @@ If you want to perform the manual steps (usually, it is not necessary), so few s
        C:\> python.exe -m pip install -U pathlib
        C:\> python.exe -m pip install -U configparser
        C:\> python.exe -m pip install -U python-magic-bin
-       C:\> python.exe -m pip install -U valhallaAPI
 
 4. To check an Android mobile you need to install the "adb" program by:
 
        * Downloading and installing the Android Studio from: https://developer.android.com/
          studio#downloads (Recommended)
+
        * Downloading it from:
          https://dl.google.com/android/repository/platform-tools-latest-windows.zip
 
@@ -417,386 +365,141 @@ If you want to perform the manual steps (usually, it is not necessary), so few s
          or...
 
          git clone https://github.com/alexandreborges/malwoverview
-  
-       
-# USAGE
-
-To use the malwoverview, execute the command as shown below:
-
-      root@ubuntu19:~/malwoverview# python3.9 malwoverview.py  | more
-
-      usage: python malwoverview.py -c <API configuration file> -d <directory> -f <fullpath> 
-      -o <0|1> -v <0-4> -a <0-5> -w <0|1> -u <url> -H <hash file> 
-      -V <filename> -D <0|1> -e <0-4> -A <filename> -g <job_id> -r <domain> -t <0|1>
-      -l <1-14> -L <hash> -U <url> -S <url> -z <tags> -K <0|1|2> -j <hash> -J <hash> 
-      -P <filename> -R <PE file, IP address, domain or URL> -G <0-4> -y <0-3> 
-      -Y <file name> -Y <file name> -T <file name> -W <tag> -k <signature> -I <ip address>
-      -n <1-5> -N <argument> -M <1-8> -m <argument> -Q <1-5> -q <argument> 
-      -E <1-5> -C <argument> -b <1-10> -B <arg> -x <1-7> -X <arg>
-
-Malwoverview is a first response tool for threat hunting written by Alexandre Borges.
-
-optional arguments:
-
-       -h, --help            show this help message and exit
-       -c CONFIG FILE, --config CONFIG FILE
-                             Use a custom config file to specify API's
-       -d DIRECTORY, --directory DIRECTORY
-                             Specifies the directory containing malware samples.
-       -f FILENAME, --filename FILENAME
-                             Specifies a full path to a malware sample. It returns general information 
-                             about the file (any filetype)
-       -o BACKGROUND, --background BACKGROUND
-                             Adapts the output colors to a white terminal. The default is black terminal
-       -v VIRUSTOTAL, --virustotal VIRUSTOTAL
-                             If using "-v 1", so it queries the Virus Total database for positives and 
-                             totals. If "v 2" (which can be used only together with -f option), so it 
-                             shows antivirus reports from the main players. If "v 3", so the binary's 
-                             IAT and EAT are also shown; If "v 4" it extracts the overlay (it must be 
-                             used with -f option). Remember: you need to edit the .malwapi.conf and 
-                             insert your VT API.
-       -a HYBRID_ANALYSIS, --hybrid HYBRID_ANALYSIS
-                             Queries the Hybrid Analysis database for getting a general report. Possible
-                             values are: 1: Windows 7 32-bit; 2: Windows 7 32-bit (HWP Support); 
-                             3: Windows 64-bit; 4: Android; 5: Linux 64-bit. Remember: you need to edit
-                             the .malwapi.conf and insert your HA API and secret.
-       -u URL_VT, --vturl URL_VT
-                             SUBMITS a URL to the Virus Total scanning.
-       -I IP_VT, --ipaddrvt IP_VT
-                             This option checks an IP address on Virus Total.
-       -r URL_DOMAIN, --urldomain URL_DOMAIN
-                             This option gets a domain's report from Virus Total.
-       -H FILE_HASH, --hash FILE_HASH
-                             This option specifies the hash to be checked on Virus Total and Hybrid 
-                             Analysis. For the Hybrid Analysis report you must use it with the -e i
-                             option.
-       -V FILENAME_VT, --vtsubmit FILENAME_VT
-                             Submits a file(up to 32MB) for Virus Total scanning and gets the report.
-                             Attention: use forward slash to specify the target file even on Windows 
-                             systems. Furthermore, the minimum waiting time is set up in 90 seconds
-                             because the Virus Total waiting queue. If an error occurs, so wait few 
-                             minutes and try to access the report by using -f option.
-       -A SUBMIT_HA, --submitha SUBMIT_HA
-                             Submits a file(up to 32MB) to be scanned by the Hybrid Analysis engine.
-                             Use the -e option to specify the best environment to run the suspicious 
-                             file.
-       -g HA_STATUS, --hastatus HA_STATUS
-                             Checks the report's status of submitted samples to Hybrid Analysis engine
-                             by providing the job ID. Possible returned status values are: IN_QUEUE,
-                             SUCCESS, ERROR, IN_PROGRESS and PARTIAL_SUCCESS.
-       -D DOWNLOAD, --download DOWNLOAD
-                             Downloads the sample from Hybrid Analysis, Malshare and Polyswarm. 
-                             Options -H or -L (Hybrid Analysis and Malshare, respectively) must be
-                             specified as well -O option for Polyswarm engine.
-       -e HA_ENVIRONMENT, --haenv HA_ENVIRONMENT
-                             This option specifies the used environment to be used to test the sample
-                             on Hybrid Analysis: <0> Windows 7 32-bits; <1> Windows 7 32-bits (with 
-                             HWP Support); <2> Windows 7 64-bits; <3> Android; <4> Linux 64-bits 
-                             environment. This option is used together either -H option or the -A 
-                             option.
-       -t MULTITHREAD, --thread MULTITHREAD
-                             (optional) This option has several different meanings according to 
-                             chosen the value. Possible values: <1>: This value is used to force 
-                             multithreads on Linux whether: the -d option is specified AND you have
-                             a PAID Virus Total API or you are NOT checking the VT while using the
-                             -d option. PS1: using this option causes Imphashes not to be grouped 
-                             anymore; PS2: it also works on Windows, but there is not gain in 
-                             performance; <2>: This value should be used with -d option in two
-                             scenarios: 1) either including the "-v 1" option (Virus Total -- you'll
-                             see a complete VT response whether you have the private API) for a 
-                             multithread searching and reduced output; 2) or including the -a option
-                             (Hybrid Analysis) for a multithread searching to get a complete and 
-                             amazing output. If you are using the -a option, so you should pickup 
-                             the right number represening the testing environment to adjust the output
-                             to your sample types. PS1: certainly, if you have a directory holding 
-                             many malware samples, so you will want to test this option with -a 
-                             option; PS2: it also works on Windows, but there is not gain in performance;
-                             <3>: You should use this value with -v option if you have a public Virus 
-                             Total API. It forces a one minute wait every 4 malware samples, but 
-                             allows obtaining a complete evaluation of the malware repository.
-       -l MALSHARE_HASHES, --malsharelist MALSHARE_HASHES
-                             This option shows hashes of a specific type from the last 24 hours 
-                             from Malshare repository. Possible values are: 1: PE32 (default) ; 
-                             2: Dalvik ; 3: ELF ; 4: HTML ; 5: ASCII ; 6: PHP ; 7: Java ; 8: RAR ; 
-                             9: Zip ; 10: UTF-8 ; 11: MS-DOS ; 12: data ; 13: PDF ; 14: Composite(OLE).
-                             You need to insert your Malshare API into the .malwapi.conf file.
-       -L MALSHARE_HASH_SEARCH, --malsharehash MALSHARE_HASH_SEARCH
-                             Searches for the provided hash on the Malshare repository. You need to
-                             insert your Malshare API into the .malwapi.conf file. PS: sometimes the
-                             Malshare website is unavailable, so should check the website availability
-                             if you get some error message.
-       -K HAUS_PAYLOAD_URL, --haus_payloadbatch HAUS_PAYLOAD_URL
-                             This option has few possible values: <1> Retrieves a list of downloadable
-                             links of recent PAYLOADS (last 3 days, limited to 1000 entries) from URLHaus
-                             website; <2>: Retrieves a list of recent URLs (last 3 days, limited to 1000
-                             entries) from URLHaus website. Take care: each link take you to download a
-                             passworless zip file containing a malware, so your AV can generate alerts!
-       -U URL_HAUS_QUERY, --haus_query URL_HAUS_QUERY
-                             Queries a URL on the URLHaus website.
-       -j HAUS_HASH, --haus_hash HAUS_HASH
-                             Queries information about a provided payload's hash (md5 or sha256) on the
-                             URLHaus website.
-       -S URL_HAUS_SUB, --haus_submission URL_HAUS_SUB
-                            Submits a URL used to distribute malware (executable, script, document) to 
-                            the URLHaus website. Pay attention: Any other submission will be ignored/deleted
-                            from URLhaus. You have to register your URLHaus API into the .malwapi.conf file.
-       -z [HAUSTAG ...], --haustag [HAUSTAG ...]
-                            Associates tags (separated by spaces) to the specified URL. Please, only upper 
-                            case, lower case, '-' and '.' are allowed. This parameter is optional, which could
-                            be used with the -S option.
-       -W [HAUSTAGSEARCH ...], --haustagsearch [HAUSTAGSEARCH ...]
-                            This option is for searching malicious URLs by tag on URLhaus. Tags are 
-                            case-senstive and only upper case, lower case, '-' and '.' are allowed.
-       -k [HAUSSIGSEARCH ...], --haussigsearch [HAUSSIGSEARCH ...]
-                            This option is for searching malicious payload by tag on URLhaus. Tags are 
-                            case-sensitive and only upper case, lower case, '-' and '.' are allowed.
-       -J HAUS_DOWNLOAD, --haus_download HAUS_DOWNLOAD
-                            Downloads a malware sample (if it is available) from the URLHaus repository.
-                            It is necessary to provide the SHA256 hash.
-       -P POLYSWARMFILE, --polyswarm_scan POLYSWARMFILE
-                           (Only for Linux) Submits a sample to Polyswarm engine and performs a file scan.
-       -O POLYSWARMHASH, --polyswarm_hash POLYSWARMHASH
-                           (Only for Linux) Performs a hash scanning using the Polyswarm engine. Optionally,
-                           you can specify -D option to download the sample. Take care: Polyswarm enforces
-                           a restriction to number of downloaded samples in 20/month.
-       -R POLYSWARMMETA, --polyswarm_meta POLYSWARMMETA
-                          (Only for Linux) Provides the argument value for searches on Polyswarm engine 
-                          through imphash (the PE file must be provided), ipv4, domain, URL and family. This
-                          argument must be used with -G option, so check it, please. Pay attention: you 
-                          should check your metadata search limit on your Polyswarm account because once you
-                          have got the limit, so you will got an error.
-       -G METATYPE, --metatype METATYPE
-                          (Only for Linux) This parameter specifies search type for arguments provided by 
-                          -R option (above) while searching on Polyswarm engine. Thus, the following values
-                          are valid -- 0: PE Executable (look for samples with the same ImpHash); 1: IP 
-                          Address ; 2: Domain ; 3. URL; 4. Family
-       -y ANDROID_HA, --androidha ANDROID_HA
-                          This option has multiple options: <1>: Check all third-party APK packages from 
-                          the USB-connected Android device against Hybrid Analysis using multithreads. The
-                          Android device does not need to be rooted and the system does need to have the 
-                          adb tool in the PATH environment variable; <2>: Check all third-party APK packages
-                          from the USB-connected Android device against VirusTotal using Public API (slower
-                          because of 60 seconds delay for each 4 hashes). The Android device does not need
-                          to be rooted and the system does need to have adb tool in the PATH environment 
-                          variable; <3>: Check all third-party APK packages from the USB-connected Android
-                          device against VirusTotal using multithreads (only for Private Virus API). The 
-                          Android device does not need to be rooted and the system needs to have adb tool in
-                          the PATH environment variable.
-       -Y ANDROID_SEND_HA, --androidsendha ANDROID_SEND_HA
-                          Sends an third-party APK package from your USB-connected Android device to Hybrid
-                          Analysis. The Android device does not need to be rooted and the system needs to
-                          have adb tool in the PATH environment variable.
-       -T ANDROID_SEND_VT, --androidsendvt ANDROID_SEND_VT
-                         Sends an third-party APK package from your USB-connected Android device to Virus 
-                         Total. The Android device does not need be rooted and the system needis to have
-                         the adb tool in the PATH environment variable.
-       -n ALIENVAULT, --alienvault ALIENVAULT
-                         Checks multiple information from AlienVault. The possible values are: 1: Get 
-                         the subscribed pulses ; 2: Get information about an IP address; 3: Get information
-                         about a domain; 4: Get information about a hash; 5: Get information about a URL
-       -N ALIENVAULT_ARGS, --alienvaultargs ALIENVAULT_ARGS
-                         Provides argument to AlienVault -n option.
-       -M MALPEDIA, --malpedia MALPEDIA
-                         This option is related to MALPEDIA and presents different meanings depending on
-                         the chosen value. Thus, 1: List meta information for all families ; 2: List all
-                         actors ID ; 3: List all available payloads organized by family from Malpedia; 
-                         4: Get meta information from an specific actor, so it is necessary to use the -m
-                         option. Additionally, try to confirm the correct actor ID by executing malwoverview
-                         with option -M 3; 5: List all families IDs; 6: Get meta information from an
-                         specific family, so it is necessary to use the -m option. Additionally, try to 
-                         confirm the correct family ID by executing malwoverview with option -M 5; 7: Get a
-                         malware sample from malpedia (zip format -- password: infected). It is necessary 
-                         to specify the requested hash by using -m option; 8: Get a zip file containing
-                         Yara rules for a specific family (get the possible families using -M 5), which 
-                         must be specified by using -m option.
-       -m MALPEDIAARG, --malpediarg MALPEDIAARG
-                         This option provides an argument to the -M option, which is related to MALPEDIA.
-       -Q THREATCROWD, --threatcrowd THREATCROWD
-                         Checks multiple information from ThreatCrowd. The possible values are: 1: Get 
-                         information about the provided e-mail ; 2: Get information about an IP address;
-                         3: Get information about a domain; 4: Get information about a provided MD5 
-                         hash; 5: Get information about a specific malware family.
-       -q THREATCROWDARG, --threatcrowdarg THREATCROWDARG
-                         This option provides an argument to the -Q option, which is related to THREATCROWD.
-       -E VALHALLA, --valhalla VALHALLA
-                         This option is used for getting Yara rules from the Valhalla service given an 
-                         argument (-C option below). Valid values are 1: searches for Yara rules matching the
-                         provided keyword; 2: search for Yara rules matching a minimal score (40-49: anomaly
-                         and threat hunting rules / 60-74: rules for suspicious objects / 75-100: hard
-                         malicious matches); 3: Look for Yara rules to the following products, which must be
-                         specified using the -C option: FireEyeAX, FireEyeNX, FireEyeEX, CarbonBlack, Tanium,
-                         Tenable, SymantecMAA, GRR, osquery, McAfeeATD3 and McAfeeATD4; 4: Given the hash 
-                         (SHA 256) through -C option, show associated Yara rules; 5: Shows information about
-                         a specific Yara rule provided through the -C option.
-       -C VALHALLAARG, --valhallaarg VALHALLAARG
-                         This option is used for providing argument to the Vahalla service (-E option).
-       -b BAZAAR, --bazaar BAZAAR
-                         Checks multiple information from Malware Bazaar and ThreatFox. The possible values 
-                         are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar)
-                         Get information and a list of malware samples associated and according to a specific
-                         tag; 3: (Bazaar) Get a list of malware samples according to a given imphash;
-                         4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample from
-                         Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped
-                         using the following password: infected; 6: (ThreatFox) Get current IOC dataset from
-                         last x days given by option -B; 7: (ThreatFox) Search for the specified IOC on
-                         ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified
-                         tag given by option -B; 9: (ThreatFox) Search IOCs according to the specified
-                         malware family provided by option -B; 10. (ThreatFox) List all available malware 
-                         families.
-       -B BAZAAR_ARG, --bazaararg BAZAAR_ARG
-                         Provides argument to -b Bazaar and ThreatFox option. If you specified "-b 1" then
-                         the -B's argument must be a hash; If you specified "-b 2" then -B's argument
-                         must be a malware tag; If you specified "-b 3" then the argument must be a imphash;
-                         If you specified "-b 4", so the argument must be "100 or time", where "100"
-                         lists last "100 samples" and "time" lists last samples added to Malware Bazaar in
-                         the last 60 minutes; If you specified "-b 5" then the -B's argument must be a
-                         SHA256 hash; If you specified "-b 6", so the -B's value is the number of DAYS to
-                         filter IOCs. The default (and max) is 90 (days); If you used "-b 7" so the -B's
-                         argument is the IOC you want to search for; If you used "-b 8", so the -B's argument
-                         is the TAG you want search for; If you used "-b 9", so the -B argument is the
-                         malware family you want to search for;
-       -x TRIAGE, --triage TRIAGE
-                         Provides information from Triage according to the specified value: <1> this option
-                         gets sample's general information by providing an argument with -B option in
-                         the following possible formats: sha256:<value>, sha1:<value>, md5:<value>,
-                         familily:<value>, score:<value>, tag:<value>, url:<value>, wallet:<value>, ip:<value>;
-                         <2> Get a sumary report for a given Triage ID (got from option -x 1) ; <3> Submit
-                         a sample for analysis ; <4> Submit a sample through a URL for analysis ; <5>
-                         Download sample specified by the Triage ID; <6> Download pcapng file from sample 
-                         associated to given Triage ID; <7> Get a dynamic report for the given Triage ID
-                         (got from option -x 1);
-       -X TRIAGE_ARG, --triagearg TRIAGE_ARG
-                         Provides argument for options especified by -x option. Pay attention: the format
-                         of this argument depends on provided -x value.
-
-
-
-      Remember that public VT API only allows 4 searches per second (as shown at the image above). Therefore,
-      if you are willing to wait some minutes, so you can use the -p option, which forces a one minute wait 
-      every 4 malware samples, but allows obtaining a complete evaluation of the repository.
-
-
-      * ATTENTION 1: if the directory contains many malware samples while using -d option, so malwoverview.py
-                     could take some time. Nonetheless, you can use the new -t option (multithreading) to
-                     speed-up things. :)
-         
-      ** ATTENTION 2: All engines enforces quota of submission and/or verification per day and/or month. 
-                      Take care!
-       
-      *** ATTENTION 3: Some options searching on Hybrid Analysis strongly depend of the "-e" option, which 
-                       specifies the environment. Therefore, to check an Android sample (for example) it is 
-                       necessary to use the right environment (-e 3 for Android).
 
 
 ## Examples:
 
-      malwoverview.py -d /root/malware/misc/
-      malwoverview.py -d /root/malware/misc -t 1
-      malwoverview.py -d /root/malware/misc -v 1 -t 3
-      malwoverview.py -d /root/malware/misc -v 1 -t 1
-      malwoverview.py -d /root/malware/misc -a 1 -t 2
-      malwoverview.py -f /root/malware/misc/8a87a1261603af4d976faa57e49ebdd8fd8317e9dd13bd36ff25
-      99d1031f53ce -v 2
-      malwoverview.py -f /root/malware/misc/806fc33650b7ec35dd01a06be3037674ae3cc0db6ba1e3f690ee
-      9ba9403c0627 -a 1 -v 1
-      malwoverview.py -f /root/malware/misc/8a87a1261603af4d976faa57e49ebdd8fd8317e9dd13bd36ff25
-      99d1031f53ce -v 3
-      malwoverview.py -f /root/malware/misc/blackstorm.php -v 4 
-      malwoverview.py -u http://mobiletech.net/images/138907/8g7c645373370255099hf4at12buy2lgrdeqo/
-      malwoverview.py -r xurl.es
-      malwoverview.py -H 9ce861b93e7ddeebec8ed052450fc136162fb3239c502aab8fa9bc8962572457
-      malwoverview.py -H 893339624602c7b3a6f481aed9509b53e4e995d6771c72d726ba5a6b319608a7 -e 1
-      malwoverview.py -d /root/malware/linux/ -a 5
-      malwoverview.py -d /root/malware/android/ -a 4
-      malwoverview.py -d /root/malware/android/ -v 1 -t 3
-      malwoverview.py -d /root/malware/android/ -a 4 -t 2
-      malwoverview.py -V /root/malware/misc/malware999
-      malwoverview.py -A /root/malware/android/NubankConvidado.apk -e 3
-      malwoverview.py -g 5f2e727f70fa896603576725
-      malwoverview.py -A /root/malware/windows/806fc33650b7ec35dd01a06be3037674ae3cc0db6ba1e3f690
-      ee9ba9403c0627
-      malwoverview.py -l 1
-      malwoverview.py -l 6
-      malwoverview.py -l 4
-      malwoverview.py -L bc9d356f8d08396d620d249b8f34a664c9397467b1a6033013c788df734f8bda
-      malwoverview.py -K 1
-      malwoverview.py -K 2
-      malwoverview.py -U http://pusatppm.poltekkesbandung.com/wp-admin/report/b17892056589733xcz
-      cjkjvqctpr9v9sm/ 
-      malwoverview.py -J 9e7d263c3c9f155229a7d6fb29dfa4b62bfec31ed0d3bf4cc2dc60ffd9fd6d0e
-      malwoverview.py -S http://jamogames.com/templates/JLHk/
-      malwoverview.py -S http://pusatppm.poltekkesbandung.com/wp-admin/report/b17892056589733xc
-      zcjkjvqctpr9v9sm/
-      malwoverview.py -P 9e7d263c3c9f155229a7d6fb29dfa4b62bfec31ed0d3bf4cc2dc60ffd9fd6d0e
-      malwoverview.py -O f3ebeeeba13c82daef9731a5f3e8dbe535e963f83e531918ba1a8904b094d3b8
-      malwoverview.py -R /root/malware/windows/Scarab_Ransomware -G 0
-      malwoverview.py -R 164.132.92.180 -G 1
-      malwoverview.py -R sndoffo79.ddns.net -G 2
-      malwoverview.py -R http://0uso87.com/bolb/jaent.php?l=liut1.cab -G 3
-      malwoverview.py -R *Trickbot* -G 4
-      malwoverview.py -R *Trojan* -G 4
-      malwoverview.py -R *Ransomware* -G 4
-      malwoverview.py -y 1
-      malwoverview.py -y 2
-      malwoverview.py -y 3
-      malwoverview.py -T icompass
-      malwoverview.py -Y icompass
-      malwoverview.py -k Trickbot | more
-      malwoverview.py -W Quakbot
-      malwoverview.py -I 149.56.79.215
-      malwoverview.py -n 1 -N 12
-      malwoverview.py -n 2 -N 79.124.8.24
-      malwoverview.py -n 3 -N covid19tracer.ca
-      malwoverview.py -n 4 -N ba42665872ea41e3d2edd8978bc38c24
-      malwoverview.py -n 5 -N http://ksahosting.net/wp-includes/utf8.php
-      malwoverview.py -M 1
-      malwoverview.py -M 2 | more
-      malwoverview.py -M 3 | more
-      malwoverview.py -M 4 -m apt41 | more
-      malwoverview.py -M 5 | more
-      malwoverview.py -M 6 -m win.locky
-      malwoverview.py -M 7 -m efbdb14f38c20c55e32cd98e4b2fdf197709581581d31fac683aabbf361df5f3
-      malwoverview.py -M 8 -m win.trickbot
-      malwoverview.py -Q 1 -q potrafamin44as@gmail.com
-      malwoverview.py -Q 2 -q 188.40.75.132
-      malwoverview.py -Q 3 -q aoldaily.com
-      malwoverview.py -Q 4 -q fa6fbd1dd2d58885772bd0b37633d5d7
-      malwoverview.py -Q 5 -q plugx
-      malwoverview.py -E 1 -C apt41
-      malwoverview.py -E 2 -C 85 
-      malwoverview.py -E 3 -C osquery 
-      malwoverview.py -E 4 -C 8a883a74702f83a273e6c292c672f1144fd1cce8ee126cd90c
-                              95131e870744af 
-      malwoverview.py -E 5 -C Casing_Anomaly_ByPass | more
-      malwoverview.py -H 9555ea9a1909120dd9be988d91cad345302b38884d2343ee16ab994ac6c5c7df -D 1
-      malwoverview.py -L 081dc7af98fe601e09d81a4698f0df119ac612be1984f1d365b4cd9c21f550a1 -D 1
-      malwoverview.py -O 081dc7af98fe601e09d81a4698f0df119ac612be1984f1d365b4cd9c21f550a1 -D 1
-      malwoverview -b 1 -B c9d7b5d06cd8ab1a01bf0c5bf41ef2a388e41b4c66b1728494f86ed255a95d48 
-      malwoverview -b 2 -B Emotet
-      malwoverview.py -b 3 -B f34d5f2d4577ed6d9ceec516c1f5a744
-      malwoverview.py -b 4 -B 100
-      malwoverview.py -b 4 -B time
-      malwoverview.py -b 5 -B 2db2c1be15db4fc71b60ff3f7556156188cac93abcfabc866a2ca020b774347b
-      malwoverview.py -b 6 -B 20
-      malwoverview.py -b 7 -B  139.180.203.104:443
-      malwoverview.py -b 8 -B Magecart
-      malwoverview.py -b 9 -B "Cobalt Strike"
-      malwoverview.py -b 10 | more
-      python3.9 malwoverview/malwoverview.py -x 1 -X score:10 | more
-      python3.9 malwoverview/malwoverview.py -x 1 -X sha256:3e27b6b287f0b9f7e85bfe18901d96111
-                                                     0ae969d58b44af15b1d75be749022c2
-      malwoverview.py -x 1 -X tag:trojan | more
-      malwoverview.py -x 1 -X url:https://pcwizardrepair.com/grduoams
-      malwoverview.py -x 1 -X family:emotet | more
-      malwoverview.py -x 2 -X 210607-5j5bg6q9r2
-      malwoverview.py -x 3 -X /root/malware/windows/c3c5dd5504de3725ef9e40d0379cc273a356a90c6
-                              b2febb9dbc1f711348a1601 
-      malwoverview.py -x 4 -X http://ztechinternational.com/Img/XSD.exe
-      malwoverview.py -x 5 -X 210607-37pxrcst8a
-      malwoverview.py -x 6 -X 210607-pbt1j18myx
-      malwoverview.py -x 7 -X 210607-pbt1j18myx
+    malwoverview.py -d /home/remnux/malware/windows_2/
+    malwoverview.py -v 1 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
+    malwoverview.py -v 2 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
+    malwoverview.py -v 3 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
+    malwoverview.py -v 4 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe,
+    malwoverview.py -v 5 -V http://jamogames.com/templates/JLHk/
+    malwoverview.py -v 6 -V 185.220.100.243
+    malwoverview.py -v 7 -V xurl.es
+    malwoverview.py -v 8 -V ab4d6a82cafc92825a0b88183325855f0c44920da970b42c949d5d5ffdcc0585
+    malwoverview.py -v 9 -V cc2d791b16063a302e1ebd35c0e84e6cf6519e90bb710c958ac4e4ddceca68f7.exe
+    malwoverview.py -v 10 -V /home/remnux/malware/hash_list_3.txt
+    malwoverview.py -v 11 -V /home/remnux/malware/hash_list_3.txt
+    malwoverview.py -v 12 -V 9d26e19b8fc5819b634397d48183637bacc9e1c62d8b1856b8116141cb8b4000
+    malwoverview.py -v 13 -V /largefiles/4b3b46558cffe1c0b651f09c719af2779af3e4e0e43da060468467d8df445e93
+    malwoverview.py -a 1 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
+    malwoverview.py -a 2 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
+    malwoverview.py -a 3 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
+    malwoverview.py -a 4 -A malware1.apk
+    malwoverview.py -a 5 -A 2b03806939d1171f063ba8d14c3b10622edb5732e4f78dc4fe3eac98b56e5d46.elf
+    malwoverview.py -a 6 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
+    malwoverview.py -a 7 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
+    malwoverview.py -a 8 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
+    malwoverview.py -a 9 -A malware_7.apk
+    malwoverview.py -a 10 -A 925f649617743f0640bdfff4b6b664b9e12761b0e24bbb99ca72740545087ad2.elf
+    malwoverview.py -a 11 -A cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
+    malwoverview.py -a 12 -A cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
+    malwoverview.py -a 13 -A cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
+    malwoverview.py -a 14 -A d90a5552fd4ef88a8b621dd3642e3be8e52115a67e6b17b13bdff461d81cf5a8
+    malwoverview.py -a 15 -A 925f649617743f0640bdfff4b6b664b9e12761b0e24bbb99ca72740545087ad2
+    malwoverview.py -l 1 -L d3dcc08c9b955cd3f68c198e11d5788869d1b159dc8014d6eaa39e6c258123b0
+    malwoverview.py -l 2
+    malwoverview.py -l 3
+    malwoverview.py -l 4
+    malwoverview.py -l 5
+    malwoverview.py -l 6
+    malwoverview.py -j 1 -J 7c99d644cf39c14208df6d139313eaf95123d569a9206939df996cfded6924a6
+    malwoverview.py -j 2 -J 7c99d644cf39c14208df6d139313eaf95123d569a9206939df996cfded6924a6
+    malwoverview.py -j 3 -J https://unada.us/acme-challenge/3NXwcYNCa/
+    malwoverview.py -j 4 -J Qakbot
+    malwoverview.py -j 5 -J Emotet
+    malwoverview.py -j 5 -J Icedid
+    malwoverview.py -j 6
+    malwoverview.py -j 7
+    malwoverview.py -p 1 -P 1999ba265cd51c94e8ae3a6038b3775bf9a49d6fe57d75dbf1726921af8a7ab2
+    malwoverview.py -p 2 -P 301524c3f959d2d6db9dffdf267ab16a706d3286c0b912f7dda5eb42b6d89996.exe
+    malwoverview.py -p 3 -P 68c11ef39769674123066bcd52e1d687502eb6c4c0788b4f682e8d31c15e5306
+    malwoverview.py -p 4 -P 68c11ef39769674123066bcd52e1d687502eb6c4c0788b4f682e8d31c15e5306.exe
+    malwoverview.py -p 5 -P 188.40.75.132
+    malwoverview.py -p 6 -P covid19tracer.ca
+    malwoverview.py -p 7 -P http://ksahosting.net/wp-includes/utf8.php
+    malwoverview.py -p 8 -P Qakbot
+    malwoverview.py -y 1
+    malwoverview.py -y 2
+    malwoverview.py -y 3
+    malwoverview.py -y 4 -Y com.spaceship.netprotect
+    malwoverview.py -y 5 -Y com.mwr.dz
+    malwoverview.py -v 1 -V 368afeda7af69f329e896dc86e9e4187a59d2007e0e4b47af30a1c117da0d792.apk
+    malwoverview.py -n 1 -N 10
+    malwoverview.py -n 2 -N 176.57.215.100
+    malwoverview.py -n 3 -N threesmallhills.com
+    malwoverview.py -n 4 -N 6d1756aa6b45244764409398305c460368d64ff9 -o 0
+    malwoverview.py -n 5 -N http://ksahosting.net/wp-includes/utf8.php
+    malwoverview.py -m 1 | more
+    malwoverview.py -m 2 | more
+    malwoverview.py -m 3 | more 
+    malwoverview.py -m 4 -M apt41 | more
+    malwoverview.py -m 5 | more 
+    malwoverview.py -m 6 -M win.qakbot
+    malwoverview.py -m 7 -M 3d375d0ead2b63168de86ca2649360d9dcff75b3e0ffa2cf1e50816ec92b3b7d 
+    malwoverview.py -m 8 -M win.qakbot
+    malwoverview.py -q 1 -Q potrafamin44as@gmail.com
+    malwoverview.py -q 2 -Q 188.40.75.132
+    malwoverview.py -q 3 -Q aoldaily.com
+    malwoverview.py -q 4 -Q fa6fbd1dd2d58885772bd0b37633d5d
+    malwoverview.py -q 5 -Q plugx
+    malwoverview.py -b 1 -B c9d7b5d06cd8ab1a01bf0c5bf41ef2a388e41b4c66b1728494f86ed255a95d48
+    malwoverview.py -b 2 -B Revil | more
+    malwoverview.py -b 3 -B f34d5f2d4577ed6d9ceec516c1f5a744
+    malwoverview.py -b 4 -B 100 
+    malwoverview.py -b 4 -B time | more
+    malwoverview.py -b 5 -B bda50ff249b947617d9551c717e78131ed32bf77db9dc5b7591d3e1af6cb2f1a
+    malwoverview.py -b 6 -B 10 | more
+    malwoverview.py -b 7 -B 193.150.103.37:21330
+    malwoverview.py -b 8 -B Magecart | more
+    malwoverview.py -b 9 -B "Cobalt Strike"
+    malwoverview.py -b 10 | more
+    malwoverview.py -x 1 -X score:10 | more
+    malwoverview.py -x 1 -X 71382e72d8fb3728dc8941798ab1c180493fa978fd7eadc1ab6d21dae0d603e2
+    malwoverview.py -x 2 -X 220315-qxzrfsadfl
+    malwoverview.py -x 3 -X cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
+    malwoverview.py -x 4 -X http://ztechinternational.com/Img/XSD.exe
+    malwoverview.py -x 5 -X 220315-xmbp7sdbel
+    malwoverview.py -x 6 -X 220315-xmbp7sdbel
+    malwoverview.py -x 7 -X 220315-xmbp7sdbel
+
 
 # HISTORY
+
+Version 5.0.0:
+
+      This version:
+
+            * Includes upgrades of all Virus Total options from API v.2 
+              to API v.3.
+            * Introduces a new option to check hashes within a given
+              file using Virus Total.
+            * Introduces a new option to submit large files (>= 32 MB) to
+              Virus Total.
+            * Changes all Virus Total options.
+            * Inverts Malpedia options ("m" and "M") purposes.
+            * Introduces a new purpose for -D option.
+            * Removes Malshare option to check a binary.
+            * Removes all Valhalla options completely.
+            * Changes all Malshare options.
+            * Removes -g option.
+            * Changes all URLhaus options.
+            * Changes all Polyswarm options.
+            * Removes -S and -z options.
+            * Upgrades, fixes and merges Android options.
+            * Updates Android options to Android 11 version.
+            * Removes -t and T options.
+            * Fixes and changes Hybrid Analysis options.
+            * Changes -d option to Virus Total APIi v.3 with a new content.
+            * Swaps options -q and -Q from Threatcrowd.
+            * Fixes tag option from Triage.
+            * Fixes URL formatting issues from URLhaus.
+            * Removes several support functions.
+            * Fixes several color issues.
+            * Fixes descriptions.
+            * Changes configuration, setup and requirement files.
+            * Removes many option's letters used in previous versions.
 
 Version 4.4.2:
 
