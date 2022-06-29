@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/5.0.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/5.0.3) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
 [<img alt="PayPal" src="https://img.shields.io/badge/Donate-Paypal-brightgreen?style=for-the-badge&logo=appveyor">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M8F458EZH8UZE&source=url)
 
@@ -63,7 +63,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 5.0.2
+# Current Version: 5.0.3
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -105,13 +105,12 @@ This tool aims to :
     malware family. 
 22. Gather threat hunting information from AlienVault using different criteria. 
 23. Gather threat hunting information from Malpedia using different criteria. 
-24. Gather threat hunting information from ThreatCrowd using different criteria. 
-25. Gather threat hunting information from Malware Bazaar using different criteria. 
-26. Gather IOC information from ThreatFox using different criteria. 
-27. Gather threat hunting information from Triage using different criteria. 
-28. Get evaluation to hashes from a given file against Virus Total. 
-29. Submit large files (>= 32 MB) to Virus Total. 
-30. Malwoverview uses Virus Total API v.3, so there isn't longer any option using v.2.
+24. Gather threat hunting information from Malware Bazaar using different criteria. 
+25. Gather IOC information from ThreatFox using different criteria. 
+26. Gather threat hunting information from Triage using different criteria. 
+27. Get evaluation to hashes from a given file against Virus Total. 
+28. Submit large files (>= 32 MB) to Virus Total. 
+29. Malwoverview uses Virus Total API v.3, so there isn't longer any option using v.2.
 
 
 # CONTRIBUTORS:
@@ -122,7 +121,7 @@ This tool aims to :
 
 # INSTALLATION 
 
-This tool has been tested on REMnux, Ubuntu and Kali Linux only. Malwoverview 
+This tool has been tested on REMnux, Ubuntu, Kali Linux and macOS only. Malwoverview 
 can be installed by executing the following command:
 
       * pip3.9 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
@@ -135,19 +134,23 @@ can be installed by executing the following command:
       
       * git clone https://github.com/alexandreborges/malwoverview
 
+If you are using macOS, so you should install libmagic before installing Malwoverview:
+
+      * brew install libmagic
+      * pip3.9 install -U malwoverview
 
 To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm,
 Alien Vault, Malpedia  and Triage into the .malwapi.conf configuration file 
 (the default one at the home directory (/home/[username] or /root) -- if the file doesn't exist,
 so you should create it) or you could create a custom configuration file and indicate it by 
-using the -c option. 
+using the -c option.
 
 Nonetheless, starting on version 4.4.2, it isn't longer necessary to insert all APIs into .malwapi.conf
 before using Malwoverview. Therefore, users can only insert few APIs and use the respective options 
-to these APIs. 
+to these APIs.
 
 * A special note about the Alien Vault: it is necessary to subscribe to pulses on Alien Vault 
-website before using -n 1 option.  
+website before using -n 1 option.
 
 The .malwapi.conf configuration file (from the the home directory -- /home/[username] or /root) 
 has the following format:
@@ -179,19 +182,18 @@ has the following format:
 
 The APIs can be requested on the respective service websites:
 
-1. Virus Total (community and paid API): https://www.virustotal.com/gui/join-us
-2. Hybrid Analysis: https://www.hybrid-analysis.com/signup
-3. Malshare: https://malshare.com/doc.php
-4. URLHaus: https://urlhaus.abuse.ch/api/#account 
-5. Polyswarm: https://docs.polyswarm.io/consumers
-6. Alien Vault: https://otx.alienvault.com/api
-7. Malpedia: It doesn't offer open registration, but you can request an user account 
-   directly through Twitter (DM) or feedback e-email. The Malpedia Twitter 
-   handle is @malpedia.
-8. ThreatCrowd: It isn't necessary an API.
-9. Malware Bazaar: It isn't necessary an API.
-10. ThreatFox: It isn't necessary an API.
-11. Triage: https://tria.ge/signup.
+01. Virus Total (community and paid API): https://www.virustotal.com/gui/join-us
+02. Hybrid Analysis: https://www.hybrid-analysis.com/signup
+03. Malshare: https://malshare.com/doc.php
+04. URLHaus: https://urlhaus.abuse.ch/api/#account 
+05. Polyswarm: https://docs.polyswarm.io/consumers
+06. Alien Vault: https://otx.alienvault.com/api
+07. Malpedia: It doesn't offer open registration, but you can request an user account 
+    directly through Twitter (DM) or feedback e-email. The Malpedia Twitter 
+    handle is @malpedia.
+08. Malware Bazaar: It isn't necessary an API.
+09. ThreatFox: It isn't necessary an API.
+10. Triage: https://tria.ge/signup.
  
 ----------------------------------------------------
 A special note about API requests to the MALPEDIA:
@@ -313,9 +315,12 @@ should be executed:
     malwoverview.py -v 12 -V 9d26e19b8fc5819b634397d48183637bacc9e1c62d8b1856b8116141cb8b4000
     malwoverview.py -v 13 -V /largefiles/4b3b46558cffe1c0b651f09c719af2779af3e4e0e43da060468467d8df445e93
     malwoverview.py -a 1 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
+    malwoverview.py -a 1 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8.exe
     malwoverview.py -a 2 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
     malwoverview.py -a 3 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
     malwoverview.py -a 4 -A malware1.apk
+    malwoverview.py -a 4 -A 82eb6039cdda6598dc23084768e18495d5ebf3bc3137990280bc0d9351a483eb
+    malwoverview.py -a 5 -A 2b03806939d1171f063ba8d14c3b10622edb5732e4f78dc4fe3eac98b56e5d46
     malwoverview.py -a 5 -A 2b03806939d1171f063ba8d14c3b10622edb5732e4f78dc4fe3eac98b56e5d46.elf
     malwoverview.py -a 6 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
     malwoverview.py -a 7 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
@@ -368,11 +373,6 @@ should be executed:
     malwoverview.py -m 6 -M win.qakbot
     malwoverview.py -m 7 -M 3d375d0ead2b63168de86ca2649360d9dcff75b3e0ffa2cf1e50816ec92b3b7d 
     malwoverview.py -m 8 -M win.qakbot
-    malwoverview.py -q 1 -Q potrafamin44as@gmail.com
-    malwoverview.py -q 2 -Q 188.40.75.132
-    malwoverview.py -q 3 -Q aoldaily.com
-    malwoverview.py -q 4 -Q fa6fbd1dd2d58885772bd0b37633d5d
-    malwoverview.py -q 5 -Q plugx
     malwoverview.py -b 1 -B c9d7b5d06cd8ab1a01bf0c5bf41ef2a388e41b4c66b1728494f86ed255a95d48
     malwoverview.py -b 2 -B Revil | more
     malwoverview.py -b 3 -B f34d5f2d4577ed6d9ceec516c1f5a744
@@ -395,6 +395,16 @@ should be executed:
 
 
 # HISTORY
+
+Version 5.0.3:
+
+      This version:
+
+            * Includes the possibility of getting information from 
+              Hybrid-Analysis using a SHA256 hash or the malware file.
+            * Removes all options related to ThreatCrowd.
+            * Fix an issue related to downloading from Malshare.
+            * Includes macOS as operating system supported to run Malwoverview.
 
 Version 5.0.2:
 

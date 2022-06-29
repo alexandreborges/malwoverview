@@ -20,7 +20,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 5.0.2
+# Malwoverview.py: version 5.0.3
 
 import os
 import sys
@@ -62,7 +62,7 @@ from requests import Request, Session, exceptions
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2021, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "5.0.2"
+__version__ = "5.0.3"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -85,7 +85,6 @@ haust = 'https://urlhaus-api.abuse.ch/v1/tag/'
 haussig = 'https://urlhaus-api.abuse.ch/v1/signature/'
 urlalien = 'http://otx.alienvault.com/api/v1'
 malpediaurl = 'https://malpedia.caad.fkie.fraunhofer.de/api'
-threatcrowdurl = 'https://www.threatcrowd.org/searchApi/v2/'
 triageurl = 'https://api.tria.ge/v0/'
 
 F = []
@@ -3091,6 +3090,13 @@ def malsharedown(filehash):
         requestsession3 = requests.Session( )
         finalurl3 = ''.join([urlmalshare, MALSHAREAPI, '&action=getfile&hash=', resource])
         malresponse3 = requestsession3.get(url=finalurl3, allow_redirects=True)
+        if (b'Sample not found by hash' in malresponse3.content):
+            if(bkg == 1):
+                print((mycolors.foreground.lightred + "\nSample not found by the given hash.\n"))
+            else:
+                print((mycolors.foreground.red + "\nSample not found by the given hash.\n"))
+                exit(1)
+
         open(resource, 'wb').write(malresponse3.content)
 
         print("\n")
@@ -3099,7 +3105,7 @@ def malsharedown(filehash):
 
     except (BrokenPipeError, IOError):
         print(mycolors.reset , file=sys.stderr)
-        exit(1)
+        exit(2)
 
     except ValueError as e:
         print(e)
@@ -8414,415 +8420,6 @@ def malpedia_get_yara(urlx, arg1):
         print(mycolors.reset)
 
 
-def threatcrowd_email(urlx, arg1):
-
-    hatext = ''
-    haresponse = ''
-    myargs = arg1
-
-    try:
-        resource = urlx
-        requestsession = requests.Session( )
-        requestsession.headers.update({'Content-Type': 'application/json'})
-        finalurl = '/'.join([resource, 'email', 'report'])
-        haresponse = requestsession.get(url=finalurl, params={"email":myargs})
-        hatext = json.loads(haresponse.text)
-
-        if(hatext['response_code'] == '0'):
-            if (bkg == 1):
-                print(mycolors.foreground.yellow + "\nThe provided e-mail address hasn't been found on ThreatCrowd.\n", mycolors.reset) 
-                exit(0)
-            if (bkg == 0):
-                print(mycolors.foreground.purple + "\nThe provided e-mail address hasn't been found on ThreatCrowd.\n", mycolors.reset) 
-                exit(0)
-
-        if(not '200' in str(haresponse)):
-            if (bkg == 1):
-                print(mycolors.foreground.lightred + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
-                exit(1)
-            if (bkg == 0):
-                print(mycolors.foreground.red + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
-                exit(1)
-
-        if(bkg == 1):
-            print(mycolors.foreground.yellow + "\nEmail:".ljust(12) + mycolors.reset + myargs)
-            if (hatext['domains']):
-                print(mycolors.foreground.lightcyan + "\nDomains:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(12), end='')
-                for i in sorted(hatext['domains']):
-                    print(mycolors.reset + str(i).ljust(12), end='\n'.ljust(12))
-            if (hatext['references']):
-                print(mycolors.foreground.lightcyan + "\nReferences:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(12), end='')
-                for i in hatext['references']:
-                    print(mycolors.reset + str(i).ljust(12), end='\n'.ljust(12))
-
-        if(bkg == 0):
-            print(mycolors.foreground.red + "\nEmail:".ljust(12) + mycolors.reset + myargs)
-            if (hatext['domains']):
-                print(mycolors.foreground.blue + "\nDomains:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(12), end='')
-                for i in sorted(hatext['domains']):
-                    print(mycolors.reset + str(i).ljust(12), end='\n'.ljust(12))
-            if (hatext['references']):
-                print(mycolors.foreground.blue + "\nReferences:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(12), end='')
-                for i in hatext['references']:
-                    print(mycolors.reset + ("\n".ljust(12)).join(textwrap.wrap(str(i),width=110)).ljust(12), end="\n".ljust(12))
-
-    except ValueError as e:
-        print(e)
-        if (bkg == 1):
-            print((mycolors.foreground.lightred + "Error while connecting to ThreatCrowd!\n"))
-        else:
-            print((mycolors.foreground.red + "Error while connecting to ThreatCrowd!\n"))
-        print(mycolors.reset)
-
-
-def threatcrowd_ip(urlx, arg1):
-
-    hatext = ''
-    haresponse = ''
-    myargs = arg1
-
-    try:
-        resource = urlx
-        requestsession = requests.Session( )
-        requestsession.headers.update({'Content-Type': 'application/json'})
-        finalurl = '/'.join([resource, 'ip', 'report'])
-        haresponse = requestsession.get(url=finalurl, params={"ip":myargs})
-        hatext = json.loads(haresponse.text)
-
-        if(hatext['response_code'] == '0'):
-            if (bkg == 1):
-                print(mycolors.foreground.yellow + "\nThe provided IP address hasn't been found on ThreatCrowd.\n", mycolors.reset) 
-                exit(0)
-            if (bkg == 0):
-                print(mycolors.foreground.purple + "\nThe provided IP address hasn't been found on ThreatCrowd.\n", mycolors.reset) 
-                exit(0)
-
-        if(not '200' in str(haresponse)):
-            if (bkg == 1):
-                print(mycolors.foreground.lightred + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
-                exit(1)
-            if (bkg == 0):
-                print(mycolors.foreground.red + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
-                exit(1)
-
-        if(bkg == 1):
-            print(mycolors.foreground.yellow + "\nIP:".ljust(14) + mycolors.reset + myargs + mycolors.foreground.yellow + "  City: " + mycolors.reset + (geocoder.ip(myargs)).city)
-            if (hatext['resolutions']):
-                print(mycolors.foreground.lightcyan + "\nResolutions:".ljust(14) + mycolors.reset, end=' ')
-                for i in sorted(hatext['resolutions'], key=itemgetter('last_resolved')):
-                    print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.pink + "Last Resolved: " + mycolors.reset +  i['last_resolved'], end='  ')
-                    print(mycolors.reset + mycolors.foreground.pink + "Domain: " + mycolors.reset +  i['domain'], end="")
-            if (hatext['hashes']):
-                print(mycolors.foreground.lightcyan + "\n\nHashes:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(14), end='')
-                for i in hatext['hashes']:
-                    print(mycolors.reset + str(i).ljust(14), end='\n'.ljust(14))
-
-        if(bkg == 0):
-            print(mycolors.foreground.red + "\nIP:".ljust(14) + mycolors.reset + myargs + mycolors.foreground.red + "  City: " + mycolors.reset + (geocoder.ip(myargs)).city)
-            if (hatext['resolutions']):
-                print(mycolors.foreground.green + "\nResolutions:".ljust(14) + mycolors.reset, end=' ')
-                for i in sorted(hatext['resolutions'], key=itemgetter('last_resolved')):
-                    print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.purple + "Last Resolved: " + mycolors.reset +  i['last_resolved'], end='  ')
-                    print(mycolors.reset + mycolors.foreground.purple + "Domain: " + mycolors.reset +  i['domain'], end="")
-            if (hatext['hashes']):
-                print(mycolors.foreground.green + "\n\nHashes:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(14), end='')
-                for i in hatext['hashes']:
-                    print(mycolors.reset + str(i).ljust(14), end='\n'.ljust(14))
-
-    except ValueError as e:
-        print(e)
-        if (bkg == 1):
-            print((mycolors.foreground.lightred + "Error while connecting to ThreatCrowd!\n"))
-        else:
-            print((mycolors.foreground.red + "Error while connecting to ThreatCrowd!\n"))
-        print(mycolors.reset)
-
-
-def threatcrowd_domain(urlx, arg1):
-
-    hatext = ''
-    haresponse = ''
-    myargs = arg1
-
-    try:
-        resource = urlx
-        requestsession = requests.Session( )
-        requestsession.headers.update({'Content-Type': 'application/json'})
-        finalurl = '/'.join([resource, 'domain', 'report'])
-        haresponse = requestsession.get(url=finalurl, params={"domain":myargs})
-        hatext = json.loads(haresponse.text)
-
-        if(hatext['response_code'] == '0'):
-            if (bkg == 1):
-                print(mycolors.foreground.yellow + "\nThe provided domain hasn't been found on ThreatCrowd.\n", mycolors.reset) 
-                exit(0)
-            if (bkg == 0):
-                print(mycolors.foreground.purple + "\nThe provided domain hasn't been found on ThreatCrowd.\n", mycolors.reset) 
-                exit(0)
-
-        if(not '200' in str(haresponse)):
-            if (bkg == 1):
-                print(mycolors.foreground.lightred + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
-                exit(1)
-            if (bkg == 0):
-                print(mycolors.foreground.red + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
-                exit(1)
-        
-        if(bkg == 1):
-            print(mycolors.foreground.yellow + "\nDomain:".ljust(14) + mycolors.reset + myargs)
-            if (hatext['resolutions']):
-                print(mycolors.foreground.lightcyan + "\nResolutions:".ljust(14) + mycolors.reset, end=' ')
-                for i in sorted(hatext['resolutions'], key=itemgetter('last_resolved')):
-                    print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.lightcyan + "Last Resolved: " + mycolors.reset +  i['last_resolved'], end='  ')
-                    print(mycolors.reset + mycolors.foreground.lightcyan + "IP Address: " + mycolors.reset +  i['ip_address'], end="")
-
-            if (hatext['hashes']):
-                print(mycolors.foreground.lightcyan + "\n\nHashes:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(14), end='')
-                for i in hatext['hashes']:
-                    print(mycolors.reset + str(i).ljust(14), end='\n'.ljust(14))
-
-            if (hatext['emails']):
-                print(mycolors.foreground.lightcyan + "\n\nEmails:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(14), end='')
-                for i in sorted(hatext['emails']):
-                    print(mycolors.reset + str(i).ljust(14), end='\n'.ljust(14))
-
-            if (hatext['subdomains']):
-                print(mycolors.foreground.lightcyan + "\n\nSubdomains:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(14), end='')
-                for i in sorted(hatext['subdomains']):
-                    print(mycolors.reset + str(i).ljust(14), end='\n'.ljust(14))
-
-            if (hatext['references']):
-                print(mycolors.foreground.lightcyan + "\n\nReferences:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(14), end='')
-                for i in hatext['references']:
-                    print(mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(str(i),width=110)).ljust(14), end="\n".ljust(14))
-
-        if(bkg == 0):
-            print(mycolors.foreground.red + "\nDomain:".ljust(14) + mycolors.reset + myargs)
-            if (hatext['resolutions']):
-                print(mycolors.foreground.cyan + "\nResolutions:".ljust(14) + mycolors.reset, end=' ')
-                for i in sorted(hatext['resolutions'], key=itemgetter('last_resolved')):
-                    print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.green + "Last Resolved: " + mycolors.reset +  i['last_resolved'], end='  ')
-                    print(mycolors.reset + mycolors.foreground.green + "IP Address: " + mycolors.reset +  i['ip_address'], end="")
-
-            if (hatext['hashes']):
-                print(mycolors.foreground.cyan + "\n\nHashes:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(14), end='')
-                for i in hatext['hashes']:
-                    print(mycolors.reset + str(i).ljust(14), end='\n'.ljust(14))
-
-            if (hatext['emails']):
-                print(mycolors.foreground.cyan + "\n\nEmails:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(14), end='')
-                for i in sorted(hatext['emails']):
-                    print(mycolors.reset + str(i).ljust(14), end='\n'.ljust(14))
-
-            if (hatext['subdomains']):
-                print(mycolors.foreground.cyan + "\n\nSubdomains:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(14), end='')
-                for i in sorted(hatext['subdomains']):
-                    print(mycolors.reset + str(i).ljust(14), end='\n'.ljust(14))
-
-            if (hatext['references']):
-                print(mycolors.foreground.cyan + "\n\nReferences:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(14), end='')
-                for i in hatext['references']:
-                    print(mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(str(i),width=110)).ljust(14), end="\n".ljust(14))
-
-    except ValueError as e:
-        print(e)
-        if (bkg == 1):
-            print((mycolors.foreground.lightred + "Error while connecting to ThreatCrowd!\n"))
-        else:
-            print((mycolors.foreground.red + "Error while connecting to ThreatCrowd!\n"))
-        print(mycolors.reset)
-
-
-def threatcrowd_hash(urlx, arg1):
-
-    hatext = ''
-    haresponse = ''
-    myargs = arg1
-
-    try:
-        resource = urlx
-        requestsession = requests.Session( )
-        requestsession.headers.update({'Content-Type': 'application/json'})
-        finalurl = '/'.join([resource, 'file', 'report'])
-        haresponse = requestsession.get(url=finalurl, params={"resource":myargs})
-        hatext = json.loads(haresponse.text)
-
-        if(hatext['response_code'] == '0'):
-            if (bkg == 1):
-                print(mycolors.foreground.yellow + "\nThe provided hash hasn't been found on ThreatCrowd.\n", mycolors.reset) 
-                exit(0)
-            if (bkg == 0):
-                print(mycolors.foreground.purple + "\nThe provided hash hasn't been found on ThreatCrowd.\n", mycolors.reset) 
-                exit(0)
-
-        if(not '200' in str(haresponse)):
-            if (bkg == 1):
-                print(mycolors.foreground.lightred + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
-                exit(1)
-            if (bkg == 0):
-                print(mycolors.foreground.red + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
-                exit(1)
-
-        if(bkg == 1):
-            print(mycolors.foreground.yellow + "\nHash:".ljust(14) + mycolors.reset + myargs)
-
-            if (hatext['md5']):
-                print(mycolors.foreground.lightcyan + "\nMD5:".ljust(14) + mycolors.reset + hatext['md5'], end=' ')
-
-            if (hatext['sha1']):
-                print(mycolors.foreground.lightcyan + "\nSHA1:".ljust(14) + mycolors.reset + hatext['sha1'], end=' ')
-                print(mycolors.foreground.lightcyan + "\nScans:".ljust(14) + mycolors.reset)
-
-            if (hatext['scans']):
-                print(mycolors.foreground.lightcyan + "\nAntivirus:".ljust(14) + mycolors.reset, end=' ')
-                for i in sorted(hatext['scans']):
-                    print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.lightcyan + mycolors.reset +  i, end='  ')
-
-            if (hatext['ips']):
-                print(mycolors.foreground.lightcyan + "\nIPs:".ljust(14) + mycolors.reset, end=' ')
-                for i in sorted(hatext['ips']):
-                    print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.lightcyan + mycolors.reset +  i, end='  ')
-
-            if (hatext['domains']):
-                print(mycolors.foreground.lightcyan + "\n\nDomains:".ljust(14) + mycolors.reset, end=' ')
-                for i in sorted(hatext['domains']):
-                    print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.lightcyan + mycolors.reset +  i, end='  ')
-
-            if (hatext['references']):
-                print(mycolors.foreground.lightcyan + "\n\nReferences:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(14), end='')
-                for i in hatext['references']:
-                    print(mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(str(i),width=110)).ljust(14), end="\n".ljust(14))
-
-        if(bkg == 0):
-            print(mycolors.foreground.red + "\nHash:".ljust(14) + mycolors.reset + myargs)
-
-            if (hatext['md5']):
-                print(mycolors.foreground.green + "\nMD5:".ljust(14) + mycolors.reset + hatext['md5'], end=' ')
-
-            if (hatext['sha1']):
-                print(mycolors.foreground.green + "\nSHA1:".ljust(14) + mycolors.reset + hatext['sha1'], end=' ')
-                print(mycolors.foreground.green + "\nScans:".ljust(14) + mycolors.reset)
-
-            if (hatext['scans']):
-                print(mycolors.foreground.green + "\nAntivirus:".ljust(14) + mycolors.reset, end=' ')
-                for i in sorted(hatext['scans']):
-                    print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.cyan + mycolors.reset +  i, end='  ')
-
-            if (hatext['ips']):
-                print(mycolors.foreground.green + "\nIPs:".ljust(14) + mycolors.reset, end=' ')
-                for i in sorted(hatext['ips']):
-                    print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.cyan + mycolors.reset +  i, end='  ')
-
-            if (hatext['domains']):
-                print(mycolors.foreground.green + "\n\nDomains:".ljust(14) + mycolors.reset, end=' ')
-                for i in sorted(hatext['domains']):
-                    print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.cyan + mycolors.reset +  i, end='  ')
-
-            if (hatext['references']):
-                print(mycolors.foreground.green + "\n\nReferences:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(14), end='')
-                for i in hatext['references']:
-                    print(mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(str(i),width=110)).ljust(14), end="\n".ljust(14))
-
-        print("\n")
-
-    except ValueError as e:
-        print(e)
-        if (bkg == 1):
-            print((mycolors.foreground.lightred + "Error while connecting to ThreatCrowd!\n"))
-        else:
-            print((mycolors.foreground.red + "Error while connecting to ThreatCrowd!\n"))
-        print(mycolors.reset)
-
-
-def threatcrowd_antivirus(urlx, arg1):
-
-    hatext = ''
-    haresponse = ''
-    myargs = arg1
-
-    try:
-        resource = urlx
-        requestsession = requests.Session( )
-        requestsession.headers.update({'Content-Type': 'application/json'})
-        finalurl = '/'.join([resource, 'antivirus', 'report'])
-        haresponse = requestsession.get(url=finalurl, params={"antivirus":myargs})
-        hatext = json.loads(haresponse.text)
-
-        if(hatext['response_code'] == '0'):
-            if (bkg == 1):
-                print(mycolors.foreground.yellow + "\nThis name hasn't been found on ThreatCrowd.\n", mycolors.reset) 
-                exit(0)
-            if (bkg == 0):
-                print(mycolors.foreground.purple + "\nThis name hasn't been found on ThreatCrowd.\n", mycolors.reset) 
-                exit(0)
-
-        if(not '200' in str(haresponse)):
-            if (bkg == 1):
-                print(mycolors.foreground.lightred + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
-                exit(1)
-            if (bkg == 0):
-                print(mycolors.foreground.red + "\nThe search key couldn't be found on ThreatCrowd.\n", mycolors.reset) 
-                exit(1)
-
-        if(bkg == 1):
-            print(mycolors.foreground.yellow + "\nName:".ljust(14) + mycolors.reset + myargs)
-
-            if (hatext['hashes']):
-                print(mycolors.foreground.lightcyan + "\nHashes:".ljust(14) + mycolors.reset, end='\n'.ljust(14))
-                for k,i in enumerate(sorted(hatext['hashes']),-1):
-                    if k % 3 == 2:
-                        print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.lightcyan + f"{k+2:03}: " + mycolors.reset + i, end='  ')
-                    else:
-                        print(mycolors.reset + mycolors.foreground.lightcyan + f"{k+2:03}: " + mycolors.reset + i, end='  ')
-
-            if (hatext['references']):
-                print(mycolors.foreground.lightcyan + "\n\nReferences:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(14), end='')
-                for i in hatext['references']:
-                    print(mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(str(i),width=110)).ljust(14), end="\n".ljust(14))
-
-        if(bkg == 0):
-            print(mycolors.foreground.red + "\nName:".ljust(14) + mycolors.reset + myargs)
-
-            if (hatext['hashes']):
-                print(mycolors.foreground.green + "\nHashes:".ljust(14) + mycolors.reset, end='\n'.ljust(14))
-                for k,i in enumerate(sorted(hatext['hashes']),-1):
-                    if k % 3 == 2:
-                        print(mycolors.reset + "\n".ljust(14) + mycolors.foreground.blue + f"{k+2:03}: " + mycolors.reset + i, end='  ')
-                    else:
-                        print(mycolors.reset + mycolors.foreground.blue + f"{k+2:03}: " + mycolors.reset + i, end='  ')
-
-            if (hatext['references']):
-                print(mycolors.foreground.green + "\n\nReferences:".ljust(13) + mycolors.reset, end=' ')
-                print(mycolors.reset + "\n".ljust(14), end='')
-                for i in hatext['references']:
-                    print(mycolors.reset + ("\n".ljust(14)).join(textwrap.wrap(str(i),width=110)).ljust(14), end="\n".ljust(14))
-    
-    except ValueError as e:
-        print(e)
-        if (bkg == 1):
-            print((mycolors.foreground.lightred + "Error while connecting to ThreatCrowd!\n"))
-        else:
-            print((mycolors.foreground.red + "Error while connecting to ThreatCrowd!\n"))
-        print(mycolors.reset)
-
-
 def quickhashowAndroid(filehash):
 
     hatext = ''
@@ -9330,8 +8927,6 @@ if __name__ == "__main__":
     malpediax = 0
     malpediaarg = ''
     malpediaargx = ''
-    threadcrowd = 0
-    threatcrowdarg = 0
     bazaar = 0
     bazaararg = ''
     triage = 0
@@ -9340,13 +8935,13 @@ if __name__ == "__main__":
     ipaddrvtx = ''
     ffpname = ''
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 5.0.2", usage= "python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-6> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -q <1-5> -Q <argument> -b <1-10> -B <arg> -x <1-7> -X <arg>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 5.0.3", usage= "python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-6> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s.')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples to be checked against VIRUS TOTAL. Use the option -D to decide whether you are being using a public VT API or a Premium VT API.')
     parser.add_argument('-o', '--background', dest='backg', type=int,default = 1, metavar = "BACKGROUND", help='Adapts the output colors to a light background color terminal. The default is dark background color terminal.')
     parser.add_argument('-v', '--virustotal_option', dest='virustotaloption', type=int,default = 0, metavar = "VIRUSTOTAL", help='-v 1: given a file using -V option, it queries the VIRUS TOTAL database (API v.3) to get the report for the given file through -V option.; -v 2: it shows an antivirus report for a given file using -V option (API v.3); -v 3: equal to -v2, but the binary\'s IAT and EAT are also shown (API v.3); -v 4: it extracts the overlay; -v 5: submits an URL to VT scanning; -v 6: submits an IP address to Virus Total; -v 7: this options gets a report on the provided domain from Virus Total; -v 8: verifies a given hash against Virus Total; -v 9: submits a sample to VT (up to 32 MB). Use forward slash to specify the target file on Windows systems. Demands passing sample file with -V option; -v 10: verifies hashes from a provided file through option -V. This option uses public VT API v.3; -v 11: verifies hashes from a provided file through option -V. This option uses Premium API v.3; -v 12: it shows behaviour information of a sample given a hash through option -V. This option uses VT API v.3; -v 13: it submits LARGE files (above 32 MB) to VT using API v.3;')
     parser.add_argument('-V', '--virustotal_arg', dest='virustotalarg', type=str, metavar = "VIRUSTOTAL_ARG", help='Provides arguments for -v option.')
-    parser.add_argument('-a', '--hybrid_option', dest='haoption', type=int,default = 0, metavar = "HYBRID_ANALYSIS", help='This parameter fetches reports from HYBRID ANALYSIS, download samples and submits samples to be analyzed. The possible values are: 1: gets a report for a sample from a Windows 7 32-bit environment; 2: gets a report for a sample from a Windows 7 32-bit environment (HWP Support); 3: gets a report for from a Windows 64-bit environment; 4: gets a report for from an Android environment; 5: gets a report for a sample from a Linux 64-bit environment; 6: submits a sample to Windows 7 32-bit environment; 7. submits a sample to Windows 7 32-bit environment with HWP support environment; 8. submits a sample to Windows 7 64-bit environment ; 9. submits a sample to an Android environment ; 10. submits a sample to a Linux 64-bit environment; 11. downloads a sample from a Windows 7 32-bit environment; 12. downloads a sample from a Windows 7 32-bit HWP environment; 13. downloads a sample from a Windows 7 64-bit environment; 14. downloads a sample from an Android environment; 15. downloads a sample from a Linux 64-bit environment.')
+    parser.add_argument('-a', '--hybrid_option', dest='haoption', type=int,default = 0, metavar = "HYBRID_ANALYSIS", help='This parameter fetches reports from HYBRID ANALYSIS, download samples and submits samples to be analyzed. The possible values are: 1: gets a report for a given hash or sample from a Windows 7 32-bit environment; 2: gets a report for a given hash or sample from a Windows 7 32-bit environment (HWP Support); 3: gets a report for given hash or sample from a Windows 64-bit environment; 4: gets a report for a given hash or sample from an Android environment; 5: gets a report for a given hash or sample from a Linux 64-bit environment; 6: submits a sample to Windows 7 32-bit environment; 7. submits a sample to Windows 7 32-bit environment with HWP support environment; 8. submits a sample to Windows 7 64-bit environment ; 9. submits a sample to an Android environment ; 10. submits a sample to a Linux 64-bit environment; 11. downloads a sample from a Windows 7 32-bit environment; 12. downloads a sample from a Windows 7 32-bit HWP environment; 13. downloads a sample from a Windows 7 64-bit environment; 14. downloads a sample from an Android environment; 15. downloads a sample from a Linux 64-bit environment.')
     parser.add_argument('-A', '--ha_arg', dest='haarg', type=str, metavar = "SUBMIT_HA", help='Provides an argument for -a option from HYBRID ANALYSIS.')
     parser.add_argument('-D', '--vtpubpremium', dest='vtpubpremium', type=int,default = 0, metavar = "VT_PUBLIC_PREMIUM", help='This option must be used with -d option. Possible values: <0> it uses the Premium VT API v3 (default); <1> it uses the Public VT API v3.')
     parser.add_argument('-l', '--malsharelist', dest='malsharelist', type=int,default = 0, metavar = "MALSHARE_HASHES", help='This option performs download a sample and shows hashes of a specific type from the last 24 hours from MALSHARE repository. Possible values are: 1: Download a sample; 2: PE32 (default) ; 3: ELF ; 4: Java; 5: PDF ; 6: Composite(OLE).')
@@ -9361,8 +8956,6 @@ if __name__ == "__main__":
     parser.add_argument('-N', '--alienvaultargs', dest='alienvaultargs', type=str, metavar = "ALIENVAULT_ARGS", help='Provides argument to ALIENVAULT -n option.')
     parser.add_argument('-m', '--malpedia', dest='malpedia', type=int, default = 0, metavar = "MALPEDIA", help='This option is related to MALPEDIA and presents different meanings depending on the chosen value. Thus, 1: List meta information for all families ; 2: List all actors ID ; 3: List all available payloads organized by family from Malpedia; 4: Get meta information from an specific actor, so it is necessary to use the -M option. Additionally, try to confirm the correct actor ID by executing malwoverview with option -m 3; 5: List all families IDs; 6: Get meta information from an specific family, so it is necessary to use the -M option. Additionally, try to confirm the correct family ID by executing malwoverview with option -m 5; 7: Get a malware sample from malpedia (zip format -- password: infected). It is necessary to specify the requested hash by using -M option; 8: Get a zip file containing Yara rules for a specific family (get the possible families using -m 5), which must be specified by using -M option.')
     parser.add_argument('-M', '--malpediarg', dest='malpediaarg', type=str, metavar = "MALPEDIAARG", help='This option provides an argument to the -m option, which is related to MALPEDIA.')
-    parser.add_argument('-q', '--threatcrowd', dest='threatcrowd', type=int, default = 0, metavar = "THREATCROWD", help='Checks multiple information from THREATCROWD. The possible values are: 1: Get information about the provided e-mail ; 2: Get information about an IP address; 3: Get information about a domain; 4: Get information about a provided MD5 hash; 5: Get information about a specific malware family.')
-    parser.add_argument('-Q', '--threatcrowdarg', dest='threatcrowdarg', type=str, metavar = "THREATCROWDARG", help='This option provides an argument to the -Q option, which is related to THREATCROWD.')
     parser.add_argument('-b', '--bazaar', dest='bazaar', type=int, default = 0, metavar = "BAZAAR", help='Checks multiple information from MALWARE BAZAAR and THREATFOX. The possible values are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar) Get information and a list of malware samples associated and according to a specific tag; 3: (Bazaar) Get a list of malware samples according to a given imphash; 4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample from Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped using the following password: infected; 6: (ThreatFox) Get current IOC dataset from last x days given by option -B; 7: (ThreatFox) Search for the specified IOC on ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified tag given by option -B; 9: (ThreatFox) Search IOCs according to the specified malware family provided by option -B; 10. (ThreatFox) List all available malware families.')
     parser.add_argument('-B', '--bazaararg', dest='bazaararg', type=str, metavar = "BAZAAR_ARG", help='Provides argument to -b MALWARE BAZAAR and THREAT FOX option. If you specified "-b 1" then the -B\'s argument must be a hash; If you specified "-b 2" then -B\'s argument must be a malware tag; If you specified "-b 3" then the argument must be a imphash; If you specified "-b 4", so the argument must be "100 or time", where "100" lists last "100 samples" and "time" lists last samples added to Malware Bazaar in the last 60 minutes; If you specified "-b 5" then the -B\'s argument must be a SHA256 hash; If you specified "-b 6", so the -B\'s value is the number of DAYS to filter IOCs. The default (and max) is 90 (days); If you used "-b 7" so the -B\'s argument is the IOC you want to search for; If you used "-b 8", so the -B\'s argument is the TAG you want search for; If you used "-b 9", so the -B argument is the malware family you want to search for;')
     parser.add_argument('-x', '--triage', dest='triage', type=int,default = 0, metavar = "TRIAGE", help='Provides information from TRIAGE according to the specified value: <1> this option gets sample\'s general information by providing an argument with -X option in the following possible formats: sha256:<value>, sha1:<value>, md5:<value>, family:<value>, score:<value>, tag:<value>, url:<value>, wallet:<value>, ip:<value>; <2> Get a sumary report for a given Triage ID (got from option -x 1) ; <3> Submit a sample for analysis ; <4> Submit a sample through a URL for analysis ; <5> Download sample specified by the Triage ID; <6> Download pcapng file from sample associated to given Triage ID; <7> Get a dynamic report for the given Triage ID (got from option -x 1);')
@@ -9418,8 +9011,6 @@ if __name__ == "__main__":
     alienargsx = args.alienvaultargs
     malpediax = args.malpedia
     malpediaargx = args.malpediaarg
-    threatcrowdx = args.threatcrowd
-    threatcrowdargx = args.threatcrowdarg
     bazaarx = args.bazaar
     bazaarargx = args.bazaararg
     triagex = args.triage
@@ -9562,17 +9153,12 @@ if __name__ == "__main__":
         print(mycolors.reset)
         exit(0)
 
-    if (args.threatcrowd) not in optval5:
-        parser.print_help()
-        print(mycolors.reset)
-        exit(0)
-
     if (args.triage) not in optval8:
         parser.print_help()
         print(mycolors.reset)
         exit(0)
 
-    if ((not virustotalargx) and (virustotaloptionx == 0) and (not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not haargx) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (args.hausoption == 0) and (polyoptionx == 0) and (not polyargx) and (androidoptionx == 0) and (not androidargx) and (alienx == 0) and (not alienargsx) and (not malpediaargx) and (malpediax == 0) and (threatcrowdx == 0) and (not threatcrowdargx) and (bazaarx == 0) and (not bazaarargx) and (triagex == 0) and (not triageargx)):
+    if ((not virustotalargx) and (virustotaloptionx == 0) and (not args.direct) and (fprovided == 0) and (not urltemp) and (not hashtemp) and (not filetemp) and (not haargx) and (not domaintemp) and (mallist == 0) and (not args.malsharehash) and (args.hausoption == 0) and (polyoptionx == 0) and (not polyargx) and (androidoptionx == 0) and (not androidargx) and (alienx == 0) and (not alienargsx) and (not malpediaargx) and (malpediax == 0) and (bazaarx == 0) and (not bazaarargx) and (triagex == 0) and (not triageargx)):
 
         parser.print_help()
         print(mycolors.reset)
@@ -9635,14 +9221,13 @@ if __name__ == "__main__":
                                                                     if (not args.bazaararg):
                                                                         if (not malpediaargx):
                                                                             if (malpediax == 0):
-                                                                                if(not args.threatcrowd):
-                                                                                    if (triagex == 0):
-                                                                                        if (not args.triagearg):
-                                                                                            if (args.polyoption == 0):
-                                                                                                if (virustotaloptionx == 0):
-                                                                                                    parser.print_help()
-                                                                                                    print(mycolors.reset)
-                                                                                                    exit(0)
+                                                                                if (triagex == 0):
+                                                                                    if (not args.triagearg):
+                                                                                        if (args.polyoption == 0):
+                                                                                            if (virustotaloptionx == 0):
+                                                                                                parser.print_help()
+                                                                                                print(mycolors.reset)
+                                                                                                exit(0)
 
     if (hashtemp):
         if ((len(hashtemp)==32) or (len(hashtemp)==40) or (len(hashtemp)==64)):
@@ -9693,18 +9278,10 @@ if __name__ == "__main__":
             print(mycolors.reset)
             exit(1)
    
-    if (haoptionx <= 10):
+    if (0 < haoptionx <= 10):
         if (haargx):
             if (os.path.isfile(haargx)) == True:
                 filecheckha = 1
-            elif (bkg == 0):
-                print(mycolors.foreground.red + "\nYou didn't provided a valid file.\n")
-                print(mycolors.reset)
-                exit(1)
-            else:
-                print(mycolors.foreground.yellow + "\nYou didn't provided a valid file.\n")
-                print(mycolors.reset)
-                exit(1)
 
     if (polyoptionx == 1 or polyoptionx == 3):
         if ((len(polyargx)==32) or (len(polyargx)==40) or (len(polyargx)==64)):
@@ -9927,36 +9504,6 @@ if __name__ == "__main__":
         print(mycolors.reset)
         exit(0)
 
-    if (threatcrowdx == 1):
-        argx = threatcrowdargx
-        threatcrowd_email(threatcrowdurl,argx)
-        print(mycolors.reset)
-        exit(0)
-
-    if (threatcrowdx == 2):
-        argx = threatcrowdargx
-        threatcrowd_ip(threatcrowdurl,argx)
-        print(mycolors.reset)
-        exit(0)
-
-    if (threatcrowdx == 3):
-        argx = threatcrowdargx
-        threatcrowd_domain(threatcrowdurl,argx)
-        print(mycolors.reset)
-        exit(0)
-
-    if (threatcrowdx == 4):
-        argx = threatcrowdargx
-        threatcrowd_hash(threatcrowdurl,argx)
-        print(mycolors.reset)
-        exit(0)
-
-    if (threatcrowdx == 5):
-        argx = threatcrowdargx
-        threatcrowd_antivirus(threatcrowdurl,argx)
-        print(mycolors.reset)
-        exit(0)
-
     if (polyoptionx == 2):
         if (filecheckpoly == 1):
             polyfile(polyargx)
@@ -10039,61 +9586,106 @@ if __name__ == "__main__":
 
     if (haoptionx == 1):
         xx = 0
-        hashow(calchash(haargx))
+        if(filecheckha == 1):
+            hashow(calchash(haargx))
+        else:
+            hashow(haargx)
         print(mycolors.reset)
         exit(0)
     
     if (haoptionx == 2):
         xx = 1
-        hashow(calchash(haargx))
+        if(filecheckha == 1):
+            hashow(calchash(haargx))
+        else:
+            hashow(haargx)
         print(mycolors.reset)
         exit(0)
 
     if (haoptionx == 3):
         xx = 2
-        hashow(calchash(haargx))
+        if(filecheckha == 1):
+            hashow(calchash(haargx))
+        else:
+            hashow(haargx)
         print(mycolors.reset)
         exit(0)
 
     if (haoptionx == 4):
         xx = 3
-        hashow(calchash(haargx))
+        if(filecheckha == 1):
+            hashow(calchash(haargx))
+        else:
+            hashow(haargx)
         print(mycolors.reset)
         exit(0)
 
     if (haoptionx == 5):
         xx = 4
-        hashow(calchash(haargx))
+        if(filecheckha == 1):
+            hashow(calchash(haargx))
+        else:
+            hashow(haargx)
         print(mycolors.reset)
         exit(0)
 
     if (haoptionx == 6):
-        xx = 0
-        hafilecheck(haargx)
+        if (filecheckha == 1):
+            xx = 0
+            hafilecheck(haargx)
+        else:
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nYou didn't provide a valid file!\n")
+            if (bkg == 0):
+                print(mycolors.foreground.red + "\nYou didn't provide a valid file!\n")
         print(mycolors.reset)
         exit(0)
     
     if (haoptionx == 7):
-        xx = 1
-        hafilecheck(haargx)
+        if (filecheckha == 1):
+            xx = 1
+            hafilecheck(haargx)
+        else:
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nYou didn't provide a valid file!\n")
+            if (bkg == 0):
+                print(mycolors.foreground.red + "\nYou didn't provide a valid file!\n")
         print(mycolors.reset)
         exit(0)
     
     if (haoptionx == 8):
-        xx = 2
-        hafilecheck(haargx)
+        if (filecheckha == 1):
+            xx = 2
+            hafilecheck(haargx)
+        else:
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nYou didn't provide a valid file!\n")
+            if (bkg == 0):
+                print(mycolors.foreground.red + "\nYou didn't provide a valid file!\n")
         print(mycolors.reset)
         exit(0)
     
     if (haoptionx == 9):
-        xx = 3
-        hafilecheck(haargx)
+        if (filecheckha == 1):
+            xx = 3
+            hafilecheck(haargx)
+        else:
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nYou didn't provide a valid file!\n")
+            if (bkg == 0):
+                print(mycolors.foreground.red + "\nYou didn't provide a valid file!\n")
         print(mycolors.reset)
         exit(0)
     
     if (haoptionx == 10):
-        xx = 4
-        hafilecheck(haargx)
+        if (filecheckha == 1):
+            xx = 4
+            hafilecheck(haargx)
+        else:
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nYou didn't provide a valid file!\n")
+            if (bkg == 0):
+                print(mycolors.foreground.red + "\nYou didn't provide a valid file!\n")
         print(mycolors.reset)
         exit(0)
 
