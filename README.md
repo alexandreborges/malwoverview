@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/5.0.3) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/5.1) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
 [<img alt="PayPal" src="https://img.shields.io/badge/Donate-Paypal-brightgreen?style=for-the-badge&logo=appveyor">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M8F458EZH8UZE&source=url)
 
@@ -47,6 +47,11 @@
 ![Alt text](pictures/picture_41.jpg?raw=true "Title")
 ![Alt text](pictures/picture_42.jpg?raw=true "Title")
 ![Alt text](pictures/picture_43.jpg?raw=true "Title")
+![Alt text](pictures/picture_44.jpg?raw=true "Title")
+![Alt text](pictures/picture_45.jpg?raw=true "Title")
+![Alt text](pictures/picture_46.jpg?raw=true "Title")
+![Alt text](pictures/picture_47.jpg?raw=true "Title")
+![Alt text](pictures/picture_48.jpg?raw=true "Title")
 
       Copyright (C)  2018-2022 Alexandre Borges <alexandreborges at blackstormsecurity dot com>
 
@@ -63,7 +68,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 5.0.3
+# Current Version: 5.1
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -75,7 +80,7 @@
 Malwoverview.py is a first response tool for threat hunting, which performs an initial and quick 
 triage of malware samples, URLs, IP addresses, domains, malware families, IOCs and hashes. Additionally,
 Malwoverview is able to get dynamic and static behavior reports, submit and download samples
-from several endpoints.
+from several endpoints. In few words, it works as a client to main existing sandboxes. 
 
 This tool aims to : 
 
@@ -111,6 +116,7 @@ This tool aims to :
 27. Get evaluation to hashes from a given file against Virus Total. 
 28. Submit large files (>= 32 MB) to Virus Total. 
 29. Malwoverview uses Virus Total API v.3, so there isn't longer any option using v.2.
+30. Retrieve different information from InQuest Labs and download samples from there. 
 
 
 # CONTRIBUTORS:
@@ -179,6 +185,9 @@ has the following format:
       [TRIAGE]
       TRIAGEAPI =
 
+      [INQUEST]
+      INQUESTAPI =
+
 
 The APIs can be requested on the respective service websites:
 
@@ -193,7 +202,8 @@ The APIs can be requested on the respective service websites:
     handle is @malpedia.
 08. Malware Bazaar: It isn't necessary an API.
 09. ThreatFox: It isn't necessary an API.
-10. Triage: https://tria.ge/signup.
+10. InQuest: https://labs.inquest.net/.
+11. Triage: https://tria.ge/signup.
  
 ----------------------------------------------------
 A special note about API requests to the MALPEDIA:
@@ -224,17 +234,14 @@ Note about background color of the terminal:
 ----------------------------------------------------
 
 Malwoverview has been written to produce outputs to 
-dark background terminal. However, there's the -o 
+dark background terminal. However, there's the -o 0 
 option, which changes and adapts output's colors to 
 light background.
 
 -----------------------------------------------------
 
-On Linux systems, create the .malwapi.conf file within /home/\[username\] directory 
-(Linux home user directory -- /home/[username] or /root).
-
-Just in case you install it on Windows systems, you should create the .malwapi.conf 
-file in the C:\Users\\[username\] directory (Windows home user directory). 
+On Linux and MacOS systems, create the .malwapi.conf file within
+/home/\[username\] directory (Linux home user directory -- /home/[username] or /root).
 
 To check the installation, execute:
 
@@ -379,7 +386,7 @@ should be executed:
     malwoverview.py -b 4 -B 100 
     malwoverview.py -b 4 -B time | more
     malwoverview.py -b 5 -B bda50ff249b947617d9551c717e78131ed32bf77db9dc5b7591d3e1af6cb2f1a
-    malwoverview.py -b 6 -B 10 | more
+    malwoverview.py -b 6 -B 3 | more
     malwoverview.py -b 7 -B 193.150.103.37:21330
     malwoverview.py -b 8 -B Magecart | more
     malwoverview.py -b 9 -B "Cobalt Strike"
@@ -392,9 +399,29 @@ should be executed:
     malwoverview.py -x 5 -X 220315-xmbp7sdbel
     malwoverview.py -x 6 -X 220315-xmbp7sdbel
     malwoverview.py -x 7 -X 220315-xmbp7sdbel
+    malwoverview.py -i 1 -I 5119c804448dd877e1a32d5157dc2e5ff9344cb55e053b20117c9b3b4c974389 
+    malwoverview.py -i 2 -I 5119c804448dd877e1a32d5157dc2e5ff9344cb55e053b20117c9b3b4c974389
+    malwoverview.py -i 3 -I 0a1b0c7a21c8929b7742db195338af5c
+    malwoverview.py -i 4 -I list
+    malwoverview.py -i 5 -I rebrand.ly | more
+    malwoverview.py -i 6 -I 10.247.111.124 
+    malwoverview.py -i 7 -I diseno@distracom.com 
+    malwoverview.py -i 8 -I 20firmas-02.jpg
+    malwoverview.py -i 9 -I http://diagnostic.htb 
+    malwoverview.py -i 10 -I http://jaao.net 
+    malwoverview.py -i 11 -I list
+    malwoverview.py -i 12 -I rebrand.ly
+    malwoverview.py -i 13 -I list | more
 
 
 # HISTORY
+
+Version 5.1:
+
+      This version:
+
+            * Introduces thirteen options related to InQuest Labs.
+            * Fix an issue related to -b 6 option from ThreatFox.
 
 Version 5.0.3:
 
