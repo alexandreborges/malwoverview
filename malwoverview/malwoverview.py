@@ -20,7 +20,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 5.1
+# Malwoverview.py: version 5.1.1
 
 import os
 import sys
@@ -62,7 +62,7 @@ from requests import Request, Session, exceptions
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2021, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "5.1"
+__version__ = "5.1.1"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -1861,7 +1861,7 @@ def vtbatchcheck(filename, url, apitype):
 
     try:
 
-        print("\nSample".center(10) + "Hash".center(72) + "Description".center(26) + "Threat Label".center(26) + "AV Detection".center(24))
+        print("\nSample".center(10) + "Hash".center(68) + "Description".center(30) + "Threat Label".center(26) + "AV Detection".center(24))
         print('-' * 152, end="\n\n")
 
         fh = open(filename,'r')
@@ -1871,13 +1871,23 @@ def vtbatchcheck(filename, url, apitype):
         for hashitem in filelines:
             hashnumber = hashnumber + 1
             (type_description, threat_label, malicious) = vtbatchwork(hashitem,url)
-            if (bkg == 1):
-                print(mycolors.foreground.lightcyan + "hash_" + str(hashnumber) + "\t   " +  mycolors.reset + (hashitem.strip()).ljust(68) + mycolors.foreground.yellow + (type_description).ljust(30) + mycolors.foreground.lightcyan + (threat_label).ljust(34) +  mycolors.foreground.lightred + str(malicious))
-            if (bkg == 0):
-                print(mycolors.foreground.purple + "hash_" + str(hashnumber) + "\t   " +  mycolors.reset + (hashitem.strip()).ljust(72) + mycolors.foreground.cyan + (type_description).ljust(30) + mycolors.foreground.blue + (threat_label).ljust(34) +  mycolors.foreground.red + str(malicious))
-            if (apitype_var == 1):
-                if ((hashnumber % 4) == 0):
-                    time.sleep(61)
+            if (type_description == "NOT FOUND"):
+                if (bkg == 1):
+                    print(mycolors.foreground.lightcyan + "hash_" + str(hashnumber) + "\t   " +  mycolors.reset + (hashitem.strip()).ljust(79) + mycolors.foreground.yellow + (type_description).ljust(28) + mycolors.foreground.lightcyan + (threat_label).ljust(26) +  mycolors.foreground.lightred + str(malicious))
+                if (bkg == 0):
+                    print(mycolors.foreground.purple + "hash_" + str(hashnumber) + "\t   " +  mycolors.reset + (hashitem.strip()).ljust(79) + mycolors.foreground.cyan + (type_description).ljust(28) + mycolors.foreground.blue + (threat_label).ljust(26) +  mycolors.foreground.red + str(malicious))
+                if (apitype_var == 1):
+                    if ((hashnumber % 4) == 0):
+                        time.sleep(61)
+            else:
+                if (bkg == 1):
+                    print(mycolors.foreground.lightcyan + "hash_" + str(hashnumber) + "\t   " +  mycolors.reset + (hashitem.strip()).ljust(68) + mycolors.foreground.yellow + (type_description).ljust(30) + mycolors.foreground.lightcyan + (threat_label).ljust(34) +  mycolors.foreground.lightred + str(malicious))
+                if (bkg == 0):
+                    print(mycolors.foreground.purple + "hash_" + str(hashnumber) + "\t   " +  mycolors.reset + (hashitem.strip()).ljust(68) + mycolors.foreground.cyan + (type_description).ljust(30) + mycolors.foreground.blue + (threat_label).ljust(34) +  mycolors.foreground.red + str(malicious))
+                if (apitype_var == 1):
+                    if ((hashnumber % 4) == 0):
+                        time.sleep(61)
+
         fh.close()
 
     except OSError:
@@ -10320,7 +10330,7 @@ if __name__ == "__main__":
     ipaddrvtx = ''
     ffpname = ''
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 5.1", usage= "python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-6> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> -i <1-13> -I <INQUEST argument>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 5.1.1", usage= "python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-6> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> -i <1-13> -I <INQUEST argument>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s.')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples to be checked against VIRUS TOTAL. Use the option -D to decide whether you are being using a public VT API or a Premium VT API.')
     parser.add_argument('-o', '--background', dest='backg', type=int,default = 1, metavar = "BACKGROUND", help='Adapts the output colors to a light background color terminal. The default is dark background color terminal.')
