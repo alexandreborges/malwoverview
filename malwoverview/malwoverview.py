@@ -221,7 +221,11 @@ if __name__ == "__main__":
                 1: (polyswarm.polyhashsearch, [polyargx, 0]),
                 2: (polyswarm.polyhashsearch, [polyargx, 1]),
                 3: (polyswarm.polyfile, [polyargx]),
-                4: (polyswarm.polymetasearch, [polyargx, polyoptionx])
+                4: (polyswarm.polymetasearch, [polyargx, polyoptionx]),
+                5: (polyswarm.polymetasearch, [polyargx, polyoptionx]),
+                6: (polyswarm.polymetasearch, [polyargx, polyoptionx]),
+                7: (polyswarm.polymetasearch, [polyargx, polyoptionx]),
+                8: (polyswarm.polymetasearch, [polyargx, polyoptionx])
             },
         },
         {
