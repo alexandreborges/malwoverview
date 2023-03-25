@@ -397,8 +397,11 @@ if __name__ == "__main__":
         elif len(action_obj) == 2:
             action, action_args = action_obj
             result = action(*action_args)
-        else:
+        elif len(action_obj) == 1:
+            action = action_obj[0]
             result = action()
+        else:
+            continue
 
         printr()
         status = 0
