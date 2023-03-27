@@ -52,7 +52,7 @@ import modules.configvars as cv
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2021, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "5.1.1"
+__version__ = "6.0.0"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 if __name__ == "__main__":
