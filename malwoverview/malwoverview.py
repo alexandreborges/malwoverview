@@ -21,12 +21,13 @@
 # Christian Clauss (https://github.com/cclauss)
 # Artur Marzano (https://github.com/Macmod)
 
-# Malwoverview.py: version 5.1.1 (refactored)
+# Malwoverview.py: version 6.0.0
 
 import os
 import argparse
 import configparser
 import platform
+import signal
 from colorama import init
 from pathlib import Path
 from modules.alienvault import AlienVaultExtractor
@@ -55,6 +56,14 @@ __version__ = "5.1.1"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 if __name__ == "__main__":
+    def finish_hook(signum, frame):
+        printr()
+        exit(1)
+
+    FINISH_SIGNALS = [signal.SIGINT, signal.SIGTERM]
+    for signal_to_hook in FINISH_SIGNALS:
+        signal.signal(signal_to_hook, finish_hook)
+
     cv.windows = ''
     if platform.system() == 'Windows':
         USER_HOME_DIR = str(Path.home()) + '\\'
@@ -64,7 +73,7 @@ if __name__ == "__main__":
         USER_HOME_DIR = str(Path.home()) + '/'
         cv.windows = 0
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 5.1.1", usage="python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-6> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> -i <1-13> -I <INQUEST argument>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 6.0.0", usage="python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-6> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> -i <1-13> -I <INQUEST argument>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar="CONFIG FILE", default=(USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s.')
     parser.add_argument('-d', '--directory', dest='direct', type=str, default='', metavar="DIRECTORY", help='Specifies the directory containing malware samples to be checked against VIRUS TOTAL. Use the option -D to decide whether you are being using a public VT API or a Premium VT API.')
     parser.add_argument('-o', '--background', dest='backg', type=int, default=1, metavar="BACKGROUND", help='Adapts the output colors to a light background color terminal. The default is dark background color terminal.')
