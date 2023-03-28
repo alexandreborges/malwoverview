@@ -118,7 +118,7 @@ class AndroidExtractor():
             resource = filehash
             requestsession = requests.Session()
             requestsession.headers.update({'user-agent': user_agent})
-            requestsession.headers.update({'api-key': HybridAnalysisExtractor.HAAPI})
+            requestsession.headers.update({'api-key': self.hybrid.HAAPI})
             requestsession.headers.update({'content-type': 'application/x-www-form-urlencoded'})
             finalurl = '/'.join([haurl, 'report', 'summary'])
             resource1 = resource + ":200"
