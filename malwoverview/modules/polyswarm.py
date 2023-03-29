@@ -123,11 +123,12 @@ class PolyswarmExtractor():
                 print((mycolors.foreground.red + "\nAn error has ocurred during Polyswarm processing. Exiting...\n"))
             printr()
             exit(1)
-        except Exception:
+        except Exception as e:
             if (cv.bkg == 1):
                 print((mycolors.foreground.lightred + "\nAn error has ocurred while connecting to Polyswarm.\n"))
             else:
                 print((mycolors.foreground.red + "\nAn error has ocurred while connecting to Polyswarm.\n"))
+            print(e)
             printr()
             exit(1)
 
