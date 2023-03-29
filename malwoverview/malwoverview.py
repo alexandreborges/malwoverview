@@ -228,8 +228,8 @@ if __name__ == "__main__":
             'flag': polyoptionx,
             'actions': {
                 1: (polyswarm.polyhashsearch, [polyargx, 0]),
-                2: (polyswarm.polyhashsearch, [polyargx, 1]),
-                3: (polyswarm.polyfile, [polyargx]),
+                2: (polyswarm.polyfile, [polyargx]),
+                3: (polyswarm.polyhashsearch, [polyargx, 1]),
                 4: (polyswarm.polymetasearch, [polyargx, polyoptionx]),
                 5: (polyswarm.polymetasearch, [polyargx, polyoptionx]),
                 6: (polyswarm.polymetasearch, [polyargx, polyoptionx]),
