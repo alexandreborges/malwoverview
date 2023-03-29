@@ -135,12 +135,44 @@ class AndroidExtractor():
                 final = 'Not Found'
                 return (final, verdict, avdetect, totalsignatures, threatscore, totalprocesses, networkconnections)
 
+            if 'verdict' in hatext[0]:
+                verdict = str(hatext[0]['verdict'])
+            else:
+                verdict = ''
+
+            if 'threat_score' in hatext[0]:
+                threatscore = str(hatext[0]['threat_score'])
+            else:
+                threatscore = ''
+
+            if 'av_detect' in hatext[0]:
+                avdetect = str(hatext[0]['av_detect'])
+            else:
+                avdetect = ''
+
+            if 'total_signatures' in hatext[0]:
+                totalsignatures = str(hatext[0]['total_signatures'])
+            else:
+                totalsignatures = ''
+
+            if 'total_processes' in hatext[0]:
+                totalprocesses = str(hatext[0]['total_processes'])
+            else:
+                totalprocesses = ''
+
+            if 'total_network_connections' in hatext[0]:
+                networkconnections = str(hatext[0]['total_network_connections'])
+            else:
+                networkconnections = ''
+
+            return (final, verdict, avdetect, totalsignatures, threatscore, totalprocesses, networkconnections)
+
         except ValueError as e:
             print(e)
             if (cv.bkg == 1):
-                print((mycolors.foreground.lightred + "Error while connecting to Alien Vault!\n"))
+                print((mycolors.foreground.lightred + "Error while connecting to Hybrid-Analysis!\n"))
             else:
-                print((mycolors.foreground.red + "Error while connecting to Alien Vault!\n"))
+                print((mycolors.foreground.red + "Error while connecting to Hybrid-Analysis!\n"))
             printr()
 
     def checkandroidha(self, key, package):
