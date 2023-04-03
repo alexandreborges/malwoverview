@@ -9,6 +9,8 @@ import json
 import time
 import os
 
+# threadLimiter = threading.BoundedSemaphore(10)
+
 
 class androidVTThread(threading.Thread):
     def __init__(self, key, package, extractor):
@@ -18,11 +20,13 @@ class androidVTThread(threading.Thread):
         self.extractor = extractor
 
     def run(self):
+#        threadLimiter.acquire()
+#        try:
         key1 = self.key
         package1 = self.package
 
         myhash = key1
-        vtfinal = self.extractor.vtcheck(myhash, 0)
+        vtfinal = self.extractor.virustotal.vtcheck(myhash, 0)
 
         if (cv.bkg == 1):
             print((mycolors.foreground.yellow + "%-70s" % package1), end=' ')
@@ -32,6 +36,8 @@ class androidVTThread(threading.Thread):
             print((mycolors.foreground.green + "%-70s" % package1), end=' ')
             print((mycolors.foreground.cyan + "%-32s" % key1), end=' ')
             print((mycolors.reset + mycolors.foreground.red + "%8s" % vtfinal + mycolors.reset))
+#        finally:
+#            threadLimiter.release()
 
 
 class quickHAAndroidThread(threading.Thread):
@@ -42,11 +48,15 @@ class quickHAAndroidThread(threading.Thread):
         self.extractor = extractor
 
     def run(self):
+#        threadLimiter.acquire()
+#        try:
         key1 = self.key
         package1 = self.package
 
         myhash = key1
-        (final, verdict, avdetect, totalsignatures, threatscore, totalprocesses, networkconnections) = self.extractor.quickhashowAndroid(myhash)
+        result = self.extractor.quickhashowAndroid(myhash)
+
+        (final, verdict, avdetect, totalsignatures, threatscore, totalprocesses, networkconnections) = result
 
         if (cv.bkg == 1):
             print((mycolors.foreground.lightcyan + "%-70s" % package1), end=' ')
@@ -92,6 +102,8 @@ class quickHAAndroidThread(threading.Thread):
             else:
                 verdict = 'not analyzed yet'
                 print((mycolors.reset + "%20s" % verdict), end='\n')
+#        finally:
+#            threadLimiter.release()
 
 
 class AndroidExtractor():
