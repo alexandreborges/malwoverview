@@ -85,7 +85,7 @@ class PolyswarmExtractor():
                 poly = (r'"' + poly + r'"')
                 metaresults = polyswarm.search_by_metadata("strings.urls:" + poly)
             if (metainfo == 8):
-                poly = ('scan.latest_scan.*.metadata.malware_family:' + poly)
+                poly = 'scan.latest_scan.\*.metadata.malware_family:' + poly
                 metaresults = polyswarm.search_by_metadata(poly)
             for y in metaresults:
                 if (cv.bkg == 1):
