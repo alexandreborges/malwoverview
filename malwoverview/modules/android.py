@@ -188,6 +188,9 @@ class AndroidExtractor():
             printr()
 
     def checkandroidha(self, key, package):
+        if len(key) == 0 or len(package) == 0:
+            return
+
         if cv.windows:
             thread = quickHAAndroidThread(key, package, self)
             thread.start()
@@ -197,6 +200,9 @@ class AndroidExtractor():
             thread.start()
 
     def checkandroidvt(self, key, package):
+        if len(key) == 0 or len(package) == 0:
+            return
+
         key1 = key
         vtfinal = self.virustotal.vtcheck(key1, 0)
         if (cv.bkg == 1):
@@ -209,6 +215,9 @@ class AndroidExtractor():
             print((mycolors.reset + mycolors.foreground.red + "%8s" % vtfinal + mycolors.reset))
 
     def checkandroidvtx(self, key, package):
+        if len(key) == 0 or len(package) == 0:
+            return
+
         if (cv.windows == 1):
             thread = androidVTThread(key, package, self)
             thread.start()
@@ -272,6 +281,7 @@ class AndroidExtractor():
                     key1b = (key1a.split("-", 1)[0])
                 except IndexError:
                     key1b = key1a
+
                 self.checkandroidha(value, key1b)
 
         if (engine == 2):
