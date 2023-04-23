@@ -84,7 +84,7 @@ class VirusTotalExtractor():
             exit(1)
 
     def vtcheck(self, myhash, showreport):
-        url = VirusTotalExtractor.urlurlvt3
+        url = VirusTotalExtractor.urlfilevt3
 
         try:
             finalurl = ''.join([url, "/", myhash])
