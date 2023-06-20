@@ -55,7 +55,7 @@
 ![Alt text](pictures/picture_47.jpg?raw=true "Title")
 ![Alt text](pictures/picture_48.jpg?raw=true "Title")
 
-      Copyright (C)  2018-2022 Alexandre Borges <alexandreborges at blackstormsecurity dot com>
+      Copyright (C)  2018-2023 Alexandre Borges <alexandreborges at blackstormsecurity dot com>
 
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
