@@ -144,8 +144,16 @@ can be installed by executing the following command:
 
 If you are installing Malwoverview on  macOS, you must execute the following commands:
 
+      * /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       * brew install libmagic
-      * pip3.11 install -U malwoverview
+      * pip install urllib3==1.26.6
+      * pip3 install -U malwoverview
+      * Add Python binary directory to the PATH variable by editing .bash_profile file in your home 
+        directory. Example:
+
+          export PATH=$PATH:/Users/alexandreborges/Library/Python/3.9/bin
+
+      * Execute: . ./.bash_profile
 
 If you are installing Malwoverview on Windows, you must execute the following commands:
 
@@ -266,20 +274,20 @@ should be executed:
 
 1. Python version 3.8 or later (Only Python 3.x !!! It does NOT work using Python 2.7) 
 
-       $ apt-get install python3.9  (for example)
+       $ apt-get install python3.11  (for example)
 
 2. Python-magic.  
 
       To install python-magic package you can execute the following command:
 
-       $ pip3.9 install python-magic
+       $ pip3.11 install python-magic
 
       Or compiling it from the github repository:
 
        $ git clone https://github.com/ahupp/python-magic
        $ cd python-magic/
-       $ python3.9 setup.py build
-       $ python3.9 setup.py install
+       $ python3.11 setup.py build
+       $ python3.11 setup.py install
 
       As there are serious problems about existing two versions of python-magic package, my 
       recommendation is to install it from github (second procedure above) and copy the magic.py 
@@ -287,20 +295,20 @@ should be executed:
       
 3. Install several Python packages: 
 
-       $ pip3.9 install -r requirements.txt
+       $ pip3.11 install -r requirements.txt
 
        OR
 
-       $ pip3.9 install -U pefile
-       $ pip3.9 install -U colorama
-       $ pip3.9 install -U simplejson
-       $ pip3.9 install -U python-magic
-       $ pip3.9 install -U requests
-       $ pip3.9 install -U validators
-       $ pip3.9 install -U geocoder
-       $ pip3.9 install -U polyswarm-api
-       $ pip3.9 install -U pathlib
-       $ pip3.9 install -U configparser
+       $ pip3.11 install -U pefile
+       $ pip3.11 install -U colorama
+       $ pip3.11 install -U simplejson
+       $ pip3.11 install -U python-magic
+       $ pip3.11 install -U requests
+       $ pip3.11 install -U validators
+       $ pip3.11 install -U geocoder
+       $ pip3.11 install -U polyswarm-api
+       $ pip3.11 install -U pathlib
+       $ pip3.11 install -U configparser
 
 4. To check an Android mobile you need to install the "adb" program by executing the following command:
 
