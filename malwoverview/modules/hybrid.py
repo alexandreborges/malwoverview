@@ -108,7 +108,7 @@ class HybridAnalysisExtractor():
             hatext = json.loads(haresponse.text)
 
             rc = str(hatext)
-            if 'message' in rc:
+            if 'Failed' in rc:
                 final = 'Malware sample was not found in Hybrid-Analysis repository.'
                 if (cv.bkg == 1):
                     print((mycolors.foreground.lightred + "\n" + final + "\n"))

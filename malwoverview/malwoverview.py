@@ -218,7 +218,7 @@ if __name__ == "__main__":
         query = calchash(haargx)
 
     def ha_show_and_down(haargx, xx=0):
-        hybrid.hashow(haargx, xx=xx)
+#        hybrid.hashow(haargx, xx=xx)
         hybrid.downhash(haargx)
 
     # Map from flags to actions that they specify

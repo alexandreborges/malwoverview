@@ -427,6 +427,12 @@ Version 6.0.0:
               Special thanks to Artur Marzano, who has contributed
               and dedicated his time to accomplish this task.
 
+Version 5.2:
+
+      This version:
+
+            * Multiple issues related to Hybrid Analysis have been fixed.
+
 Version 5.1.1:
 
       This version:
