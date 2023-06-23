@@ -130,10 +130,10 @@ This tool aims to :
 
 # INSTALLATION 
 
-This tool has been tested on REMnux, Ubuntu, Kali Linux and macOS only. Malwoverview 
+This tool has been tested on REMnux, Ubuntu, Kali Linux, macOS and Windows. Malwoverview 
 can be installed by executing the following command:
 
-      * pip3.9 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
+      * pip3.11 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
       
       or...
       
@@ -143,10 +143,15 @@ can be installed by executing the following command:
       
       * git clone https://github.com/alexandreborges/malwoverview
 
-If you are using macOS, so you should install libmagic before installing Malwoverview:
+If you are installing Malwoverview on macOS, you must execute the following commands:
 
       * brew install libmagic
-      * pip3.9 install -U malwoverview
+      * pip3.11 install -U malwoverview
+
+If you are installing Malwoverview on Windows, you must execute the following commands:
+
+      * python -m pip uninstall python-magic
+      * python -m pip install python-magic-bin
 
 To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm,
 Alien Vault, Malpedia  and Triage into the .malwapi.conf configuration file 
