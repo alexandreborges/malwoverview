@@ -160,6 +160,8 @@ installing Malwoverview:
 
       * python -m pip uninstall python-magic
       * python -m pip install python-magic-bin 
+      
+      ** You need to repeat both commands above everytime you update Malwoverview on Windows.
 
 To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm,
 Alien Vault, Malpedia  and Triage into the .malwapi.conf configuration file 
