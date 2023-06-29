@@ -73,7 +73,7 @@ if __name__ == "__main__":
         USER_HOME_DIR = str(Path.home()) + '/'
         cv.windows = 0
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 6.0.0", usage="python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-6> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> -i <1-13> -I <INQUEST argument>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 6.0.0", usage="python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> -i <1-13> -I <INQUEST argument>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar="CONFIG FILE", default=(USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s.')
     parser.add_argument('-d', '--directory', dest='direct', type=str, default='', metavar="DIRECTORY", help='Specifies the directory containing malware samples to be checked against VIRUS TOTAL. Use the option -D to decide whether you are being using a public VT API or a Premium VT API.')
     parser.add_argument('-o', '--background', dest='backg', type=int, default=1, metavar="BACKGROUND", help='Adapts the output colors to a light background color terminal. The default is dark background color terminal.')
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     parser.add_argument('-a', '--hybrid_option', dest='haoption', type=int, default=0, metavar="HYBRID_ANALYSIS", help='This parameter fetches reports from HYBRID ANALYSIS, download samples and submits samples to be analyzed. The possible values are: 1: gets a report for a given hash or sample from a Windows 7 32-bit environment; 2: gets a report for a given hash or sample from a Windows 7 32-bit environment (HWP Support); 3: gets a report for given hash or sample from a Windows 64-bit environment; 4: gets a report for a given hash or sample from an Android environment; 5: gets a report for a given hash or sample from a Linux 64-bit environment; 6: submits a sample to Windows 7 32-bit environment; 7. submits a sample to Windows 7 32-bit environment with HWP support environment; 8. submits a sample to Windows 7 64-bit environment ; 9. submits a sample to an Android environment ; 10. submits a sample to a Linux 64-bit environment; 11. downloads a sample from a Windows 7 32-bit environment; 12. downloads a sample from a Windows 7 32-bit HWP environment; 13. downloads a sample from a Windows 7 64-bit environment; 14. downloads a sample from an Android environment; 15. downloads a sample from a Linux 64-bit environment.')
     parser.add_argument('-A', '--ha_arg', dest='haarg', type=str, metavar="SUBMIT_HA", help='Provides an argument for -a option from HYBRID ANALYSIS.')
     parser.add_argument('-D', '--vtpubpremium', dest='vtpubpremium', type=int, default=0, metavar="VT_PUBLIC_PREMIUM", help='This option must be used with -d option. Possible values: <0> it uses the Premium VT API v3 (default); <1> it uses the Public VT API v3.')
-    parser.add_argument('-l', '--malsharelist', dest='malsharelist', type=int, default=0, metavar="MALSHARE_HASHES", help='This option performs download a sample and shows hashes of a specific type from the last 24 hours from MALSHARE repository. Possible values are: 1: Download a sample; 2: PE32 (default) ; 3: ELF ; 4: Java; 5: PDF ; 6: Composite(OLE).')
+    parser.add_argument('-l', '--malsharelist', dest='malsharelist', type=int, default=0, metavar="MALSHARE_HASHES", help='This option performs download a sample and shows hashes of a specific type from the last 24 hours from MALSHARE repository. Possible values are: 1: Download a sample; 2: PE32 (default) ; 3: ELF ; 4: Java; 5: PDF ; 6: Composite(OLE); 7: List of hashes from past 24 hours.')
     parser.add_argument('-L', '--malshare_hash', dest='malsharehash', type=str, metavar="MALSHARE_HASH_SEARCH", help='Provides a hash as argument for downloading a sample from MALSHARE repository.')
     parser.add_argument('-j', '--haus_option', dest='hausoption', type=int, default=0, metavar="HAUS_OPTION", help='This option fetches information from URLHaus depending of the value passed as argument: 1: performs download of the given sample; 2: queries information about a provided hash ; 3: searches information about a given URL; 4: searches a malicious URL by a given tag (case sensitive); 5: searches for payloads given a tag; 6: retrives a list of downloadable links to recent payloads; 7: retrives a list of recent malicious URLs.')
     parser.add_argument('-J', '--haus_arg', dest='hausarg', type=str, metavar="HAUS_ARG", help='Provides argument to -j option from URLHaus.')
@@ -176,7 +176,7 @@ if __name__ == "__main__":
         args.triage not in optval8,
         args.inquest not in optval9,
         args.backg not in optval,
-        args.malsharelist not in optval3,
+        args.malsharelist not in optval8,
         args.virustotaloption not in optval9,
         args.vtpubpremium not in optval
     ]
@@ -360,7 +360,8 @@ if __name__ == "__main__":
                 3: (malshare.malsharelastlist, [maltype]),
                 4: (malshare.malsharelastlist, [maltype]),
                 5: (malshare.malsharelastlist, [maltype]),
-                6: (malshare.malsharelastlist, [maltype])
+                6: (malshare.malsharelastlist, [maltype]),
+                7: (malshare.malsharelastlist, [maltype])
             }
         },
         {

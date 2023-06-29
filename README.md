@@ -156,10 +156,14 @@ If you are installing Malwoverview on macOS, you must execute the following comm
 
       * Execute: . ./.bash_profile
 
-If you are installing Malwoverview on Windows, you must execute the following commands:
+If you are installing Malwoverview on Windows, you must execute the following commands AFTER 
+installing Malwoverview:
 
       * python -m pip uninstall python-magic
       * python -m pip install python-magic-bin
+
+      ** You need to repeat both commands above everytime you update 
+         Malwoverview on Windows.
 
 To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm,
 Alien Vault, Malpedia  and Triage into the .malwapi.conf configuration file 
@@ -167,9 +171,9 @@ Alien Vault, Malpedia  and Triage into the .malwapi.conf configuration file
 so you should create it) or you could create a custom configuration file and indicate it by 
 using the -c option.
 
-Nonetheless, starting on version 4.4.2, it isn't longer necessary to insert all APIs into .malwapi.conf
-before using Malwoverview. Therefore, users can only insert few APIs and use the respective options 
-to these APIs.
+Nonetheless, starting on version 4.4.2, it isn't longer necessary to insert all APIs into
+.malwapi.conf file before using Malwoverview. Therefore, users can only insert few APIs 
+and use the respective options to these APIs.
 
 * A special note about the Alien Vault: it is necessary to subscribe to pulses on Alien Vault 
 website before using -n 1 option.
@@ -439,6 +443,14 @@ Version 6.0.0:
             * It has been completely refactored.
               Special thanks to Artur Marzano, who has contributed
               and dedicated his time to accomplish this task.
+
+Version 5.3:
+
+      This version:
+
+            * Fixes issues related to Malshare (-l and -L options).
+            * Adds a new Malshare option (-l 7) to list all samples 
+              from last 24 hours.
 
 Version 5.2:
 

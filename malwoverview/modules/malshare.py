@@ -41,9 +41,10 @@ class MalshareExtractor():
 
             if (b'Sample not found by hash' in malresponse3.content):
                 if (cv.bkg == 1):
-                    print((mycolors.foreground.lightred + "\nSample not found by the given hash.\n"))
+                    print((mycolors.foreground.lightred + "\nSample not found by the provided hash.\n"))
                 else:
-                    print((mycolors.foreground.red + "\nSample not found by the given hash.\n"))
+                    print((mycolors.foreground.red + "\nSample not found by the provided hash.\n"))
+                    print(mycolors.reset)
                     exit(1)
 
             open(resource, 'wb').write(malresponse3.content)
@@ -77,36 +78,55 @@ class MalshareExtractor():
             filetype = 'ELF'
         elif (maltype == 4):
             filetype = 'Java'
-        elif (maltype == 5):
+        elif (maltype == 5 or maltype == 6):
             filetype = 'PDF'
         else:
-            filetype = 'Composite'
+            filetype = 'all'
 
         try:
-            print("\n")
-            print((mycolors.reset + "SHA256 hash".center(75)), end='')
-            print((mycolors.reset + "MD5 hash".center(38)), end='')
-            print((mycolors.reset + "File type".center(8)), end='')
-            print("\n" + (126 * '-').center(59))
-            print((mycolors.reset))
+            if (filetype != "all"):
+                print("\n")
+                print((mycolors.reset + "SHA256 hash".center(75)), end='')
+                print((mycolors.reset + "MD5 hash".center(38)), end='')
+                print((mycolors.reset + "File type".center(8)), end='')
+                print("\n" + (126 * '-').center(59))
+                print((mycolors.reset))
 
-            requestsession = requests.Session()
-            requestsession.headers.update({'accept': 'application/json'})
-            finalurl = ''.join([
-                urlmalshare, self.MALSHAREAPI,
-                '&action=type&type=', filetype
-            ])
-            malresponse = requestsession.get(url=finalurl)
-            maltext = json.loads(malresponse.text)
+                requestsession = requests.Session()
+                requestsession.headers.update({'accept': 'application/json'})
+                finalurl = ''.join([
+                    urlmalshare, self.MALSHAREAPI,
+                    '&action=type&type=', filetype
+                ])
+                malresponse = requestsession.get(url=finalurl)
+                maltext = json.loads(malresponse.text)
+            else:
+                print("\n")
+                print((mycolors.reset + "SHA256 hash".center(75)), end='')
+                print((mycolors.reset + "MD5 hash".center(38)), end='')
+                print("\n" + (112 * '-').center(56))
+                print((mycolors.reset))
+
+                requestsession = requests.Session( )
+                requestsession.headers.update({'accept': 'application/json'})
+                finalurl = ''.join([urlmalshare, self.MALSHAREAPI, '&action=getlist'])
+                malresponse = requestsession.get(url=finalurl)
+                maltext = json.loads(malresponse.text)
 
             if maltext:
                 try:
                     for i in range(0, len(maltext)):
                         if (maltext[i].get('sha256')):
                             if (cv.bkg == 1):
-                                print((mycolors.reset + "sha256: " + mycolors.foreground.yellow + "%s" % maltext[i]['sha256'] + mycolors.reset + "  md5: " + mycolors.foreground.lightcyan + "%s" % maltext[i]['md5'] + mycolors.reset + "  type: " + mycolors.foreground.lightred + "%s" % filetype))
+                                if filetype != "all":
+                                    print((mycolors.reset + "sha256: " + mycolors.foreground.yellow + "%s" % maltext[i]['sha256'] + mycolors.reset + "  md5: " + mycolors.foreground.lightcyan + "%s" % maltext[i]['md5'] + mycolors.reset + "  type: " + mycolors.foreground.lightred + "%s" % filetype))
+                                else:
+                                    print((mycolors.reset + "sha256: " + mycolors.foreground.yellow + "%s" % maltext[i]['sha256'] + mycolors.reset + " md5: " + mycolors.foreground.lightcyan + "%s" % maltext[i]['md5'] + mycolors.reset))
                             else:
-                                print((mycolors.reset + "sha256: " + mycolors.foreground.red + "%s" % maltext[i]['sha256'] + mycolors.reset + "  md5: " + mycolors.foreground.blue + "%s" % maltext[i]['md5'] + mycolors.reset + "   type: " + mycolors.foreground.purple + "%s" % filetype))
+                                if filetype != "all":
+                                    print((mycolors.reset + "sha256: " + mycolors.foreground.red + "%s" % maltext[i]['sha256'] + mycolors.reset + "  md5: " + mycolors.foreground.blue + "%s" % maltext[i]['md5'] + mycolors.reset + "   type: " + mycolors.foreground.purple + "%s" % filetype))
+                                else:
+                                    print((mycolors.reset + "sha256: " + mycolors.foreground.red + "%s" % maltext[i]['sha256'] + mycolors.reset + " md5: " + mycolors.foreground.blue + "%s" % maltext[i]['md5'] + mycolors.reset))
                 except KeyError:
                     pass
                 except (BrokenPipeError, IOError):
