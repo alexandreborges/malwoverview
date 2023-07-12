@@ -5,6 +5,7 @@
 [<img alt="PayPal" src="https://img.shields.io/badge/Donate-Paypal-brightgreen?style=for-the-badge&logo=appveyor">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M8F458EZH8UZE&source=url)
 [<img alt="Downloads/Month" src="https://img.shields.io/pypi/dm/malwoverview?color=yellow&style=for-the-badge">](https://pypistats.org/packages/malwoverview)
 [<img alt="Downloads/Total" src="https://static.pepy.tech/personalized-badge/malwoverview?period=total&units=international_system&left_color=grey&right_color=red&left_text=Total%20Downloads">](https://pepy.tech/project/malwoverview)
+[![Sponsored by Tines](https://www.tines.com/images/badges/tines-sponsorship-badge-pill-210x75.svg)](https://www.tines.com?utm_source=oss&utm_medium=sponsorship&utm_campaign=malwoverview)
 
 ![Alt text](pictures/picture_1.jpg?raw=true "Title")
 ![Alt text](pictures/picture_2.jpg?raw=true "Title")
