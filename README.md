@@ -156,15 +156,12 @@ If you are installing Malwoverview on  macOS, you must execute the following com
 
       * Execute: . ./.bash_profile
 
-If you are installing Malwoverview on Windows, you must execute the following commands AFTER 
-installing Malwoverview:
+If you are installing Malwoverview on Windows, make sure that the following conditions are true  
+AFTER having installed Malwoverview:
 
-      * python -m pip uninstall python-magic
-      * python -m pip install python-magic-bin 
+      * python-magic is NOT installed. (pip show python-magic)
+      * python-magic-bin IS installed. (pip show python-magic-bin)
       
-      ** You need to execute the first command above everytime you to update 
-         Malwoverview on Windows.
-
 To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm,
 Alien Vault, Malpedia  and Triage into the .malwapi.conf configuration file 
 (the default one at the home directory (/home/[username] or /root) -- if the file doesn't exist,
