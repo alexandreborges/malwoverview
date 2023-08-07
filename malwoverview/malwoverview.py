@@ -20,7 +20,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 5.3
+# Malwoverview.py: version 5.4
 
 import os
 import sys
@@ -62,7 +62,7 @@ from requests import Request, Session, exceptions
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2021, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "5.3"
+__version__ = "5.4"
 __email__ = "alexandreborges at blackstormsecurity.com"
 
 haurl = 'https://www.hybrid-analysis.com/api/v2'
@@ -2489,17 +2489,28 @@ def polymetasearch(poly, metainfo):
                         print(mycolors.reset + "MD5: " + mycolors.foreground.green + "%s" + "None", end=' ')
             print(mycolors.reset + "\n")
             sys.exit(0)
+        
+        try:
 
-        if (metainfo == 5):
-            metaresults = polyswarm.search_by_metadata("strings.ipv4:" + poly)
-        if (metainfo == 6):
-            metaresults = polyswarm.search_by_metadata("strings.domains:" + poly)
-        if (metainfo == 7):
-            poly = (r'"' + poly + r'"')
-            metaresults = polyswarm.search_by_metadata("strings.urls:" + poly)
-        if (metainfo == 8):
-            poly = ('scan.latest_scan.\*.metadata.malware_family:' + poly)
-            metaresults = polyswarm.search_by_metadata(poly)
+            if (metainfo == 5):
+                metaresults = polyswarm.search_by_metadata("strings.ipv4:" + poly)
+            if (metainfo == 6):
+                metaresults = polyswarm.search_by_metadata("strings.domains:" + poly)
+            if (metainfo == 7):
+                poly = (r'"' + poly + r'"')
+                metaresults = polyswarm.search_by_metadata("strings.urls:" + poly)
+            if (metainfo == 8):
+                poly = ('scan.latest_scan.\*.metadata.malware_family:' + poly)
+                metaresults = polyswarm.search_by_metadata(poly)
+
+        except Exception:
+            if (bkg == 1):
+                print((mycolors.foreground.lightred + "\nInformation not found on Polyswarm.\n"))
+            else:
+                print((mycolors.foreground.red + "\nInformation not found on Polyswarm.\n"))
+            print(mycolors.reset)
+            exit(0)
+
         for y in metaresults:
             if (bkg == 1):
                 if (y.sha256):
@@ -2507,7 +2518,13 @@ def polymetasearch(poly, metainfo):
                 else:
                     print(mycolors.reset + "Result: " + mycolors.foreground.yellow + "Sample not found!", end=' ')
                     exit(0)
-                score = next(polyswarm.search(y.sha256))
+               
+                try:
+                    score = next(polyswarm.search(y.sha256))
+                except Exception:
+                    score.polyscore = "None"
+                    pass
+
                 print(mycolors.reset + "Polyscore: " +  mycolors.foreground.yellow + "%20s" % score.polyscore, end=' ') 
                 if (str(y.scan.get('detections',{}).get('malicious'))) != 'None':
                     print(mycolors.reset + "scan: " + mycolors.foreground.yellow + "%s" % y.scan.get('detections', {}).get('malicious'), end=' ') 
@@ -2520,7 +2537,13 @@ def polymetasearch(poly, metainfo):
                 else:
                     print(mycolors.reset + "scan: " + mycolors.foreground.purple + "Sample not found!", end=' ')
                     exit(0)
-                score = next(polyswarm.search(y.sha256))
+
+                try:
+                    score = next(polyswarm.search(y.sha256))
+                except Exception:
+                    score.polyscore = "None"
+                    pass
+
                 print(mycolors.reset + "Polyscore: " +  mycolors.foreground.red + "%20s" % score.polyscore, end=' ') 
                 if (str(y.scan.get('detections',{}).get('malicious'))) != 'None':
                     print(mycolors.reset + "scan: " + mycolors.foreground.red + "%s" % y.scan.get('detections', {}).get('malicious'), end=' ') 
@@ -3481,9 +3504,15 @@ def urlhauscheck(urlx, haus):
                     x = x + 1
                     if (bkg == 1):
                         print(mycolors.reset + "Payload_%d:\t" % x, end='')
-                        print(mycolors.foreground.pink + "firstseen:%12s" % i['firstseen'], end = '     ' )
-                        print(mycolors.foreground.yellow + "filename: %-30s" % i['filename'].ljust(40), end = ' ' + "")
-                        print(mycolors.foreground.lightred + "filetype: %s" % i['file_type'].ljust(10) + Fore.WHITE, end= ' ' + "")
+                        if ('firstseen' in i):
+                            if (i['firstseen'] is not None):
+                                print(mycolors.foreground.pink + "firstseen:%12s" % i['firstseen'], end = '     ' )
+                        if ('filename' in i):
+                            if (i['filename'] is not None):
+                                print(mycolors.foreground.yellow + "filename: %-30s" % i['filename'].ljust(40), end = ' ' + "")
+                        if ('file_type' in i):
+                            if (i['file_type'] is not None):
+                                print(mycolors.foreground.lightred + "filetype: %s" % i['file_type'].ljust(10) + Fore.WHITE, end= ' ' + "")
                         results = i['virustotal']
                         if (results) is not None:
                             print(mycolors.foreground.lightcyan + "VirusTotal: %s" % results['result'] + Fore.WHITE)
@@ -3491,9 +3520,15 @@ def urlhauscheck(urlx, haus):
                             print(mycolors.foreground.lightcyan + "VirusTotal: Not Found" + Fore.WHITE)
                     else:
                         print(mycolors.reset + "Payload_%d:\t" % x, end='')
-                        print(mycolors.foreground.purple + "firstseen:%12s" % i['firstseen'], end = '     ')
-                        print(mycolors.foreground.green + "filename: %-30s" % i['filename'].ljust(40), end = ' ' + "")
-                        print(mycolors.foreground.red + "filetype: %s" % i['file_type'].ljust(10) + Fore.BLACK, end = '' + "")
+                        if ('firstseen' in i):
+                            if (i['firstseen'] is not None):
+                                print(mycolors.foreground.purple + "firstseen:%12s" % i['firstseen'], end = '     ')
+                        if ('filename' in i):
+                            if (i['filename'] is not None):
+                                print(mycolors.foreground.green + "filename: %-30s" % i['filename'].ljust(40), end = ' ' + "")
+                        if ('file_type' in i):
+                            if (i['file_type'] is not None):
+                                print(mycolors.foreground.red + "filetype: %s" % i['file_type'].ljust(10) + Fore.BLACK, end = '' + "")
                         results = i['virustotal']
                         if (results) is not None:
                             print(mycolors.foreground.blue + "VirusTotal: %s" % results['result'] + Fore.BLACK)
@@ -5185,7 +5220,7 @@ def inquest_download(inquestx, inquest):
         requestsession.headers.update({'Accept': 'application/octet-stream'})
         requestsession.headers.update({'Authorization':INQUESTAPI})
         inquestresponse = requestsession.get(inquest + '/download?sha256=' + inquestx)
-
+        
         if (inquestresponse.status_code == 400):
             inquesttext = json.loads(inquestresponse.text)
 
@@ -5196,6 +5231,15 @@ def inquest_download(inquestx, inquest):
                     else:
                         print(mycolors.foreground.red + "\nThe provided SHA256 hash is not valid!\n" + mycolors.reset)
                     exit(1)
+            
+        if (inquestresponse.status_code == 403 or inquestresponse.status_code == 500):
+            inquesttext = json.loads(inquestresponse.text)
+
+            if (bkg == 1):
+                print(mycolors.foreground.lightred + "\nThe sample is not available for download!\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + "\nThe sample is not available for download!\n" + mycolors.reset)
+            exit(1)
 
         open(inquestx + '.bin', 'wb').write(inquestresponse.content)
         if (bkg == 1):
@@ -5241,6 +5285,7 @@ def inquest_hash(inquestx, inquest):
         requestsession.headers.update({'Authorization':INQUESTAPI})
         inquestresponse = requestsession.get(inquest + '/search/hash/sha256?hash=' + inquestx)
         inquesttext = json.loads(inquestresponse.text)
+
 
         if (inquestresponse.status_code == 400 or inquestresponse.status_code == 500):
             inquesttext = json.loads(inquestresponse.text)
@@ -7160,7 +7205,8 @@ def threatfox_listiocs(bazaarx, bazaar):
 
         requestsession = requests.Session( )
         requestsession.headers.update({'accept':'application/json'})
-        params = {'query':"get_iocs" , 'days':bazaarx}
+        params = {'query':"get_iocs" , 'days':int(bazaarx)}
+
         bazaarresponse = requestsession.post(url=bazaar, data=json.dumps(params))
         bazaartext = json.loads(bazaarresponse.text)
 
@@ -10365,7 +10411,7 @@ if __name__ == "__main__":
     ipaddrvtx = ''
     ffpname = ''
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 5.3", usage= "python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> -i <1-13> -I <INQUEST argument>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 5.4", usage= "python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> -i <1-13> -I <INQUEST argument>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar = "CONFIG FILE", default = (USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s.')
     parser.add_argument('-d', '--directory', dest='direct',type=str, metavar = "DIRECTORY", help='Specifies the directory containing malware samples to be checked against VIRUS TOTAL. Use the option -D to decide whether you are being using a public VT API or a Premium VT API.')
     parser.add_argument('-o', '--background', dest='backg', type=int,default = 1, metavar = "BACKGROUND", help='Adapts the output colors to a light background color terminal. The default is dark background color terminal.')
@@ -10387,7 +10433,7 @@ if __name__ == "__main__":
     parser.add_argument('-m', '--malpedia', dest='malpedia', type=int, default = 0, metavar = "MALPEDIA", help='This option is related to MALPEDIA and presents different meanings depending on the chosen value. Thus, 1: List meta information for all families ; 2: List all actors ID ; 3: List all available payloads organized by family from Malpedia; 4: Get meta information from an specific actor, so it is necessary to use the -M option. Additionally, try to confirm the correct actor ID by executing malwoverview with option -m 3; 5: List all families IDs; 6: Get meta information from an specific family, so it is necessary to use the -M option. Additionally, try to confirm the correct family ID by executing malwoverview with option -m 5; 7: Get a malware sample from malpedia (zip format -- password: infected). It is necessary to specify the requested hash by using -M option; 8: Get a zip file containing Yara rules for a specific family (get the possible families using -m 5), which must be specified by using -M option.')
     parser.add_argument('-M', '--malpediarg', dest='malpediaarg', type=str, metavar = "MALPEDIAARG", help='This option provides an argument to the -m option, which is related to MALPEDIA.')
     parser.add_argument('-b', '--bazaar', dest='bazaar', type=int, default = 0, metavar = "BAZAAR", help='Checks multiple information from MALWARE BAZAAR and THREATFOX. The possible values are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar) Get information and a list of malware samples associated and according to a specific tag; 3: (Bazaar) Get a list of malware samples according to a given imphash; 4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample from Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped using the following password: infected; 6: (ThreatFox) Get current IOC dataset from last x days given by option -B (maximum of 7 days); 7: (ThreatFox) Search for the specified IOC on ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified tag given by option -B; 9: (ThreatFox) Search IOCs according to the specified malware family provided by option -B; 10. (ThreatFox) List all available malware families.')
-    parser.add_argument('-B', '--bazaararg', dest='bazaararg', type=str, metavar = "BAZAAR_ARG", help='Provides argument to -b MALWARE BAZAAR and THREAT FOX option. If you specified "-b 1" then the -B\'s argument must be a hash; If you specified "-b 2" then -B\'s argument must be a malware tag; If you specified "-b 3" then the argument must be a imphash; If you specified "-b 4", so the argument must be "100 or time", where "100" lists last "100 samples" and "time" lists last samples added to Malware Bazaar in the last 60 minutes; If you specified "-b 5" then the -B\'s argument must be a SHA256 hash; If you specified "-b 6", so the -B\'s value is the number of DAYS to filter IOCs. The maximum is 7 (days); If you used "-b 7" so the -B\'s argument is the IOC you want to search for; If you used "-b 8", so the -B\'s argument is the TAG you want search for; If you used "-b 9", so the -B argument is the malware family you want to search for;')
+    parser.add_argument('-B', '--bazaararg', dest='bazaararg', type=str, metavar = "BAZAAR_ARG", help='Provides argument to -b MALWARE BAZAAR and THREAT FOX option. If you specified "-b 1" then the -B\'s argument must be a hash and a report about the sample will be retrieved; If you specified "-b 2" then -B\'s argument must be a malware tag and last samples matching this tag will be shown; If you specified "-b 3" then the argument must be a imphash and last samples matching this impshash will be shown; If you specified "-b 4", so the argument must be "100 or time", where "100" lists last "100 samples" and "time" lists last samples added to Malware Bazaar in the last 60 minutes; If you specified "-b 5", so the sample will be downloaded and -B\'s argument must be a SHA256 hash of the sample that you want to download from Malware Bazaar; If you specified "-b 6" then a list of IOCs will be retrieved and the -B\'s value is the number of DAYS to filter such IOCs. The maximum time is 7 (days); If you used "-b 7" so the -B\'s argument is the IOC you want to search for; If you used "-b 8", so the -B\'s argument is the IOC\'s TAG that you want search for; If you used "-b 9", so the -B argument is the malware family that you want to search for IOCs;')
     parser.add_argument('-x', '--triage', dest='triage', type=int,default = 0, metavar = "TRIAGE", help='Provides information from TRIAGE according to the specified value: <1> this option gets sample\'s general information by providing an argument with -X option in the following possible formats: sha256:<value>, sha1:<value>, md5:<value>, family:<value>, score:<value>, tag:<value>, url:<value>, wallet:<value>, ip:<value>; <2> Get a sumary report for a given Triage ID (got from option -x 1) ; <3> Submit a sample for analysis ; <4> Submit a sample through a URL for analysis ; <5> Download sample specified by the Triage ID; <6> Download pcapng file from sample associated to given Triage ID; <7> Get a dynamic report for the given Triage ID (got from option -x 1);')
     parser.add_argument('-X', '--triagearg', dest='triagearg', type=str, metavar = "TRIAGE_ARG", help='Provides argument for options especified by -x option. Pay attention: the format of this argument depends on provided -x value.')
     parser.add_argument('-i', '--inquest', dest='inquest', type=int, default = 0, metavar = "INQUEST", help='Retrieves multiple information from INQUEST. The possible values are: 1: Downloads a sample; 2: Retrives information about a sample given a SHA256; 3: Retrieves information about a sample given a MD5 hash; 4: Gets the most recent list of threats. To this option, the -I argument must be "list" (lowercase and without double quotes) ; 5: Retrives threats related to a provided domain; 6. Retrieves a list of samples related to the given IP address; 7. Retrives a list of sample related to the given e-mail address; 8. Retrieves a list of samples related to the given filename; 9. Retrieves a list of samples related to a given URL; 10. Retrieves information about a specified IOC; 11. List a list of IOCs. Note: you must pass "list" (without double quotes) as argument to -I; 12. Check for a given keyword in the reputation database; 13. List artifacts in the reputation dabatabse. Note: you must pass "list" (without double quotes) as argument to -I.')
