@@ -441,7 +441,8 @@ Version 5.4:
             * Fixes issues related to Polyswarm.
             * Fixes issues related to Malware Bazaar.
             * Fixes issues related to InQuest.
-            * Introduces changes in the help description. 
+            * Introduces changes to the help description. 
+            * Introduces changes to installation process. 
 
 Version 5.3:
 
