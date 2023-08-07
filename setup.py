@@ -28,7 +28,7 @@ setup(
     install_requires=[
         "pefile",
         "colorama",
-        "python-magic; platform_system == 'Linux' and 'Darwin'",
+        "python-magic; platform_system == ('Linux','Darwin')",
         "simplejson",
         "requests",
         "validators",
