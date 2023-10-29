@@ -438,7 +438,7 @@ Version 5.4.2:
 
       This version:
 
-            * Fixes two issues related to language syntax due to Python 3.12.
+            * Fixes two small issues.
 
 Version 5.4.1:
 
