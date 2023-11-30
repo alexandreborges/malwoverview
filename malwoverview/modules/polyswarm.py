@@ -77,16 +77,25 @@ class PolyswarmExtractor():
                 print(mycolors.reset + "\n")
                 exit(0)
 
-            if (metainfo == 5):
-                metaresults = polyswarm.search_by_metadata("strings.ipv4:" + poly)
-            if (metainfo == 6):
-                metaresults = polyswarm.search_by_metadata("strings.domains:" + poly)
-            if (metainfo == 7):
-                poly = (r'"' + poly + r'"')
-                metaresults = polyswarm.search_by_metadata("strings.urls:" + poly)
-            if (metainfo == 8):
-                poly = 'scan.latest_scan.\*.metadata.malware_family:' + poly
-                metaresults = polyswarm.search_by_metadata(poly)
+            try:
+                if (metainfo == 5):
+                    metaresults = polyswarm.search_by_metadata("strings.ipv4:" + poly)
+                if (metainfo == 6):
+                    metaresults = polyswarm.search_by_metadata("strings.domains:" + poly)
+                if (metainfo == 7):
+                    poly = (r'"' + poly + r'"')
+                    metaresults = polyswarm.search_by_metadata("strings.urls:" + poly)
+                if (metainfo == 8):
+                    poly = ('scan.latest_scan.\*.metadata.malware_family:' + poly)
+                    metaresults = polyswarm.search_by_metadata(poly)
+            except Exception:
+                if (cv.bkg == 1):
+                    print((mycolors.foreground.lightred + "\nInformation not found on Polyswarm.\n"))
+                else:
+                    print((mycolors.foreground.red + "\nInformation not found on Polyswarm.\n"))
+                print(mycolors.reset)
+                exit(0)
+
             for y in metaresults:
                 if (cv.bkg == 1):
                     if (y.sha256):
@@ -94,7 +103,13 @@ class PolyswarmExtractor():
                     else:
                         print(mycolors.reset + "Result: " + mycolors.foreground.yellow + "Sample not found!", end=' ')
                         exit(0)
-                    score = next(polyswarm.search(y.sha256))
+
+                    try:
+                        score = next(polyswarm.search(y.sha256))
+                    except Exception:
+                        score.polyscore = "None"
+                        pass
+
                     print(mycolors.reset + "Polyscore: " + mycolors.foreground.yellow + "%20s" % score.polyscore, end=' ')
                     if (str(y.scan.get('detections', {}).get('malicious'))) != 'None':
                         print(mycolors.reset + "scan: " + mycolors.foreground.yellow + "%s" % y.scan.get('detections', {}).get('malicious'), end=' ')
@@ -107,7 +122,13 @@ class PolyswarmExtractor():
                     else:
                         print(mycolors.reset + "scan: " + mycolors.foreground.purple + "Sample not found!", end=' ')
                         exit(0)
-                    score = next(polyswarm.search(y.sha256))
+
+                    try:
+                        score = next(polyswarm.search(y.sha256))
+                    except Exception:
+                        score.polyscore = "None"
+                        pass
+
                     print(mycolors.reset + "Polyscore: " + mycolors.foreground.red + "%20s" % score.polyscore, end=' ')
                     if (str(y.scan.get('detections', {}).get('malicious'))) != 'None':
                         print(mycolors.reset + "scan: " + mycolors.foreground.red + "%s" % y.scan.get('detections', {}).get('malicious'), end=' ')

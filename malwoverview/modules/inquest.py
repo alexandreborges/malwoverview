@@ -54,6 +54,15 @@ class InQuestExtractor():
                             print(mycolors.foreground.red + "\nThe provided SHA256 hash is not valid!\n" + mycolors.reset)
                         exit(1)
 
+            if (inquestresponse.status_code == 403 or inquestresponse.status_code == 500):
+                inquesttext = json.loads(inquestresponse.text)
+
+                if (cv.bkg == 1):
+                    print(mycolors.foreground.lightred + "\nThe sample is not available for download!\n" + mycolors.reset)
+                else:
+                    print(mycolors.foreground.red + "\nThe sample is not available for download!\n" + mycolors.reset)
+                exit(1)
+
             open(inquestx + '.bin', 'wb').write(inquestresponse.content)
             if (cv.bkg == 1):
                 print("\n" + mycolors.foreground.yellow + "SAMPLE SAVED as: " + inquestx + ".bin" + mycolors.reset, end=' ')

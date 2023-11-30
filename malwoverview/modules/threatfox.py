@@ -25,7 +25,8 @@ class ThreatFoxExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json'})
-            params = {'query': "get_iocs", 'days': bazaarx}
+            params = {'query': "get_iocs", 'days': int(bazaarx)}
+
             bazaarresponse = requestsession.post(
                 url=bazaar,
                 data=json.dumps(params)

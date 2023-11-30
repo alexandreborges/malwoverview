@@ -718,9 +718,16 @@ class URLHausExtractor():
                         x = x + 1
                         if (cv.bkg == 1):
                             print(mycolors.reset + "Payload_%d:\t" % x, end='')
-                            print(mycolors.foreground.pink + "firstseen:%12s" % i['firstseen'], end='     ')
-                            print(mycolors.foreground.yellow + "filename: %-30s" % i['filename'].ljust(40), end=' ' + "")
-                            print(mycolors.foreground.lightred + "filetype: %s" % i['file_type'].ljust(10) + Fore.WHITE, end=' ' + "")
+                            if ('firstseen' in i):
+                                if (i['firstseen'] is not None):
+                                    print(mycolors.foreground.pink + "firstseen:%12s" % i['firstseen'], end = '     ' )
+                            if ('filename' in i):
+                                if (i['filename'] is not None):
+                                    print(mycolors.foreground.yellow + "filename: %-30s" % i['filename'].ljust(40), end = ' ' + "")
+                            if ('file_type' in i):
+                                if (i['file_type'] is not None):
+                                    print(mycolors.foreground.lightred + "filetype: %s" % i['file_type'].ljust(10) + Fore.WHITE, end= ' ' + "")
+
                             results = i['virustotal']
                             if (results) is not None:
                                 print(mycolors.foreground.lightcyan + "VirusTotal: %s" % results['result'] + Fore.WHITE)
@@ -728,9 +735,15 @@ class URLHausExtractor():
                                 print(mycolors.foreground.lightcyan + "VirusTotal: Not Found" + Fore.WHITE)
                         else:
                             print(mycolors.reset + "Payload_%d:\t" % x, end='')
-                            print(mycolors.foreground.purple + "firstseen:%12s" % i['firstseen'], end='     ')
-                            print(mycolors.foreground.green + "filename: %-30s" % i['filename'].ljust(40), end=' ' + "")
-                            print(mycolors.foreground.red + "filetype: %s" % i['file_type'].ljust(10) + Fore.BLACK, end='' + "")
+                            if ('firstseen' in i):
+                                if (i['firstseen'] is not None):
+                                    print(mycolors.foreground.purple + "firstseen:%12s" % i['firstseen'], end = '     ')
+                            if ('filename' in i):
+                                if (i['filename'] is not None):
+                                    print(mycolors.foreground.green + "filename: %-30s" % i['filename'].ljust(40), end = ' ' + "")
+                            if ('file_type' in i):
+                                if (i['file_type'] is not None):
+                                    print(mycolors.foreground.red + "filetype: %s" % i['file_type'].ljust(10) + Fore.BLACK, end = '' + "")
                             results = i['virustotal']
                             if (results) is not None:
                                 print(mycolors.foreground.blue + "VirusTotal: %s" % results['result'] + Fore.BLACK)

@@ -1,10 +1,12 @@
 # Malwoverview
 
 [<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/6.0.0) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
-[<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers) [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?color=blueviolet&style=for-the-badge">](https://twitter.com/ale_sp_brazil)
-[<img alt="PayPal" src="https://img.shields.io/badge/Donate-Paypal-brightgreen?style=for-the-badge&logo=appveyor">](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M8F458EZH8UZE&source=url)
-[<img alt="Downloads/Month" src="https://img.shields.io/pypi/dm/malwoverview?color=yellow&style=for-the-badge">](https://pypistats.org/packages/malwoverview)
+[<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
+[<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
+[<img alt="Downloads/Last Month" src="https://img.shields.io/pypi/dm/malwoverview?color=blue&style=for-the-badge&label=Last%20Month">](https://pypistats.org/packages/malwoverview)
+[![Downloads](https://static.pepy.tech/personalized-badge/malwoverview?period=month&units=international_system&left_color=grey&right_color=orange&left_text=Last%2030%20days)](https://pepy.tech/project/malwoverview)
 [<img alt="Downloads/Total" src="https://static.pepy.tech/personalized-badge/malwoverview?period=total&units=international_system&left_color=grey&right_color=red&left_text=Total%20Downloads">](https://pepy.tech/project/malwoverview)
+[![Sponsored by Tines](https://www.tines.com/images/badges/tines-sponsorship-badge-pill-210x75.svg)](https://www.tines.com?utm_source=oss&utm_medium=sponsorship&utm_campaign=malwoverview)
 
 ![Alt text](pictures/picture_1.jpg?raw=true "Title")
 ![Alt text](pictures/picture_2.jpg?raw=true "Title")
@@ -147,7 +149,7 @@ If you are installing Malwoverview on macOS, you must execute the following comm
 
       * /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       * brew install libmagic
-      * pip install urllib3==1.26.6
+      * pip3 install urllib3==1.26.6
       * pip3 install -U malwoverview
       * Add Python binary directory to the PATH variable by editing .bash_profile file in your home 
         directory. Example:
@@ -156,14 +158,11 @@ If you are installing Malwoverview on macOS, you must execute the following comm
 
       * Execute: . ./.bash_profile
 
-If you are installing Malwoverview on Windows, you must execute the following commands AFTER 
-installing Malwoverview:
+If you are installing Malwoverview on Windows, make sure that the following conditions are true  
+AFTER having installed Malwoverview:
 
-      * python -m pip uninstall python-magic
-      * python -m pip install python-magic-bin
-
-      ** You need to repeat both commands above everytime you update 
-         Malwoverview on Windows.
+      * python-magic is NOT installed. (pip show python-magic)
+      * python-magic-bin IS installed. (pip show python-magic-bin)
 
 To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm,
 Alien Vault, Malpedia  and Triage into the .malwapi.conf configuration file 
@@ -443,6 +442,23 @@ Version 6.0.0:
             * It has been completely refactored.
               Special thanks to Artur Marzano, who has contributed
               and dedicated his time to accomplish this task.
+
+Version 5.4.2:
+
+      This version:
+
+            * Fixes two small issues.
+
+Version 5.4.1:
+
+      This version:
+
+            * Fixes issues related to URLHaus.
+            * Fixes issues related to Polyswarm.
+            * Fixes issues related to Malware Bazaar.
+            * Fixes issues related to InQuest.
+            * Introduces changes in the help description. 
+            * Introduces changes to installation process. 
 
 Version 5.3:
 
