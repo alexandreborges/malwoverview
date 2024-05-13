@@ -1816,10 +1816,10 @@ def vtbatchwork(myhash, url):
 
     try:
 
-        finalurl = ''.join([url, "/", myhash ])
+        finalurl = ''.join([url, "/", myhash.strip()])
         requestsession = requests.Session( )
-        requestsession.headers.update({'x-apikey': VTAPI})
-        requestsession.headers.update({'content-type': 'application/json'})
+        requestsession.headers.update({"x-apikey": VTAPI })
+        requestsession.headers.update({"accept": "application/json"})
         response = requestsession.get(finalurl)
         vttext = json.loads(response.text)
 
@@ -4777,6 +4777,7 @@ def triage_download(triagex, triage):
         requestsession = requests.Session( )
         requestsession.headers.update({'Authorization':'Bearer ' + TRIAGEAPI})
         triageresponse = requestsession.get(triage + 'samples/' + triagex + '/sample')
+
         if (triageresponse.status_code == 404):
             triagetext = json.loads(triageresponse.text)
 
@@ -8303,7 +8304,7 @@ def haussample(hashx, haus):
 
         try:
 
-            resource = hashx 
+            resource = hashx.strip()
             requestsession = requests.Session( )
             requestsession.headers.update({'accept': 'application/gzip'})
             finalurl = ''.join([haus, resource])
