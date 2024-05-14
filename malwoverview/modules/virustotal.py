@@ -87,7 +87,7 @@ class VirusTotalExtractor():
         url = VirusTotalExtractor.urlfilevt3
 
         try:
-            finalurl = ''.join([url, "/", myhash])
+            finalurl = ''.join([url, "/", myhash.strip()])
             requestsession = requests.Session()
             requestsession.headers.update({'x-apikey': self.VTAPI})
             requestsession.headers.update({'content-type': 'application/json'})
