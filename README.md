@@ -6,7 +6,6 @@
 [<img alt="Downloads/Last Month" src="https://img.shields.io/pypi/dm/malwoverview?color=blue&style=for-the-badge&label=Last%20Month">](https://pypistats.org/packages/malwoverview)
 [![Downloads](https://static.pepy.tech/personalized-badge/malwoverview?period=month&units=international_system&left_color=grey&right_color=orange&left_text=Last%2030%20days)](https://pepy.tech/project/malwoverview)
 [<img alt="Downloads/Total" src="https://static.pepy.tech/personalized-badge/malwoverview?period=total&units=international_system&left_color=grey&right_color=red&left_text=Total%20Downloads">](https://pepy.tech/project/malwoverview)
-[![Sponsored by Tines](https://www.tines.com/images/badges/tines-sponsorship-badge-pill-210x75.svg)](https://www.tines.com?utm_source=oss&utm_medium=sponsorship&utm_campaign=malwoverview)
 
 ![Alt text](pictures/picture_1.jpg?raw=true "Title")
 ![Alt text](pictures/picture_2.jpg?raw=true "Title")

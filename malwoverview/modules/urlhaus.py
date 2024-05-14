@@ -315,7 +315,7 @@ class URLHausExtractor():
         finalurl = ''
 
         try:
-            resource = hashx
+            resource = hashx.strip()
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/gzip'})
             finalurl = ''.join([haus, resource])

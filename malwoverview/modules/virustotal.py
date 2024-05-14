@@ -1138,8 +1138,8 @@ class VirusTotalExtractor():
         try:
             finalurl = ''.join([url, "/", myhash])
             requestsession = requests.Session()
-            requestsession.headers.update({'x-apikey': self.VTAPI})
-            requestsession.headers.update({'content-type': 'application/json'})
+            requestsession.headers.update({"x-apikey": self.VTAPI})
+            requestsession.headers.update({"accept": "application/json"})
             response = requestsession.get(finalurl)
             vttext = json.loads(response.text)
             attrs = vttext.get('data', {}).get('attributes', {})
