@@ -163,6 +163,16 @@ AFTER having installed Malwoverview:
       * python-magic is NOT installed. (pip show python-magic)
       * python-magic-bin IS installed. (pip show python-magic-bin)
 
+          export PATH=$PATH:/Users/alexandreborges/Library/Python/3.9/bin
+
+      * Execute: . ./.bash_profile
+
+If you are installing Malwoverview on Windows, make sure that the following conditions are true  
+AFTER having installed Malwoverview:
+
+      * python-magic is NOT installed. (pip show python-magic)
+      * python-magic-bin IS installed. (pip show python-magic-bin)
+      
 To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm,
 Alien Vault, Malpedia  and Triage into the .malwapi.conf configuration file 
 (the default one at the home directory (/home/[username] or /root) -- if the file doesn't exist,
