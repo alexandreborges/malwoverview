@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/5.4.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/5.4.3) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [<img alt="Downloads/Last Month" src="https://img.shields.io/pypi/dm/malwoverview?color=blue&style=for-the-badge&label=Last%20Month">](https://pypistats.org/packages/malwoverview)
@@ -56,7 +56,7 @@
 ![Alt text](pictures/picture_47.jpg?raw=true "Title")
 ![Alt text](pictures/picture_48.jpg?raw=true "Title")
 
-      Copyright (C)  2018-2023 Alexandre Borges <alexandreborges at blackstormsecurity dot com>
+      Copyright (C)  2018-2024 Alexandre Borges (https://exploitreversing.com) 
 
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
@@ -71,7 +71,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-# Current Version: 5.4.2
+# Current Version: 5.4.3
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -143,7 +143,7 @@ can be installed by executing the following command:
       
       * git clone https://github.com/alexandreborges/malwoverview
 
-If you are installing Malwoverview on  macOS, you must execute the following commands:
+If you want to install the  Malwoverview on macOS, you have to execute the following commands:
 
       * /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       * brew install libmagic
@@ -240,7 +240,7 @@ Additional explanation about Triage:
 ----------------------------------------------------
 
 Every Triage operation is based on the Triage ID of each artifact, so you need to
-use the "-x 1 -X \<attribute\>:\<value\>" to look for the correct ID of the artifact,
+use the "-x 1 -X \<attribute\>:\<value\>" to search for the correct ID of the artifact,
 so use this ID information with the remaining Triage options (-x [2-7]) for getting 
 further threat hunting information from Triage endpoint.
 
@@ -269,7 +269,7 @@ Further information is available on:
        (PYPI.org repository) https://pypi.org/project/malwoverview/
        (Github) https://github.com/alexandreborges/malwoverview
 
-If you want to perform the manual steps (usually, it is not necessary), so few steps 
+If you want to perform the manual installation (it is not usually necessary), so few steps 
 should be executed:
 
 ## REMnux / Ubuntu (manual steps)
@@ -284,18 +284,18 @@ should be executed:
 
        $ pip3.11 install python-magic
 
-      Or compiling it from the github repository:
+      Or you can compile it from the github repository:
 
        $ git clone https://github.com/ahupp/python-magic
        $ cd python-magic/
        $ python3.11 setup.py build
        $ python3.11 setup.py install
 
-      As there are serious problems about existing two versions of python-magic package, my 
+      As there are serious issues related to existing two versions of python-magic package, the  
       recommendation is to install it from github (second procedure above) and copy the magic.py 
       file to the SAME directory of malwoverview tool. 
       
-3. Install several Python packages: 
+3. Install all needed Python packages: 
 
        $ pip3.11 install -r requirements.txt
 
@@ -312,13 +312,13 @@ should be executed:
        $ pip3.11 install -U pathlib
        $ pip3.11 install -U configparser
 
-4. To check an Android mobile you need to install the "adb" program by executing the following command:
+4. To check an Android mobile you need to install the "adb" tool:
 
-       # apt get install adb
+       $ sudo apt get install adb
 
    PS: before trying Android's options, check:
 
-       * If the adb program is listed in the PATH environment variable.
+       * If the adb tool is listed in the PATH environment variable.
        * If the system has authorized access to the device by using "adb devices -l"
 
 
@@ -432,6 +432,14 @@ should be executed:
 
 
 # HISTORY
+
+Version 5.4.3:
+
+      This version:
+
+	    * Fixes a recent issue on -v 10 and 11 options (VT) due to 
+	      a change in one of the used libraries. 
+	    * Fixes other minor issues on several options. 
 
 Version 5.4.2:
 
