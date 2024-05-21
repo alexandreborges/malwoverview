@@ -11,9 +11,9 @@ with open("README.md", encoding='utf8') as readme:
 
 setup(
     name="malwoverview",
-    version="5.4.3",
+    version="5.4.4",
     author="Alexandre Borges",
-    author_email="alexandreborges@blackstormsecurity.com",
+    author_email="reverseexploit@proton.me",
     license="GNU GPL v3.0",
     url="https://github.com/alexandreborges/malwoverview",
     description=("Malwoverview is a first response tool for threat hunting."),
