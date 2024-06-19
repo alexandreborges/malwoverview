@@ -11,7 +11,7 @@ with open("README.md", encoding='utf8') as readme:
 
 setup(
     name="malwoverview",
-    version="5.4.4",
+    version="5.4.5",
     author="Alexandre Borges",
     author_email="reverseexploit@proton.me",
     license="GNU GPL v3.0",
