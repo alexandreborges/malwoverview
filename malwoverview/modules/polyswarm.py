@@ -1,8 +1,8 @@
-import modules.configvars as cv
+import malwoverview.modules.configvars as cv
 from polyswarm_api.api import PolyswarmAPI
-from utils.colors import mycolors, printr
-from utils.hash import sha256hash
-from utils.peinfo import ftype
+from malwoverview.utils.colors import mycolors, printr
+from malwoverview.utils.hash import sha256hash
+from malwoverview.utils.peinfo import ftype
 import pefile
 from requests.exceptions import RetryError
 import re

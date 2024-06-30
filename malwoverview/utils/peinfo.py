@@ -1,6 +1,6 @@
 import pefile
-from utils.colors import mycolors, printr
-import modules.configvars as cv
+from malwoverview.utils.colors import mycolors, printr
+import malwoverview.modules.configvars as cv
 import magic
 
 

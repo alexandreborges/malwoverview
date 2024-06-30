@@ -1,9 +1,9 @@
-import modules.configvars as cv
+import malwoverview.modules.configvars as cv
 import requests
 from colorama import Fore
 import geocoder
-from utils.colors import mycolors, printr
-from utils.hash import sha256hash
+from malwoverview.utils.colors import mycolors, printr
+from malwoverview.utils.hash import sha256hash
 import json
 import os
 

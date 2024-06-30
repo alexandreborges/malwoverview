@@ -1,5 +1,5 @@
-import modules.configvars as cv
-from utils.colors import mycolors, printr
+import malwoverview.modules.configvars as cv
+from malwoverview.utils.colors import mycolors, printr
 import json
 import requests
 import sys

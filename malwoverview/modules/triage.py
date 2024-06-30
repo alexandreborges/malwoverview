@@ -1,6 +1,6 @@
-import modules.configvars as cv
+import malwoverview.modules.configvars as cv
 from requests import Request
-from utils.colors import mycolors, printr
+from malwoverview.utils.colors import mycolors, printr
 import binascii
 import textwrap
 from io import BytesIO

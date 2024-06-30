@@ -1,7 +1,7 @@
-import modules.configvars as cv
-from utils.colors import mycolors, printr
-from utils.hash import sha256hash
-from modules.hybrid import HybridAnalysisExtractor
+import malwoverview.modules.configvars as cv
+from malwoverview.utils.colors import mycolors, printr
+from malwoverview.utils.hash import sha256hash
+from malwoverview.modules.hybrid import HybridAnalysisExtractor
 import requests
 import subprocess
 import threading

@@ -1,10 +1,10 @@
-import modules.configvars as cv
+import malwoverview.modules.configvars as cv
 import requests
 import textwrap
 from colorama import Fore
 import validators
-from utils.colors import mycolors, printr
-from utils.utils import urltoip
+from malwoverview.utils.colors import mycolors, printr
+from malwoverview.utils.utils import urltoip
 import json
 import sys
 

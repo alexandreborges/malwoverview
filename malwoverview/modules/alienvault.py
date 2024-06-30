@@ -1,7 +1,7 @@
-import modules.configvars as cv
+import malwoverview.modules.configvars as cv
 import requests
 import textwrap
-from utils.colors import mycolors, printr
+from malwoverview.utils.colors import mycolors, printr
 import json
 
 

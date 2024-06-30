@@ -30,21 +30,21 @@ import platform
 import signal
 from colorama import init
 from pathlib import Path
-from modules.alienvault import AlienVaultExtractor
-from modules.android import AndroidExtractor
-from modules.bazaar import BazaarExtractor
-from modules.hybrid import HybridAnalysisExtractor
-from modules.inquest import InQuestExtractor
-from modules.malpedia import MalpediaExtractor
-from modules.malshare import MalshareExtractor
-from modules.polyswarm import PolyswarmExtractor
-from modules.threatfox import ThreatFoxExtractor
-from modules.triage import TriageExtractor
-from modules.urlhaus import URLHausExtractor
-from modules.virustotal import VirusTotalExtractor
-from utils.colors import printr
-from utils.hash import calchash
-import modules.configvars as cv
+from malwoverview.modules.alienvault import AlienVaultExtractor
+from malwoverview.modules.android import AndroidExtractor
+from malwoverview.modules.bazaar import BazaarExtractor
+from malwoverview.modules.hybrid import HybridAnalysisExtractor
+from malwoverview.modules.inquest import InQuestExtractor
+from malwoverview.modules.malpedia import MalpediaExtractor
+from malwoverview.modules.malshare import MalshareExtractor
+from malwoverview.modules.polyswarm import PolyswarmExtractor
+from malwoverview.modules.threatfox import ThreatFoxExtractor
+from malwoverview.modules.triage import TriageExtractor
+from malwoverview.modules.urlhaus import URLHausExtractor
+from malwoverview.modules.virustotal import VirusTotalExtractor
+from malwoverview.utils.colors import printr
+from malwoverview.utils.hash import calchash
+import malwoverview.modules.configvars as cv
 
 
 # On Windows systems, it is necessary to install python-magic-bin: pip install python-magic-bin

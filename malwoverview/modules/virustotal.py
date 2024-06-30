@@ -1,8 +1,8 @@
-import modules.configvars as cv
+import malwoverview.modules.configvars as cv
 from datetime import datetime
-from utils.colors import mycolors, printr
-from utils.hash import sha256hash
-from utils.peinfo import ftype, isoverlay, overextract, list_imports_exports
+from malwoverview.utils.colors import mycolors, printr
+from malwoverview.utils.hash import sha256hash
+from malwoverview.utils.peinfo import ftype, isoverlay, overextract, list_imports_exports
 import geocoder
 import validators
 import requests

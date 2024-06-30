@@ -1,7 +1,7 @@
 import hashlib
 import os
-from utils.colors import mycolors, printr
-import modules.configvars as cv
+from malwoverview.utils.colors import mycolors, printr
+import malwoverview.modules.configvars as cv
 
 
 def sha256hash(fname):
