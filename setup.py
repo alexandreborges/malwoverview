@@ -38,7 +38,11 @@ setup(
         "configparser",
 		"python-magic-bin; platform_system == 'Windows'"
     ],
-    scripts=['malwoverview/malwoverview.py'],
+    entry_points = {
+        "console_scripts": [
+            "malwoverview = malwoverview.malwoverview:main",
+        ]
+    },
     package_data={'': ['README.md, LICENSE, .malwapi.conf']},
     data_files=[(USER_HOME_DIR, ['.malwapi.conf'])],
 )

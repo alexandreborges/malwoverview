@@ -55,11 +55,11 @@ __license__ = "GNU General Public License v3.0"
 __version__ = "6.0.0"
 __email__ = "reverseexploit at proton.me"
 
-if __name__ == "__main__":
-    def finish_hook(signum, frame):
-        printr()
-        exit(1)
+def finish_hook(signum, frame):
+    printr()
+    exit(1)
 
+def main():
     FINISH_SIGNALS = [signal.SIGINT, signal.SIGTERM]
     for signal_to_hook in FINISH_SIGNALS:
         signal.signal(signal_to_hook, finish_hook)
@@ -419,3 +419,6 @@ if __name__ == "__main__":
             status = 1
 
         exit(status)
+
+if __name__ == "__main__":
+    main()
