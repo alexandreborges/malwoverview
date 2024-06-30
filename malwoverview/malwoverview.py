@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (C)  2018-2022 Alexandre Borges <alexandreborges@blackstormsecurity.com>
+# Copyright (C)  2018-2024 Alexandre Borges <https://exploitreversing.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -50,10 +50,10 @@ import modules.configvars as cv
 # On Windows systems, it is necessary to install python-magic-bin: pip install python-magic-bin
 
 __author__ = "Alexandre Borges"
-__copyright__ = "Copyright 2018-2021, Alexandre Borges"
+__copyright__ = "Copyright 2018-2024, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
 __version__ = "6.0.0"
-__email__ = "alexandreborges at blackstormsecurity.com"
+__email__ = "reverseexploit at proton.me"
 
 if __name__ == "__main__":
     def finish_hook(signum, frame):

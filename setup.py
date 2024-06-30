@@ -13,7 +13,7 @@ setup(
     name="malwoverview",
     version="6.0.0",
     author="Alexandre Borges",
-    author_email="alexandreborges@blackstormsecurity.com",
+    author_email="reverseexploit@proton.me",
     license="GNU GPL v3.0",
     url="https://github.com/alexandreborges/malwoverview",
     description=("Malwoverview is a first response tool for threat hunting."),

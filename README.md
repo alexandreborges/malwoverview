@@ -56,7 +56,7 @@
 ![Alt text](pictures/picture_47.jpg?raw=true "Title")
 ![Alt text](pictures/picture_48.jpg?raw=true "Title")
 
-      Copyright (C)  2018-2023 Alexandre Borges <alexandreborges at blackstormsecurity dot com>
+      Copyright (C)  2018-2024 Alexandre Borges (https://exploitreversing.com) 
 
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
@@ -144,7 +144,7 @@ can be installed by executing the following command:
       
       * git clone https://github.com/alexandreborges/malwoverview
 
-If you are installing Malwoverview on macOS, you must execute the following commands:
+If you want to install the  Malwoverview on macOS, you have to execute the following commands:
 
       * /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       * brew install libmagic
@@ -162,16 +162,6 @@ AFTER having installed Malwoverview:
 
       * python-magic is NOT installed. (pip show python-magic)
       * python-magic-bin IS installed. (pip show python-magic-bin)
-
-          export PATH=$PATH:/Users/alexandreborges/Library/Python/3.9/bin
-
-      * Execute: . ./.bash_profile
-
-If you are installing Malwoverview on Windows, make sure that the following conditions are true  
-AFTER having installed Malwoverview:
-
-      * python-magic is NOT installed. (pip show python-magic)
-      * python-magic-bin IS installed. (pip show python-magic-bin)
       
 To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm,
 Alien Vault, Malpedia  and Triage into the .malwapi.conf configuration file 
@@ -179,7 +169,7 @@ Alien Vault, Malpedia  and Triage into the .malwapi.conf configuration file
 so you should create it) or you could create a custom configuration file and indicate it by 
 using the -c option.
 
-Nonetheless, starting on version 4.4.2, it isn't longer necessary to insert all APIs into
+Nonetheless, starting on version 4.4.2, it isn't longer necessary to insert all APIs into 
 .malwapi.conf file before using Malwoverview. Therefore, users can only insert few APIs 
 and use the respective options to these APIs.
 
@@ -251,7 +241,7 @@ Additional explanation about Triage:
 ----------------------------------------------------
 
 Every Triage operation is based on the Triage ID of each artifact, so you need to
-use the "-x 1 -X \<attribute\>:\<value\>" to look for the correct ID of the artifact,
+use the "-x 1 -X \<attribute\>:\<value\>" to search for the correct ID of the artifact,
 so use this ID information with the remaining Triage options (-x [2-7]) for getting 
 further threat hunting information from Triage endpoint.
 
@@ -280,7 +270,7 @@ Further information is available on:
        (PYPI.org repository) https://pypi.org/project/malwoverview/
        (Github) https://github.com/alexandreborges/malwoverview
 
-If you want to perform the manual steps (usually, it is not necessary), so few steps 
+If you want to perform the manual installation (it is not usually necessary), so few steps 
 should be executed:
 
 ## REMnux / Ubuntu (manual steps)
@@ -295,18 +285,18 @@ should be executed:
 
        $ pip3.11 install python-magic
 
-      Or compiling it from the github repository:
+      Or you can compile it from the github repository:
 
        $ git clone https://github.com/ahupp/python-magic
        $ cd python-magic/
        $ python3.11 setup.py build
        $ python3.11 setup.py install
 
-      As there are serious problems about existing two versions of python-magic package, my 
+      As there are serious issues related to existing two versions of python-magic package, the  
       recommendation is to install it from github (second procedure above) and copy the magic.py 
       file to the SAME directory of malwoverview tool. 
       
-3. Install several Python packages: 
+3. Install all needed Python packages: 
 
        $ pip3.11 install -r requirements.txt
 
@@ -323,13 +313,13 @@ should be executed:
        $ pip3.11 install -U pathlib
        $ pip3.11 install -U configparser
 
-4. To check an Android mobile you need to install the "adb" program by executing the following command:
+4. To check an Android mobile you need to install the "adb" tool:
 
-       # apt get install adb
+       $ sudo apt get install adb
 
    PS: before trying Android's options, check:
 
-       * If the adb program is listed in the PATH environment variable.
+       * If the adb tool is listed in the PATH environment variable.
        * If the system has authorized access to the device by using "adb devices -l"
 
 
@@ -452,6 +442,26 @@ Version 6.0.0:
               Special thanks to Artur Marzano, who has contributed
               and dedicated his time to accomplish this task.
 
+Version 5.4.5:
+
+      This version:
+
+	    * Includes a fix related to the installation path. 
+
+Version 5.4.4:
+
+      This version:
+
+	    * Includes only small changes and updates in the README.md.
+
+Version 5.4.3:
+
+      This version:
+
+	    * Fixes a recent issue on -v 10 and 11 options (VT) due to 
+	      a change in one of the used libraries. 
+	    * Fixes other minor issues on several options.
+
 Version 5.4.2:
 
       This version:
@@ -466,7 +476,7 @@ Version 5.4.1:
             * Fixes issues related to Polyswarm.
             * Fixes issues related to Malware Bazaar.
             * Fixes issues related to InQuest.
-            * Introduces changes in the help description. 
+            * Introduces changes to the help description. 
             * Introduces changes to installation process. 
 
 Version 5.3:
