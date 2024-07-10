@@ -139,7 +139,7 @@ and how it would make the project better. Once it has been accepted, so she/he i
 authorized to submit the PR, which will be tested. 
 
 Once all changes are tested, this new version of Malwoverview is replicated to the master 
-branch and a new Python package is generated.
+branch and a new Python package is generated.
 
 ## INSTALLATION
 
