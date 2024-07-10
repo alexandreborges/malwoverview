@@ -1,10 +1,6 @@
 # Malwoverview
 
-<<<<<<< HEAD
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/6.0.0) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
-=======
 [<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/5.4.5) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
->>>>>>> master
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [<img alt="Downloads/Last Month" src="https://img.shields.io/pypi/dm/malwoverview?color=blue&style=for-the-badge&label=Last%20Month">](https://pypistats.org/packages/malwoverview)
@@ -75,18 +71,14 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-<<<<<<< HEAD
-## Current Version: 6.0.0
-=======
 # Current Version: 5.4.5
->>>>>>> master
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
      that explicitly submit samples, but these options are explained in the help.
 
 
-## ABOUT
+# ABOUT
 
 Malwoverview.py is a first response tool for threat hunting, which performs an initial and quick 
 triage of malware samples, URLs, IP addresses, domains, malware families, IOCs and hashes. Additionally,
@@ -130,26 +122,13 @@ This tool aims to :
 30. Retrieve different information from InQuest Labs and download samples from there. 
 
 
-## CONTRIBUTORS
+# CONTRIBUTORS:
 
       Alexandre Borges (project owner)
       Corey Forman (https://github.com/digitalsleuth)
       Christian Clauss (https://github.com/cclauss)
-      Artur Marzano (https://github.com/Macmod)
 
-## HOW TO CONTRIBUTE TO THIS PROJECT
-
-Since version 6.0.0, there is a new branch named "dev". All contributions and proposals 
-must be done into this "dev" branch.
-
-Professionals who want to contribute must open an issue explaining your proposed improvement 
-and how it would make the project better. Once it has been accepted, so she/he is 
-authorized to submit the PR, which will be tested. 
-
-Once all changes are tested, this new version of Malwoverview is replicated to the master 
-branch and a new Python package is generated.
-
-## INSTALLATION
+# INSTALLATION 
 
 This tool has been tested on REMnux, Ubuntu, Kali Linux, macOS and Windows. Malwoverview 
 can be installed by executing the following command:
@@ -160,7 +139,11 @@ can be installed by executing the following command:
       
       * python -m pip install -U malwoverview
       
-If you want to install the Malwoverview on macOS, you have to execute the following commands:
+      or...
+      
+      * git clone https://github.com/alexandreborges/malwoverview
+
+If you want to install the  Malwoverview on macOS, you have to execute the following commands:
 
       * /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
       * brew install libmagic
@@ -279,7 +262,7 @@ On Linux and MacOS systems, create the .malwapi.conf file within
 
 To check the installation, execute:
 
-       malwoverview --help
+       malwoverview.py --help
        
 Further information is available on: 
 
@@ -289,7 +272,7 @@ Further information is available on:
 If you want to perform the manual installation (it is not usually necessary), so few steps 
 should be executed:
 
-## MANUAL INSTALLATION (REMnux and Ubuntu)
+## REMnux / Ubuntu (manual steps)
 
 1. Python version 3.8 or later (Only Python 3.x !!! It does NOT work using Python 2.7) 
 
@@ -339,137 +322,116 @@ should be executed:
        * If the system has authorized access to the device by using "adb devices -l"
 
 
-## EXAMPLES
+## Examples:
 
-    malwoverview -d /home/remnux/malware/windows_2/
-    malwoverview -v 1 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
-    malwoverview -v 2 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
-    malwoverview -v 3 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
-    malwoverview -v 4 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe,
-    malwoverview -v 5 -V http://jamogames.com/templates/JLHk/
-    malwoverview -v 6 -V 185.220.100.243
-    malwoverview -v 7 -V xurl.es
-    malwoverview -v 8 -V ab4d6a82cafc92825a0b88183325855f0c44920da970b42c949d5d5ffdcc0585
-    malwoverview -v 9 -V cc2d791b16063a302e1ebd35c0e84e6cf6519e90bb710c958ac4e4ddceca68f7.exe
-    malwoverview -v 10 -V /home/remnux/malware/hash_list_3.txt
-    malwoverview -v 11 -V /home/remnux/malware/hash_list_3.txt
-    malwoverview -v 12 -V 9d26e19b8fc5819b634397d48183637bacc9e1c62d8b1856b8116141cb8b4000
-    malwoverview -v 13 -V /largefiles/4b3b46558cffe1c0b651f09c719af2779af3e4e0e43da060468467d8df445e93
-    malwoverview -a 1 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
-    malwoverview -a 1 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8.exe
-    malwoverview -a 2 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
-    malwoverview -a 3 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
-    malwoverview -a 4 -A malware1.apk
-    malwoverview -a 4 -A 82eb6039cdda6598dc23084768e18495d5ebf3bc3137990280bc0d9351a483eb
-    malwoverview -a 5 -A 2b03806939d1171f063ba8d14c3b10622edb5732e4f78dc4fe3eac98b56e5d46
-    malwoverview -a 5 -A 2b03806939d1171f063ba8d14c3b10622edb5732e4f78dc4fe3eac98b56e5d46.elf
-    malwoverview -a 6 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
-    malwoverview -a 7 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
-    malwoverview -a 8 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
-    malwoverview -a 9 -A malware_7.apk
-    malwoverview -a 10 -A 925f649617743f0640bdfff4b6b664b9e12761b0e24bbb99ca72740545087ad2.elf
-    malwoverview -a 11 -A cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
-    malwoverview -a 12 -A cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
-    malwoverview -a 13 -A cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
-    malwoverview -a 14 -A d90a5552fd4ef88a8b621dd3642e3be8e52115a67e6b17b13bdff461d81cf5a8
-    malwoverview -a 15 -A 925f649617743f0640bdfff4b6b664b9e12761b0e24bbb99ca72740545087ad2
-    malwoverview -l 1 -L d3dcc08c9b955cd3f68c198e11d5788869d1b159dc8014d6eaa39e6c258123b0
-    malwoverview -l 2
-    malwoverview -l 3
-    malwoverview -l 4
-    malwoverview -l 5
-    malwoverview -l 6
-    malwoverview -j 1 -J 7c99d644cf39c14208df6d139313eaf95123d569a9206939df996cfded6924a6
-    malwoverview -j 2 -J 7c99d644cf39c14208df6d139313eaf95123d569a9206939df996cfded6924a6
-    malwoverview -j 3 -J https://unada.us/acme-challenge/3NXwcYNCa/
-    malwoverview -j 4 -J Qakbot
-    malwoverview -j 5 -J Emotet
-    malwoverview -j 5 -J Icedid
-    malwoverview -j 6
-    malwoverview -j 7
-    malwoverview -p 1 -P 1999ba265cd51c94e8ae3a6038b3775bf9a49d6fe57d75dbf1726921af8a7ab2
-    malwoverview -p 2 -P 301524c3f959d2d6db9dffdf267ab16a706d3286c0b912f7dda5eb42b6d89996.exe
-    malwoverview -p 3 -P 68c11ef39769674123066bcd52e1d687502eb6c4c0788b4f682e8d31c15e5306
-    malwoverview -p 4 -P 68c11ef39769674123066bcd52e1d687502eb6c4c0788b4f682e8d31c15e5306.exe
-    malwoverview -p 5 -P 188.40.75.132
-    malwoverview -p 6 -P covid19tracer.ca
-    malwoverview -p 7 -P http://ksahosting.net/wp-includes/utf8.php
-    malwoverview -p 8 -P Qakbot
-    malwoverview -y 1
-    malwoverview -y 2
-    malwoverview -y 3
-    malwoverview -y 4 -Y com.spaceship.netprotect
-    malwoverview -y 5 -Y com.mwr.dz
-    malwoverview -v 1 -V 368afeda7af69f329e896dc86e9e4187a59d2007e0e4b47af30a1c117da0d792.apk
-    malwoverview -n 1 -N 10
-    malwoverview -n 2 -N 176.57.215.100
-    malwoverview -n 3 -N threesmallhills.com
-    malwoverview -n 4 -N 6d1756aa6b45244764409398305c460368d64ff9 -o 0
-    malwoverview -n 5 -N http://ksahosting.net/wp-includes/utf8.php
-    malwoverview -m 1 | more
-    malwoverview -m 2 | more
-    malwoverview -m 3 | more 
-    malwoverview -m 4 -M apt41 | more
-    malwoverview -m 5 | more 
-    malwoverview -m 6 -M win.qakbot
-    malwoverview -m 7 -M 3d375d0ead2b63168de86ca2649360d9dcff75b3e0ffa2cf1e50816ec92b3b7d 
-    malwoverview -m 8 -M win.qakbot
-    malwoverview -b 1 -B c9d7b5d06cd8ab1a01bf0c5bf41ef2a388e41b4c66b1728494f86ed255a95d48
-    malwoverview -b 2 -B Revil | more
-    malwoverview -b 3 -B f34d5f2d4577ed6d9ceec516c1f5a744
-    malwoverview -b 4 -B 100 
-    malwoverview -b 4 -B time | more
-    malwoverview -b 5 -B bda50ff249b947617d9551c717e78131ed32bf77db9dc5b7591d3e1af6cb2f1a
-    malwoverview -b 6 -B 3 | more
-    malwoverview -b 7 -B 193.150.103.37:21330
-    malwoverview -b 8 -B Magecart | more
-    malwoverview -b 9 -B "Cobalt Strike"
-    malwoverview -b 10 | more
-    malwoverview -x 1 -X score:10 | more
-    malwoverview -x 1 -X 71382e72d8fb3728dc8941798ab1c180493fa978fd7eadc1ab6d21dae0d603e2
-    malwoverview -x 2 -X 220315-qxzrfsadfl
-    malwoverview -x 3 -X cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
-    malwoverview -x 4 -X http://ztechinternational.com/Img/XSD.exe
-    malwoverview -x 5 -X 220315-xmbp7sdbel
-    malwoverview -x 6 -X 220315-xmbp7sdbel
-    malwoverview -x 7 -X 220315-xmbp7sdbel
-    malwoverview -i 1 -I 5119c804448dd877e1a32d5157dc2e5ff9344cb55e053b20117c9b3b4c974389 
-    malwoverview -i 2 -I 5119c804448dd877e1a32d5157dc2e5ff9344cb55e053b20117c9b3b4c974389
-    malwoverview -i 3 -I 0a1b0c7a21c8929b7742db195338af5c
-    malwoverview -i 4 -I list
-    malwoverview -i 5 -I rebrand.ly | more
-    malwoverview -i 6 -I 10.247.111.124 
-    malwoverview -i 7 -I diseno@distracom.com 
-    malwoverview -i 8 -I 20firmas-02.jpg
-    malwoverview -i 9 -I http://diagnostic.htb 
-    malwoverview -i 10 -I http://jaao.net 
-    malwoverview -i 11 -I list
-    malwoverview -i 12 -I rebrand.ly
-    malwoverview -i 13 -I list | more
+    malwoverview.py -d /home/remnux/malware/windows_2/
+    malwoverview.py -v 1 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
+    malwoverview.py -v 2 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
+    malwoverview.py -v 3 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
+    malwoverview.py -v 4 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe,
+    malwoverview.py -v 5 -V http://jamogames.com/templates/JLHk/
+    malwoverview.py -v 6 -V 185.220.100.243
+    malwoverview.py -v 7 -V xurl.es
+    malwoverview.py -v 8 -V ab4d6a82cafc92825a0b88183325855f0c44920da970b42c949d5d5ffdcc0585
+    malwoverview.py -v 9 -V cc2d791b16063a302e1ebd35c0e84e6cf6519e90bb710c958ac4e4ddceca68f7.exe
+    malwoverview.py -v 10 -V /home/remnux/malware/hash_list_3.txt
+    malwoverview.py -v 11 -V /home/remnux/malware/hash_list_3.txt
+    malwoverview.py -v 12 -V 9d26e19b8fc5819b634397d48183637bacc9e1c62d8b1856b8116141cb8b4000
+    malwoverview.py -v 13 -V /largefiles/4b3b46558cffe1c0b651f09c719af2779af3e4e0e43da060468467d8df445e93
+    malwoverview.py -a 1 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
+    malwoverview.py -a 1 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8.exe
+    malwoverview.py -a 2 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
+    malwoverview.py -a 3 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
+    malwoverview.py -a 4 -A malware1.apk
+    malwoverview.py -a 4 -A 82eb6039cdda6598dc23084768e18495d5ebf3bc3137990280bc0d9351a483eb
+    malwoverview.py -a 5 -A 2b03806939d1171f063ba8d14c3b10622edb5732e4f78dc4fe3eac98b56e5d46
+    malwoverview.py -a 5 -A 2b03806939d1171f063ba8d14c3b10622edb5732e4f78dc4fe3eac98b56e5d46.elf
+    malwoverview.py -a 6 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
+    malwoverview.py -a 7 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
+    malwoverview.py -a 8 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
+    malwoverview.py -a 9 -A malware_7.apk
+    malwoverview.py -a 10 -A 925f649617743f0640bdfff4b6b664b9e12761b0e24bbb99ca72740545087ad2.elf
+    malwoverview.py -a 11 -A cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
+    malwoverview.py -a 12 -A cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
+    malwoverview.py -a 13 -A cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
+    malwoverview.py -a 14 -A d90a5552fd4ef88a8b621dd3642e3be8e52115a67e6b17b13bdff461d81cf5a8
+    malwoverview.py -a 15 -A 925f649617743f0640bdfff4b6b664b9e12761b0e24bbb99ca72740545087ad2
+    malwoverview.py -l 1 -L d3dcc08c9b955cd3f68c198e11d5788869d1b159dc8014d6eaa39e6c258123b0
+    malwoverview.py -l 2
+    malwoverview.py -l 3
+    malwoverview.py -l 4
+    malwoverview.py -l 5
+    malwoverview.py -l 6
+    malwoverview.py -j 1 -J 7c99d644cf39c14208df6d139313eaf95123d569a9206939df996cfded6924a6
+    malwoverview.py -j 2 -J 7c99d644cf39c14208df6d139313eaf95123d569a9206939df996cfded6924a6
+    malwoverview.py -j 3 -J https://unada.us/acme-challenge/3NXwcYNCa/
+    malwoverview.py -j 4 -J Qakbot
+    malwoverview.py -j 5 -J Emotet
+    malwoverview.py -j 5 -J Icedid
+    malwoverview.py -j 6
+    malwoverview.py -j 7
+    malwoverview.py -p 1 -P 1999ba265cd51c94e8ae3a6038b3775bf9a49d6fe57d75dbf1726921af8a7ab2
+    malwoverview.py -p 2 -P 301524c3f959d2d6db9dffdf267ab16a706d3286c0b912f7dda5eb42b6d89996.exe
+    malwoverview.py -p 3 -P 68c11ef39769674123066bcd52e1d687502eb6c4c0788b4f682e8d31c15e5306
+    malwoverview.py -p 4 -P 68c11ef39769674123066bcd52e1d687502eb6c4c0788b4f682e8d31c15e5306.exe
+    malwoverview.py -p 5 -P 188.40.75.132
+    malwoverview.py -p 6 -P covid19tracer.ca
+    malwoverview.py -p 7 -P http://ksahosting.net/wp-includes/utf8.php
+    malwoverview.py -p 8 -P Qakbot
+    malwoverview.py -y 1
+    malwoverview.py -y 2
+    malwoverview.py -y 3
+    malwoverview.py -y 4 -Y com.spaceship.netprotect
+    malwoverview.py -y 5 -Y com.mwr.dz
+    malwoverview.py -v 1 -V 368afeda7af69f329e896dc86e9e4187a59d2007e0e4b47af30a1c117da0d792.apk
+    malwoverview.py -n 1 -N 10
+    malwoverview.py -n 2 -N 176.57.215.100
+    malwoverview.py -n 3 -N threesmallhills.com
+    malwoverview.py -n 4 -N 6d1756aa6b45244764409398305c460368d64ff9 -o 0
+    malwoverview.py -n 5 -N http://ksahosting.net/wp-includes/utf8.php
+    malwoverview.py -m 1 | more
+    malwoverview.py -m 2 | more
+    malwoverview.py -m 3 | more 
+    malwoverview.py -m 4 -M apt41 | more
+    malwoverview.py -m 5 | more 
+    malwoverview.py -m 6 -M win.qakbot
+    malwoverview.py -m 7 -M 3d375d0ead2b63168de86ca2649360d9dcff75b3e0ffa2cf1e50816ec92b3b7d 
+    malwoverview.py -m 8 -M win.qakbot
+    malwoverview.py -b 1 -B c9d7b5d06cd8ab1a01bf0c5bf41ef2a388e41b4c66b1728494f86ed255a95d48
+    malwoverview.py -b 2 -B Revil | more
+    malwoverview.py -b 3 -B f34d5f2d4577ed6d9ceec516c1f5a744
+    malwoverview.py -b 4 -B 100 
+    malwoverview.py -b 4 -B time | more
+    malwoverview.py -b 5 -B bda50ff249b947617d9551c717e78131ed32bf77db9dc5b7591d3e1af6cb2f1a
+    malwoverview.py -b 6 -B 3 | more
+    malwoverview.py -b 7 -B 193.150.103.37:21330
+    malwoverview.py -b 8 -B Magecart | more
+    malwoverview.py -b 9 -B "Cobalt Strike"
+    malwoverview.py -b 10 | more
+    malwoverview.py -x 1 -X score:10 | more
+    malwoverview.py -x 1 -X 71382e72d8fb3728dc8941798ab1c180493fa978fd7eadc1ab6d21dae0d603e2
+    malwoverview.py -x 2 -X 220315-qxzrfsadfl
+    malwoverview.py -x 3 -X cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
+    malwoverview.py -x 4 -X http://ztechinternational.com/Img/XSD.exe
+    malwoverview.py -x 5 -X 220315-xmbp7sdbel
+    malwoverview.py -x 6 -X 220315-xmbp7sdbel
+    malwoverview.py -x 7 -X 220315-xmbp7sdbel
+    malwoverview.py -i 1 -I 5119c804448dd877e1a32d5157dc2e5ff9344cb55e053b20117c9b3b4c974389 
+    malwoverview.py -i 2 -I 5119c804448dd877e1a32d5157dc2e5ff9344cb55e053b20117c9b3b4c974389
+    malwoverview.py -i 3 -I 0a1b0c7a21c8929b7742db195338af5c
+    malwoverview.py -i 4 -I list
+    malwoverview.py -i 5 -I rebrand.ly | more
+    malwoverview.py -i 6 -I 10.247.111.124 
+    malwoverview.py -i 7 -I diseno@distracom.com 
+    malwoverview.py -i 8 -I 20firmas-02.jpg
+    malwoverview.py -i 9 -I http://diagnostic.htb 
+    malwoverview.py -i 10 -I http://jaao.net 
+    malwoverview.py -i 11 -I list
+    malwoverview.py -i 12 -I rebrand.ly
+    malwoverview.py -i 13 -I list | more
 
 
-## HISTORY
-
-Version 6.0.0:
-
-      This version:
-
-            * It has been completely refactored.
-	    * README.md has been also changed.
-            * Special thanks to Artur Marzano, who has contributed
-              and dedicated his time to conduct and write this new version.
-
-Version 5.4.5:
-
-      This version:
-
-	    * Includes a fix related to the installation path. 
-
-Version 5.4.4:
-
-      This version:
-
-	    * Includes only small changes and updates in the README.md.
+# HISTORY
 
 Version 5.4.5:
 
