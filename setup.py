@@ -11,11 +11,7 @@ with open("README.md", encoding='utf8') as readme:
 
 setup(
     name="malwoverview",
-<<<<<<< HEAD
-    version="6.0.0",
-=======
     version="5.4.5",
->>>>>>> master
     author="Alexandre Borges",
     author_email="reverseexploit@proton.me",
     license="GNU GPL v3.0",
@@ -42,11 +38,7 @@ setup(
         "configparser",
 		"python-magic-bin; platform_system == 'Windows'"
     ],
-    entry_points = {
-        "console_scripts": [
-            "malwoverview = malwoverview.malwoverview:main",
-        ]
-    },
+    scripts=['malwoverview/malwoverview.py'],
     package_data={'': ['README.md, LICENSE, .malwapi.conf']},
     data_files=[(USER_HOME_DIR, ['.malwapi.conf'])],
 )
