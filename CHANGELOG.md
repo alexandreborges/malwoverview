@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 -->
 
-## [6.0.9] - 2024-07-10
+## [6.0.0] - 2024-07-10
 
 * It has been completely refactored.
 * README.md has been also changed.
