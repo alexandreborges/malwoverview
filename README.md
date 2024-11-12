@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v6.0.1) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v6.0.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [<img alt="Downloads/Last Month" src="https://img.shields.io/pypi/dm/malwoverview?color=blue&style=for-the-badge&label=Last%20Month">](https://pypistats.org/packages/malwoverview)
@@ -71,7 +71,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-## Current Version: 6.0.1
+## Current Version: 6.0.2
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -90,12 +90,12 @@ This tool aims to :
 1. Determine similar executable malware samples (PE/PE+) according to the import table (imphash) and group 
    them by different colors (pay attention to the second column from output). Thus, colors matter!
 2. Show hash information on Virus Total, Hybrid Analysis, Malshare, Polyswarm, URLhaus, Alien Vault, 
-   Malpedia and ThreatCrowd engines. 
+   Malpedia, ThreatCrowd and VirusExchange engines. 
 3. Determining whether the malware samples contain overlay and, if you want, extract it. 
 4. Check suspect files on Virus Total, Hybrid Analysis and Polyswarm.
 5. Check URLs on Virus Total, Malshare, Polyswarm, URLhaus engines and Alien Vault. 
-6. Download malware samples from Hybrid Analysis, Malshare, URLHaus, Polyswarm and Malpedia engines.
-7. Submit malware samples to VirusTotal, Hybrid Analysis and Polyswarm.
+6. Download malware samples from Hybrid Analysis, Malshare, URLHaus, Polyswarm, Malpedia and VirusExchange engines.
+7. Submit malware samples to VirusTotal, Hybrid Analysis, Polyswarm and VirusExchange.
 8. List last suspected URLs from URLHaus.
 9. List last payloads from URLHaus. 
 10. Search for specific payloads on the Malshare.
@@ -214,6 +214,8 @@ has the following format:
       [INQUEST]
       INQUESTAPI =
 
+      [VIRUSEXCHANGE]
+      VXAPI = 
 
 The APIs can be requested on the respective service websites:
 
@@ -230,6 +232,7 @@ The APIs can be requested on the respective service websites:
 09. ThreatFox: It isn't necessary an API.
 10. InQuest: https://labs.inquest.net/.
 11. Triage: https://tria.ge/signup.
+12. VirusExchange: https://virus.exchange/users/register.
  
 ----------------------------------------------------
 A special note about API requests to the MALPEDIA:
@@ -442,11 +445,17 @@ should be executed:
 
 ## HISTORY
 
+Version 6.0.2:
+      This version:
+
+            * Introduces -vx and -VX flags to allow interaction with VirusExchange's APIs for hash chack, sample download and sample submission.
+            * Adds a new -O flag to set up the output directory for any sample downloads
+
 Version 6.0.1:
 
       This version:
 
-            * Issue in Malshare's download option has been fixed..
+            * Issue in Malshare's download option has been fixed.
 
 Version 6.0.0:
 

@@ -2,7 +2,7 @@ import malwoverview.modules.configvars as cv
 from malwoverview.utils.colors import mycolors, printr
 import requests
 import json
-
+import os
 
 class BazaarExtractor():
     urlbazaar = 'https://mb-api.abuse.ch/api/v1/'
@@ -596,8 +596,9 @@ class BazaarExtractor():
                     print(mycolors.foreground.red + "\nNo malware samples found for the provided sha256 hash!\n" + mycolors.reset)
                 exit(1)
 
-            open(resource + '.zip', 'wb').write(bazaarresponse.content)
-            final = '\nSAMPLE SAVED!'
+            outputpath = os.path.join(cv.output_dir, resource + '.zip')
+            open(outputpath, 'wb').write(bazaarresponse.content)
+            final = f'\nSample downloaded to: {outputpath}'
 
             if (cv.bkg == 1):
                 print((mycolors.foreground.yellow + final + "\n"))

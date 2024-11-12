@@ -3,6 +3,7 @@ from malwoverview.utils.colors import mycolors, printr
 import json
 import requests
 import sys
+import os
 
 
 class MalshareExtractor():
@@ -47,10 +48,11 @@ class MalshareExtractor():
                     print(mycolors.reset)
                     exit(1)
             else:
-                open(resource, 'wb').write(malresponse3.content)
+                outputpath = os.path.join(cv.output_dir, resource)
+                open(outputpath, 'wb').write(malresponse3.content)
 
                 print("\n")
-                print((mycolors.reset + "MALWARE SAMPLE SAVED! "))
+                print((mycolors.reset + f"Sample downloaded to: {outputpath}"))
                 printr()
         except (BrokenPipeError, IOError):
             print(mycolors.reset, file=sys.stderr)

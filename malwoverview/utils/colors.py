@@ -30,8 +30,8 @@ class mycolors:
         red = '\033[41m'
 
 
-def printc(self, color, text, **args):
-    print(f'{color}{text}{mycolors.reset}', *args)
+def printc(text, color, *args, **kwargs):
+    print(f'{color}{text}{mycolors.reset}', *args, **kwargs)
 
 
 def printr():

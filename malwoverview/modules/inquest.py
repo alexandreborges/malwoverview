@@ -3,7 +3,7 @@ from malwoverview.utils.colors import mycolors, printr
 import requests
 import textwrap
 import json
-
+import os
 
 class InQuestExtractor():
     inquesturl = 'https://labs.inquest.net/api/dfi'
@@ -63,11 +63,12 @@ class InQuestExtractor():
                     print(mycolors.foreground.red + "\nThe sample is not available for download!\n" + mycolors.reset)
                 exit(1)
 
-            open(inquestx + '.bin', 'wb').write(inquestresponse.content)
+            outputpath = os.path.join(cv.output_dir, inquestx + '.bin')
+            open(outputpath, 'wb').write(inquestresponse.content)
             if (cv.bkg == 1):
-                print("\n" + mycolors.foreground.yellow + "SAMPLE SAVED as: " + inquestx + ".bin" + mycolors.reset, end=' ')
+                print("\n" + mycolors.foreground.yellow + f"Sample downloaded to: {outputpath}" + mycolors.reset, end=' ')
             if (cv.bkg == 0):
-                print("\n" + mycolors.foreground.blue + "SAMPLE SAVED as: " + inquestx + ".bin" + mycolors.reset, end=' ')
+                print("\n" + mycolors.foreground.blue + f"Sample downloaded to: {outputpath}" + mycolors.reset, end=' ')
 
             print(mycolors.reset + "\n")
             exit(0)
