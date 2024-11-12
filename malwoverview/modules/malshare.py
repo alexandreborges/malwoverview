@@ -46,12 +46,12 @@ class MalshareExtractor():
                     print((mycolors.foreground.red + "\nSample not found by the provided hash.\n"))
                     print(mycolors.reset)
                     exit(1)
+            else:
+                open(resource, 'wb').write(malresponse3.content)
 
-            open(resource, 'wb').write(malresponse3.content)
-
-            print("\n")
-            print((mycolors.reset + "MALWARE SAMPLE SAVED! "))
-            printr()
+                print("\n")
+                print((mycolors.reset + "MALWARE SAMPLE SAVED! "))
+                printr()
         except (BrokenPipeError, IOError):
             print(mycolors.reset, file=sys.stderr)
             exit(2)
