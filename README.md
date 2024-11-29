@@ -747,7 +747,7 @@ Version 6.1.0:
             * Introduces -vx and -VX flags to allow interaction with VirusExchange's APIs for hash chack, sample download and sample submission.
             * Adds a new -O flag to set up the output directory for any sample downloads
             * Adds -ip and -IP flags to allow querying IPInfo, BGPView and other already existing sources (currently VirusTotal & AlientVault) for basic IP address lookups.
-            * Fixes a bug in the VirusTotal output.
+            * Fixes a bug in VirusTotal output.
 
 Version 6.0.1:
 

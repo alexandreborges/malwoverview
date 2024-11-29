@@ -23,6 +23,9 @@ class MultipleIPExtractor:
             elif extractor == "AlienVault":
                 data = extractor_obj._raw_ip_info(ip_address)
                 self._get_info_alienvault(data.json())
+            #elif extractor == "InQuest":
+            #    data = extractor_obj._raw_ip_info(ip_address)
+            #    self._get_info_inquest(data.json())
             # elif extractor == "PolySwarm":
             #     data = extractor_obj._raw_ip_info(ip_address)
             #     self._get_info_polyswarm(data)
@@ -79,17 +82,6 @@ class MultipleIPExtractor:
         print()
         print("(For the full VirusTotal report use the -v and -V options)")
 
-    def _get_info_polyswarm(self, data):
-        print("\n")
-        print((mycolors.reset + "POLYSWARM IP REPORT".center(100)), end='')
-        print((mycolors.reset + "".center(28)), end='')
-        print("\n" + (100 * '-').center(50))
-
-        print(data)
-
-        print()
-        print("(For the full PolySwarm report use the -p and -P options)")
-
     def _get_info_alienvault(self, data):
         try:
             print("\n")
@@ -101,9 +93,9 @@ class MultipleIPExtractor:
         
             if (cv.bkg == 1):
                 print(mycolors.foreground.lightcyan + "ASN: ".ljust(COLSIZE) + mycolors.reset + str(data.get('asn')))
-                print(mycolors.foreground.lightcyan + "City: ".ljust(COLSIZE) + mycolors.reset + str(data.get('city')))
-                print(mycolors.foreground.lightcyan + "Region: ".ljust(COLSIZE) + mycolors.reset + str(data.get('region')))
                 print(mycolors.foreground.lightcyan + "Country: ".ljust(COLSIZE) + mycolors.reset + str(data.get('country_name')))
+                print(mycolors.foreground.lightcyan + "Region: ".ljust(COLSIZE) + mycolors.reset + str(data.get('region')))
+                print(mycolors.foreground.lightcyan + "City: ".ljust(COLSIZE) + mycolors.reset + str(data.get('city')))
                 print(mycolors.foreground.lightcyan + "Continent: ".ljust(COLSIZE) + mycolors.reset + str(data.get('continent_code')))
                 print(mycolors.foreground.lightcyan + "Latitude: ".ljust(COLSIZE) + mycolors.reset + str(data.get('latitude')))
                 print(mycolors.foreground.lightcyan + "Longitude: ".ljust(COLSIZE) + mycolors.reset + str(data.get('longitude')))
@@ -111,9 +103,9 @@ class MultipleIPExtractor:
                 print(mycolors.foreground.lightred + "Pulses Found: ".ljust(COLSIZE) + mycolors.reset + str(data.get('pulse_info', {}).get('count')))
             else:
                 print(mycolors.foreground.cyan + "ASN: ".ljust(COLSIZE) + mycolors.reset + str(data.get('asn')))
-                print(mycolors.foreground.cyan + "City: ".ljust(COLSIZE) + mycolors.reset + str(data.get('city')))
-                print(mycolors.foreground.cyan + "Region: ".ljust(COLSIZE) + mycolors.reset + str(data.get('region')))
                 print(mycolors.foreground.cyan + "Country: ".ljust(COLSIZE) + mycolors.reset + str(data.get('country_name')))
+                print(mycolors.foreground.cyan + "Region: ".ljust(COLSIZE) + mycolors.reset + str(data.get('region')))
+                print(mycolors.foreground.cyan + "City: ".ljust(COLSIZE) + mycolors.reset + str(data.get('city')))
                 print(mycolors.foreground.cyan + "Continent: ".ljust(COLSIZE) + mycolors.reset + str(data.get('continent_code')))
                 print(mycolors.foreground.cyan + "Latitude: ".ljust(COLSIZE) + mycolors.reset + str(data.get('latitude')))
                 print(mycolors.foreground.cyan + "Longitude: ".ljust(COLSIZE) + mycolors.reset + str(data.get('longitude')))
@@ -128,3 +120,34 @@ class MultipleIPExtractor:
 
         print()
         print("(For the full AlienVault report use the -n and -N options)")
+
+"""
+    def _get_info_inquest(self, data):
+        try:
+            print("\n")
+            print((mycolors.reset + "INQUEST IP REPORT".center(100)), end='')
+            print((mycolors.reset + "".center(28)), end='')
+            print("\n" + (100 * '-').center(50))
+
+            print(data)
+
+        except Exception as e:
+            if (cv.bkg == 1):
+                print(mycolors.foreground.lightred + f"\nError: {str(e)}\n" + mycolors.reset)
+            else:
+                print(mycolors.foreground.red + f"\nError: {str(e)}\n" + mycolors.reset)
+
+        print()
+        print("(For the full InQuest report use the -i and -I options)")
+
+    def _get_info_polyswarm(self, data):
+        print("\n")
+        print((mycolors.reset + "POLYSWARM IP REPORT".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100 * '-').center(50))
+
+        print(data)
+
+        print()
+        print("(For the full PolySwarm report use the -p and -P options)")
+"""

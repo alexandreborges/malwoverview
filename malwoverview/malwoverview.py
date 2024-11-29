@@ -236,7 +236,7 @@ def main():
             "BGPView": bgpview,
             "VirusTotal": virustotal,
             "AlienVault": alien,
-            "InQuest": inquest,
+            #"InQuest": inquest,
             # "PolySwarm": polyswarm,
         }
     )
