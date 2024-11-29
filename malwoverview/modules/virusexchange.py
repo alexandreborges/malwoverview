@@ -37,7 +37,7 @@ class VirusExchangeExtractor:
 
         try:
             response = self._get_hash_metadata(sha256)
-        except e:
+        except Exception as e:
             printc(f"[-] Error checking hash metadata: {str(e)}", mycolors.foreground.red)
             return
 

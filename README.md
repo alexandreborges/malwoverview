@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v6.0.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v6.1.0) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [<img alt="Downloads/Last Month" src="https://img.shields.io/pypi/dm/malwoverview?color=blue&style=for-the-badge&label=Last%20Month">](https://pypistats.org/packages/malwoverview)
@@ -71,7 +71,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-## Current Version: 6.0.2
+## Current Version: 6.1.0
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -343,7 +343,8 @@ usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1
 -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> 
 -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> 
 -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> -i <1-13> 
--I <INQUEST argument>
+-I <INQUEST argument> -vx <1-3> -VX <VirusExchange arg> -O <output directory> -ip <1-3> 
+-IP <IP address>
 
 Malwoverview is a first response tool for threat hunting written by Alexandre Borges. 
 
@@ -745,7 +746,8 @@ Version 6.1.0:
 
             * Introduces -vx and -VX flags to allow interaction with VirusExchange's APIs for hash chack, sample download and sample submission.
             * Adds a new -O flag to set up the output directory for any sample downloads
-            * Adds -ip and -IP flags to allow querying IPInfo for IP address lookups.
+            * Adds -ip and -IP flags to allow querying IPInfo, BGPView and other already existing sources (currently VirusTotal & AlientVault) for basic IP address lookups.
+            * Fixes a bug in the VirusTotal output.
 
 Version 6.0.1:
 

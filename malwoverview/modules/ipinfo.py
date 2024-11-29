@@ -16,14 +16,14 @@ class IPInfoExtractor:
         
         try:
             response = requests.get(url)
-            data = response.json()
-        except:
-            return {}
+            return response.json()
+        except Exception as e:
+            return {'error': e}
 
     def get_ip_details(self, ip_address):
         self.requestIPINFOAPI()
         
-        data = self._get_info(ip_address)
+        data = self._raw_ip_info(ip_address)
 
         try:
             print("\n")
@@ -38,7 +38,7 @@ class IPInfoExtractor:
                     print(mycolors.foreground.red + f"\n{data['error']['message']}\n" + mycolors.reset)
                 return
                 
-            fields = ['ip', 'hostname', 'city', 'region', 'country', 'loc', 'org', 'postal', 'timezone']
+            fields = ['ip', 'hostname', 'org', 'country', 'region', 'city', 'loc', 'postal', 'timezone']
 
             COLSIZE = max(len(field) for field in fields) + 3
             

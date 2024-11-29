@@ -629,15 +629,21 @@ class InQuestExtractor():
             else:
                 print((mycolors.foreground.lightred + "\nError while connecting to InQuest!\n"))
 
-    def inquest_ip(self, inquestx):
+    def _raw_ip_info(self, ip):
         inquest = InQuestExtractor.inquesturl
 
+        requestsession = requests.Session()
+        requestsession.headers.update({'Accept': 'application/json'})
+        requestsession.headers.update({'Authorization': self.INQUESTAPI})
+        inquestresponse = requestsession.get(inquest + '/search/ioc/ip?keyword=' + ip)
+        return inquestresponse
+
+    def inquest_ip(self, inquestx):
         inquestresponse = ''
 
         self.requestINQUESTAPI()
 
         try:
-
             print("\n")
             print((mycolors.reset + "INQUEST IP ADDRESS SEARCH REPORT".center(110)), end='')
             print((mycolors.reset + "".center(28)), end='')
@@ -650,11 +656,8 @@ class InQuestExtractor():
                     print(mycolors.foreground.red + "\nThe -I parameter with the provided IP address is required!\n" + mycolors.reset)
                 exit(1)
 
-            requestsession = requests.Session()
-            requestsession.headers.update({'Accept': 'application/json'})
-            requestsession.headers.update({'Authorization': self.INQUESTAPI})
-            inquestresponse = requestsession.get(inquest + '/search/ioc/ip?keyword=' + inquestx)
-            inquesttext = json.loads(inquestresponse.text)
+            inquestresponse = self._raw_ip_info(inquestx)
+            inquesttext = inquestresponse.json()
 
             if (cv.bkg == 1):
                 for i in inquesttext.keys():
