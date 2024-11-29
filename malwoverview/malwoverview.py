@@ -43,6 +43,7 @@ from malwoverview.modules.triage import TriageExtractor
 from malwoverview.modules.urlhaus import URLHausExtractor
 from malwoverview.modules.virustotal import VirusTotalExtractor
 from malwoverview.modules.virusexchange import VirusExchangeExtractor 
+from malwoverview.modules.ipinfo import IPInfoExtractor
 from malwoverview.utils.colors import printr
 from malwoverview.utils.hash import calchash
 import malwoverview.modules.configvars as cv
@@ -104,6 +105,8 @@ def main():
     parser.add_argument('-vx', '--vx', dest='vxoption', type=int, default=0, help='VirusExchange operations. The possible values are: 1: Gets basic metadata for a given SHA256 hash; 2: Downloads sample given a SHA256 provided in the -VX argument; 3: Uploads a sample given a path provided in the -VX argument.')
     parser.add_argument('-VX', '--VX', dest='vxarg', type=str, help='Provides argument to the -vx option from VirusExchange.')
     parser.add_argument('-O', '--output-dir', dest='output_dir', type=str, default='.', help='Set output directory for all sample downloads')
+    parser.add_argument('-ip', '--ipinfo', dest='ipoption', type=int, default=0, metavar="IPINFO", help='Get IP information from IPInfo.io. Value 1: Get details for an IP address provided with -G')
+    parser.add_argument('-IP', '--ipinfoarg', dest='iparg', type=str, metavar="IPINFO_ARG", help='Provides argument for IPInfo.io operations specified by -g option')
 
     args = parser.parse_args()
 
@@ -120,6 +123,7 @@ def main():
     TRIAGEAPI = config_dict.get('TRIAGE', 'TRIAGEAPI')
     INQUESTAPI = config_dict.get('INQUEST', 'INQUESTAPI')
     VXAPI = config_dict.get('VIRUSEXCHANGE', 'VXAPI')
+    IPINFOAPI = config_dict.get('IPINFO', 'IPINFOAPI')
 
     optval = range(2)
     optval1 = range(3)
@@ -161,6 +165,8 @@ def main():
     inquestargx = args.inquestarg
     vxoptionx = args.vxoption
     vxargx = args.vxarg
+    ipoptionx = args.ipoption
+    ipargx = args.iparg
     config = args.config
 
     ffpname = ''
@@ -195,7 +201,7 @@ def main():
         haargx, mallist, args.malsharehash, args.hausoption, polyoptionx, polyargx,
         androidoptionx, androidargx, alienx, alienargsx, malpediaargx,
         malpediax, bazaarx, bazaarargx, triagex, triageargx,
-        inquestx, inquestargx, vxoptionx, vxargx
+        inquestx, inquestargx, vxoptionx, vxargx, ipoptionx, ipargx
     ]
 
     # Show the help message if:
@@ -220,7 +226,7 @@ def main():
     haus = URLHausExtractor(HAUSSUBMITAPI)
     android = AndroidExtractor(hybrid, virustotal)
     vx = VirusExchangeExtractor(VXAPI)
-
+    ipinfo = IPInfoExtractor(IPINFOAPI)
 
     # Special parameters for hybrid analysis module
     query = haargx
@@ -402,6 +408,12 @@ def main():
                 1: (vx.check_hash, [vxargx]),
                 2: (vx.download_sample, [vxargx]),
                 3: (vx.upload_sample, [vxargx])
+            }
+        },
+        {
+            'flag': ipoptionx,
+            'actions': {
+                1: (ipinfo.get_ip_details, [ipargx])
             }
         }
     ]

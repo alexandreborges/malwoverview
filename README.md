@@ -90,7 +90,7 @@ This tool aims to :
 1. Determine similar executable malware samples (PE/PE+) according to the import table (imphash) and group 
    them by different colors (pay attention to the second column from output). Thus, colors matter!
 2. Show hash information on Virus Total, Hybrid Analysis, Malshare, Polyswarm, URLhaus, Alien Vault, 
-   Malpedia, ThreatCrowd and VirusExchange engines. 
+   Malpedia and VirusExchange engines. 
 3. Determining whether the malware samples contain overlay and, if you want, extract it. 
 4. Check suspect files on Virus Total, Hybrid Analysis and Polyswarm.
 5. Check URLs on Virus Total, Malshare, Polyswarm, URLhaus engines and Alien Vault. 
@@ -101,13 +101,12 @@ This tool aims to :
 10. Search for specific payloads on the Malshare.
 11. Search for similar payloads (PE32/PE32+) on Polyswarm engine.
 12. Classify all files in a directory searching information on Virus Total and Hybrid Analysis. 
-13. Make reports about a suspect domain using different engines such as VirusTotal, Malpedia and 
-    ThreatCrowd. 
+13. Make reports about a suspect domain using different engines such as VirusTotal & Malpedia. 
 14. Check APK packages directly from Android devices against Hybrid Analysis and Virus Total. 
 15. Submit APK packages directly from Android devices to Hybrid Analysis and Virus Total. 
 16. Show URLs related to an user provided tag from URLHaus.
 17. Show payloads related to a tag (signature) from URLHaus.
-18. Show information about an IP address from Virus Total, Alien Vault, Malpedia and ThreatCrowd.
+18. Show information about an IP address from Virus Total, Alien Vault, Malpedia.
 19. Show IP address, domain and URL information from Polyswarm. 
 21. Perform meta-search on Polyswarm Network using several criteria: imphash, IPv4, domain, URL and
     malware family. 
@@ -197,7 +196,7 @@ has the following format:
       MALSHAREAPI = 
 
       [HAUSSUBMIT]
-      HAUSSUBMITAPI =
+      HAUSSUBMITAPI = 
 
       [POLYSWARM]
       POLYAPI = 
@@ -206,16 +205,19 @@ has the following format:
       ALIENAPI = 
 
       [MALPEDIA]
-      MALPEDIAAPI =
+      MALPEDIAAPI = 
 
       [TRIAGE]
-      TRIAGEAPI =
+      TRIAGEAPI = 
 
       [INQUEST]
-      INQUESTAPI =
+      INQUESTAPI = 
 
       [VIRUSEXCHANGE]
       VXAPI = 
+
+      [IPINFO]
+      IPINFOAPI = 
 
 The APIs can be requested on the respective service websites:
 
@@ -230,9 +232,10 @@ The APIs can be requested on the respective service websites:
     handle is @malpedia.
 08. Malware Bazaar: It isn't necessary an API.
 09. ThreatFox: It isn't necessary an API.
-10. InQuest: https://labs.inquest.net/.
-11. Triage: https://tria.ge/signup.
-12. VirusExchange: https://virus.exchange/users/register.
+10. InQuest: https://labs.inquest.net/
+11. Triage: https://tria.ge/signup
+12. VirusExchange: https://virus.exchange/users/register
+13. IPInfo: https://ipinfo.io/signup
  
 ----------------------------------------------------
 A special note about API requests to the MALPEDIA:
@@ -445,11 +448,12 @@ should be executed:
 
 ## HISTORY
 
-Version 6.0.2:
+Version 6.1.0:
       This version:
 
             * Introduces -vx and -VX flags to allow interaction with VirusExchange's APIs for hash chack, sample download and sample submission.
             * Adds a new -O flag to set up the output directory for any sample downloads
+            * Adds -ip and -IP flags to allow querying IPInfo for IP address lookups.
 
 Version 6.0.1:
 
