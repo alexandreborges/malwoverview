@@ -343,7 +343,7 @@ usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1
 -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> 
 -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> 
 -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> -i <1-13> 
--I <INQUEST argument> -vx <1-3> -VX <VirusExchange arg> -O <output directory> -ip <1-3> 
+-I <INQUEST argument> -vx <1-2> -VX <VirusExchange arg> -O <output directory> -ip <1-3> 
 -IP <IP address>
 
 Malwoverview is a first response tool for threat hunting written by Alexandre Borges. 
@@ -744,7 +744,7 @@ Malwoverview is a first response tool for threat hunting written by Alexandre Bo
 Version 6.1.0:
       This version:
 
-            * Introduces -vx and -VX flags to allow interaction with VirusExchange's APIs for hash chack, sample download and sample submission.
+            * Introduces -vx and -VX flags to allow interaction with VirusExchange's APIs for hash chack & sample download.
             * Adds a new -O flag to set up the output directory for any sample downloads
             * Adds -ip and -IP flags to allow querying IPInfo, BGPView and other already existing sources (currently VirusTotal & AlientVault) for basic IP address lookups.
             * Fixes a bug in VirusTotal output.
