@@ -26,16 +26,13 @@ class IPInfoExtractor:
         data = self._raw_ip_info(ip_address)
 
         try:
-            print("\n")
+            print()
             print((mycolors.reset + "IPINFO.IO REPORT".center(100)), end='')
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
             
             if 'error' in data:
-                if (cv.bkg == 1):
-                    print(mycolors.foreground.lightred + f"\n{data['error']['message']}\n" + mycolors.reset)
-                else:
-                    print(mycolors.foreground.red + f"\n{data['error']['message']}\n" + mycolors.reset)
+                printc(f"\n{data['error']['message']}\n", mycolors.foreground.error(cv.bkg))
                 return
                 
             fields = ['ip', 'hostname', 'org', 'country', 'region', 'city', 'loc', 'postal', 'timezone']
@@ -44,13 +41,7 @@ class IPInfoExtractor:
             
             for field in fields:
                 if field in data:
-                    if (cv.bkg == 1):
-                        print(mycolors.foreground.lightcyan + f"{field.title()}: ".ljust(COLSIZE) + mycolors.reset + str(data[field]))
-                    else:
-                        print(mycolors.foreground.cyan + f"{field.title()}: ".ljust(COLSIZE) + mycolors.reset + str(data[field]))
-                        
+                    print(mycolors.foreground.info(cv.bkg) + f"{field.title()}: ".ljust(COLSIZE) + mycolors.reset + str(data[field]))
+
         except Exception as e:
-            if (cv.bkg == 1):
-                print(mycolors.foreground.lightred + f"\nError: {str(e)}\n" + mycolors.reset)
-            else:
-                print(mycolors.foreground.red + f"\nError: {str(e)}\n" + mycolors.reset)
+            printc(f"\nError: {str(e)}\n", mycolors.foreground.error(cv.bkg))

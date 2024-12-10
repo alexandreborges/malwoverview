@@ -10,7 +10,7 @@ class VirusExchangeExtractor:
 
     def _requireVXAPI(self):
         if (self.VXAPI == ''):
-            printc("\nTo be able to get/submit information from/to Virus Exchange, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the Virus Exchange API according to the format shown on the Github website.", mycolors.foreground.red)
+            printc("\nTo be able to get/submit information from/to Virus Exchange, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the Virus Exchange API according to the format shown on the Github website.", mycolors.foreground.error(cv.bkg))
             exit(1)
 
     def _get_hash_metadata(self, sha256):
@@ -38,12 +38,11 @@ class VirusExchangeExtractor:
         try:
             response = self._get_hash_metadata(sha256)
         except Exception as e:
-            printc(f"[-] Error checking hash metadata: {str(e)}", mycolors.foreground.red)
+            printc(f"[-] Error checking hash metadata: {str(e)}", mycolors.foreground.error(cv.bkg))
             return
 
         metadata = response.json()
 
-        print()
         print()
         for val in metadata_to_show:
             key = val['key']
@@ -77,21 +76,23 @@ class VirusExchangeExtractor:
                         output_path = os.path.join(cv.output_dir, sha256)
                         with open(output_path, 'wb') as f:
                             f.write(sample_response.content)
-                        printc(f"Sample downloaded to: {output_path}", mycolors.foreground.green)
+                        printc(f"Sample downloaded to: {output_path}", mycolors.foreground.success(cv.bkg))
                     else:
-                        printc(f"Failed to download sample: {sample_response.status_code}", mycolors.foreground.red)
+                        printc(f"Failed to download sample: {sample_response.status_code}", mycolors.foreground.error(cv.bkg))
                 else:
-                    printc("No download link available in metadata", mycolors.foreground.red)
+                    printc("No download link available in metadata", mycolors.foreground.error(cv.bkg))
             else:
                 error_detail = metadata.get('errors', {}).get('detail', 'Unknown error')
-                printc(f"Failed to fetch sample metadata: {error_detail}", mycolors.foreground.red)
+                printc(f"Failed to fetch sample metadata: {error_detail}", mycolors.foreground.error(cv.bkg))
         except Exception as e:
-            printc(f"Error downloading sample: {str(e)}", mycolors.foreground.red)
+            printc(f"Error downloading sample: {str(e)}", mycolors.foreground.error(cv.bkg))
 
+    # This method is currently shown in the docs, but it's always returning 401
+    # so it was removed from the official options.
     def upload_sample(self, file_path):
         self._requireVXAPI()
 
-        url = f'{self.base_url}/upload'
+        url = f'{self.base_url}/samples/new'
         
         try:
             with open(file_path, 'rb') as f:
@@ -99,8 +100,8 @@ class VirusExchangeExtractor:
                 response = requests.post(url, headers={'Authorization': f'Bearer {self.VXAPI}'}, files=files)
                 
             if response.status_code == 200:
-                printc("Sample uploaded successfully", mycolors.foreground.green)
+                printc("Sample uploaded successfully", mycolors.foreground.success(cv.bkg))
             else:
-                printc(f"Failed to upload sample: {response.status_code}", mycolors.foreground.red)
+                printc(f"Failed to upload sample: {response.status_code}", mycolors.foreground.error(cv.bkg))
         except Exception as e:
-            printc(f"Error uploading sample: {str(e)}", mycolors.foreground.red)
+            printc(f"Error uploading sample: {str(e)}", mycolors.foreground.error(cv.bkg))

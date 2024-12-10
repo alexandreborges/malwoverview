@@ -104,11 +104,11 @@ def main():
     parser.add_argument('-X', '--triagearg', dest='triagearg', type=str, default='', metavar="TRIAGE_ARG", help='Provides argument for options especified by -x option. Pay attention: the format of this argument depends on provided -x value.')
     parser.add_argument('-i', '--inquest', dest='inquest', type=int, default=0, metavar="INQUEST", help='Retrieves multiple information from INQUEST. The possible values are: 1: Downloads a sample; 2: Retrives information about a sample given a SHA256; 3: Retrieves information about a sample given a MD5 hash; 4: Gets the most recent list of threats. To this option, the -I argument must be "list" (lowercase and without double quotes) ; 5: Retrives threats related to a provided domain; 6. Retrieves a list of samples related to the given IP address; 7. Retrives a list of sample related to the given e-mail address; 8. Retrieves a list of samples related to the given filename; 9. Retrieves a list of samples related to a given URL; 10. Retrieves information about a specified IOC; 11. List a list of IOCs. Note: you must pass "list" (without double quotes) as argument to -I; 12. Check for a given keyword in the reputation database; 13. List artifacts in the reputation dabatabse. Note: you must pass "list" (without double quotes) as argument to -I.')
     parser.add_argument('-I', '--inquestarg', dest='inquestarg', type=str, metavar="INQUEST_ARG", help='Provides argument to INQUEST -i option.')
-    parser.add_argument('-vx', '--vx', dest='vxoption', type=int, default=0, help='VirusExchange operations. The possible values are: 1: Gets basic metadata for a given SHA256 hash; 2: Downloads sample given a SHA256 provided in the -VX argument; 3: Uploads a sample given a path provided in the -VX argument.')
+    parser.add_argument('-vx', '--vx', dest='vxoption', type=int, default=0, help='VirusExchange operations. The possible values are: 1: Gets basic metadata for a given SHA256 hash; 2: Downloads sample given a SHA256 provided in the -VX argument.')
     parser.add_argument('-VX', '--VX', dest='vxarg', type=str, help='Provides argument to the -vx option from VirusExchange.')
-    parser.add_argument('-O', '--output-dir', dest='output_dir', type=str, default='.', help='Set output directory for all sample downloads')
-    parser.add_argument('-ip', '--ip', dest='ipoption', type=int, default=0, metavar="IP", help='Get IP information from various sources. The possible values are: 1: Get details for an IP address provided with -IP from all available sources (IPInfo/BGPView/VirusTotal/Alienvault); 2: Get details for an IP address provided with -IP from IPInfo; 3: Get details for an IP address provided with -IP from BGPView')
-    parser.add_argument('-IP', '--iparg', dest='iparg', type=str, metavar="IP_ARG", help='Provides argument for IP lookup operations specified by the -ip option')
+    parser.add_argument('-O', '--output-dir', dest='output_dir', type=str, default='.', help='Set output directory for all sample downloads.')
+    parser.add_argument('-ip', '--ip', dest='ipoption', type=int, default=0, metavar="IP", help='Get IP information from various sources. The possible values are: 1: Get details for an IP address provided with -IP from IPInfo; 2: Get details for an IP address provided with -IP from BGPView; 3: Get details for an IP address provided with -IP from all available intel services (VirusTotal/Alienvault).')
+    parser.add_argument('-IP', '--iparg', dest='iparg', type=str, metavar="IP_ARG", help='Provides argument for IP lookup operations specified by the -ip option.')
 
     args = parser.parse_args()
 
@@ -232,8 +232,8 @@ def main():
     bgpview = BGPViewExtractor()
     multipleip = MultipleIPExtractor(
         {
-            "IPInfo": ipinfo,
-            "BGPView": bgpview,
+            #"IPInfo": ipinfo,
+            #"BGPView": bgpview,
             "VirusTotal": virustotal,
             "AlienVault": alien,
             #"InQuest": inquest,
@@ -419,16 +419,16 @@ def main():
             'flag': vxoptionx,
             'actions': {
                 1: (vx.check_hash, [vxargx]),
-                2: (vx.download_sample, [vxargx]),
-                3: (vx.upload_sample, [vxargx])
+                2: (vx.download_sample, [vxargx])
+#               3: (vx.upload_sample, [vxargx])
             }
         },
         {
             'flag': ipoptionx,
             'actions': {
-                1: (multipleip.get_multiple_ip_details, [ipargx]),
-                2: (ipinfo.get_ip_details, [ipargx]),
-                3: (bgpview.get_ip_details, [ipargx]),
+                1: (ipinfo.get_ip_details, [ipargx]),
+                2: (bgpview.get_ip_details, [ipargx]),
+                3: (multipleip.get_multiple_ip_details, [ipargx])
             }
         }
     ]

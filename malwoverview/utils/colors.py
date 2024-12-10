@@ -19,6 +19,27 @@ class mycolors:
         lightred = '\033[91m'
         yellow = '\033[93m'
 
+        @staticmethod
+        def error(bkg):
+            if bkg == 1:
+                return mycolors.foreground.lightred
+            else:
+                return mycolors.foreground.red
+
+        @staticmethod
+        def info(bkg):
+            if bkg == 1:
+                return mycolors.foreground.lightcyan
+            else:
+                return mycolors.foreground.cyan
+        
+        @staticmethod
+        def success(bkg):
+            if bkg == 1:
+                return mycolors.foreground.yellow
+            else:
+                return mycolors.foreground.blue
+
     class background:
         black = '\033[40m'
         blue = '\033[44m'
