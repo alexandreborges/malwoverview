@@ -4,7 +4,7 @@ import requests
 import textwrap
 import base64
 import json
-
+import os
 
 class MalpediaExtractor():
     malpediaurl = 'https://malpedia.caad.fkie.fraunhofer.de/api'
@@ -471,13 +471,13 @@ class MalpediaExtractor():
                 exit(1)
 
             if ('200' in str(haresponse)):
+                outputpath = os.path.join(cv.output_dir, myargs + ".zip")
+                open(outputpath, 'wb').write(base64.b64decode(hatext['zipped']))
                 if (cv.bkg == 1):
-                    open(myargs + ".zip", 'wb').write(base64.b64decode(hatext['zipped']))
-                    print(mycolors.foreground.lightcyan + "\nSample successfuly downloaded from Malpedia!\n", mycolors.reset)
+                    print(mycolors.foreground.lightcyan + f"\nSample downloaded to: {outputpath}\n", mycolors.reset)
                 else:
-                    open(myargs + ".zip", 'wb').write(base64.b64decode(hatext['zipped']))
-                    print(mycolors.foreground.green + "\nSample successfuly downloaded from Malpedia!\n", mycolors.reset)
-                    exit(0)
+                    print(mycolors.foreground.green + f"\nSample downloaded to: {outputpath}\n", mycolors.reset)
+                exit(0)
 
         except ValueError as e:
             print(e)
@@ -519,11 +519,12 @@ class MalpediaExtractor():
                 exit(1)
 
             if ('200' in str(haresponse)):
+                outputpath = os.path.join(cv.output_dir, myargs + ".zip")
                 if (cv.bkg == 1):
-                    open(myargs + ".zip", 'wb').write(haresponse.content)
+                    open(outputpath, 'wb').write(haresponse.content)
                     print(mycolors.foreground.lightcyan + "\nA zip file named %s.zip containing Yara rules has been SUCCESSFULLY downloaded from Malpedia!\n" % myargs, mycolors.reset)
                 else:
-                    open(myargs + ".zip", 'wb').write(haresponse.content)
+                    open(outputpath, 'wb').write(haresponse.content)
                     print(mycolors.foreground.green + "\nA zip file named %s.zip containing Yara rules has been SUCCESSFULLY downloaded from Malpedia!\n" % myargs, mycolors.reset)
                     exit(0)
         except ValueError as e:

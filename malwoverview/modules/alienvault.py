@@ -159,25 +159,27 @@ class AlienVaultExtractor():
                 print((mycolors.foreground.red + "Error while connecting to Alien Vault!\n"))
             printr()
 
-    def alien_ipv4(self, arg1):
+    def _raw_ip_info(self, ip):
         url = AlienVaultExtractor.urlalien
 
-        self.requestALIENAPI()
         hatext = ''
         haresponse = ''
         history = '10'
         headers = {'X-OTX-API-KEY': self.ALIENAPI}
         search_params = {'limit': history}
-        myargs = arg1
 
+        resource = url
+        requestsession = requests.Session()
+        requestsession.headers.update({'Content-Type': 'application/json'})
+        finalurl = '/'.join([resource, 'indicators', 'IPv4', ip])
+        haresponse = requestsession.post(url=finalurl, headers=headers, params=search_params)
+        return haresponse
+
+    def alien_ipv4(self, arg1):
+        self.requestALIENAPI()
         try:
-
-            resource = url
-            requestsession = requests.Session()
-            requestsession.headers.update({'Content-Type': 'application/json'})
-            finalurl = '/'.join([resource, 'indicators', 'IPv4', myargs])
-            haresponse = requestsession.post(url=finalurl, headers=headers, params=search_params)
-            hatext = json.loads(haresponse.text)
+            haresponse = self._raw_ip_info(arg1)
+            hatext = haresponse.json()
 
             if (cv.bkg == 1):
                 if 'sections' in hatext:

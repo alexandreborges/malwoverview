@@ -746,11 +746,12 @@ class TriageExtractor():
                         print("\n" + mycolors.foreground.red + triagetext['message'] + mycolors.reset, end='\n\n')
                     exit(1)
 
-            open(triagex + '.bin', 'wb').write(triageresponse.content)
+            outputpath = os.path.join(cv.output_dir, )
+            open(outputpath, 'wb').write(triageresponse.content)
             if (cv.bkg == 1):
-                print("\n" + mycolors.foreground.yellow + "SAMPLE SAVED as: " + triagex + ".bin" + mycolors.reset, end=' ')
+                print("\n" + mycolors.foreground.yellow + f"Sample downloaded to: {outputpath}" + mycolors.reset, end=' ')
             if (cv.bkg == 0):
-                print("\n" + mycolors.foreground.blue + "SAMPLE SAVED as: " + triagex + ".bin" + mycolors.reset, end=' ')
+                print("\n" + mycolors.foreground.blue + f"Sample downloaded to: {outputpath}" + mycolors.reset, end=' ')
 
             print(mycolors.reset + "\n")
             exit(0)
@@ -805,11 +806,12 @@ class TriageExtractor():
                         print("\n" + mycolors.foreground.red + triagetext['message'] + mycolors.reset, end='\n\n')
                     exit(1)
 
-            open(triagex + '.pcapng', 'wb').write(triageresponse.content)
+            outputpath = os.path.join(cv.output_dir, triagex + '.pcapng')
+            open(outputpath, 'wb').write(triageresponse.content)
             if (cv.bkg == 1):
-                print("\n" + mycolors.foreground.yellow + "PCAP SAVED as: " + triagex + ".pcapng" + mycolors.reset, end=' ')
+                print("\n" + mycolors.foreground.yellow + f"PCAP downloaded to: {outputpath}" + mycolors.reset, end=' ')
             if (cv.bkg == 0):
-                print("\n" + mycolors.foreground.blue + "PCAP SAVED as: " + triagex + ".pcapng" + mycolors.reset, end=' ')
+                print("\n" + mycolors.foreground.blue + f"PCAP downloaded to: {outputpath}" + mycolors.reset, end=' ')
 
             print(mycolors.reset + "\n")
             exit(0)
