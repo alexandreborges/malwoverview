@@ -21,7 +21,7 @@
 # Christian Clauss (https://github.com/cclauss)
 # Artur Marzano (https://github.com/Macmod)
 
-# Malwoverview.py: version 6.0.1
+# Malwoverview.py: version 6.1.0
 
 import os
 import argparse
@@ -42,6 +42,10 @@ from malwoverview.modules.threatfox import ThreatFoxExtractor
 from malwoverview.modules.triage import TriageExtractor
 from malwoverview.modules.urlhaus import URLHausExtractor
 from malwoverview.modules.virustotal import VirusTotalExtractor
+from malwoverview.modules.virusexchange import VirusExchangeExtractor 
+from malwoverview.modules.ipinfo import IPInfoExtractor
+from malwoverview.modules.bgpview import BGPViewExtractor
+from malwoverview.modules.multipleip import MultipleIPExtractor
 from malwoverview.utils.colors import printr
 from malwoverview.utils.hash import calchash
 import malwoverview.modules.configvars as cv
@@ -52,7 +56,7 @@ import malwoverview.modules.configvars as cv
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2024, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "6.0.1"
+__version__ = "6.1.0"
 __email__ = "reverseexploit at proton.me"
 
 def finish_hook(signum, frame):
@@ -73,7 +77,7 @@ def main():
         USER_HOME_DIR = str(Path.home()) + '/'
         cv.windows = 0
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is 6.0.1", usage="python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> -i <1-13> -I <INQUEST argument>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is " + __version__, usage="usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> -i <1-13> -I <INQUEST argument> -vx <1-2> -VX <VirusExchange arg> -O <output directory> -ip <1-3> -IP <IP address>")
     parser.add_argument('-c', '--config', dest='config', type=str, metavar="CONFIG FILE", default=(USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s.')
     parser.add_argument('-d', '--directory', dest='direct', type=str, default='', metavar="DIRECTORY", help='Specifies the directory containing malware samples to be checked against VIRUS TOTAL. Use the option -D to decide whether you are being using a public VT API or a Premium VT API.')
     parser.add_argument('-o', '--background', dest='backg', type=int, default=1, metavar="BACKGROUND", help='Adapts the output colors to a light background color terminal. The default is dark background color terminal.')
@@ -100,6 +104,11 @@ def main():
     parser.add_argument('-X', '--triagearg', dest='triagearg', type=str, default='', metavar="TRIAGE_ARG", help='Provides argument for options especified by -x option. Pay attention: the format of this argument depends on provided -x value.')
     parser.add_argument('-i', '--inquest', dest='inquest', type=int, default=0, metavar="INQUEST", help='Retrieves multiple information from INQUEST. The possible values are: 1: Downloads a sample; 2: Retrives information about a sample given a SHA256; 3: Retrieves information about a sample given a MD5 hash; 4: Gets the most recent list of threats. To this option, the -I argument must be "list" (lowercase and without double quotes) ; 5: Retrives threats related to a provided domain; 6. Retrieves a list of samples related to the given IP address; 7. Retrives a list of sample related to the given e-mail address; 8. Retrieves a list of samples related to the given filename; 9. Retrieves a list of samples related to a given URL; 10. Retrieves information about a specified IOC; 11. List a list of IOCs. Note: you must pass "list" (without double quotes) as argument to -I; 12. Check for a given keyword in the reputation database; 13. List artifacts in the reputation dabatabse. Note: you must pass "list" (without double quotes) as argument to -I.')
     parser.add_argument('-I', '--inquestarg', dest='inquestarg', type=str, metavar="INQUEST_ARG", help='Provides argument to INQUEST -i option.')
+    parser.add_argument('-vx', '--vx', dest='vxoption', type=int, default=0, help='VirusExchange operations. The possible values are: 1: Gets basic metadata for a given SHA256 hash; 2: Downloads sample given a SHA256 provided in the -VX argument.')
+    parser.add_argument('-VX', '--VX', dest='vxarg', type=str, help='Provides argument to the -vx option from VirusExchange.')
+    parser.add_argument('-O', '--output-dir', dest='output_dir', type=str, default='.', help='Set output directory for all sample downloads.')
+    parser.add_argument('-ip', '--ip', dest='ipoption', type=int, default=0, metavar="IP", help='Get IP information from various sources. The possible values are: 1: Get details for an IP address provided with -IP from IPInfo; 2: Get details for an IP address provided with -IP from BGPView; 3: Get details for an IP address provided with -IP from all available intel services (VirusTotal/Alienvault).')
+    parser.add_argument('-IP', '--iparg', dest='iparg', type=str, metavar="IP_ARG", help='Provides argument for IP lookup operations specified by the -ip option.')
 
     args = parser.parse_args()
 
@@ -115,6 +124,8 @@ def main():
     MALPEDIAAPI = config_dict.get('MALPEDIA', 'MALPEDIAAPI')
     TRIAGEAPI = config_dict.get('TRIAGE', 'TRIAGEAPI')
     INQUESTAPI = config_dict.get('INQUEST', 'INQUESTAPI')
+    VXAPI = config_dict.get('VIRUSEXCHANGE', 'VXAPI')
+    IPINFOAPI = config_dict.get('IPINFO', 'IPINFOAPI')
 
     optval = range(2)
     optval1 = range(3)
@@ -128,6 +139,7 @@ def main():
     optval9 = range(14)
     optval10 = range(16)
     repo = args.direct
+    cv.output_dir = args.output_dir
     cv.bkg = args.backg
     virustotaloptionx = args.virustotaloption
     haoptionx = args.haoption
@@ -153,6 +165,10 @@ def main():
     virustotalargx = args.virustotalarg
     inquestx = args.inquest
     inquestargx = args.inquestarg
+    vxoptionx = args.vxoption
+    vxargx = args.vxarg
+    ipoptionx = args.ipoption
+    ipargx = args.iparg
     config = args.config
 
     ffpname = ''
@@ -187,7 +203,7 @@ def main():
         haargx, mallist, args.malsharehash, args.hausoption, polyoptionx, polyargx,
         androidoptionx, androidargx, alienx, alienargsx, malpediaargx,
         malpediax, bazaarx, bazaarargx, triagex, triageargx,
-        inquestx, inquestargx
+        inquestx, inquestargx, vxoptionx, vxargx, ipoptionx, ipargx
     ]
 
     # Show the help message if:
@@ -211,6 +227,19 @@ def main():
     malshare = MalshareExtractor(MALSHAREAPI)
     haus = URLHausExtractor(HAUSSUBMITAPI)
     android = AndroidExtractor(hybrid, virustotal)
+    vx = VirusExchangeExtractor(VXAPI)
+    ipinfo = IPInfoExtractor(IPINFOAPI)
+    bgpview = BGPViewExtractor()
+    multipleip = MultipleIPExtractor(
+        {
+            #"IPInfo": ipinfo,
+            #"BGPView": bgpview,
+            "VirusTotal": virustotal,
+            "AlienVault": alien,
+            #"InQuest": inquest,
+            # "PolySwarm": polyswarm,
+        }
+    )
 
     # Special parameters for hybrid analysis module
     query = haargx
@@ -384,6 +413,22 @@ def main():
                 3: (android.checkandroid, [3]),
                 4: (android.sendandroidha, [androidargx]),
                 5: (android.sendandroidvt, [androidargx])
+            }
+        },
+        {
+            'flag': vxoptionx,
+            'actions': {
+                1: (vx.check_hash, [vxargx]),
+                2: (vx.download_sample, [vxargx])
+#               3: (vx.upload_sample, [vxargx])
+            }
+        },
+        {
+            'flag': ipoptionx,
+            'actions': {
+                1: (ipinfo.get_ip_details, [ipargx]),
+                2: (bgpview.get_ip_details, [ipargx]),
+                3: (multipleip.get_multiple_ip_details, [ipargx])
             }
         }
     ]

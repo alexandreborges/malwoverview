@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v6.0.1) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v6.1.0) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [<img alt="Downloads/Last Month" src="https://img.shields.io/pypi/dm/malwoverview?color=blue&style=for-the-badge&label=Last%20Month">](https://pypistats.org/packages/malwoverview)
@@ -71,7 +71,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-## Current Version: 6.0.1
+## Current Version: 6.1.0
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -90,24 +90,23 @@ This tool aims to :
 1. Determine similar executable malware samples (PE/PE+) according to the import table (imphash) and group 
    them by different colors (pay attention to the second column from output). Thus, colors matter!
 2. Show hash information on Virus Total, Hybrid Analysis, Malshare, Polyswarm, URLhaus, Alien Vault, 
-   Malpedia and ThreatCrowd engines. 
+   Malpedia and VirusExchange engines. 
 3. Determining whether the malware samples contain overlay and, if you want, extract it. 
 4. Check suspect files on Virus Total, Hybrid Analysis and Polyswarm.
 5. Check URLs on Virus Total, Malshare, Polyswarm, URLhaus engines and Alien Vault. 
-6. Download malware samples from Hybrid Analysis, Malshare, URLHaus, Polyswarm and Malpedia engines.
-7. Submit malware samples to VirusTotal, Hybrid Analysis and Polyswarm.
+6. Download malware samples from Hybrid Analysis, Malshare, URLHaus, Polyswarm, Malpedia and VirusExchange engines.
+7. Submit malware samples to VirusTotal, Hybrid Analysis, Polyswarm and VirusExchange.
 8. List last suspected URLs from URLHaus.
 9. List last payloads from URLHaus. 
 10. Search for specific payloads on the Malshare.
 11. Search for similar payloads (PE32/PE32+) on Polyswarm engine.
 12. Classify all files in a directory searching information on Virus Total and Hybrid Analysis. 
-13. Make reports about a suspect domain using different engines such as VirusTotal, Malpedia and 
-    ThreatCrowd. 
+13. Make reports about a suspect domain using different engines such as VirusTotal & Malpedia. 
 14. Check APK packages directly from Android devices against Hybrid Analysis and Virus Total. 
 15. Submit APK packages directly from Android devices to Hybrid Analysis and Virus Total. 
 16. Show URLs related to an user provided tag from URLHaus.
 17. Show payloads related to a tag (signature) from URLHaus.
-18. Show information about an IP address from Virus Total, Alien Vault, Malpedia and ThreatCrowd.
+18. Show information about an IP address from Virus Total, Alien Vault, Malpedia.
 19. Show IP address, domain and URL information from Polyswarm. 
 21. Perform meta-search on Polyswarm Network using several criteria: imphash, IPv4, domain, URL and
     malware family. 
@@ -197,7 +196,7 @@ has the following format:
       MALSHAREAPI = 
 
       [HAUSSUBMIT]
-      HAUSSUBMITAPI =
+      HAUSSUBMITAPI = 
 
       [POLYSWARM]
       POLYAPI = 
@@ -206,14 +205,19 @@ has the following format:
       ALIENAPI = 
 
       [MALPEDIA]
-      MALPEDIAAPI =
+      MALPEDIAAPI = 
 
       [TRIAGE]
-      TRIAGEAPI =
+      TRIAGEAPI = 
 
       [INQUEST]
-      INQUESTAPI =
+      INQUESTAPI = 
 
+      [VIRUSEXCHANGE]
+      VXAPI = 
+
+      [IPINFO]
+      IPINFOAPI = 
 
 The APIs can be requested on the respective service websites:
 
@@ -228,8 +232,10 @@ The APIs can be requested on the respective service websites:
     handle is @malpedia.
 08. Malware Bazaar: It isn't necessary an API.
 09. ThreatFox: It isn't necessary an API.
-10. InQuest: https://labs.inquest.net/.
-11. Triage: https://tria.ge/signup.
+10. InQuest: https://labs.inquest.net/
+11. Triage: https://tria.ge/signup
+12. VirusExchange: https://virus.exchange/users/register
+13. IPInfo: https://ipinfo.io/signup
  
 ----------------------------------------------------
 A special note about API requests to the MALPEDIA:
@@ -337,7 +343,8 @@ usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1
 -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> 
 -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> 
 -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> -i <1-13> 
--I <INQUEST argument>
+-I <INQUEST argument> -vx <1-2> -VX <VirusExchange arg> -O <output directory> -ip <1-3> 
+-IP <IP address>
 
 Malwoverview is a first response tool for threat hunting written by Alexandre Borges. 
 
@@ -734,11 +741,19 @@ Malwoverview is a first response tool for threat hunting written by Alexandre Bo
 
 ## HISTORY
 
+Version 6.1.0:
+      This version:
+
+            * Introduces -vx and -VX flags to allow interaction with VirusExchange's APIs for hash chack & sample download.
+            * Adds a new -O flag to set up the output directory for any sample downloads
+            * Adds -ip and -IP flags to allow querying IPInfo, BGPView and other already existing sources (currently VirusTotal & AlientVault) for basic IP address lookups.
+            * Fixes a bug in VirusTotal output.
+
 Version 6.0.1:
 
       This version:
 
-            * Issue in Malshare's download option has been fixed..
+            * Issue in Malshare's download option has been fixed.
 
 Version 6.0.0:
 

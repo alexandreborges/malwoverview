@@ -524,19 +524,23 @@ class VirusTotalExtractor():
             print(mycolors.reset)
             exit(3)
 
+    def _raw_ip_info(self, myip):
+        url = VirusTotalExtractor.urlipvt3
+
+        finalurl = ''.join([url, "/", myip])
+        requestsession = requests.Session()
+        requestsession.headers.update({'x-apikey': self.VTAPI})
+        requestsession.headers.update({'content-type': 'application/json'})
+        response = requestsession.get(finalurl)
+        return response
+
     def vtipwork(self, myip):
         if not myip:
             return False
 
-        url = VirusTotalExtractor.urlipvt3
-
         try:
-            finalurl = ''.join([url, "/", myip])
-            requestsession = requests.Session()
-            requestsession.headers.update({'x-apikey': self.VTAPI})
-            requestsession.headers.update({'content-type': 'application/json'})
-            response = requestsession.get(finalurl)
-            vttext = json.loads(response.text)
+            response = self._raw_ip_info(myip)
+            vttext = response.json()
 
             if (response.status_code == 404):
                 if (cv.bkg == 1):
@@ -637,6 +641,7 @@ class VirusTotalExtractor():
                     if ('last_analysis_stats' in attrs):
                         if ('suspicious' in attrs['last_analysis_stats']):
                             suspicious = attrs['last_analysis_stats']['suspicious']
+                            print(mycolors.foreground.red + "\nSuspicious: ".ljust(26) + mycolors.reset + str(suspicious), end='')
                     print(mycolors.foreground.red + "\nCity: ".ljust(26) + mycolors.reset + str(geocoder.ip(myip).city), end='')
 
                     self.vt_url_ip_domain_report_light(vttext)

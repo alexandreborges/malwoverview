@@ -244,7 +244,7 @@ class PolyswarmExtractor():
         firstseen = ''
         score = 0
         down = download
-        DOWN_DIR = '.'
+        DOWN_DIR = cv.output_dir
 
         self.requestPOLYAPI()
         polyswarm = PolyswarmAPI(key=self.POLYAPI)
@@ -295,7 +295,7 @@ class PolyswarmExtractor():
                     print(mycolors.foreground.yellow + "\nPolyscore: \t%f" % score)
                 if (down == 1):
                     polyswarm.download(DOWN_DIR, sha256)
-                    print(mycolors.reset + "\n\nThe sample has been SAVED!")
+                    print(mycolors.reset + f"\n\nSample downloaded to: {DOWN_DIR}")
             else:
                 if (sha256):
                     print(mycolors.foreground.cyan + "\nSHA256: \t%s" % sha256)
@@ -309,7 +309,7 @@ class PolyswarmExtractor():
                     print(mycolors.foreground.red + "\nPolyscore: \t%f" % score)
                 if (down == 1):
                     polyswarm.download(DOWN_DIR, sha256)
-                    print(mycolors.reset + "\n\nThe sample has been SAVED!")
+                    print(mycolors.reset + f"\n\nSample downloaded to: {DOWN_DIR}")
             printr()
         except Exception:
             if (cv.bkg == 1):

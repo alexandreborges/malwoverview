@@ -54,8 +54,9 @@ class HybridAnalysisExtractor():
                     print((mycolors.reset))
                     return final
 
-                open(resource + '.gz', 'wb').write(haresponse.content)
-                final = 'SAMPLE SAVED!'
+                outputpath = os.path.join(cv.output_dir, f'{resource}.gz')
+                open(outputpath, 'wb').write(haresponse.content)
+                final = f'Sample downloaded to: {outputpath}'
 
                 print((mycolors.reset))
                 print((final + "\n"))

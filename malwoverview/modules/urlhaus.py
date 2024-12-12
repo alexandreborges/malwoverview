@@ -7,6 +7,7 @@ from malwoverview.utils.colors import mycolors, printr
 from malwoverview.utils.utils import urltoip
 import json
 import sys
+import os
 
 
 class URLHausExtractor():
@@ -338,8 +339,9 @@ class URLHausExtractor():
                     print((mycolors.foreground.red + "\n" + final + "\n" + mycolors.reset))
                 exit(1)
 
-            open(resource + '.zip', 'wb').write(response.content)
-            final = '\nSAMPLE SAVED!'
+            outputpath = os.path.join(cv.output_dir, resource + '.zip')
+            open(outputpath, 'wb').write(response.content)
+            final = f'\nSample downloaded to: {outputpath}'
 
             if (cv.bkg == 1):
                 print((mycolors.foreground.yellow + final + "\n"))
