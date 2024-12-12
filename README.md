@@ -56,7 +56,7 @@
 ![Alt text](pictures/picture_47.jpg?raw=true "Title")
 ![Alt text](pictures/picture_48.jpg?raw=true "Title")
 
-      Copyright (C)  2018-2024 Alexandre Borges (https://exploitreversing.com) 
+      Copyright (C)  2018-2025 Alexandre Borges (https://exploitreversing.com) 
 
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
@@ -90,23 +90,24 @@ This tool aims to :
 1. Determine similar executable malware samples (PE/PE+) according to the import table (imphash) and group 
    them by different colors (pay attention to the second column from output). Thus, colors matter!
 2. Show hash information on Virus Total, Hybrid Analysis, Malshare, Polyswarm, URLhaus, Alien Vault, 
-   Malpedia and VirusExchange engines. 
+   Malpedia and ThreatCrowd engines. 
 3. Determining whether the malware samples contain overlay and, if you want, extract it. 
 4. Check suspect files on Virus Total, Hybrid Analysis and Polyswarm.
 5. Check URLs on Virus Total, Malshare, Polyswarm, URLhaus engines and Alien Vault. 
-6. Download malware samples from Hybrid Analysis, Malshare, URLHaus, Polyswarm, Malpedia and VirusExchange engines.
-7. Submit malware samples to VirusTotal, Hybrid Analysis, Polyswarm and VirusExchange.
+6. Download malware samples from Hybrid Analysis, Malshare, URLHaus, Polyswarm and Malpedia engines.
+7. Submit malware samples to VirusTotal, Hybrid Analysis and Polyswarm.
 8. List last suspected URLs from URLHaus.
 9. List last payloads from URLHaus. 
 10. Search for specific payloads on the Malshare.
 11. Search for similar payloads (PE32/PE32+) on Polyswarm engine.
 12. Classify all files in a directory searching information on Virus Total and Hybrid Analysis. 
-13. Make reports about a suspect domain using different engines such as VirusTotal & Malpedia. 
+13. Make reports about a suspect domain using different engines such as VirusTotal, Malpedia and 
+    ThreatCrowd. 
 14. Check APK packages directly from Android devices against Hybrid Analysis and Virus Total. 
 15. Submit APK packages directly from Android devices to Hybrid Analysis and Virus Total. 
 16. Show URLs related to an user provided tag from URLHaus.
 17. Show payloads related to a tag (signature) from URLHaus.
-18. Show information about an IP address from Virus Total, Alien Vault, Malpedia.
+18. Show information about an IP address from Virus Total, Alien Vault, Malpedia and ThreatCrowd.
 19. Show IP address, domain and URL information from Polyswarm. 
 21. Perform meta-search on Polyswarm Network using several criteria: imphash, IPv4, domain, URL and
     malware family. 
@@ -119,7 +120,11 @@ This tool aims to :
 28. Submit large files (>= 32 MB) to Virus Total. 
 29. Malwoverview uses Virus Total API v.3, so there isn't longer any option using v.2.
 30. Retrieve different information from InQuest Labs and download samples from there. 
-
+31. Retrieve information and download malware samples from Virus Exchange (vxunderground). 
+32. Retrieve information about a given IP address from IPInfo service.
+33. Retrieve information about a given IP address from BGPView service.
+34. Retrieve combined information about a given IP address from multiple services.
+35. Offer extra option to save any downloaded file to a central location.
 
 ## CONTRIBUTORS
 
@@ -196,7 +201,7 @@ has the following format:
       MALSHAREAPI = 
 
       [HAUSSUBMIT]
-      HAUSSUBMITAPI = 
+      HAUSSUBMITAPI =
 
       [POLYSWARM]
       POLYAPI = 
@@ -205,19 +210,19 @@ has the following format:
       ALIENAPI = 
 
       [MALPEDIA]
-      MALPEDIAAPI = 
+      MALPEDIAAPI =
 
       [TRIAGE]
-      TRIAGEAPI = 
+      TRIAGEAPI =
 
       [INQUEST]
-      INQUESTAPI = 
+      INQUESTAPI =
 
       [VIRUSEXCHANGE]
-      VXAPI = 
+      VXAPI =  
 
       [IPINFO]
-      IPINFOAPI = 
+      IPINFOAPI =  
 
 The APIs can be requested on the respective service websites:
 
@@ -232,11 +237,12 @@ The APIs can be requested on the respective service websites:
     handle is @malpedia.
 08. Malware Bazaar: It isn't necessary an API.
 09. ThreatFox: It isn't necessary an API.
-10. InQuest: https://labs.inquest.net/
-11. Triage: https://tria.ge/signup
-12. VirusExchange: https://virus.exchange/users/register
-13. IPInfo: https://ipinfo.io/signup
- 
+10. InQuest: https://labs.inquest.net/.
+11. Triage: https://tria.ge/signup.
+12. Virus Exchange: https://virus.exchange/ 
+13. IPInfo: https://ipinfo.io/ 
+14. BGPView: ihttps://bgpview.docs.apiary.io/
+
 ----------------------------------------------------
 A special note about API requests to the MALPEDIA:
 ----------------------------------------------------
@@ -340,11 +346,10 @@ should be executed:
 ## HELP
 
 usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13>
--V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> 
--J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> 
--N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> -i <1-13> 
--I <INQUEST argument> -vx <1-2> -VX <VirusExchange arg> -O <output directory> -ip <1-3> 
--IP <IP address>
+-V <argument> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> 
+-J <argument> -p <1-8> -P <argument> -y <1-5> -Y <file name> -n <1-5> 
+-N <argument> -m <1-8> -M <argument> -b <1-10> -B <argument> -x <1-7> -X <argurment> -i <1-13> 
+-I <argument> -vx <1-2> -VX <argument> -ip <1-3> -IP <argument> -O <directory> 
 
 Malwoverview is a first response tool for threat hunting written by Alexandre Borges. 
 
@@ -581,7 +586,7 @@ Malwoverview is a first response tool for threat hunting written by Alexandre Bo
 	-x TRIAGE, --triage TRIAGE
 	
 		+ Provides information from TRIAGE according to the specified value: 
-			+ <1> this option gets sample's general information by providing an 
+			+ 1: this option gets sample's general information by providing an 
 			argument with -X option in the following possible formats: 
 				- sha256:<value>
 				- sha1:<value>
@@ -593,12 +598,12 @@ Malwoverview is a first response tool for threat hunting written by Alexandre Bo
 				- wallet:<value>
 				- ip:<value>; 
 				
-			+ <2> Get a sumary report for a given Triage ID (got from option -x 1); 
-			+ <3> Submit a sample for analysis; 
-			+ <4> Submit a sample through a URL for analysis; 
-			+ <5> Download sample specified by the Triage ID; 
-			+ <6> Download pcapng file from sample associated to given Triage ID; 
-			+ <7> Get a dynamic report for the given Triage ID (got from option -x 1);
+			+ 2: Get a sumary report for a given Triage ID (got from option -x 1); 
+			+ 3: Submit a sample for analysis; 
+			+ 4: Submit a sample through a URL for analysis; 
+			+ 5: Download sample specified by the Triage ID; 
+			+ 6: Download pcapng file from sample associated to given Triage ID; 
+			+ 7: Get a dynamic report for the given Triage ID (got from option -x 1);
 
 	-X TRIAGE_ARG, --triagearg TRIAGE_ARG
 	
@@ -614,20 +619,45 @@ Malwoverview is a first response tool for threat hunting written by Alexandre Bo
 			+ 4: Gets the most recent list of threats. To this option, the -I 
 			argument must be "list" (lowercase and without double quotes); 
 			+ 5: Retrives threats related to a provided domain; 
-			+ 6. Retrieves a list of samples related to the given IP address; 
-			+ 7. Retrives a list of sample related to the given e-mail address; 
-			+ 8. Retrieves a list of samples related to the given filename; 
-			+ 9. Retrieves a list of samples related to a given URL; 
-			+ 10. Retrieves information about a specified IOC; 
-			+ 11. List a list of IOCs. Note: you must pass "list" (without 
+			+ 6: Retrieves a list of samples related to the given IP address; 
+			+ 7: Retrives a list of sample related to the given e-mail address; 
+			+ 8: Retrieves a list of samples related to the given filename; 
+			+ 9: Retrieves a list of samples related to a given URL; 
+			+ 10: Retrieves information about a specified IOC; 
+			+ 11: List a list of IOCs. Note: you must pass "list" (without 
 			double quotes) as argument to -I;
-			+ 12. Check for a given keyword in the reputation database; 
-			+ 13. List artifacts in the reputation dabatabse. Note: you must 
+			+ 12: Check for a given keyword in the reputation database; 
+			+ 13: List artifacts in the reputation dabatabse. Note: you must 
 			pass "list" (without double quotes) as argument to -I.
 
 	-I INQUEST_ARG, --inquestarg INQUEST_ARG
 	
-		+ Provides argument to INQUEST -i option.
+		  + Provides argument to INQUEST -i option.
+
+  -vx VXOPTION, --vx VXOPTION
+   
+      + 1: Gets basic metadata for a given SHA256 hash; 
+      + 2: Downloads sample given a SHA256 provided in the -VX argument.
+
+  -VX VXARG, --VX VXARG
+      
+      + Provides argument to the -vx option from VirusExchange.
+
+  -O OUTPUTDIR, --output-dir OUTPUTDIR
+      
+      + Set output directory for all sample downloads.
+  
+  -ip IP, --ip IP
+
+    + Get IP information from various sources. The possible values are: 
+      + 1: Get details for an IP address provided with -IP from IPInfo; 
+      + 2: Get details for an IP address provided with -IP from BGPView; 
+      + 3: Get details for an IP address provided with -IP from all 
+           available intel services (VirusTotal/Alienvault).
+  
+  -IP IPARG, --iparg IPARG
+       
+      + Provides argument for IP lookup operations specified by the -ip option.
 
 
 ## EXAMPLES
@@ -737,17 +767,26 @@ Malwoverview is a first response tool for threat hunting written by Alexandre Bo
     malwoverview -i 11 -I list
     malwoverview -i 12 -I rebrand.ly
     malwoverview -i 13 -I list | more
+    malwoverview -vx 1 -VX c3247ada71931ee267e975cb04160dc8ac611f3b4409f41b595177e124be7c2e
+    malwoverview -vx 2 -VX c3247ada71931ee267e975cb04160dc8ac611f3b4409f41b595177e124be7c2e
+    malwoverview -ip 1 -IP 8.8.8.8
+    malwoverview -ip 2 -IP 8.8.8.8
+    malwoverview -ip 3 -IP 8.8.8.8
+    malwoverview -vx 2 -VX <hash> -O <directory>
+    malwoverview -b 5 -B <hash> -O <directory> 
 
 
 ## HISTORY
 
+
 Version 6.1.0:
+
       This version:
 
-            * Introduces -vx and -VX flags to allow interaction with VirusExchange's APIs for hash chack & sample download.
-            * Adds a new -O flag to set up the output directory for any sample downloads
-            * Adds -ip and -IP flags to allow querying IPInfo, BGPView and other already existing sources (currently VirusTotal & AlientVault) for basic IP address lookups.
-            * Fixes a bug in VirusTotal output.
+            * Introduces -vx option for Virus Exchange.
+            * Introduces -ip option for IPView and BGPView.
+            * Introduces -O option to save samples in a central directory. 
+            * Fixes multiple other issues.
 
 Version 6.0.1:
 
