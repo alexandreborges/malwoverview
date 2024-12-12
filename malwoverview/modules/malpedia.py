@@ -519,11 +519,12 @@ class MalpediaExtractor():
                 exit(1)
 
             if ('200' in str(haresponse)):
+                outputpath = os.path.join(cv.output_dir, myargs + ".zip")
                 if (cv.bkg == 1):
-                    open(myargs + ".zip", 'wb').write(haresponse.content)
+                    open(outputpath, 'wb').write(haresponse.content)
                     print(mycolors.foreground.lightcyan + "\nA zip file named %s.zip containing Yara rules has been SUCCESSFULLY downloaded from Malpedia!\n" % myargs, mycolors.reset)
                 else:
-                    open(myargs + ".zip", 'wb').write(haresponse.content)
+                    open(outputpath, 'wb').write(haresponse.content)
                     print(mycolors.foreground.green + "\nA zip file named %s.zip containing Yara rules has been SUCCESSFULLY downloaded from Malpedia!\n" % myargs, mycolors.reset)
                     exit(0)
         except ValueError as e:

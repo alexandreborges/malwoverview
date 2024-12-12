@@ -2,6 +2,7 @@ import pefile
 from malwoverview.utils.colors import mycolors, printr
 import malwoverview.modules.configvars as cv
 import magic
+import os
 
 
 def ftype(filename):
@@ -26,12 +27,14 @@ def overextract(fname):
     offset = pe.get_overlay_data_start_offset()
     if offset is None:
         exit(0)
-    with open(fname + ".overlay", "wb") as t:
+
+    outputpath = os.path.join(cv.output_dir, fname + '.overlay')
+    with open(outputpath, "wb") as t:
         t.write(r[offset:])
     if (cv.bkg == 1):
-        print((mycolors.foreground.yellow + "\n\nOverlay extracted:   " + mycolors.reset + "%s.overlay" % fname))
+        print((mycolors.foreground.yellow + "\n\nOverlay extracted:   " + mycolors.reset + outputpath))
     else:
-        print((mycolors.foreground.green + "\n\nOverlay extracted:   " + mycolors.reset + "%s.overlay" % fname))
+        print((mycolors.foreground.green + "\n\nOverlay extracted:   " + mycolors.reset + outputpath))
     printr()
 
 
