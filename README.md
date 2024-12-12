@@ -784,7 +784,7 @@ Version 6.1.0:
       This version:
 
             * Introduces -vx option for Virus Exchange.
-            * Introduces -ip option for IPView and BGPView.
+            * Introduces -ip option for IPInfo and BGPView.
             * Introduces -O option to save samples in a central directory. 
             * Fixes multiple other issues.
 
