@@ -1,4 +1,4 @@
-from malwoverview.utils.colors import mycolors, printr
+from malwoverview.utils.colors import mycolors, printr, printc
 import malwoverview.modules.configvars as cv
 
 class MultipleIPExtractor:
@@ -6,6 +6,10 @@ class MultipleIPExtractor:
         self.extractors = extractors
 
     def get_multiple_ip_details(self, ip_address):
+        if ip_address is None:
+            printc("A valid IP address is required.", mycolors.foreground.error(cv.bkg))
+            return
+
         for extractor in self.extractors:
             extractor_obj = self.extractors[extractor]
             if extractor == "IPInfo":
