@@ -129,9 +129,9 @@ This tool aims to :
 ## CONTRIBUTORS
 
       Alexandre Borges (project owner)
+      Artur Marzano (https://github.com/Macmod)
       Corey Forman (https://github.com/digitalsleuth)
       Christian Clauss (https://github.com/cclauss)
-      Artur Marzano (https://github.com/Macmod)
 
 ## HOW TO CONTRIBUTE TO THIS PROJECT
 
@@ -784,7 +784,7 @@ Version 6.1.0:
       This version:
 
             * Introduces -vx option for Virus Exchange.
-            * Introduces -ip option for IPView and BGPView.
+            * Introduces -ip option for IPInfo and BGPView.
             * Introduces -O option to save samples in a central directory. 
             * Fixes multiple other issues.
 
