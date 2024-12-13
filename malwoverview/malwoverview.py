@@ -21,7 +21,7 @@
 # Christian Clauss (https://github.com/cclauss)
 # Artur Marzano (https://github.com/Macmod)
 
-# Malwoverview.py: version 6.1.0
+# Malwoverview.py: version 6.1.1
 
 import os
 import argparse
@@ -56,7 +56,7 @@ import malwoverview.modules.configvars as cv
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2025, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "6.1.0"
+__version__ = "6.1.1"
 __email__ = "reverseexploit at proton.me"
 
 def finish_hook(signum, frame):
@@ -115,17 +115,24 @@ def main():
     config_file = configparser.ConfigParser()
     config_file.read(args.config)
     config_dict = config_file
-    VTAPI = config_dict.get('VIRUSTOTAL', 'VTAPI')
-    HAAPI = config_dict.get('HYBRID-ANALYSIS', 'HAAPI')
-    MALSHAREAPI = config_dict.get('MALSHARE', 'MALSHAREAPI')
-    HAUSSUBMITAPI = config_dict.get('HAUSSUBMIT', 'HAUSSUBMITAPI')
-    POLYAPI = config_dict.get('POLYSWARM', 'POLYAPI')
-    ALIENAPI = config_dict.get('ALIENVAULT', 'ALIENAPI')
-    MALPEDIAAPI = config_dict.get('MALPEDIA', 'MALPEDIAAPI')
-    TRIAGEAPI = config_dict.get('TRIAGE', 'TRIAGEAPI')
-    INQUESTAPI = config_dict.get('INQUEST', 'INQUESTAPI')
-    VXAPI = config_dict.get('VIRUSEXCHANGE', 'VXAPI')
-    IPINFOAPI = config_dict.get('IPINFO', 'IPINFOAPI')
+
+    def getoption(section, name):
+        if config_dict.has_option(section,name):
+            return config_dict.get(section,name)
+        else:
+            return ''
+
+    VTAPI = getoption('VIRUSTOTAL', 'VTAPI')
+    HAAPI = getoption('HYBRID-ANALYSIS', 'HAAPI')
+    MALSHAREAPI = getoption('MALSHARE', 'MALSHAREAPI')
+    HAUSSUBMITAPI = getoption('HAUSSUBMIT', 'HAUSSUBMITAPI')
+    POLYAPI = getoption('POLYSWARM', 'POLYAPI')
+    ALIENAPI = getoption('ALIENVAULT', 'ALIENAPI')
+    MALPEDIAAPI = getoption('MALPEDIA', 'MALPEDIAAPI')
+    TRIAGEAPI = getoption('TRIAGE', 'TRIAGEAPI')
+    INQUESTAPI = getoption('INQUEST', 'INQUESTAPI')
+    VXAPI = getoption('VIRUSEXCHANGE', 'VXAPI')
+    IPINFOAPI = getoption('IPINFO', 'IPINFOAPI')
 
     optval = range(2)
     optval1 = range(3)
@@ -194,7 +201,10 @@ def main():
         args.backg not in optval,
         args.malsharelist not in optval8,
         args.virustotaloption not in optval9,
-        args.vtpubpremium not in optval
+        args.vtpubpremium not in optval,
+        args.vxoption not in optval1,
+        args.ipoption not in optval4,
+        args.androidoption not in optval5
     ]
 
     MIN_OPTIONS = [
