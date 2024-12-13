@@ -6,11 +6,14 @@ class IPInfoExtractor:
     def __init__(self, IPINFOAPI):
         self.IPINFOAPI = IPINFOAPI
         
+    """
+    IPInfo API can be used anonymously up to 1000 requests per day
     def requestIPINFOAPI(self):
-        if self.IPINFOAPI == '':
-            print(mycolors.foreground.red + "\nTo use IPInfo.io services, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the IPInfo API key according to the format shown on the Github website." + mycolors.reset + "\n")
-            exit(1)
-            
+            if self.IPINFOAPI == '':
+                print(mycolors.foreground.red + "\nTo use IPInfo.io services, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the IPInfo API key according to the format shown on the Github website." + mycolors.reset + "\n")
+                exit(1)
+    """
+
     def _raw_ip_info(self, ip_address):
         url = f"https://ipinfo.io/{ip_address}?token={self.IPINFOAPI}"
         
@@ -21,7 +24,7 @@ class IPInfoExtractor:
             return {'error': e}
 
     def get_ip_details(self, ip_address):
-        self.requestIPINFOAPI()
+#        self.requestIPINFOAPI()
         
         data = self._raw_ip_info(ip_address)
 
