@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v6.1.0) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v6.1.1) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [<img alt="Downloads/Last Month" src="https://img.shields.io/pypi/dm/malwoverview?color=blue&style=for-the-badge&label=Last%20Month">](https://pypistats.org/packages/malwoverview)
@@ -55,6 +55,8 @@
 ![Alt text](pictures/picture_46.jpg?raw=true "Title")
 ![Alt text](pictures/picture_47.jpg?raw=true "Title")
 ![Alt text](pictures/picture_48.jpg?raw=true "Title")
+![Alt text](pictures/picture_49.jpg?raw=true "Title")
+![Alt text](pictures/picture_50.jpg?raw=true "Title")
 
       Copyright (C)  2018-2025 Alexandre Borges (https://exploitreversing.com) 
 
@@ -71,7 +73,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-## Current Version: 6.1.0
+## Current Version: 6.1.1
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -87,17 +89,17 @@ from several endpoints. In few words, it works as a client to main existing sand
 
 This tool aims to : 
 
-1. Determine similar executable malware samples (PE/PE+) according to the import table (imphash) and group 
-   them by different colors (pay attention to the second column from output). Thus, colors matter!
-2. Show hash information on Virus Total, Hybrid Analysis, Malshare, Polyswarm, URLhaus, Alien Vault, 
-   Malpedia and ThreatCrowd engines. 
-3. Determining whether the malware samples contain overlay and, if you want, extract it. 
-4. Check suspect files on Virus Total, Hybrid Analysis and Polyswarm.
-5. Check URLs on Virus Total, Malshare, Polyswarm, URLhaus engines and Alien Vault. 
-6. Download malware samples from Hybrid Analysis, Malshare, URLHaus, Polyswarm and Malpedia engines.
-7. Submit malware samples to VirusTotal, Hybrid Analysis and Polyswarm.
-8. List last suspected URLs from URLHaus.
-9. List last payloads from URLHaus. 
+01. Determine similar executable malware samples (PE/PE+) according to the import table (imphash) and group 
+    them by different colors (pay attention to the second column from output). Thus, colors matter!
+02. Show hash information on Virus Total, Hybrid Analysis, Malshare, Polyswarm, URLhaus, Alien Vault, 
+    Malpedia and ThreatCrowd engines. 
+03. Determining whether the malware samples contain overlay and, if you want, extract it. 
+04. Check suspect files on Virus Total, Hybrid Analysis and Polyswarm.
+05. Check URLs on Virus Total, Malshare, Polyswarm, URLhaus engines and Alien Vault. 
+06. Download malware samples from Hybrid Analysis, Malshare, URLHaus, Polyswarm and Malpedia engines.
+07. Submit malware samples to VirusTotal, Hybrid Analysis and Polyswarm.
+08. List last suspected URLs from URLHaus.
+09. List last payloads from URLHaus. 
 10. Search for specific payloads on the Malshare.
 11. Search for similar payloads (PE32/PE32+) on Polyswarm engine.
 12. Classify all files in a directory searching information on Virus Total and Hybrid Analysis. 
@@ -128,9 +130,9 @@ This tool aims to :
 
 ## CONTRIBUTORS
 
-      Alexandre Borges (project owner)
-      Artur Marzano (https://github.com/Macmod)
-      Corey Forman (https://github.com/digitalsleuth)
+      Alexandre Borges (https://github.com/alexandreborges) | project owner and main developer
+      Artur Marzano (https://github.com/Macmod) | co-main developer
+      Corey Forman (https://github.com/digitalsleuth) | resposible for REMnux integration
       Christian Clauss (https://github.com/cclauss)
 
 ## HOW TO CONTRIBUTE TO THIS PROJECT
@@ -174,22 +176,28 @@ AFTER having installed Malwoverview:
 
       * python-magic is NOT installed. (pip show python-magic)
       * python-magic-bin IS installed. (pip show python-magic-bin)
-      
-To use Malwoverview you should insert VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm,
-Alien Vault, Malpedia  and Triage into the .malwapi.conf configuration file 
-(the default one at the home directory (/home/[username] or /root) -- if the file doesn't exist,
-so you should create it) or you could create a custom configuration file and indicate it by 
+    
+
+## REQUIRED APIs
+
+Malwoverview does not require to insert all APIs anymore. Therefore, professionals can 
+us it without having registered such APIs. Obviously, to use certain options is necessary to 
+add respective API into .malwapi.conf file, whose format is shown below. 
+
+To use all options of Malwoverview you must insert respective API of the following services:
+VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm, Alien Vault, Malpedia, Triage, 
+InQuest, Virus Exchange and APInfo into the .malwapi.conf configuration file, which must be present 
+(or created) in the home directory (/home/[username] or /root on Linux, and C:\Users\[username] 
+on Windows. Alternatively, users could create a custom configuration file and indicate it by 
 using the -c option.
 
-Nonetheless, starting on version 4.4.2, it isn't longer necessary to insert all APIs into 
-.malwapi.conf file before using Malwoverview. Therefore, users can only insert few APIs 
-and use the respective options to these APIs.
+To highlight: if the .malwapi.conf file does not exist in your home directory, so you must 
+create it!
 
 * A special note about the Alien Vault: it is necessary to subscribe to pulses on Alien Vault 
 website before using -n 1 option.
 
-The .malwapi.conf configuration file (from the the home directory -- /home/[username] or /root) 
-has the following format:
+The .malwapi.conf configuration file has the following format:
 
       [VIRUSTOTAL]
       VTAPI = 
@@ -243,6 +251,7 @@ The APIs can be requested on the respective service websites:
 13. IPInfo: https://ipinfo.io/ 
 14. BGPView: ihttps://bgpview.docs.apiary.io/
 
+
 ----------------------------------------------------
 A special note about API requests to the MALPEDIA:
 ----------------------------------------------------
@@ -254,7 +263,6 @@ you provided further information about you (LinkedIn account, Twitter and so on)
 because it would make simpler to proof your identity, professional profile and 
 legitimacy, so making quicker the approval of your request.  
 
------------------------------------------------------
 
 ----------------------------------------------------
 Additional explanation about Triage:
@@ -265,7 +273,6 @@ use the "-x 1 -X \<attribute\>:\<value\>" to search for the correct ID of the ar
 so use this ID information with the remaining Triage options (-x [2-7]) for getting 
 further threat hunting information from Triage endpoint.
 
------------------------------------------------------
 
 ----------------------------------------------------
 Note about background color of the terminal:
@@ -278,8 +285,6 @@ light background.
 
 -----------------------------------------------------
 
-On Linux and MacOS systems, create the .malwapi.conf file within
-/home/\[username\] directory (Linux home user directory -- /home/[username] or /root).
 
 To check the installation, execute:
 
@@ -291,11 +296,12 @@ Further information is available on:
        (Github) https://github.com/alexandreborges/malwoverview
 
 If you want to perform the manual installation (it is not usually necessary), so few steps 
-should be executed:
+should be executed, as shown in the next sub-section. 
+
 
 ## MANUAL INSTALLATION (REMnux and Ubuntu)
 
-1. Python version 3.8 or later (Only Python 3.x !!! It does NOT work using Python 2.7) 
+1. Python version 3.11 or later (Only Python 3.x !!! It does NOT work using Python 2.7) 
 
        $ apt-get install python3.11  (for example)
 
@@ -778,6 +784,13 @@ Malwoverview is a first response tool for threat hunting written by Alexandre Bo
 
 ## HISTORY
 
+
+Version 6.1.1:
+
+      This version:
+
+            * Modifies the code to not require to registers all APIs at the first usage.
+            * Add a new section in the README (this file) about required APIs.
 
 Version 6.1.0:
 
