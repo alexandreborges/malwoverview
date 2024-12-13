@@ -132,7 +132,7 @@ This tool aims to :
 
       Alexandre Borges (https://github.com/alexandreborges) | project owner and main developer
       Artur Marzano (https://github.com/Macmod) | co-main developer
-      Corey Forman (https://github.com/digitalsleuth) | resposible for REMnux integration
+      Corey Forman (https://github.com/digitalsleuth) | responsible for REMnux integration
       Christian Clauss (https://github.com/cclauss)
 
 ## HOW TO CONTRIBUTE TO THIS PROJECT
