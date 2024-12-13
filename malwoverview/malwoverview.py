@@ -56,7 +56,7 @@ import malwoverview.modules.configvars as cv
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2025, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "6.1.0"
+__version__ = "6.1.1"
 __email__ = "reverseexploit at proton.me"
 
 def finish_hook(signum, frame):
@@ -201,7 +201,10 @@ def main():
         args.backg not in optval,
         args.malsharelist not in optval8,
         args.virustotaloption not in optval9,
-        args.vtpubpremium not in optval
+        args.vtpubpremium not in optval,
+        args.vxoption not in optval1,
+        args.ipoption not in optval4,
+        args.androidoption not in optval5
     ]
 
     MIN_OPTIONS = [

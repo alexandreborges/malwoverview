@@ -1,5 +1,5 @@
 import malwoverview.modules.configvars as cv
-from malwoverview.utils.colors import mycolors
+from malwoverview.utils.colors import mycolors, printc
 import requests
 
 class IPInfoExtractor:
