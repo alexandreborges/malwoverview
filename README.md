@@ -176,7 +176,9 @@ AFTER having installed Malwoverview:
 
       * python-magic is NOT installed. (pip show python-magic)
       * python-magic-bin IS installed. (pip show python-magic-bin)
-    
+
+#### Note: It is recommended to save the .malwapi.conf before any update!
+
 
 ## REQUIRED APIs
 
