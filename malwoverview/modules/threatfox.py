@@ -12,7 +12,7 @@ class ThreatFoxExtractor():
 
     def requestTHREATFOXAPI(self):
         if (self.THREATFOXAPI == ''):
-            print(mycolors.foreground.red + "\nTo be able to get/submit information from/to THREAT FOX, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the THREATFOX API (Auth-Key) according to the format shown on the Github website." + mycolors.reset + "\n")
+            print(mycolors.foreground.red + "\nTo be able to get/submit information from/to THREATFOX, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the THREATFOX API (Auth-Key) according to the format shown on the Github website." + mycolors.reset + "\n")
             exit(1)
 
     def threatfox_listiocs(self, bazaarx):
