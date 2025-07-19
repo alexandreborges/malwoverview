@@ -21,7 +21,7 @@
 # Christian Clauss (https://github.com/cclauss)
 # Artur Marzano (https://github.com/Macmod)
 
-# Malwoverview.py: version 6.1.1
+# Malwoverview.py: version 6.2
 
 import os
 import argparse
@@ -56,7 +56,7 @@ import malwoverview.modules.configvars as cv
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2025, Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "6.1.1"
+__version__ = "6.2"
 __email__ = "reverseexploit at proton.me"
 
 def finish_hook(signum, frame):
@@ -133,6 +133,8 @@ def main():
     INQUESTAPI = getoption('INQUEST', 'INQUESTAPI')
     VXAPI = getoption('VIRUSEXCHANGE', 'VXAPI')
     IPINFOAPI = getoption('IPINFO', 'IPINFOAPI')
+    BAZAARAPI = getoption('BAZAAR', 'BAZAARAPI')
+    THREATFOXAPI = getoption('THREATFOX', 'THREATFOXAPI')
 
     optval = range(2)
     optval1 = range(3)
@@ -227,8 +229,8 @@ def main():
     # Module objects
     polyswarm = PolyswarmExtractor(POLYAPI)
     alien = AlienVaultExtractor(ALIENAPI)
-    bazaar = BazaarExtractor()
-    threatfox = ThreatFoxExtractor()
+    bazaar = BazaarExtractor(BAZAARAPI)
+    threatfox = ThreatFoxExtractor(THREATFOXAPI)
     triage = TriageExtractor(TRIAGEAPI)
     inquest = InQuestExtractor(INQUESTAPI)
     malpedia = MalpediaExtractor(MALPEDIAAPI)

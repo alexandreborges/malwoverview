@@ -7,14 +7,21 @@ import os
 class BazaarExtractor():
     urlbazaar = 'https://mb-api.abuse.ch/api/v1/'
 
-    def __init__(self):
-        pass
+    def __init__(self, BAZAARAPI):
+        self.BAZAARAPI = BAZAARAPI
+
+    def requestBAZAARAPI(self):
+        if (self.BAZAARAPI == ''):
+            print(mycolors.foreground.red + "\nTo be able to get/submit information from/to Malware Bazaar, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the Malware Bazaar API (Auth-Key) according to the format shown on the Github website." + mycolors.reset + "\n")
+            exit(1)
 
     def bazaar_tag(self, bazaarx):
         bazaar = BazaarExtractor.urlbazaar
         bazaartext = ''
         bazaarresponse = ''
         params = ''
+
+        self.requestBAZAARAPI()
 
         try:
             print("\n")
@@ -24,9 +31,12 @@ class BazaarExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json'})
+            requestsession.headers.update({'Auth-Key': self.BAZAARAPI})
             params = {'query': 'get_taginfo', "tag": bazaarx, "limit": 50}
             bazaarresponse = requestsession.post(bazaar, data=params)
             bazaartext = json.loads(bazaarresponse.text)
+
+            print(bazaartext)
 
             if bazaartext['query_status'] == "tag_not_found":
                 if (cv.bkg == 1):
@@ -201,6 +211,8 @@ class BazaarExtractor():
         bazaartext = ''
         params = ''
 
+        self.requestBAZAARAPI()
+
         try:
 
             print("\n")
@@ -210,6 +222,7 @@ class BazaarExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json'})
+            requestsession.headers.update({'Auth-Key': self.BAZAARAPI})
             params = {'query': 'get_imphash', "imphash": bazaarx, "limit": 50}
             bazaarresponse = requestsession.post(bazaar, data=params)
             bazaartext = json.loads(bazaarresponse.text)
@@ -389,6 +402,8 @@ class BazaarExtractor():
         bazaarresponse = ''
         params = ''
 
+        self.requestBAZAARAPI()
+
         try:
             print("\n")
             print((mycolors.reset + "MALWARE BAZAAR REPORT".center(100)), end='')
@@ -397,6 +412,7 @@ class BazaarExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json'})
+            requestsession.headers.update({'Auth-Key': self.BAZAARAPI})
             params = {'query': 'get_recent', "selector": bazaarx}
             bazaarresponse = requestsession.post(bazaar, data=params)
             bazaartext = json.loads(bazaarresponse.text)
@@ -570,6 +586,8 @@ class BazaarExtractor():
         params = ''
         resource = bazaarx
 
+        self.requestBAZAARAPI()
+
         try:
             print("\n")
             print((mycolors.reset + "MALWARE BAZAAR REPORT".center(100)), end='')
@@ -578,6 +596,7 @@ class BazaarExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/gzip'})
+            requestsession.headers.update({'Auth-Key': self.BAZAARAPI})
             params = {'query': 'get_file', "sha256_hash": bazaarx}
             bazaarresponse = requestsession.post(bazaar, data=params, allow_redirects=True)
             bazaartext = bazaarresponse.text
@@ -623,6 +642,8 @@ class BazaarExtractor():
         bazaarresponse = ''
         params = ''
 
+        self.requestBAZAARAPI()
+
         try:
             print("\n")
             print((mycolors.reset + "MALWARE BAZAAR REPORT".center(100)), end='')
@@ -631,6 +652,7 @@ class BazaarExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json'})
+            requestsession.headers.update({'Auth-Key': self.BAZAARAPI})
             params = {'query': 'get_info', "hash": bazaarx}
             bazaarresponse = requestsession.post(bazaar, data=params)
             bazaartext = json.loads(bazaarresponse.text)

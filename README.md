@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v6.1.1) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v6.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [<img alt="Downloads/Last Month" src="https://img.shields.io/pypi/dm/malwoverview?color=blue&style=for-the-badge&label=Last%20Month">](https://pypistats.org/packages/malwoverview)
@@ -73,7 +73,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-## Current Version: 6.1.1
+## Current Version: 6.2
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -152,7 +152,7 @@ branch and a new Python package is generated.
 This tool has been tested on REMnux, Ubuntu, Kali Linux, macOS and Windows. Malwoverview 
 can be installed by executing the following command:
 
-      * pip3.11 install git+https://github.com/alexandreborges/malwoverview (preferred method) 
+      * pip3.11 install git+https://github.com/alexandreborges/malwoverview
       
       or...
       
@@ -182,16 +182,13 @@ AFTER having installed Malwoverview:
 
 ## REQUIRED APIs
 
-Malwoverview does not require to insert all APIs anymore. Therefore, professionals can 
-us it without having registered such APIs. Obviously, to use certain options is necessary to 
-add respective API into .malwapi.conf file, whose format is shown below. 
-
-To use all options of Malwoverview you must insert respective API of the following services:
+It is possible to start using Malwoverview does without inserting all APIs. However, 
+to use all options of Malwoverview, you must insert the respective API of the following services:
 VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm, Alien Vault, Malpedia, Triage, 
-InQuest, Virus Exchange and APInfo into the .malwapi.conf configuration file, which must be present 
-(or created) in the home directory (/home/[username] or /root on Linux, and C:\Users\[username] 
-on Windows. Alternatively, users could create a custom configuration file and indicate it by 
-using the -c option.
+InQuest, Virus Exchange, APInfo, Malware Bazaar and ThreatFox into the .malwapi.conf 
+configuration file, which must be present (or created) in the home directory (/home/[username]
+or /root on Linux, and C:\Users\[username] on Windows. Alternatively, users can create 
+a custom configuration file and indicate it by using the -c option.
 
 To highlight: if the .malwapi.conf file does not exist in your home directory, so you must 
 create it!
@@ -233,6 +230,12 @@ The .malwapi.conf configuration file has the following format:
 
       [IPINFO]
       IPINFOAPI =  
+      
+      [BAZAAR]
+      BAZAARAPI = 
+
+      [THREATFOX]
+      THREATFOXAPI = 
 
 The APIs can be requested on the respective service websites:
 
@@ -245,17 +248,17 @@ The APIs can be requested on the respective service websites:
 07. Malpedia: It doesn't offer open registration, but you can request an user account 
     directly through Twitter (DM) or feedback e-email. The Malpedia Twitter 
     handle is @malpedia.
-08. Malware Bazaar: It isn't necessary an API.
-09. ThreatFox: It isn't necessary an API.
+08. Malware Bazaar: https://bazaar.abuse.ch/api/#auth\_key
+09. ThreatFox: https://threatfox.abuse.ch/api/#auth\_key
 10. InQuest: https://labs.inquest.net/.
 11. Triage: https://tria.ge/signup.
 12. Virus Exchange: https://virus.exchange/ 
 13. IPInfo: https://ipinfo.io/ 
-14. BGPView: ihttps://bgpview.docs.apiary.io/
+14. BGPView: https://bgpview.docs.apiary.io/
 
 
 ----------------------------------------------------
-A special note about API requests to the MALPEDIA:
+Note about API requests to the MALPEDIA:
 ----------------------------------------------------
 
 The service and acceptance is based on the community vetting. Thus, it's recommended 
@@ -267,13 +270,21 @@ legitimacy, so making quicker the approval of your request.
 
 
 ----------------------------------------------------
-Additional explanation about Triage:
+Note about Triage:
 ----------------------------------------------------
 
 Every Triage operation is based on the Triage ID of each artifact, so you need to
 use the "-x 1 -X \<attribute\>:\<value\>" to search for the correct ID of the artifact,
 so use this ID information with the remaining Triage options (-x [2-7]) for getting 
 further threat hunting information from Triage endpoint.
+
+
+----------------------------------------------------
+Note about Malware Bazaar and Threat Fox: 
+----------------------------------------------------
+
+Since second semester of 2025, it is required the Auth-Key (API) to use Malware 
+Bazaar and Threat Fox services.
 
 
 ----------------------------------------------------
@@ -786,6 +797,13 @@ Malwoverview is a first response tool for threat hunting written by Alexandre Bo
 
 ## HISTORY
 
+
+Version 6.2:
+
+      This version:
+
+            * Modifies Malware Bazaar option to use Auth-Key.
+            * Modifies Threat Fox option to use Auth-Key.
 
 Version 6.1.1:
 
