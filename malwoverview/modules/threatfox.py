@@ -7,8 +7,13 @@ from malwoverview.utils.colors import mycolors, printr
 class ThreatFoxExtractor():
     urlthreatfox = 'https://threatfox-api.abuse.ch/api/v1/'
 
-    def __init__(self):
-        pass
+    def __init__(self,THREATFOXAPI):
+        self.THREATFOXAPI = THREATFOXAPI
+
+    def requestTHREATFOXAPI(self):
+        if (self.THREATFOXAPI == ''):
+            print(mycolors.foreground.red + "\nTo be able to get/submit information from/to THREATFOX, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the THREATFOX API (Auth-Key) according to the format shown on the Github website." + mycolors.reset + "\n")
+            exit(1)
 
     def threatfox_listiocs(self, bazaarx):
         bazaar = ThreatFoxExtractor.urlthreatfox
@@ -16,6 +21,8 @@ class ThreatFoxExtractor():
         bazaartext = ''
         bazaarresponse = ''
         params = ''
+
+        self.requestTHREATFOXAPI()
 
         try:
             print("\n")
@@ -25,6 +32,7 @@ class ThreatFoxExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json'})
+            requestsession.headers.update({'Auth-Key': self.THREATFOXAPI})
             params = {'query': "get_iocs", 'days': int(bazaarx)}
 
             bazaarresponse = requestsession.post(
@@ -196,6 +204,8 @@ class ThreatFoxExtractor():
         bazaarresponse = ''
         params = ''
 
+        self.requestTHREATFOXAPI()
+
         try:
             print("\n")
             print((mycolors.reset + "THREATFOX REPORT".center(100)), end='')
@@ -204,6 +214,7 @@ class ThreatFoxExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json'})
+            requestsession.headers.update({'Auth-Key': self.THREATFOXAPI})
             params = {'query': "search_ioc", 'search_term': bazaarx}
             bazaarresponse = requestsession.post(url=bazaar, data=json.dumps(params))
             bazaartext = json.loads(bazaarresponse.text)
@@ -386,6 +397,8 @@ class ThreatFoxExtractor():
         bazaarresponse = ''
         params = ''
 
+        self.requestTHREATFOXAPI()
+
         try:
 
             print("\n")
@@ -395,6 +408,7 @@ class ThreatFoxExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json'})
+            requestsession.headers.update({'Auth-Key': self.THREATFOXAPI})
             params = {'query': "taginfo", 'tag': bazaarx}
             bazaarresponse = requestsession.post(url=bazaar, data=json.dumps(params))
             bazaartext = json.loads(bazaarresponse.text)
@@ -584,6 +598,8 @@ class ThreatFoxExtractor():
         bazaarresponse = ''
         params = ''
 
+        self.requestTHREATFOXAPI()
+
         try:
 
             print("\n")
@@ -593,6 +609,7 @@ class ThreatFoxExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json'})
+            requestsession.headers.update({'Auth-Key': self.THREATFOXAPI})
             params = {'query': "malwareinfo", 'malware': bazaarx}
             bazaarresponse = requestsession.post(url=bazaar, data=json.dumps(params))
             bazaartext = json.loads(bazaarresponse.text)
@@ -775,6 +792,8 @@ class ThreatFoxExtractor():
         bazaarresponse = ''
         params = ''
 
+        self.requestTHREATFOXAPI()
+
         try:
 
             print("\n")
@@ -784,6 +803,7 @@ class ThreatFoxExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json'})
+            requestsession.headers.update({'Auth-Key': self.THREATFOXAPI})
             params = {'query': "malware_list"}
             bazaarresponse = requestsession.post(url=bazaar, data=json.dumps(params))
             bazaartext = json.loads(bazaarresponse.text)

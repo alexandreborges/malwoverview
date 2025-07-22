@@ -746,7 +746,7 @@ class TriageExtractor():
                         print("\n" + mycolors.foreground.red + triagetext['message'] + mycolors.reset, end='\n\n')
                     exit(1)
 
-            outputpath = os.path.join(cv.output_dir, )
+            outputpath = os.path.join(cv.output_dir, triagex)
             open(outputpath, 'wb').write(triageresponse.content)
             if (cv.bkg == 1):
                 print("\n" + mycolors.foreground.yellow + f"Sample downloaded to: {outputpath}" + mycolors.reset, end=' ')
