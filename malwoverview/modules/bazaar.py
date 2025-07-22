@@ -36,8 +36,6 @@ class BazaarExtractor():
             bazaarresponse = requestsession.post(bazaar, data=params)
             bazaartext = json.loads(bazaarresponse.text)
 
-            print(bazaartext)
-
             if bazaartext['query_status'] == "tag_not_found":
                 if (cv.bkg == 1):
                     print(mycolors.foreground.lightred + "\nThe provided tag was not found!\n" + mycolors.reset)
