@@ -19,6 +19,7 @@ setup(
     description=("Malwoverview is a first response tool for threat hunting."),
     long_description=long_description,
     long_description_content_type="text/markdown",
+    license_files=["LICENSE"],
     packages=find_packages(exclude=["pictures"]),
     include_package_data=True,
     python_requires=">=3.8",
