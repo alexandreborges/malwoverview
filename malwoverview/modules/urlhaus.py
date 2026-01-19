@@ -9,7 +9,6 @@ import json
 import sys
 import os
 
-
 class URLHausExtractor():
     hauss = 'https://urlhaus.abuse.ch/api/'
     hausq = 'https://urlhaus-api.abuse.ch/v1/url/'
@@ -20,11 +19,11 @@ class URLHausExtractor():
     haust = 'https://urlhaus-api.abuse.ch/v1/tag/'
     haussig = 'https://urlhaus-api.abuse.ch/v1/signature/'
 
-    def __init__(self, HAUSSUBMITAPI):
-        self.HAUSSUBMITAPI = HAUSSUBMITAPI
+    def __init__(self, URLHAUSAPI):
+        self.URLHAUSAPI = URLHAUSAPI
 
-    def requestHAUSSUBMITAPI(self):
-        if (self.HAUSSUBMITAPI == ''):
+    def requestURLHAUSAPI(self):
+        if (self.URLHAUSAPI == ''):
             print(mycolors.foreground.red + "\nTo be able to get/submit information from/to URLHaus, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the URLHaus API according to the format shown on the Github website." + mycolors.reset + "\n")
             exit(1)
 
@@ -34,6 +33,8 @@ class URLHausExtractor():
         hausresponse = ''
         params = ''
 
+        self.requestURLHAUSAPI()
+        
         try:
             print("\n")
             print((mycolors.reset + "URLHaus Report".center(126)), end='')
@@ -42,6 +43,7 @@ class URLHausExtractor():
 
             requestsession9 = requests.Session()
             requestsession9.headers.update({'accept': 'application/json'})
+            requestsession9.headers.update({'Auth-Key': self.URLHAUSAPI})
             params = {"signature": payloadtagx}
             hausresponse = requestsession9.post(haus, data=params)
             haustext = json.loads(hausresponse.text)
@@ -179,6 +181,8 @@ class URLHausExtractor():
         hausresponse = ''
         params = ''
 
+        self.requestURLHAUSAPI()
+
         try:
 
             print("\n")
@@ -189,6 +193,7 @@ class URLHausExtractor():
             params = {"tag": haustag}
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json'})
+            requestsession.headers.update({'Auth-Key': self.URLHAUSAPI})
             hausresponse = requestsession.post(hausurltag, data=params)
             haustext = json.loads(hausresponse.text)
 
@@ -315,10 +320,13 @@ class URLHausExtractor():
         response = ''
         finalurl = ''
 
+        self.requestURLHAUSAPI()
+
         try:
             resource = hashx.strip()
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/gzip'})
+            requestsession.headers.update({'Auth-Key': self.URLHAUSAPI})
             finalurl = ''.join([haus, resource])
             response = requestsession.get(url=finalurl, allow_redirects=True)
             hatext = response.text
@@ -370,6 +378,8 @@ class URLHausExtractor():
         alltags = ''
         c = 0
 
+        self.requestURLHAUSAPI()
+
         try:
             print("\n")
             print((mycolors.reset + "URLhaus Recent Malicious URLs".center(104)), end='')
@@ -378,6 +388,7 @@ class URLHausExtractor():
 
             requestsession7 = requests.Session()
             requestsession7.headers.update({'accept': 'application/json'})
+            requestsession7.headers.update({'Auth-Key': self.URLHAUSAPI})
             hausresponse = requestsession7.get(haus)
             haustext = json.loads(hausresponse.text)
             nurl = len(haustext['urls'])
@@ -453,14 +464,17 @@ class URLHausExtractor():
         hausresponse = ''
         npayloads = 0
 
+        self.requestURLHAUSAPI()
+
         try:
             print("\n")
             print((mycolors.reset + "Haus Downloadable Links to Recent Payloads".center(146)), end='')
             print((mycolors.reset + "".center(28)), end='')
-            print("\n" + (146 * '-').center(59))
+            print("\n" + (136 * '-').center(59))
 
             requestsession8 = requests.Session()
             requestsession8.headers.update({'accept': 'application/json'})
+            requestsession8.headers.update({'Auth-Key': self.URLHAUSAPI})
             hausresponse = requestsession8.get(haus)
             haustext = json.loads(hausresponse.text)
             npayloads = len(haustext['payloads'])
@@ -472,20 +486,10 @@ class URLHausExtractor():
                             if (cv.bkg == 1):
                                 print(mycolors.foreground.lightred + "%-8s" % haustext['payloads'][i].get('file_type'), end=' ')
                                 print(mycolors.foreground.lightcyan + haustext['payloads'][i].get('firstseen'), end=" ")
-                                results = haustext['payloads'][i]['virustotal']
-                                if (results) is not None:
-                                    print(mycolors.foreground.yellow + (results['result']).center(9), end=' ')
-                                else:
-                                    print(mycolors.foreground.yellow + "Not Found", end=' ')
-                                print(mycolors.foreground.lightcyan + haustext['payloads'][i].get('urlhaus_download'))
+                                print(mycolors.foreground.yellow + haustext['payloads'][i].get('urlhaus_download'))
                             else:
                                 print(mycolors.foreground.red + "%-8s" % haustext['payloads'][i].get('file_type'), end=' ')
                                 print(mycolors.foreground.green + haustext['payloads'][i].get('firstseen'), end=" ")
-                                results = haustext['payloads'][i]['virustotal']
-                                if (results) is not None:
-                                    print(mycolors.foreground.purple + (results['result']).center(9), end=' ')
-                                else:
-                                    print(mycolors.foreground.purple + "Not Found", end=' ')
                                 print(mycolors.foreground.blue + haustext['payloads'][i].get('urlhaus_download'))
 
                     print(mycolors.reset, file=sys.stderr)
@@ -529,6 +533,8 @@ class URLHausExtractor():
         haustext = ''
         hausresponse = ''
 
+        self.requestURLHAUSAPI()
+
         try:
             print("\n")
             print((mycolors.reset + "URLhaus Report".center(100)), end='')
@@ -537,6 +543,7 @@ class URLHausExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json'})
+            requestsession.headers.update({'Auth-Key': self.URLHAUSAPI})
             params = {"url": urlx}
             hausresponse = requestsession.post(haus, data=params)
             haustext = json.loads(hausresponse.text)
@@ -787,6 +794,8 @@ class URLHausExtractor():
         hausresponse = ''
         params = ''
 
+        self.requestURLHAUSAPI()
+
         try:
             print("\n")
             print((mycolors.reset + "URLHaus Report".center(126)), end='')
@@ -795,17 +804,18 @@ class URLHausExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json'})
+            requestsession.headers.update({'Auth-Key': self.URLHAUSAPI})
+            
             if ((len(hashx) == 32)):
                 params = {"md5_hash": hashx}
-            hausresponse = requestsession.post(haus, data=params)
-            haustext = json.loads(hausresponse.text)
-
-            if ((len(hashx) == 64)):
+                hausresponse = requestsession.post(haus, data=params)
+                haustext = json.loads(hausresponse.text)
+            elif ((len(hashx) == 64)):
                 params = {"sha256_hash": hashx}
-            hausresponse = requests.post(haus, data=params)
-            haustext = json.loads(hausresponse.text)
+                hausresponse = requestsession.post(haus, data=params)
+                haustext = json.loads(hausresponse.text)
 
-            if ((haustext.get('md5_hash') is None) and (haustext.get('sha256_hash') is None)):
+            if ((haustext.get("md5_hash") is None) and (haustext.get("sha256_hash") is None)):
                 if (cv.bkg == 1):
                     print(mycolors.foreground.lightred + "Hash not found!\n" + mycolors.reset)
                 else:

@@ -11,7 +11,7 @@ with open("README.md", encoding='utf8') as readme:
 
 setup(
     name="malwoverview",
-    version="6.2",
+    version="7.0",
     author="Alexandre Borges",
     author_email="reverseexploit@proton.me",
     license="GNU GPL v3.0",
@@ -19,7 +19,9 @@ setup(
     description=("Malwoverview is a first response tool for threat hunting."),
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=find_packages(),
+    packages=find_packages(exclude=["pictures"]),
+    include_package_data=True,
+    python_requires=">=3.8",
     classifiers=[
     'Operating System :: OS Independent',
     'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
@@ -34,8 +36,9 @@ setup(
         "validators",
         "geocoder",
         "polyswarm-api",
-        "pathlib",
-        "configparser",
+        # Standard library in Python 3, do not force install
+        # "pathlib",
+        # "configparser",
 		"python-magic-bin; platform_system == 'Windows'"
     ],
     entry_points = {
@@ -43,6 +46,7 @@ setup(
             "malwoverview = malwoverview.malwoverview:main",
         ]
     },
-    package_data={'': ['README.md, LICENSE, .malwapi.conf']},
-    data_files=[(USER_HOME_DIR, ['.malwapi.conf'])],
+    # package_data should list actual files inside packages; root-level files
+    # are included via include_package_data + sdist configuration if present.
+    package_data={"malwoverview": []},
 )
