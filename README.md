@@ -619,7 +619,8 @@ VULNERABILITY OPTIONS:
       NIST CVE Database Query:
       Query options for NIST CVE database (Query type and value are required; other options are optional)
 
-      --nist NIST_OPTION,   Query type: 1=CPE/Product Search, 2=CVE ID Search, 3=CVSS v3 Severity, 4=Keyword Search, 5=CWE ID Search
+      --nist NIST_OPTION,   Query type: 1=CPE/Product Search, 2=CVE ID Search, 
+                            3=CVSS v3 Severity, 4=Keyword Search, 5=CWE ID Search
       --NIST NIST_ARG       Search value (format depends on query type)
       --time YEARS          Limit results to last N years
       --rpp NUM             Results per page (default: 100, max: 2000)
