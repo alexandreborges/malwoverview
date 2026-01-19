@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=65.0", "wheel"]
+requires = ["setuptools>=77.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,7 +8,7 @@ version = "7.0"
 description = "Malwoverview is a first response tool for threat hunting."
 readme = "README.md"
 authors = [{name = "Alexandre Borges", email = "reverseexploit@proton.me"}]
-license = {text = "GPL-3.0-or-later"}
+license = "GPL-3.0-or-later"
 requires-python = ">=3.8"
 classifiers = [
     "Operating System :: OS Independent",
