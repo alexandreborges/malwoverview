@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "malwoverview"
+version = "7.0"
+description = "Malwoverview is a first response tool for threat hunting."
+readme = "README.md"
+authors = [{name = "Alexandre Borges", email = "reverseexploit@proton.me"}]
+license = {text = "GPL-3.0-or-later"}
+requires-python = ">=3.8"
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "pefile",
+    "colorama",
+    "python-magic>=0.4.25; platform_system == 'Linux' or platform_system == 'Darwin'",
+    "python-magic-bin>=0.4.14; platform_system == 'Windows'",
+    "simplejson",
+    "requests",
+    "validators",
+    "geocoder",
+    "polyswarm-api",
+]
+
+[project.urls]
+Homepage = "https://github.com/alexandreborges/malwoverview"
+Repository = "https://github.com/alexandreborges/malwoverview"
+
+[project.scripts]
+malwoverview = "malwoverview.malwoverview:main"
+
+[tool.setuptools]
+packages = ["malwoverview"]
+
+[tool.setuptools.package-data]
+malwoverview = []
