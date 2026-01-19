@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (C)  2018-2025 Alexandre Borges <https://exploitreversing.com>
+# Copyright (C)  2018-2026 Alexandre Borges <https://exploitreversing.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 # Christian Clauss (https://github.com/cclauss)
 # Artur Marzano (https://github.com/Macmod)
 
-# Malwoverview.py: version 6.2
+# Malwoverview.py: version 7.0
 
 import os
 import argparse
@@ -34,7 +34,6 @@ from malwoverview.modules.alienvault import AlienVaultExtractor
 from malwoverview.modules.android import AndroidExtractor
 from malwoverview.modules.bazaar import BazaarExtractor
 from malwoverview.modules.hybrid import HybridAnalysisExtractor
-from malwoverview.modules.inquest import InQuestExtractor
 from malwoverview.modules.malpedia import MalpediaExtractor
 from malwoverview.modules.malshare import MalshareExtractor
 from malwoverview.modules.polyswarm import PolyswarmExtractor
@@ -42,10 +41,10 @@ from malwoverview.modules.threatfox import ThreatFoxExtractor
 from malwoverview.modules.triage import TriageExtractor
 from malwoverview.modules.urlhaus import URLHausExtractor
 from malwoverview.modules.virustotal import VirusTotalExtractor
-from malwoverview.modules.virusexchange import VirusExchangeExtractor 
 from malwoverview.modules.ipinfo import IPInfoExtractor
 from malwoverview.modules.bgpview import BGPViewExtractor
 from malwoverview.modules.multipleip import MultipleIPExtractor
+from malwoverview.modules.nist import NISTExtractor
 from malwoverview.utils.colors import printr
 from malwoverview.utils.hash import calchash
 import malwoverview.modules.configvars as cv
@@ -54,9 +53,9 @@ import malwoverview.modules.configvars as cv
 # On Windows systems, it is necessary to install python-magic-bin: pip install python-magic-bin
 
 __author__ = "Alexandre Borges"
-__copyright__ = "Copyright 2018-2025, Alexandre Borges"
+__copyright__ = "Copyright 2018-2026 Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "6.2"
+__version__ = "7.0"
 __email__ = "reverseexploit at proton.me"
 
 def finish_hook(signum, frame):
@@ -77,38 +76,46 @@ def main():
         USER_HOME_DIR = str(Path.home()) + '/'
         cv.windows = 0
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is " + __version__, usage="usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> -i <1-13> -I <INQUEST argument> -vx <1-2> -VX <VirusExchange arg> -O <output directory> -ip <1-3> -IP <IP address>")
-    parser.add_argument('-c', '--config', dest='config', type=str, metavar="CONFIG FILE", default=(USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s.')
-    parser.add_argument('-d', '--directory', dest='direct', type=str, default='', metavar="DIRECTORY", help='Specifies the directory containing malware samples to be checked against VIRUS TOTAL. Use the option -D to decide whether you are being using a public VT API or a Premium VT API.')
-    parser.add_argument('-o', '--background', dest='backg', type=int, default=1, metavar="BACKGROUND", help='Adapts the output colors to a light background color terminal. The default is dark background color terminal.')
-    parser.add_argument('-v', '--virustotal_option', dest='virustotaloption', type=int, default=0, metavar="VIRUSTOTAL", help='-v 1: given a file using -V option, it queries the VIRUS TOTAL database (API v.3) to get the report for the given file through -V option.; -v 2: it shows an antivirus report for a given file using -V option (API v.3); -v 3: equal to -v2, but the binary\'s IAT and EAT are also shown (API v.3); -v 4: it extracts the overlay; -v 5: submits an URL to VT scanning; -v 6: submits an IP address to Virus Total; -v 7: this options gets a report on the provided domain from Virus Total; -v 8: verifies a given hash against Virus Total; -v 9: submits a sample to VT (up to 32 MB). Use forward slash to specify the target file on Windows systems. Demands passing sample file with -V option; -v 10: verifies hashes from a provided file through option -V. This option uses public VT API v.3; -v 11: verifies hashes from a provided file through option -V. This option uses Premium API v.3; -v 12: it shows behaviour information of a sample given a hash through option -V. This option uses VT API v.3; -v 13: it submits LARGE files (above 32 MB) to VT using API v.3;')
-    parser.add_argument('-V', '--virustotal_arg', dest='virustotalarg', type=str, default='', metavar="VIRUSTOTAL_ARG", help='Provides arguments for -v option.')
-    parser.add_argument('-a', '--hybrid_option', dest='haoption', type=int, default=0, metavar="HYBRID_ANALYSIS", help='This parameter fetches reports from HYBRID ANALYSIS, download samples and submits samples to be analyzed. The possible values are: 1: gets a report for a given hash or sample from a Windows 7 32-bit environment; 2: gets a report for a given hash or sample from a Windows 7 32-bit environment (HWP Support); 3: gets a report for given hash or sample from a Windows 64-bit environment; 4: gets a report for a given hash or sample from an Android environment; 5: gets a report for a given hash or sample from a Linux 64-bit environment; 6: submits a sample to Windows 7 32-bit environment; 7. submits a sample to Windows 7 32-bit environment with HWP support environment; 8. submits a sample to Windows 7 64-bit environment ; 9. submits a sample to an Android environment ; 10. submits a sample to a Linux 64-bit environment; 11. downloads a sample from a Windows 7 32-bit environment; 12. downloads a sample from a Windows 7 32-bit HWP environment; 13. downloads a sample from a Windows 7 64-bit environment; 14. downloads a sample from an Android environment; 15. downloads a sample from a Linux 64-bit environment.')
-    parser.add_argument('-A', '--ha_arg', dest='haarg', type=str, metavar="SUBMIT_HA", help='Provides an argument for -a option from HYBRID ANALYSIS.')
-    parser.add_argument('-D', '--vtpubpremium', dest='vtpubpremium', type=int, default=0, metavar="VT_PUBLIC_PREMIUM", help='This option must be used with -d option. Possible values: <0> it uses the Premium VT API v3 (default); <1> it uses the Public VT API v3.')
-    parser.add_argument('-l', '--malsharelist', dest='malsharelist', type=int, default=0, metavar="MALSHARE_HASHES", help='This option performs download a sample and shows hashes of a specific type from the last 24 hours from MALSHARE repository. Possible values are: 1: Download a sample; 2: PE32 (default) ; 3: ELF ; 4: Java; 5: PDF ; 6: Composite(OLE); 7: List of hashes from past 24 hours.')
-    parser.add_argument('-L', '--malshare_hash', dest='malsharehash', type=str, metavar="MALSHARE_HASH_SEARCH", help='Provides a hash as argument for downloading a sample from MALSHARE repository.')
-    parser.add_argument('-j', '--haus_option', dest='hausoption', type=int, default=0, metavar="HAUS_OPTION", help='This option fetches information from URLHaus depending of the value passed as argument: 1: performs download of the given sample; 2: queries information about a provided hash ; 3: searches information about a given URL; 4: searches a malicious URL by a given tag (case sensitive); 5: searches for payloads given a tag; 6: retrives a list of downloadable links to recent payloads; 7: retrives a list of recent malicious URLs.')
-    parser.add_argument('-J', '--haus_arg', dest='hausarg', type=str, metavar="HAUS_ARG", help='Provides argument to -j option from URLHaus.')
-    parser.add_argument('-p', '--poly_option', dest='polyoption', type=int, default=0, metavar="POLY_OPTION", help='(Only for Linux) This option is related to POLYSWARM operations: 1. searches information related to a given hash provided using -P option; 2. submits a sample provided by -P option to be analyzed by Polyswarm engine ; 3. Downloads a sample from Polyswarm by providing the hash throught option -P .Attention: Polyswarm enforces a maximum of 20 samples per month; 4. searches for similar samples given a sample file thought option -P; 5. searches for samples related to a provided IP address through option -P; 6. searches for samples related to a given domain provided by option -P; 7. searches for samples related to a provided URL throught option -P; 8. searches for samples related to a provided malware family given by option -P.')
-    parser.add_argument('-P', '--poly_arg', dest='polyarg', type=str, metavar="POLYSWARM_ARG", help='(Only for Linux) Provides an argument for -p option from POLYSWARM.')
-    parser.add_argument('-y', '--android_option', dest='androidoption', type=int, default=0, metavar="ANDROID_OPTION", help='This ANDROID option has multiple possible values: <1>: Check all third-party APK packages from the USB-connected Android device against Hybrid Analysis using multithreads. Notes: the Android device does not need to be rooted and the system does need to have the adb tool in the PATH environment variable; <2>: Check all third-party APK packages from the USB-connected Android device against VirusTotal using Public API (slower because of 60 seconds delay for each 4 hashes). Notes: the Android device does not need to be rooted and the system does need to have adb tool in the PATH environment variable; <3>: Check all third-party APK packages from the USB-connected Android device against VirusTotal using multithreads (only for Private Virus API). Notes: the Android device does not need to be rooted and the system needs to have adb tool in the PATH environment variable; <4> Sends an third-party APK from your USB-connected Android device to Hybrid Analysis; 5. Sends an third-party APK from your USB-connected Android device to Virus-Total.')
-    parser.add_argument('-Y', '--android_arg', dest='androidarg', type=str, default='', metavar="ANDROID_ARG", help='This option provides the argument for -y from ANDROID.')
-    parser.add_argument('-n', '--alienvault', dest='alienvault', type=int, default=0, metavar="ALIENVAULT", help='Checks multiple information from ALIENVAULT. The possible values are: 1: Get the subscribed pulses ; 2: Get information about an IP address; 3: Get information about a domain; 4: Get information about a hash; 5: Get information about a URL.')
-    parser.add_argument('-N', '--alienvaultargs', dest='alienvaultargs', type=str, default='', metavar="ALIENVAULT_ARGS", help='Provides argument to ALIENVAULT -n option.')
-    parser.add_argument('-m', '--malpedia', dest='malpedia', type=int, default=0, metavar="MALPEDIA", help='This option is related to MALPEDIA and presents different meanings depending on the chosen value. Thus, 1: List meta information for all families ; 2: List all actors ID ; 3: List all available payloads organized by family from Malpedia; 4: Get meta information from an specific actor, so it is necessary to use the -M option. Additionally, try to confirm the correct actor ID by executing malwoverview with option -m 3; 5: List all families IDs; 6: Get meta information from an specific family, so it is necessary to use the -M option. Additionally, try to confirm the correct family ID by executing malwoverview with option -m 5; 7: Get a malware sample from malpedia (zip format -- password: infected). It is necessary to specify the requested hash by using -M option; 8: Get a zip file containing Yara rules for a specific family (get the possible families using -m 5), which must be specified by using -M option.')
-    parser.add_argument('-M', '--malpediarg', dest='malpediaarg', type=str, default='', metavar="MALPEDIAARG", help='This option provides an argument to the -m option, which is related to MALPEDIA.')
-    parser.add_argument('-b', '--bazaar', dest='bazaar', type=int, default=0, metavar="BAZAAR", help='Checks multiple information from MALWARE BAZAAR and THREATFOX. The possible values are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar) Get information and a list of malware samples associated and according to a specific tag; 3: (Bazaar) Get a list of malware samples according to a given imphash; 4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample from Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped using the following password: infected; 6: (ThreatFox) Get current IOC dataset from last x days given by option -B (maximum of 7 days); 7: (ThreatFox) Search for the specified IOC on ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified tag given by option -B; 9: (ThreatFox) Search IOCs according to the specified malware family provided by option -B; 10. (ThreatFox) List all available malware families.')
-    parser.add_argument('-B', '--bazaararg', dest='bazaararg', type=str, metavar = "BAZAAR_ARG", help='Provides argument to -b MALWARE BAZAAR and THREAT FOX option. If you specified "-b 1" then the -B\'s argument must be a hash and a report about the sample will be retrieved; If you specified "-b 2" then -B\'s argument must be a malware tag and last samples matching this tag will be shown; If you specified "-b 3" then the argument must be a imphash and last samples matching this impshash will be shown; If you specified "-b 4", so the argument must be "100 or time", where "100" lists last "100 samples" and "time" lists last samples added to Malware Bazaar in the last 60 minutes; If you specified "-b 5", so the sample will be downloaded and -B\'s argument must be a SHA256 hash of the sample that you want to download from Malware Bazaar; If you specified "-b 6" then a list of IOCs will be retrieved and the -B\'s value is the number of DAYS to filter such IOCs. The maximum time is 7 (days); If you used "-b 7" so the -B\'s argument is the IOC you want to search for; If you used "-b 8", so the -B\'s argument is the IOC\'s TAG that you want search for; If you used "-b 9", so the -B argument is the malware family that you want to search for IOCs;')
-    parser.add_argument('-x', '--triage', dest='triage', type=int, default=0, metavar="TRIAGE", help='Provides information from TRIAGE according to the specified value: <1> this option gets sample\'s general information by providing an argument with -X option in the following possible formats: sha256:<value>, sha1:<value>, md5:<value>, family:<value>, score:<value>, tag:<value>, url:<value>, wallet:<value>, ip:<value>; <2> Get a sumary report for a given Triage ID (got from option -x 1) ; <3> Submit a sample for analysis ; <4> Submit a sample through a URL for analysis ; <5> Download sample specified by the Triage ID; <6> Download pcapng file from sample associated to given Triage ID; <7> Get a dynamic report for the given Triage ID (got from option -x 1);')
-    parser.add_argument('-X', '--triagearg', dest='triagearg', type=str, default='', metavar="TRIAGE_ARG", help='Provides argument for options especified by -x option. Pay attention: the format of this argument depends on provided -x value.')
-    parser.add_argument('-i', '--inquest', dest='inquest', type=int, default=0, metavar="INQUEST", help='Retrieves multiple information from INQUEST. The possible values are: 1: Downloads a sample; 2: Retrives information about a sample given a SHA256; 3: Retrieves information about a sample given a MD5 hash; 4: Gets the most recent list of threats. To this option, the -I argument must be "list" (lowercase and without double quotes) ; 5: Retrives threats related to a provided domain; 6. Retrieves a list of samples related to the given IP address; 7. Retrives a list of sample related to the given e-mail address; 8. Retrieves a list of samples related to the given filename; 9. Retrieves a list of samples related to a given URL; 10. Retrieves information about a specified IOC; 11. List a list of IOCs. Note: you must pass "list" (without double quotes) as argument to -I; 12. Check for a given keyword in the reputation database; 13. List artifacts in the reputation dabatabse. Note: you must pass "list" (without double quotes) as argument to -I.')
-    parser.add_argument('-I', '--inquestarg', dest='inquestarg', type=str, metavar="INQUEST_ARG", help='Provides argument to INQUEST -i option.')
-    parser.add_argument('-vx', '--vx', dest='vxoption', type=int, default=0, help='VirusExchange operations. The possible values are: 1: Gets basic metadata for a given SHA256 hash; 2: Downloads sample given a SHA256 provided in the -VX argument.')
-    parser.add_argument('-VX', '--VX', dest='vxarg', type=str, help='Provides argument to the -vx option from VirusExchange.')
-    parser.add_argument('-O', '--output-dir', dest='output_dir', type=str, default='.', help='Set output directory for all sample downloads.')
-    parser.add_argument('-ip', '--ip', dest='ipoption', type=int, default=0, metavar="IP", help='Get IP information from various sources. The possible values are: 1: Get details for an IP address provided with -IP from IPInfo; 2: Get details for an IP address provided with -IP from BGPView; 3: Get details for an IP address provided with -IP from all available intel services (VirusTotal/Alienvault).')
-    parser.add_argument('-IP', '--iparg', dest='iparg', type=str, metavar="IP_ARG", help='Provides argument for IP lookup operations specified by the -ip option.')
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is " + __version__, usage="usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> --nist <1-5> --NIST <argument> -O <output directory> -ip <1-3> -IP <IP address>")
+    
+    malware_group = parser.add_argument_group('MALWARE OPTIONS', 'Malware analysis and intelligence query options')
+    malware_group.add_argument('-c', '--config', dest='config', type=str, metavar="CONFIG FILE", default=(USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s.')
+    malware_group.add_argument('-d', '--directory', dest='direct', type=str, default='', metavar="DIRECTORY", help='Specifies the directory containing malware samples to be checked against VIRUS TOTAL. Use the option -D to decide whether you are being using a public VT API or a Premium VT API.')
+    malware_group.add_argument('-o', '--background', dest='backg', type=int, default=1, metavar="BACKGROUND", help='Adapts the output colors to a light background color terminal. The default is dark background color terminal.')
+    malware_group.add_argument('-v', '--virustotal_option', dest='virustotaloption', type=int, default=0, metavar="VIRUSTOTAL", help='-v 1: given a file using -V option, it queries the VIRUS TOTAL database (API v.3) to get the report for the given file through -V option.; -v 2: it shows an antivirus report for a given file using -V option (API v.3); -v 3: equal to -v2, but the binary\'s IAT and EAT are also shown (API v.3); -v 4: it extracts the overlay; -v 5: submits an URL to VT scanning; -v 6: submits an IP address to Virus Total; -v 7: this options gets a report on the provided domain from Virus Total; -v 8: verifies a given hash against Virus Total; -v 9: submits a sample to VT (up to 32 MB). Use forward slash to specify the target file on Windows systems. Demands passing sample file with -V option; -v 10: verifies hashes from a provided file through option -V. This option uses public VT API v.3; -v 11: verifies hashes from a provided file through option -V. This option uses Premium API v.3; -v 12: it shows behaviour information of a sample given a hash through option -V. This option uses VT API v.3; -v 13: it submits LARGE files (above 32 MB) to VT using API v.3;')
+    malware_group.add_argument('-V', '--virustotal_arg', dest='virustotalarg', type=str, default='', metavar="VIRUSTOTAL_ARG", help='Provides arguments for -v option.')
+    malware_group.add_argument('-a', '--hybrid_option', dest='haoption', type=int, default=0, metavar="HYBRID_ANALYSIS", help='This parameter fetches reports from HYBRID ANALYSIS, download samples and submits samples to be analyzed. The possible values are: 1: gets a report for a given hash or sample from a Windows 7 32-bit environment; 2: gets a report for a given hash or sample from a Windows 7 32-bit environment (HWP Support); 3: gets a report for given hash or sample from a Windows 64-bit environment; 4: gets a report for a given hash or sample from an Android environment; 5: gets a report for a given hash or sample from a Linux 64-bit environment; 6: submits a sample to Windows 7 32-bit environment; 7. submits a sample to Windows 7 32-bit environment with HWP support environment; 8. submits a sample to Windows 7 64-bit environment ; 9. submits a sample to an Android environment ; 10. submits a sample to a Linux 64-bit environment; 11. downloads a sample from a Windows 7 32-bit environment; 12. downloads a sample from a Windows 7 32-bit HWP environment; 13. downloads a sample from a Windows 7 64-bit environment; 14. downloads a sample from an Android environment; 15. downloads a sample from a Linux 64-bit environment.')
+    malware_group.add_argument('-A', '--ha_arg', dest='haarg', type=str, metavar="SUBMIT_HA", help='Provides an argument for -a option from HYBRID ANALYSIS.')
+    malware_group.add_argument('-D', '--vtpubpremium', dest='vtpubpremium', type=int, default=0, metavar="VT_PUBLIC_PREMIUM", help='This option must be used with -d option. Possible values: <0> it uses the Premium VT API v3 (default); <1> it uses the Public VT API v3.')
+    malware_group.add_argument('-l', '--malsharelist', dest='malsharelist', type=int, default=0, metavar="MALSHARE_HASHES", help='This option performs download a sample and shows hashes of a specific type from the last 24 hours from MALSHARE repository. Possible values are: 1: Download a sample; 2: PE32 (default) ; 3: ELF ; 4: Java; 5: PDF ; 6: Composite(OLE); 7: List of hashes from past 24 hours.')
+    malware_group.add_argument('-L', '--malshare_hash', dest='malsharehash', type=str, metavar="MALSHARE_HASH_SEARCH", help='Provides a hash as argument for downloading a sample from MALSHARE repository.')
+    malware_group.add_argument('-j', '--haus_option', dest='hausoption', type=int, default=0, metavar="HAUS_OPTION", help='This option fetches information from URLHaus depending of the value passed as argument: 1: performs download of the given sample; 2: queries information about a provided hash ; 3: searches information about a given URL; 4: searches a malicious URL by a given tag (case sensitive); 5: searches for payloads given a tag; 6: retrives a list of downloadable links to recent payloads; 7: retrives a list of recent malicious URLs.')
+    malware_group.add_argument('-J', '--haus_arg', dest='hausarg', type=str, metavar="HAUS_ARG", help='Provides argument to -j option from URLHaus.')
+    malware_group.add_argument('-p', '--poly_option', dest='polyoption', type=int, default=0, metavar="POLY_OPTION", help='(Only for Linux) This option is related to POLYSWARM operations: 1. searches information related to a given hash provided using -P option; 2. submits a sample provided by -P option to be analyzed by Polyswarm engine ; 3. Downloads a sample from Polyswarm by providing the hash throught option -P .Attention: Polyswarm enforces a maximum of 20 samples per month; 4. searches for similar samples given a sample file thought option -P; 5. searches for samples related to a provided IP address through option -P; 6. searches for samples related to a given domain provided by option -P; 7. searches for samples related to a provided URL throught option -P; 8. searches for samples related to a provided malware family given by option -P.')
+    malware_group.add_argument('-P', '--poly_arg', dest='polyarg', type=str, metavar="POLYSWARM_ARG", help='(Only for Linux) Provides an argument for -p option from POLYSWARM.')
+    malware_group.add_argument('-y', '--android_option', dest='androidoption', type=int, default=0, metavar="ANDROID_OPTION", help='This ANDROID option has multiple possible values: <1>: Check all third-party APK packages from the USB-connected Android device against Hybrid Analysis using multithreads. Notes: the Android device does not need to be rooted and the system does need to have the adb tool in the PATH environment variable; <2>: Check all third-party APK packages from the USB-connected Android device against VirusTotal using Public API (slower because of 60 seconds delay for each 4 hashes). Notes: the Android device does not need to be rooted and the system does need to have adb tool in the PATH environment variable; <3>: Check all third-party APK packages from the USB-connected Android device against VirusTotal using multithreads (only for Private Virus API). Notes: the Android device does not need to be rooted and the system needs to have adb tool in the PATH environment variable; <4> Sends an third-party APK from your USB-connected Android device to Hybrid Analysis; 5. Sends an third-party APK from your USB-connected Android device to Virus-Total.')
+    malware_group.add_argument('-Y', '--android_arg', dest='androidarg', type=str, default='', metavar="ANDROID_ARG", help='This option provides the argument for -y from ANDROID.')
+    malware_group.add_argument('-n', '--alienvault', dest='alienvault', type=int, default=0, metavar="ALIENVAULT", help='Checks multiple information from ALIENVAULT. The possible values are: 1: Get the subscribed pulses ; 2: Get information about an IP address; 3: Get information about a domain; 4: Get information about a hash; 5: Get information about a URL.')
+    malware_group.add_argument('-N', '--alienvaultargs', dest='alienvaultargs', type=str, default='', metavar="ALIENVAULT_ARGS", help='Provides argument to ALIENVAULT -n option.')
+    malware_group.add_argument('-m', '--malpedia', dest='malpedia', type=int, default=0, metavar="MALPEDIA", help='This option is related to MALPEDIA and presents different meanings depending on the chosen value. Thus, 1: List meta information for all families ; 2: List all actors ID ; 3: List all available payloads organized by family from Malpedia; 4: Get meta information from an specific actor, so it is necessary to use the -M option. Additionally, try to confirm the correct actor ID by executing malwoverview with option -m 3; 5: List all families IDs; 6: Get meta information from an specific family, so it is necessary to use the -M option. Additionally, try to confirm the correct family ID by executing malwoverview with option -m 5; 7: Get a malware sample from malpedia (zip format -- password: infected). It is necessary to specify the requested hash by using -M option; 8: Get a zip file containing Yara rules for a specific family (get the possible families using -m 5), which must be specified by using -M option.')
+    malware_group.add_argument('-M', '--malpediarg', dest='malpediaarg', type=str, default='', metavar="MALPEDIAARG", help='This option provides an argument to the -m option, which is related to MALPEDIA.')
+    malware_group.add_argument('-b', '--bazaar', dest='bazaar', type=int, default=0, metavar="BAZAAR", help='Checks multiple information from MALWARE BAZAAR and THREATFOX. The possible values are: 1: (Bazaar) Query information about a malware hash sample ; 2: (Bazaar) Get information and a list of malware samples associated and according to a specific tag; 3: (Bazaar) Get a list of malware samples according to a given imphash; 4: (Bazaar) Query latest malware samples; 5: (Bazaar) Download a malware sample from Malware Bazaar by providing a SHA256 hash. The downloaded sample is zipped using the following password: infected; 6: (ThreatFox) Get current IOC dataset from last x days given by option -B (maximum of 7 days); 7: (ThreatFox) Search for the specified IOC on ThreatFox given by option -B; 8: (ThreatFox) Search IOCs according to the specified tag given by option -B; 9: (ThreatFox) Search IOCs according to the specified malware family provided by option -B; 10. (ThreatFox) List all available malware families.')
+    malware_group.add_argument('-B', '--bazaararg', dest='bazaararg', type=str, metavar = "BAZAAR_ARG", help='Provides argument to -b MALWARE BAZAAR and THREAT FOX option. If you specified "-b 1" then the -B\'s argument must be a hash and a report about the sample will be retrieved; If you specified "-b 2" then -B\'s argument must be a malware tag and last samples matching this tag will be shown; If you specified "-b 3" then the argument must be a imphash and last samples matching this impshash will be shown; If you specified "-b 4", so the argument must be "100 or time", where "100" lists last "100 samples" and "time" lists last samples added to Malware Bazaar in the last 60 minutes; If you specified "-b 5", so the sample will be downloaded and -B\'s argument must be a SHA256 hash of the sample that you want to download from Malware Bazaar; If you specified "-b 6" then a list of IOCs will be retrieved and the -B\'s value is the number of DAYS to filter such IOCs. The maximum time is 7 (days); If you used "-b 7" so the -B\'s argument is the IOC you want to search for; If you used "-b 8", so the -B\'s argument is the IOC\'s TAG that you want search for; If you used "-b 9", so the -B argument is the malware family that you want to search for IOCs;')
+    malware_group.add_argument('-x', '--triage', dest='triage', type=int, default=0, metavar="TRIAGE", help='Provides information from TRIAGE according to the specified value: <1> this option gets sample\'s general information by providing an argument with -X option in the following possible formats: sha256:<value>, sha1:<value>, md5:<value>, family:<value>, score:<value>, tag:<value>, url:<value>, wallet:<value>, ip:<value>; <2> Get a sumary report for a given Triage ID (got from option -x 1) ; <3> Submit a sample for analysis ; <4> Submit a sample through a URL for analysis ; <5> Download sample specified by the Triage ID; <6> Download pcapng file from sample associated to given Triage ID; <7> Get a dynamic report for the given Triage ID (got from option -x 1);')
+    malware_group.add_argument('-X', '--triagearg', dest='triagearg', type=str, default='', metavar="TRIAGE_ARG", help='Provides argument for options especified by -x option. Pay attention: the format of this argument depends on provided -x value.')
+    malware_group.add_argument('-O', '--output-dir', dest='output_dir', type=str, default='.', help='Set output directory for all sample downloads.')
+    malware_group.add_argument('-ip', '--ip', dest='ipoption', type=int, default=0, metavar="IP", help='Get IP information from various sources. The possible values are: 1: Get details for an IP address provided with -IP from IPInfo; 2: Get details for an IP address provided with -IP from BGPView; 3: Get details for an IP address provided with -IP from all available intel services (VirusTotal/Alienvault).')
+    malware_group.add_argument('-IP', '--iparg', dest='iparg', type=str, metavar="IP_ARG", help='Provides argument for IP lookup operations specified by the -ip option.')
+    
+    vuln_section = parser.add_argument_group('VULNERABILITY OPTIONS', 'Vulnerability database query options')
+    
+    nist_group = parser.add_argument_group('  NIST CVE Database Query', 'Query options for NIST CVE database (Query type and value are required; other options are optional)')
+    nist_group.add_argument('--nist', dest='nistoption', type=int, default=0, metavar="NIST_OPTION", help='Query type: 1=CPE/Product Search, 2=CVE ID Search, 3=CVSS v3 Severity, 4=Keyword Search, 5=CWE ID Search')
+    nist_group.add_argument('--NIST', dest='nistarg', type=str, metavar="NIST_ARG", help='Search value (format depends on query type)')
+    nist_group.add_argument('--time', dest='nisttime', type=int, default=None, metavar="YEARS", help='Limit results to last N years')
+    nist_group.add_argument('--rpp', dest='nistrpp', type=int, default=100, metavar="NUM", help='Results per page (default: 100, max: 2000)')
+    nist_group.add_argument('--startindex', dest='niststartindex', type=int, default=0, metavar="NUM", help='Pagination start index (default: 0)')
+    nist_group.add_argument('--ncves', dest='nistncves', type=int, default=None, metavar="NUM", help='Limit output to first N CVEs')
 
     args = parser.parse_args()
 
@@ -125,13 +132,11 @@ def main():
     VTAPI = getoption('VIRUSTOTAL', 'VTAPI')
     HAAPI = getoption('HYBRID-ANALYSIS', 'HAAPI')
     MALSHAREAPI = getoption('MALSHARE', 'MALSHAREAPI')
-    HAUSSUBMITAPI = getoption('HAUSSUBMIT', 'HAUSSUBMITAPI')
+    URLHAUSAPI = getoption('URLHAUS', 'URLHAUSAPI')
     POLYAPI = getoption('POLYSWARM', 'POLYAPI')
     ALIENAPI = getoption('ALIENVAULT', 'ALIENAPI')
     MALPEDIAAPI = getoption('MALPEDIA', 'MALPEDIAAPI')
     TRIAGEAPI = getoption('TRIAGE', 'TRIAGEAPI')
-    INQUESTAPI = getoption('INQUEST', 'INQUESTAPI')
-    VXAPI = getoption('VIRUSEXCHANGE', 'VXAPI')
     IPINFOAPI = getoption('IPINFO', 'IPINFOAPI')
     BAZAARAPI = getoption('BAZAAR', 'BAZAARAPI')
     THREATFOXAPI = getoption('THREATFOX', 'THREATFOXAPI')
@@ -172,12 +177,14 @@ def main():
     triagex = args.triage
     triageargx = args.triagearg
     virustotalargx = args.virustotalarg
-    inquestx = args.inquest
-    inquestargx = args.inquestarg
-    vxoptionx = args.vxoption
-    vxargx = args.vxarg
     ipoptionx = args.ipoption
     ipargx = args.iparg
+    nistoption = args.nistoption
+    nistarg = args.nistarg
+    nisttime = args.nisttime
+    nistrpp = args.nistrpp
+    niststartindex = args.niststartindex
+    nistncves = args.nistncves
     config = args.config
 
     ffpname = ''
@@ -199,12 +206,10 @@ def main():
         args.bazaar not in optval7,
         args.malpedia not in optval6,
         args.triage not in optval8,
-        args.inquest not in optval9,
         args.backg not in optval,
         args.malsharelist not in optval8,
         args.virustotaloption not in optval9,
         args.vtpubpremium not in optval,
-        args.vxoption not in optval1,
         args.ipoption not in optval4,
         args.androidoption not in optval5
     ]
@@ -214,8 +219,8 @@ def main():
         virustotalargx, virustotaloptionx, args.direct, fprovided,
         haargx, mallist, args.malsharehash, args.hausoption, polyoptionx, polyargx,
         androidoptionx, androidargx, alienx, alienargsx, malpediaargx,
-        malpediax, bazaarx, bazaarargx, triagex, triageargx,
-        inquestx, inquestargx, vxoptionx, vxargx, ipoptionx, ipargx
+        malpediax, bazaarx, bazaarargx, triagex, triageargx, ipoptionx, ipargx,
+        nistoption and nistarg
     ]
 
     # Show the help message if:
@@ -232,26 +237,21 @@ def main():
     bazaar = BazaarExtractor(BAZAARAPI)
     threatfox = ThreatFoxExtractor(THREATFOXAPI)
     triage = TriageExtractor(TRIAGEAPI)
-    inquest = InQuestExtractor(INQUESTAPI)
     malpedia = MalpediaExtractor(MALPEDIAAPI)
     virustotal = VirusTotalExtractor(VTAPI)
     hybrid = HybridAnalysisExtractor(HAAPI)
     malshare = MalshareExtractor(MALSHAREAPI)
-    haus = URLHausExtractor(HAUSSUBMITAPI)
+    haus = URLHausExtractor(URLHAUSAPI)
     android = AndroidExtractor(hybrid, virustotal)
-    vx = VirusExchangeExtractor(VXAPI)
     ipinfo = IPInfoExtractor(IPINFOAPI)
     bgpview = BGPViewExtractor()
     multipleip = MultipleIPExtractor(
         {
-            #"IPInfo": ipinfo,
-            #"BGPView": bgpview,
             "VirusTotal": virustotal,
             "AlienVault": alien,
-            #"InQuest": inquest,
-            # "PolySwarm": polyswarm,
         }
     )
+    nist = NISTExtractor()
 
     # Special parameters for hybrid analysis module
     query = haargx
@@ -318,24 +318,6 @@ def main():
                 5: (triage.triage_download, [triageargx]),
                 6: (triage.triage_download_pcap, [triageargx]),
                 7: (triage.triage_dynamic, [triageargx])
-            }
-        },
-        {
-            'flag': inquestx,
-            'actions': {
-                1: (inquest.inquest_download, [inquestargx]),
-                2: (inquest.inquest_hash, [inquestargx]),
-                3: (inquest.inquest_hash_md5, [inquestargx]),
-                4: (inquest.inquest_list, [inquestargx]),
-                5: (inquest.inquest_domain, [inquestargx]),
-                6: (inquest.inquest_ip, [inquestargx]),
-                7: (inquest.inquest_email, [inquestargx]),
-                8: (inquest.inquest_filename, [inquestargx]),
-                9: (inquest.inquest_url, [inquestargx]),
-                10: (inquest.inquest_ioc_search, [inquestargx]),
-                11: (inquest.inquest_ioc_list, [inquestargx]),
-                12: (inquest.inquest_rep_search, [inquestargx]),
-                13: (inquest.inquest_rep_list, [inquestargx])
             }
         },
         {
@@ -428,20 +410,23 @@ def main():
             }
         },
         {
-            'flag': vxoptionx,
-            'actions': {
-                1: (vx.check_hash, [vxargx]),
-                2: (vx.download_sample, [vxargx])
-#               3: (vx.upload_sample, [vxargx])
-            }
-        },
-        {
             'flag': ipoptionx,
             'actions': {
                 1: (ipinfo.get_ip_details, [ipargx]),
                 2: (bgpview.get_ip_details, [ipargx]),
                 3: (multipleip.get_multiple_ip_details, [ipargx])
             }
+        },
+        {
+            'flag': nistoption,
+            'actions': {
+                1: (lambda: nist.query_cve(1, nistarg, nistrpp, niststartindex, nisttime), []),
+                2: (lambda: nist.query_cve(2, nistarg, nistrpp, niststartindex, nisttime), []),
+                3: (lambda: nist.query_cve(3, nistarg, nistrpp, niststartindex, nisttime), []),
+                4: (lambda: nist.query_cve(4, nistarg, nistrpp, niststartindex, nisttime), []),
+                5: (lambda: nist.query_cve(5, nistarg, nistrpp, niststartindex, nisttime), [])
+            },
+            'process_results': True
         }
     ]
 
@@ -449,6 +434,7 @@ def main():
     for option_map in OPTIONS_MAPS:
         flag = option_map['flag']
         actions = option_map['actions']
+        process_results = option_map.get('process_results', False)
 
         if isinstance(actions, dict) and flag in actions:
             action_obj = actions[flag]
@@ -457,7 +443,6 @@ def main():
         else:
             continue
 
-        # If flag conditions are met, then call the appropriate function with its parameters
         if len(action_obj) == 3:
             action, action_args, action_kwargs = action_obj
             result = action(*action_args, **action_kwargs)
@@ -469,6 +454,9 @@ def main():
             result = action()
         else:
             continue
+
+        if process_results and result:
+            nist.print_results(result, verbose=False, color_scheme=args.backg, max_cves=nistncves)
 
         printr()
         status = 0

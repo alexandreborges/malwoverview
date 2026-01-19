@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v6.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v7.0) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [<img alt="Downloads/Last Month" src="https://img.shields.io/pypi/dm/malwoverview?color=blue&style=for-the-badge&label=Last%20Month">](https://pypistats.org/packages/malwoverview)
@@ -27,39 +27,8 @@
 ![Alt text](pictures/picture_17.jpg?raw=true "Title")
 ![Alt text](pictures/picture_18.jpg?raw=true "Title")
 ![Alt text](pictures/picture_19.jpg?raw=true "Title")
-![Alt text](pictures/picture_20.jpg?raw=true "Title")
-![Alt text](pictures/picture_21.jpg?raw=true "Title")
-![Alt text](pictures/picture_22.jpg?raw=true "Title")
-![Alt text](pictures/picture_23.jpg?raw=true "Title")
-![Alt text](pictures/picture_24.jpg?raw=true "Title")
-![Alt text](pictures/picture_25.jpg?raw=true "Title")
-![Alt text](pictures/picture_26.jpg?raw=true "Title")
-![Alt text](pictures/picture_27.jpg?raw=true "Title")
-![Alt text](pictures/picture_28.jpg?raw=true "Title")
-![Alt text](pictures/picture_29.jpg?raw=true "Title")
-![Alt text](pictures/picture_30.jpg?raw=true "Title")
-![Alt text](pictures/picture_31.jpg?raw=true "Title")
-![Alt text](pictures/picture_32.jpg?raw=true "Title")
-![Alt text](pictures/picture_33.jpg?raw=true "Title")
-![Alt text](pictures/picture_34.jpg?raw=true "Title")
-![Alt text](pictures/picture_35.jpg?raw=true "Title")
-![Alt text](pictures/picture_36.jpg?raw=true "Title")
-![Alt text](pictures/picture_37.jpg?raw=true "Title")
-![Alt text](pictures/picture_38.jpg?raw=true "Title")
-![Alt text](pictures/picture_39.jpg?raw=true "Title")
-![Alt text](pictures/picture_40.jpg?raw=true "Title")
-![Alt text](pictures/picture_41.jpg?raw=true "Title")
-![Alt text](pictures/picture_42.jpg?raw=true "Title")
-![Alt text](pictures/picture_43.jpg?raw=true "Title")
-![Alt text](pictures/picture_44.jpg?raw=true "Title")
-![Alt text](pictures/picture_45.jpg?raw=true "Title")
-![Alt text](pictures/picture_46.jpg?raw=true "Title")
-![Alt text](pictures/picture_47.jpg?raw=true "Title")
-![Alt text](pictures/picture_48.jpg?raw=true "Title")
-![Alt text](pictures/picture_49.jpg?raw=true "Title")
-![Alt text](pictures/picture_50.jpg?raw=true "Title")
 
-      Copyright (C)  2018-2025 Alexandre Borges (https://exploitreversing.com) 
+      Copyright (C)  2018-2026 Alexandre Borges (https://exploitreversing.com) 
 
       This program is free software: you can redistribute it and/or modify
       it under the terms of the GNU General Public License as published by
@@ -74,7 +43,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-## Current Version: 6.2
+## Current Version: 7.0
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -121,13 +90,12 @@ This tool aims to :
 26. Gather threat hunting information from Triage using different criteria. 
 27. Get evaluation to hashes from a given file against Virus Total. 
 28. Submit large files (>= 32 MB) to Virus Total. 
-29. Malwoverview uses Virus Total API v.3, so there isn't longer any option using v.2.
-30. Retrieve different information from InQuest Labs and download samples from there. 
-31. Retrieve information and download malware samples from Virus Exchange (vxunderground). 
-32. Retrieve information about a given IP address from IPInfo service.
-33. Retrieve information about a given IP address from BGPView service.
-34. Retrieve combined information about a given IP address from multiple services.
-35. Offer extra option to save any downloaded file to a central location.
+29. Malwoverview uses Virus Total API v.3, so there isn't longer any option using v.2. 
+30. Retrieve information about a given IP address from IPInfo service.
+31. Retrieve information about a given IP address from BGPView service.
+32. Retrieve combined information about a given IP address from multiple services.
+33. Offer extra option to save any downloaded file to a central location.
+34. List and search vulnerabilities from NIST through different criterias. 
 
 ## CONTRIBUTORS
 
@@ -186,8 +154,8 @@ AFTER having installed Malwoverview:
 It is possible to start using Malwoverview does without inserting all APIs. However, 
 to use all options of Malwoverview, you must insert the respective API of the following services:
 VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm, Alien Vault, Malpedia, Triage, 
-InQuest, Virus Exchange, APInfo, Malware Bazaar and ThreatFox into the .malwapi.conf 
-configuration file, which must be present (or created) in the home directory (/home/[username]
+APInfo, Malware Bazaar and ThreatFox into the .malwapi.conf configuration file, which 
+must be present (or created) in the home directory (/home/[username]
 or /root on Linux, and C:\Users\[username] on Windows. Alternatively, users can create 
 a custom configuration file and indicate it by using the -c option.
 
@@ -223,12 +191,6 @@ The .malwapi.conf configuration file has the following format:
       [TRIAGE]
       TRIAGEAPI =
 
-      [INQUEST]
-      INQUESTAPI =
-
-      [VIRUSEXCHANGE]
-      VXAPI =  
-
       [IPINFO]
       IPINFOAPI =  
       
@@ -237,6 +199,9 @@ The .malwapi.conf configuration file has the following format:
 
       [THREATFOX]
       THREATFOXAPI = 
+
+      [URLHAUS]
+      URLHAUSAPI =
 
 The APIs can be requested on the respective service websites:
 
@@ -251,51 +216,50 @@ The APIs can be requested on the respective service websites:
     handle is @malpedia.
 08. Malware Bazaar: https://bazaar.abuse.ch/api/#auth\_key
 09. ThreatFox: https://threatfox.abuse.ch/api/#auth\_key
-10. InQuest: https://labs.inquest.net/.
-11. Triage: https://tria.ge/signup.
-12. Virus Exchange: https://virus.exchange/ 
-13. IPInfo: https://ipinfo.io/ 
-14. BGPView: https://bgpview.docs.apiary.io/
+10. Triage: https://tria.ge/signup.
+11. IPInfo: https://ipinfo.io/ 
+12. BGPView: https://bgpview.docs.apiary.io/
 
 
 ----------------------------------------------------
 Note about API requests to the MALPEDIA:
 ----------------------------------------------------
 
-The service and acceptance is based on the community vetting. Thus, it's recommended 
-you send a request for an API from your business e-mail address and NOT 
-public/free one (Gmail, Outlook and so on). Additionally, it'd be great whether 
-you provided further information about you (LinkedIn account, Twitter and so on) 
-because it would make simpler to proof your identity, professional profile and 
-legitimacy, so making quicker the approval of your request.  
+The service and acceptance are based on the community vetting. Thus, it's 
+recommended that you submit an API request from your business e-mail address
+and NOT from a public/free one (Gmail, Outlook and so on). Additionally, it 
+would be great if you provided more information about yourself (LinkedIn 
+account, X/Twitter, Mastodon, BlueSky, etc.) as this would facilitate 
+verification of your identity, professional profile, and legitimacy, 
+speeding up the approval of your request.  
 
 
 ----------------------------------------------------
 Note about Triage:
 ----------------------------------------------------
 
-Every Triage operation is based on the Triage ID of each artifact, so you need to
-use the "-x 1 -X \<attribute\>:\<value\>" to search for the correct ID of the artifact,
-so use this ID information with the remaining Triage options (-x [2-7]) for getting 
-further threat hunting information from Triage endpoint.
+Every Triage operation is based on the Triage ID of each artifact, so you 
+need touse the "-x 1 -X \<attribute\>:\<value\>" to search for the 
+correct ID of the artifact then use this ID information with the 
+remaining Triage options (-x [2-7]) to get more threat hunting information 
+from Triage endpoint.
 
 
 ----------------------------------------------------
-Note about Malware Bazaar and Threat Fox: 
+Note about URLHaus, Malware Bazaar and Threat Fox: 
 ----------------------------------------------------
 
-Since second semester of 2025, it is required the Auth-Key (API) to use Malware 
-Bazaar and Threat Fox services.
+Starting in the second half of 2025, an Auth-Key (API) will be required to 
+use the URLHaus,Malware Bazaar and Threat Fox services.
 
 
 ----------------------------------------------------
 Note about background color of the terminal:
 ----------------------------------------------------
 
-Malwoverview has been written to produce outputs to 
-dark background terminal. However, there's the -o 0 
-option, which changes and adapts output's colors to 
-light background.
+Malwoverview was written to produce output for a dark 
+terminal background. However, there is the -o 0 option 
+that changes and adapts the output colors for a light background.
 
 -----------------------------------------------------
 
@@ -309,13 +273,14 @@ Further information is available on:
        (PYPI.org repository) https://pypi.org/project/malwoverview/
        (Github) https://github.com/alexandreborges/malwoverview
 
-If you want to perform the manual installation (it is not usually necessary), so few steps 
-should be executed, as shown in the next sub-section. 
+If you want to perform the manual installation (it is not usually necessary), 
+so few steps should be executed, as shown in the next sub-section. 
 
 
 ## MANUAL INSTALLATION (REMnux and Ubuntu)
 
-1. Python version 3.11 or later (Only Python 3.x !!! It does NOT work using Python 2.7) 
+1. Python version 3.11 or later (Only Python 3.x !!! It does NOT work using 
+Python 2.7) 
 
        $ apt-get install python3.11  (for example)
 
@@ -332,9 +297,10 @@ should be executed, as shown in the next sub-section.
        $ python3.11 setup.py build
        $ python3.11 setup.py install
 
-      As there are serious issues related to existing two versions of python-magic package, the  
-      recommendation is to install it from github (second procedure above) and copy the magic.py 
-      file to the SAME directory of malwoverview tool. 
+      As there are serious issues related to existing two versions of 
+      python-magic package, the recommendation is to install it from 
+      Github (second procedure above) and copy the magic.py file to the 
+      SAME directory of malwoverview tool. 
       
 3. Install all needed Python packages: 
 
@@ -368,12 +334,13 @@ should be executed, as shown in the next sub-section.
 usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13>
 -V <argument> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> 
 -J <argument> -p <1-8> -P <argument> -y <1-5> -Y <file name> -n <1-5> 
--N <argument> -m <1-8> -M <argument> -b <1-10> -B <argument> -x <1-7> -X <argurment> -i <1-13> 
--I <argument> -vx <1-2> -VX <argument> -ip <1-3> -IP <argument> -O <directory> 
+-N <argument> -m <1-8> -M <argument> -b <1-10> -B <argument> -x <1-7> -X <argurment> 
+-ip <1-3> -IP <argument> -O <directory> --nist <1-5> --NIST <argument>
 
 Malwoverview is a first response tool for threat hunting written by Alexandre Borges. 
 
-> Options:
+MALWARE OPTIONS:
+  Malware analysis and intelligence query options
 
 	-h, --help
 	
@@ -630,174 +597,205 @@ Malwoverview is a first response tool for threat hunting written by Alexandre Bo
 		+ Provides argument for options especified by -x option. Pay attention: 
 		the format of this argument depends on provided -x value.
 
-	-i INQUEST, --inquest INQUEST
-	
-		+ Retrieves multiple information from INQUEST. The possible values are: 
-			+ 1: Downloads a sample; 
-			+ 2: Retrives information about a sample given a SHA256; 
-			+ 3: Retrieves information about a sample given a MD5 hash; 
-			+ 4: Gets the most recent list of threats. To this option, the -I 
-			argument must be "list" (lowercase and without double quotes); 
-			+ 5: Retrives threats related to a provided domain; 
-			+ 6: Retrieves a list of samples related to the given IP address; 
-			+ 7: Retrives a list of sample related to the given e-mail address; 
-			+ 8: Retrieves a list of samples related to the given filename; 
-			+ 9: Retrieves a list of samples related to a given URL; 
-			+ 10: Retrieves information about a specified IOC; 
-			+ 11: List a list of IOCs. Note: you must pass "list" (without 
-			double quotes) as argument to -I;
-			+ 12: Check for a given keyword in the reputation database; 
-			+ 13: List artifacts in the reputation dabatabse. Note: you must 
-			pass "list" (without double quotes) as argument to -I.
-
-	-I INQUEST_ARG, --inquestarg INQUEST_ARG
-	
-		  + Provides argument to INQUEST -i option.
-
-  -vx VXOPTION, --vx VXOPTION
-   
-      + 1: Gets basic metadata for a given SHA256 hash; 
-      + 2: Downloads sample given a SHA256 provided in the -VX argument.
-
-  -VX VXARG, --VX VXARG
+      -O OUTPUTDIR, --output-dir OUTPUTDIR
+            
+            + Set output directory for all sample downloads.
       
-      + Provides argument to the -vx option from VirusExchange.
+      -ip IP, --ip IP
 
-  -O OUTPUTDIR, --output-dir OUTPUTDIR
+      + Get IP information from various sources. The possible values are: 
+            + 1: Get details for an IP address provided with -IP from IPInfo; 
+            + 2: Get details for an IP address provided with -IP from BGPView; 
+            + 3: Get details for an IP address provided with -IP from all 
+            available intel services (VirusTotal/Alienvault).
       
-      + Set output directory for all sample downloads.
-  
-  -ip IP, --ip IP
+      -IP IPARG, --iparg IPARG
+            
+            + Provides argument for IP lookup operations specified by the -ip option.
 
-    + Get IP information from various sources. The possible values are: 
-      + 1: Get details for an IP address provided with -IP from IPInfo; 
-      + 2: Get details for an IP address provided with -IP from BGPView; 
-      + 3: Get details for an IP address provided with -IP from all 
-           available intel services (VirusTotal/Alienvault).
-  
-  -IP IPARG, --iparg IPARG
-       
-      + Provides argument for IP lookup operations specified by the -ip option.
+VULNERABILITY OPTIONS:
+  Vulnerability database query options
 
+      NIST CVE Database Query:
+      Query options for NIST CVE database (Query type and value are required; other options are optional)
+
+      --nist NIST_OPTION,   Query type: 1=CPE/Product Search, 2=CVE ID Search, 
+                            3=CVSS v3 Severity, 4=Keyword Search, 5=CWE ID Search
+      --NIST NIST_ARG       Search value (format depends on query type)
+      --time YEARS          Limit results to last N years
+      --rpp NUM             Results per page (default: 100, max: 2000)
+      --startindex NUM      Pagination start index (default: 0)
+      --ncves NUM           Limit output to first N CVEs
 
 ## EXAMPLES
 
-    malwoverview -d /home/remnux/malware/windows_2/
-    malwoverview -v 1 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
-    malwoverview -v 2 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
-    malwoverview -v 3 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
-    malwoverview -v 4 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe,
-    malwoverview -v 5 -V http://jamogames.com/templates/JLHk/
-    malwoverview -v 6 -V 185.220.100.243
-    malwoverview -v 7 -V xurl.es
-    malwoverview -v 8 -V ab4d6a82cafc92825a0b88183325855f0c44920da970b42c949d5d5ffdcc0585
-    malwoverview -v 9 -V cc2d791b16063a302e1ebd35c0e84e6cf6519e90bb710c958ac4e4ddceca68f7.exe
-    malwoverview -v 10 -V /home/remnux/malware/hash_list_3.txt
-    malwoverview -v 11 -V /home/remnux/malware/hash_list_3.txt
-    malwoverview -v 12 -V 9d26e19b8fc5819b634397d48183637bacc9e1c62d8b1856b8116141cb8b4000
-    malwoverview -v 13 -V /largefiles/4b3b46558cffe1c0b651f09c719af2779af3e4e0e43da060468467d8df445e93
-    malwoverview -a 1 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
-    malwoverview -a 1 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8.exe
-    malwoverview -a 2 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
-    malwoverview -a 3 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
-    malwoverview -a 4 -A malware1.apk
-    malwoverview -a 4 -A 82eb6039cdda6598dc23084768e18495d5ebf3bc3137990280bc0d9351a483eb
-    malwoverview -a 5 -A 2b03806939d1171f063ba8d14c3b10622edb5732e4f78dc4fe3eac98b56e5d46
-    malwoverview -a 5 -A 2b03806939d1171f063ba8d14c3b10622edb5732e4f78dc4fe3eac98b56e5d46.elf
-    malwoverview -a 6 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
-    malwoverview -a 7 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
-    malwoverview -a 8 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
-    malwoverview -a 9 -A malware_7.apk
-    malwoverview -a 10 -A 925f649617743f0640bdfff4b6b664b9e12761b0e24bbb99ca72740545087ad2.elf
-    malwoverview -a 11 -A cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
-    malwoverview -a 12 -A cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
-    malwoverview -a 13 -A cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
-    malwoverview -a 14 -A d90a5552fd4ef88a8b621dd3642e3be8e52115a67e6b17b13bdff461d81cf5a8
-    malwoverview -a 15 -A 925f649617743f0640bdfff4b6b664b9e12761b0e24bbb99ca72740545087ad2
-    malwoverview -l 1 -L d3dcc08c9b955cd3f68c198e11d5788869d1b159dc8014d6eaa39e6c258123b0
-    malwoverview -l 2
-    malwoverview -l 3
-    malwoverview -l 4
-    malwoverview -l 5
-    malwoverview -l 6
-    malwoverview -j 1 -J 7c99d644cf39c14208df6d139313eaf95123d569a9206939df996cfded6924a6
-    malwoverview -j 2 -J 7c99d644cf39c14208df6d139313eaf95123d569a9206939df996cfded6924a6
-    malwoverview -j 3 -J https://unada.us/acme-challenge/3NXwcYNCa/
-    malwoverview -j 4 -J Qakbot
-    malwoverview -j 5 -J Emotet
-    malwoverview -j 5 -J Icedid
-    malwoverview -j 6
-    malwoverview -j 7
-    malwoverview -p 1 -P 1999ba265cd51c94e8ae3a6038b3775bf9a49d6fe57d75dbf1726921af8a7ab2
-    malwoverview -p 2 -P 301524c3f959d2d6db9dffdf267ab16a706d3286c0b912f7dda5eb42b6d89996.exe
-    malwoverview -p 3 -P 68c11ef39769674123066bcd52e1d687502eb6c4c0788b4f682e8d31c15e5306
-    malwoverview -p 4 -P 68c11ef39769674123066bcd52e1d687502eb6c4c0788b4f682e8d31c15e5306.exe
-    malwoverview -p 5 -P 188.40.75.132
-    malwoverview -p 6 -P covid19tracer.ca
-    malwoverview -p 7 -P http://ksahosting.net/wp-includes/utf8.php
-    malwoverview -p 8 -P Qakbot
-    malwoverview -y 1
-    malwoverview -y 2
-    malwoverview -y 3
-    malwoverview -y 4 -Y com.spaceship.netprotect
-    malwoverview -y 5 -Y com.mwr.dz
-    malwoverview -v 1 -V 368afeda7af69f329e896dc86e9e4187a59d2007e0e4b47af30a1c117da0d792.apk
-    malwoverview -n 1 -N 10
-    malwoverview -n 2 -N 176.57.215.100
-    malwoverview -n 3 -N threesmallhills.com
-    malwoverview -n 4 -N 6d1756aa6b45244764409398305c460368d64ff9 -o 0
-    malwoverview -n 5 -N http://ksahosting.net/wp-includes/utf8.php
-    malwoverview -m 1 | more
-    malwoverview -m 2 | more
-    malwoverview -m 3 | more 
-    malwoverview -m 4 -M apt41 | more
-    malwoverview -m 5 | more 
-    malwoverview -m 6 -M win.qakbot
-    malwoverview -m 7 -M 3d375d0ead2b63168de86ca2649360d9dcff75b3e0ffa2cf1e50816ec92b3b7d 
-    malwoverview -m 8 -M win.qakbot
-    malwoverview -b 1 -B c9d7b5d06cd8ab1a01bf0c5bf41ef2a388e41b4c66b1728494f86ed255a95d48
-    malwoverview -b 2 -B Revil | more
-    malwoverview -b 3 -B f34d5f2d4577ed6d9ceec516c1f5a744
-    malwoverview -b 4 -B 100 
-    malwoverview -b 4 -B time | more
-    malwoverview -b 5 -B bda50ff249b947617d9551c717e78131ed32bf77db9dc5b7591d3e1af6cb2f1a
-    malwoverview -b 6 -B 3 | more
-    malwoverview -b 7 -B 193.150.103.37:21330
-    malwoverview -b 8 -B Magecart | more
-    malwoverview -b 9 -B "Cobalt Strike"
-    malwoverview -b 10 | more
-    malwoverview -x 1 -X score:10 | more
-    malwoverview -x 1 -X 71382e72d8fb3728dc8941798ab1c180493fa978fd7eadc1ab6d21dae0d603e2
-    malwoverview -x 2 -X 220315-qxzrfsadfl
-    malwoverview -x 3 -X cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
-    malwoverview -x 4 -X http://ztechinternational.com/Img/XSD.exe
-    malwoverview -x 5 -X 220315-xmbp7sdbel
-    malwoverview -x 6 -X 220315-xmbp7sdbel
-    malwoverview -x 7 -X 220315-xmbp7sdbel
-    malwoverview -i 1 -I 5119c804448dd877e1a32d5157dc2e5ff9344cb55e053b20117c9b3b4c974389 
-    malwoverview -i 2 -I 5119c804448dd877e1a32d5157dc2e5ff9344cb55e053b20117c9b3b4c974389
-    malwoverview -i 3 -I 0a1b0c7a21c8929b7742db195338af5c
-    malwoverview -i 4 -I list
-    malwoverview -i 5 -I rebrand.ly | more
-    malwoverview -i 6 -I 10.247.111.124 
-    malwoverview -i 7 -I diseno@distracom.com 
-    malwoverview -i 8 -I 20firmas-02.jpg
-    malwoverview -i 9 -I http://diagnostic.htb 
-    malwoverview -i 10 -I http://jaao.net 
-    malwoverview -i 11 -I list
-    malwoverview -i 12 -I rebrand.ly
-    malwoverview -i 13 -I list | more
-    malwoverview -vx 1 -VX c3247ada71931ee267e975cb04160dc8ac611f3b4409f41b595177e124be7c2e
-    malwoverview -vx 2 -VX c3247ada71931ee267e975cb04160dc8ac611f3b4409f41b595177e124be7c2e
-    malwoverview -ip 1 -IP 8.8.8.8
-    malwoverview -ip 2 -IP 8.8.8.8
-    malwoverview -ip 3 -IP 8.8.8.8
-    malwoverview -vx 2 -VX <hash> -O <directory>
-    malwoverview -b 5 -B <hash> -O <directory> 
+### MALWARE OPTIONS:
 
+      malwoverview -d /home/remnux/malware/windows_2/
+      malwoverview -v 1 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
+      malwoverview -v 2 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
+      malwoverview -v 3 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
+      malwoverview -v 4 -V 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe,
+      malwoverview -v 5 -V http://jamogames.com/templates/JLHk/
+      malwoverview -v 6 -V 185.220.100.243
+      malwoverview -v 7 -V xurl.es
+      malwoverview -v 8 -V ab4d6a82cafc92825a0b88183325855f0c44920da970b42c949d5d5ffdcc0585
+      malwoverview -v 9 -V cc2d791b16063a302e1ebd35c0e84e6cf6519e90bb710c958ac4e4ddceca68f7.exe
+      malwoverview -v 10 -V /home/remnux/malware/hash_list_3.txt
+      malwoverview -v 11 -V /home/remnux/malware/hash_list_3.txt
+      malwoverview -v 12 -V 9d26e19b8fc5819b634397d48183637bacc9e1c62d8b1856b8116141cb8b4000
+      malwoverview -v 13 -V /largefiles/4b3b46558cffe1c0b651f09c719af2779af3e4e0e43da060468467d8df445e93
+      malwoverview -a 1 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
+      malwoverview -a 1 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8.exe
+      malwoverview -a 2 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
+      malwoverview -a 3 -A 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
+      malwoverview -a 4 -A malware1.apk
+      malwoverview -a 4 -A 82eb6039cdda6598dc23084768e18495d5ebf3bc3137990280bc0d9351a483eb
+      malwoverview -a 5 -A 2b03806939d1171f063ba8d14c3b10622edb5732e4f78dc4fe3eac98b56e5d46
+      malwoverview -a 5 -A 2b03806939d1171f063ba8d14c3b10622edb5732e4f78dc4fe3eac98b56e5d46.elf
+      malwoverview -a 6 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
+      malwoverview -a 7 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
+      malwoverview -a 8 -A 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
+      malwoverview -a 9 -A malware_7.apk
+      malwoverview -a 10 -A 925f649617743f0640bdfff4b6b664b9e12761b0e24bbb99ca72740545087ad2.elf
+      malwoverview -a 11 -A cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
+      malwoverview -a 12 -A cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
+      malwoverview -a 13 -A cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
+      malwoverview -a 14 -A d90a5552fd4ef88a8b621dd3642e3be8e52115a67e6b17b13bdff461d81cf5a8
+      malwoverview -a 15 -A 925f649617743f0640bdfff4b6b664b9e12761b0e24bbb99ca72740545087ad2
+      malwoverview -l 1 -L d3dcc08c9b955cd3f68c198e11d5788869d1b159dc8014d6eaa39e6c258123b0
+      malwoverview -l 2
+      malwoverview -l 3
+      malwoverview -l 4
+      malwoverview -l 5
+      malwoverview -l 6
+      malwoverview -j 1 -J 7c99d644cf39c14208df6d139313eaf95123d569a9206939df996cfded6924a6
+      malwoverview -j 2 -J 7c99d644cf39c14208df6d139313eaf95123d569a9206939df996cfded6924a6
+      malwoverview -j 3 -J https://unada.us/acme-challenge/3NXwcYNCa/
+      malwoverview -j 4 -J Qakbot
+      malwoverview -j 5 -J Emotet
+      malwoverview -j 5 -J Icedid
+      malwoverview -j 6
+      malwoverview -j 7
+      malwoverview -p 1 -P 1999ba265cd51c94e8ae3a6038b3775bf9a49d6fe57d75dbf1726921af8a7ab2
+      malwoverview -p 2 -P 301524c3f959d2d6db9dffdf267ab16a706d3286c0b912f7dda5eb42b6d89996.exe
+      malwoverview -p 3 -P 68c11ef39769674123066bcd52e1d687502eb6c4c0788b4f682e8d31c15e5306
+      malwoverview -p 4 -P 68c11ef39769674123066bcd52e1d687502eb6c4c0788b4f682e8d31c15e5306.exe
+      malwoverview -p 5 -P 188.40.75.132
+      malwoverview -p 6 -P covid19tracer.ca
+      malwoverview -p 7 -P http://ksahosting.net/wp-includes/utf8.php
+      malwoverview -p 8 -P Qakbot
+      malwoverview -y 1
+      malwoverview -y 2
+      malwoverview -y 3
+      malwoverview -y 4 -Y com.spaceship.netprotect
+      malwoverview -y 5 -Y com.mwr.dz
+      malwoverview -v 1 -V 368afeda7af69f329e896dc86e9e4187a59d2007e0e4b47af30a1c117da0d792.apk
+      malwoverview -n 1 -N 10
+      malwoverview -n 2 -N 176.57.215.100
+      malwoverview -n 3 -N threesmallhills.com
+      malwoverview -n 4 -N 6d1756aa6b45244764409398305c460368d64ff9 -o 0
+      malwoverview -n 5 -N http://ksahosting.net/wp-includes/utf8.php
+      malwoverview -m 1 | more
+      malwoverview -m 2 | more
+      malwoverview -m 3 | more 
+      malwoverview -m 4 -M apt41 | more
+      malwoverview -m 5 | more 
+      malwoverview -m 6 -M win.qakbot
+      malwoverview -m 7 -M 3d375d0ead2b63168de86ca2649360d9dcff75b3e0ffa2cf1e50816ec92b3b7d 
+      malwoverview -m 8 -M win.qakbot
+      malwoverview -b 1 -B c9d7b5d06cd8ab1a01bf0c5bf41ef2a388e41b4c66b1728494f86ed255a95d48
+      malwoverview -b 2 -B Revil | more
+      malwoverview -b 3 -B f34d5f2d4577ed6d9ceec516c1f5a744
+      malwoverview -b 4 -B 100 
+      malwoverview -b 4 -B time | more
+      malwoverview -b 5 -B bda50ff249b947617d9551c717e78131ed32bf77db9dc5b7591d3e1af6cb2f1a
+      malwoverview -b 6 -B 3 | more
+      malwoverview -b 7 -B 193.150.103.37:21330
+      malwoverview -b 8 -B Magecart | more
+      malwoverview -b 9 -B "Cobalt Strike"
+      malwoverview -b 10 | more
+      malwoverview -x 1 -X score:10 | more
+      malwoverview -x 1 -X 71382e72d8fb3728dc8941798ab1c180493fa978fd7eadc1ab6d21dae0d603e2
+      malwoverview -x 2 -X 220315-qxzrfsadfl
+      malwoverview -x 3 -X cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
+      malwoverview -x 4 -X http://ztechinternational.com/Img/XSD.exe
+      malwoverview -x 5 -X 220315-xmbp7sdbel
+      malwoverview -x 6 -X 220315-xmbp7sdbel
+      malwoverview -x 7 -X 220315-xmbp7sdbel
+      malwoverview -ip 1 -IP 8.8.8.8
+      malwoverview -ip 2 -IP 8.8.8.8
+      malwoverview -ip 3 -IP 8.8.8.8
+      malwoverview -b 5 -B <hash> -O <directory> 
+
+### VULNERABILITIES OPTIONS:
+
+      # Search for Windows vulnerabilities
+      malwoverview --nist 1 --NIST "windows" --ncves 50
+
+      # Search for Apache vulnerabilities
+      malwoverview --nist 1 --NIST "apache" --ncves 30
+
+      # Search for Chrome vulnerabilities
+      malwoverview --nist 1 --NIST "chrome" --ncves 25
+
+      # Search for Chromium vulnerabilities
+      malwoverview --nist 1 --NIST "chromium" --ncves 25
+
+      # Search for Linux vulnerabilities
+      malwoverview --nist 1 --NIST "linux" --ncves 25
+
+      # Search for MacOS vulnerabilities
+      malwoverview --nist 1 --NIST "MacOS" --ncves 25
+
+      # Search for Log4Shell vulnerability
+      malwoverview --nist 2 --NIST "CVE-2021-44228" 
+
+      # Search for ProxyShell vulnerability
+      malwoverview --nist 2 --NIST "CVE-2021-34473" 
+
+      # Search for Spring4Shell vulnerability
+      malwoverview --nist 2 --NIST "CVE-2022-22965" 
+
+      # Search for CRITICAL severity vulnerabilities
+      malwoverview --nist 3 --NIST "CRITICAL" --ncves 50
+
+      # Search for HIGH severity vulnerabilities
+      malwoverview --nist 3 --NIST "HIGH" --ncves 40
+
+      # Search for MEDIUM severity vulnerabilities
+      malwoverview --nist 3 --NIST "MEDIUM" --ncves 30
+
+      # Search for Authentication Bypass vulnerabilities
+      malwoverview --nist 4 --NIST "authentication bypass" --ncves 30
+
+      # Search for Remote Code Execution (RCE) vulnerabilities
+      malwoverview --nist 4 --NIST "remote code execution" --ncves 50
+
+      # Search for SQL injection vulnerabilities
+      malwoverview --nist 4 --NIST "sql injection" --ncves 25
+
+      # Search for Path Traversal vulnerabilities (CWE-22)
+      malwoverview --nist 5 --NIST "CWE-22" --ncves 30
+
+      # Search for SQL Injection vulnerabilities (CWE-89)
+      malwoverview --nist 5 --NIST "CWE-89" ---ncves 40
+
+      # Search for Cross-Site Scripting vulnerabilities (CWE-79)
+      malwoverview --nist 5 --NIST "CWE-79" --ncves 35
 
 ## HISTORY
 
+Version 7.0:
+
+      This version:
+
+            * Introduces options to search for vulnerabilites on NIST.
+            * Fixes multiples URLHaus options.
+            * Removes InQuest and Virus Exchange options.
+            * Fixes and modificates multiple minor issues.
+            * Fixes Python requirements file.
+            * Fixes setup.py file.  
 
 Version 6.2:
 
