@@ -14,7 +14,7 @@ setup(
     version="7.0",
     author="Alexandre Borges",
     author_email="reverseexploit@proton.me",
-    license="GNU GPL v3.0",
+    license="GPL-3.0-or-later",
     url="https://github.com/alexandreborges/malwoverview",
     description=("Malwoverview is a first response tool for threat hunting."),
     long_description=long_description,
@@ -25,7 +25,6 @@ setup(
     python_requires=">=3.8",
     classifiers=[
     'Operating System :: OS Independent',
-    'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
     'Programming Language :: Python :: 3',
     ],
     install_requires=[
