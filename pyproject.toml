@@ -39,7 +39,7 @@ Repository = "https://github.com/alexandreborges/malwoverview"
 malwoverview = "malwoverview.malwoverview:main"
 
 [tool.setuptools]
-packages = ["malwoverview"]
+include-package-data = true
 
-[tool.setuptools.package-data]
-malwoverview = []
+[tool.setuptools.packages.find]
+include = ["malwoverview", "malwoverview.*"]
