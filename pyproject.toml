@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "malwoverview"
-version = "7.0"
+version = "7.0.1"
 description = "Malwoverview is a first response tool for threat hunting."
 readme = "README.md"
 authors = [{name = "Alexandre Borges", email = "reverseexploit@proton.me"}]
