@@ -3,6 +3,7 @@ import requests
 import textwrap
 from malwoverview.utils.colors import mycolors, printr
 import json
+from urllib.parse import quote
 
 
 class AlienVaultExtractor():
@@ -340,7 +341,7 @@ class AlienVaultExtractor():
             resource = url
             requestsession = requests.Session()
             requestsession.headers.update({'Content-Type': 'application/json'})
-            finalurl = '/'.join([resource, 'indicators', 'domain', myargs])
+            finalurl = '/'.join([resource, 'indicators', 'domain', quote(myargs, safe='')])
             haresponse = requestsession.post(url=finalurl, headers=headers, params=search_params)
             hatext = json.loads(haresponse.text)
 
@@ -467,7 +468,7 @@ class AlienVaultExtractor():
             resource = url
             requestsession = requests.Session()
             requestsession.headers.update({'Content-Type': 'application/json'})
-            finalurl = '/'.join([resource, 'indicators', 'file', myargs])
+            finalurl = '/'.join([resource, 'indicators', 'file', quote(myargs, safe='')])
             haresponse = requestsession.post(url=finalurl, headers=headers, params=search_params)
             hatext = json.loads(haresponse.text)
 
@@ -626,7 +627,7 @@ class AlienVaultExtractor():
             resource = urlx
             requestsession = requests.Session()
             requestsession.headers.update({'Content-Type': 'application/json'})
-            finalurl = '/'.join([resource, 'indicators', 'url', myargs, 'general'])
+            finalurl = '/'.join([resource, 'indicators', 'url', quote(myargs, safe=''), 'general'])
             haresponse = requestsession.post(url=finalurl, headers=headers, params=search_params)
             hatext = json.loads(haresponse.text)
 

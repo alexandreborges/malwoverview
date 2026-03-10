@@ -7,6 +7,7 @@ from io import BytesIO
 import requests
 import json
 import os
+from urllib.parse import quote
 
 
 class TriageExtractor():
@@ -35,7 +36,8 @@ class TriageExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json', 'Authorization': 'Bearer ' + self.TRIAGEAPI})
-            triageresponse = requestsession.get(triage + triagex)
+            safe_query = quote(triagex, safe='')
+            triageresponse = requestsession.get(triage + safe_query)
             triagetext = json.loads(triageresponse.text)
 
             if 'error' in triagetext:
@@ -218,7 +220,7 @@ class TriageExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json', 'Authorization': 'Bearer ' + self.TRIAGEAPI})
-            triageresponse = requestsession.get(triage + 'samples/' + triagex + '/overview.json')
+            triageresponse = requestsession.get(triage + 'samples/' + quote(triagex, safe='') + '/overview.json')
             triagetext = json.loads(triageresponse.text)
 
             if 'error' in triagetext:
@@ -580,22 +582,23 @@ class TriageExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (80 * '-').center(40))
 
-            myfile = open(triagex, 'rb')
-            mydata = {
-                'kind': 'file',
-                'interactive': False,
-            }
-
             filename = os.path.basename(triagex)
-            mybody, content_type = encode_multipart_formdata({
-                '_json': json.dumps(mydata),
-                'file': (filename, myfile),
-            })
+            
+            with open(triagex, 'rb') as myfile:
+                mydata = {
+                    'kind': 'file',
+                    'interactive': False,
+                }
 
-            req = Request('POST', triage + 'samples', data=mybody, headers={"Content-Type": content_type, "Authorization": "Bearer " + self.TRIAGEAPI})
-            requestsession = requests.Session()
-            triageres = requestsession.send(req.prepare())
-            triagetext = triageres.json()
+                mybody, content_type = encode_multipart_formdata({
+                    '_json': json.dumps(mydata),
+                    'file': (filename, myfile),
+                })
+
+                req = Request('POST', triage + 'samples', data=mybody, headers={"Content-Type": content_type, "Authorization": "Bearer " + self.TRIAGEAPI})
+                requestsession = requests.Session()
+                triageres = requestsession.send(req.prepare())
+                triagetext = triageres.json()
 
             if 'error' in triagetext:
 
@@ -720,7 +723,7 @@ class TriageExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'Authorization': 'Bearer ' + self.TRIAGEAPI})
-            triageresponse = requestsession.get(triage + 'samples/' + triagex + '/sample')
+            triageresponse = requestsession.get(triage + 'samples/' + quote(triagex, safe='') + '/sample')
             if (triageresponse.status_code == 404):
                 triagetext = json.loads(triageresponse.text)
 
@@ -746,8 +749,10 @@ class TriageExtractor():
                         print("\n" + mycolors.foreground.red + triagetext['message'] + mycolors.reset, end='\n\n')
                     exit(1)
 
-            outputpath = os.path.join(cv.output_dir, triagex)
-            open(outputpath, 'wb').write(triageresponse.content)
+            safe_filename = os.path.basename(triagex)
+            outputpath = os.path.join(cv.output_dir, safe_filename)
+            with open(outputpath, 'wb') as f:
+                f.write(triageresponse.content)
             if (cv.bkg == 1):
                 print("\n" + mycolors.foreground.yellow + f"Sample downloaded to: {outputpath}" + mycolors.reset, end=' ')
             if (cv.bkg == 0):
@@ -780,7 +785,7 @@ class TriageExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'Authorization': 'Bearer ' + self.TRIAGEAPI})
-            triageresponse = requestsession.get(triage + 'samples/' + triagex + '/behavioral1/dump.pcapng')
+            triageresponse = requestsession.get(triage + 'samples/' + quote(triagex, safe='') + '/behavioral1/dump.pcapng')
             if (triageresponse.status_code == 404):
                 triagetext = json.loads(triageresponse.text)
 
@@ -806,8 +811,10 @@ class TriageExtractor():
                         print("\n" + mycolors.foreground.red + triagetext['message'] + mycolors.reset, end='\n\n')
                     exit(1)
 
-            outputpath = os.path.join(cv.output_dir, triagex + '.pcapng')
-            open(outputpath, 'wb').write(triageresponse.content)
+            safe_filename = os.path.basename(triagex) + '.pcapng'
+            outputpath = os.path.join(cv.output_dir, safe_filename)
+            with open(outputpath, 'wb') as f:
+                f.write(triageresponse.content)
             if (cv.bkg == 1):
                 print("\n" + mycolors.foreground.yellow + f"PCAP downloaded to: {outputpath}" + mycolors.reset, end=' ')
             if (cv.bkg == 0):
@@ -840,7 +847,7 @@ class TriageExtractor():
 
             requestsession = requests.Session()
             requestsession.headers.update({'accept': 'application/json', 'Authorization': 'Bearer ' + self.TRIAGEAPI})
-            triageresponse = requestsession.get(triage + 'samples/' + triagex + '/behavioral1/report_triage.json')
+            triageresponse = requestsession.get(triage + 'samples/' + quote(triagex, safe='') + '/behavioral1/report_triage.json')
             triagetext = json.loads(triageresponse.text)
 
             if 'error' in triagetext:

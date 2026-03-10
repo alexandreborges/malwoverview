@@ -38,7 +38,16 @@ class HybridAnalysisExtractor():
 
             finalurl = '/'.join([haurl, 'overview', resource, 'sample'])
 
-            haresponse = requestsession.get(url=finalurl, allow_redirects=True)
+            haresponse = requestsession.get(url=finalurl, allow_redirects=False, stream=True, timeout=60)
+            
+            MAX_DOWNLOAD_SIZE = 500 * 1024 * 1024
+            content = bytearray()
+            for chunk in haresponse.iter_content(chunk_size=8192):
+                if chunk:
+                    content += chunk
+                    if len(content) > MAX_DOWNLOAD_SIZE:
+                        print(mycolors.foreground.red + "\nError: File too large (>500MB). Download aborted.\n" + mycolors.reset)
+                        exit(1)
 
             try:
 
@@ -54,8 +63,10 @@ class HybridAnalysisExtractor():
                     print((mycolors.reset))
                     return final
 
-                outputpath = os.path.join(cv.output_dir, f'{resource}.gz')
-                open(outputpath, 'wb').write(haresponse.content)
+                safe_filename = os.path.basename(resource) + '.gz'
+                outputpath = os.path.join(cv.output_dir, safe_filename)
+                with open(outputpath, 'wb') as f:
+                    f.write(content)
                 final = f'Sample downloaded to: {outputpath}'
 
                 print((mycolors.reset))
@@ -343,8 +354,6 @@ class HybridAnalysisExtractor():
             else:
                 haenv = '300'
 
-            resource = {'file': (os.path.basename(filenameha), open(filenameha, 'rb')), 'environment_id': (None, haenv)}
-
             mysha256hash = sha256hash(filenameha)
 
             if (cv.bkg == 1):
@@ -365,7 +374,9 @@ class HybridAnalysisExtractor():
 
             finalurl = '/'.join([haurl, 'submit', 'file'])
 
-            haresponse = requestsession.post(url=finalurl, files=resource)
+            with open(filenameha, 'rb') as file_handle:
+                resource = {'file': (os.path.basename(filenameha), file_handle), 'environment_id': (None, haenv)}
+                haresponse = requestsession.post(url=finalurl, files=resource)
 
             hatext = json.loads(haresponse.text)
 

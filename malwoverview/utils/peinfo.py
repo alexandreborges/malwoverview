@@ -28,7 +28,8 @@ def overextract(fname):
     if offset is None:
         exit(0)
 
-    outputpath = os.path.join(cv.output_dir, fname + '.overlay')
+    safe_filename = os.path.basename(fname) + '.overlay'
+    outputpath = os.path.join(cv.output_dir, safe_filename)
     with open(outputpath, "wb") as t:
         t.write(r[offset:])
     if (cv.bkg == 1):

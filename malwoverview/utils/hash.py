@@ -6,25 +6,25 @@ import malwoverview.modules.configvars as cv
 
 def sha256hash(fname):
     BSIZE = 65536
-    hnd = open(fname, 'rb')
     hash256 = hashlib.sha256()
-    while True:
-        info = hnd.read(BSIZE)
-        if not info:
-            break
-        hash256.update(info)
+    with open(fname, 'rb') as hnd:
+        while True:
+            info = hnd.read(BSIZE)
+            if not info:
+                break
+            hash256.update(info)
     return hash256.hexdigest()
 
 
 def md5hash(fname):
     BSIZE = 65536
-    hnd = open(fname, 'rb')
     hashmd5 = hashlib.md5()
-    while True:
-        info = hnd.read(BSIZE)
-        if not info:
-            break
-        hashmd5.update(info)
+    with open(fname, 'rb') as hnd:
+        while True:
+            info = hnd.read(BSIZE)
+            if not info:
+                break
+            hashmd5.update(info)
     return hashmd5.hexdigest()
 
 

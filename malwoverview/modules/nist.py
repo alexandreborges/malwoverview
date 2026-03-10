@@ -166,7 +166,7 @@ class NISTExtractor():
             wrapped_desc = textwrap.fill(description, width=75, initial_indent='    ', subsequent_indent='    ')
             try:
                 print(wrapped_desc.encode('utf-8', 'replace').decode('utf-8'))
-            except:
+            except Exception:
                 print(wrapped_desc.encode('ascii', 'replace').decode('ascii'))
             print()
             if verbose:

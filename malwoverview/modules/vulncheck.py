@@ -38,7 +38,7 @@ class VulnCheckExtractor():
         
         try:
             text = text.encode('ascii', errors='replace').decode('ascii')
-        except:
+        except Exception:
             pass
         
         return text
