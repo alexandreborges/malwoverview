@@ -1,6 +1,7 @@
 import malwoverview.modules.configvars as cv
 from malwoverview.utils.colors import mycolors, printc
 import requests
+import ipaddress
 
 class IPInfoExtractor:
     def __init__(self, IPINFOAPI):
@@ -15,13 +16,21 @@ class IPInfoExtractor:
     """
 
     def _raw_ip_info(self, ip_address):
-        url = f"https://ipinfo.io/{ip_address}?token={self.IPINFOAPI}"
+        try:
+            ipaddress.ip_address(ip_address)
+        except ValueError:
+            return {'error': {'message': 'Invalid IP address format'}}
+        
+        url = f"https://ipinfo.io/{ip_address}"
+        headers = {}
+        if self.IPINFOAPI:
+            headers['Authorization'] = f'Bearer {self.IPINFOAPI}'
         
         try:
-            response = requests.get(url)
+            response = requests.get(url, headers=headers, timeout=30)
             return response.json()
         except Exception as e:
-            return {'error': e}
+            return {'error': {'message': str(e)}}
 
     def get_ip_details(self, ip_address):
 #        self.requestIPINFOAPI()

@@ -798,8 +798,9 @@ class VirusTotalExtractor():
             finalurl = url
             requestsession = requests.Session()
             requestsession.headers.update({'x-apikey': self.VTAPI})
-            files = {'file': (file_item, open(file_item, 'rb'))}
-            response = requestsession.post(finalurl, files=files)
+            with open(file_item, 'rb') as file_handle:
+                files = {'file': (file_item, file_handle)}
+                response = requestsession.post(finalurl, files=files)
             vttext = json.loads(response.text)
 
             if (response.status_code == 400):
@@ -1627,8 +1628,8 @@ class VirusTotalExtractor():
             print("\nSample".center(10) + "Hash".center(68) + "Description".center(30) + "Threat Label".center(26) + "AV Detection".center(24))
             print('-' * 152, end="\n\n")
 
-            fh = open(filename, 'r')
-            filelines = fh.readlines()
+            with open(filename, 'r') as fh:
+                filelines = fh.readlines()
 
             hashnumber = 0
             for hashitem in filelines:
@@ -1650,7 +1651,6 @@ class VirusTotalExtractor():
                     if (apitype_var == 1):
                         if ((hashnumber % 4) == 0):
                             time.sleep(61)
-            fh.close()
         except OSError:
             if (cv.bkg == 1):
                 print((mycolors.foreground.lightred + "The provided file doesn't exist!\n"))

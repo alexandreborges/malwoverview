@@ -596,8 +596,17 @@ class BazaarExtractor():
             requestsession.headers.update({'accept': 'application/gzip'})
             requestsession.headers.update({'Auth-Key': self.BAZAARAPI})
             params = {'query': 'get_file', "sha256_hash": bazaarx}
-            bazaarresponse = requestsession.post(bazaar, data=params, allow_redirects=True)
-            bazaartext = bazaarresponse.text
+            bazaarresponse = requestsession.post(bazaar, data=params, allow_redirects=False, stream=True, timeout=60)
+            
+            MAX_DOWNLOAD_SIZE = 500 * 1024 * 1024
+            content = bytearray()
+            for chunk in bazaarresponse.iter_content(chunk_size=8192):
+                if chunk:
+                    content += chunk
+                    if len(content) > MAX_DOWNLOAD_SIZE:
+                        print(mycolors.foreground.red + "\nError: File too large (>500MB). Download aborted.\n" + mycolors.reset)
+                        exit(1)
+            bazaartext = content.decode('utf-8', errors='ignore')
 
             if "illegal_sha256_hash" in bazaartext:
                 if (cv.bkg == 1):
@@ -613,8 +622,10 @@ class BazaarExtractor():
                     print(mycolors.foreground.red + "\nNo malware samples found for the provided sha256 hash!\n" + mycolors.reset)
                 exit(1)
 
-            outputpath = os.path.join(cv.output_dir, resource + '.zip')
-            open(outputpath, 'wb').write(bazaarresponse.content)
+            safe_filename = os.path.basename(resource) + '.zip'
+            outputpath = os.path.join(cv.output_dir, safe_filename)
+            with open(outputpath, 'wb') as f:
+                f.write(content)
             final = f'\nSample downloaded to: {outputpath}'
 
             if (cv.bkg == 1):

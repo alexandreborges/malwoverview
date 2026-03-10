@@ -220,10 +220,12 @@ def main():
 
     MIN_OPTIONS = [
         virustotaloptionx in range(5, 10) and virustotalargx,
-        virustotalargx, virustotaloptionx, args.direct, fprovided,
-        haargx, mallist, args.malsharehash, args.hausoption, polyoptionx, polyargx,
-        androidoptionx, androidargx, alienx, alienargsx, malpediaargx,
-        malpediax, bazaarx, bazaarargx, triagex, triageargx, ipoptionx, ipargx,
+        virustotaloptionx and virustotalargx, args.direct, fprovided,
+        haoptionx and haargx, mallist, args.malsharehash, args.hausoption,
+        polyoptionx and polyargx,
+        androidoptionx and androidargx, alienx and alienargsx, 
+        malpediax, bazaarx, triagex and triageargx, 
+        ipoptionx and ipargx,
         nistoption and nistarg,
         vulncheckoption
     ]

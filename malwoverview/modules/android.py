@@ -252,6 +252,11 @@ class AndroidExtractor():
 
         try:
             for h in results2:
+                if not h or not h.startswith('/data/app/'):
+                    continue
+                # Allowlist: only permit valid Android path characters
+                if not all(c in '/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-' for c in h):
+                    continue
                 myconn3 = subprocess.run([adb_comm, "shell", "md5sum", h], text=True, capture_output=True)
                 x = myconn3.stdout.split(" ")[0]
                 final1.append(x)

@@ -843,6 +843,47 @@ VULNERABILITY OPTIONS:
 
 ## HISTORY
 
+Version 7.1.1:
+
+      This version:
+
+            * Fixes path traversal vulnerability (9 locations) - user-controlled 
+              filenames not sanitized.
+            * Fixes URL injection/SSRF in triage.py - user input inserted directly 
+              into URLs without encoding.
+            * Fixes incomplete URL encoding in triage.py - applies quote() to all 
+              4 endpoints (overview, sample, pcap, report), not just search.
+            * Fixes URL injection/SSRF in ipinfo.py - IP address parameter not 
+              validated, API token moved to Authorization header.
+            * Improves IP validation in ipinfo.py - replaces permissive regex with 
+              stdlib ipaddress.ip_address() for proper validation.
+            * Fixes URL injection/SSRF in alienvault.py (3 locations) - user input 
+              for domain, file, and URL indicators not URL-encoded.
+            * Fixes URL injection/SSRF in malpedia.py (4 locations) - user input 
+              for actor, family, sample, and yara endpoints not URL-encoded.
+            * Improves IP validation in bgpview.py - adds ipaddress.ip_address() 
+              validation to prevent injection attacks.
+            * Fixes subprocess injection in android.py - unsanitized paths passed 
+              to ADB shell commands.
+            * Strengthens Android path validation - replaces incomplete metacharacter 
+              blocklist with secure allowlist (permits only /a-zA-Z0-9._-).
+            * Fixes resource leak - file handles (14 locations) - files opened 
+              without context managers in hash.py, hybrid.py, virustotal.py (2), 
+              triage.py, and malpedia.py (9 previous).
+            * Fixes unsafe HTTP redirects (4 locations) - allow_redirects=True 
+              allowed redirect to attacker-controlled URLs.
+            * Fixes unbounded response size (4 locations) - no size limits on 
+              downloaded files, added 500MB limit.
+            * Optimizes download performance (4 locations) - uses bytearray instead 
+              of bytes concatenation to avoid O(n²) complexity.
+            * Fixes missing timeout in ipinfo.py - no timeout on HTTP request.
+            * Fixes bare except clauses (3 locations) - bgpview.py, vulncheck.py, 
+              nist.py now use except Exception: to avoid catching KeyboardInterrupt 
+              and SystemExit.
+            * Fixes CLI validation bug - accepted argument-only invocations.
+            * Fixes Polyswarm crash - NameError when score lookup failed.
+            * Fixes IPInfo error handling - wrong error structure returned.
+
 Version 7.1:
 
       This version:

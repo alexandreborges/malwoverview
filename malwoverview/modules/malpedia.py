@@ -5,6 +5,7 @@ import textwrap
 import base64
 import json
 import os
+from urllib.parse import quote
 
 class MalpediaExtractor():
     malpediaurl = 'https://malpedia.caad.fkie.fraunhofer.de/api'
@@ -149,7 +150,7 @@ class MalpediaExtractor():
             requestsession = requests.Session()
             requestsession.headers.update({'Content-Type': 'application/json'})
             requestsession.headers.update({'Authorization': 'apitoken ' + self.MALPEDIAAPI})
-            finalurl = '/'.join([resource, 'get', 'actor', myargs])
+            finalurl = '/'.join([resource, 'get', 'actor', quote(myargs, safe='')])
             haresponse = requestsession.get(url=finalurl)
             hatext = json.loads(haresponse.text)
 
@@ -355,7 +356,7 @@ class MalpediaExtractor():
             requestsession = requests.Session()
             requestsession.headers.update({'Content-Type': 'application/json'})
             requestsession.headers.update({'Authorization': 'apitoken ' + self.MALPEDIAAPI})
-            finalurl = '/'.join([resource, 'get', 'family', myargs])
+            finalurl = '/'.join([resource, 'get', 'family', quote(myargs, safe='')])
             haresponse = requestsession.get(url=finalurl)
             hatext = json.loads(haresponse.text)
 
@@ -452,7 +453,7 @@ class MalpediaExtractor():
             requestsession = requests.Session()
             requestsession.headers.update({'Content-Type': 'application/json'})
             requestsession.headers.update({'Authorization': 'apitoken ' + self.MALPEDIAAPI})
-            finalurl = '/'.join([resource, 'get', 'sample', myargs, 'zip'])
+            finalurl = '/'.join([resource, 'get', 'sample', quote(myargs, safe=''), 'zip'])
             haresponse = requestsession.get(url=finalurl)
             hatext = json.loads(haresponse.text)
 
@@ -471,8 +472,10 @@ class MalpediaExtractor():
                 exit(1)
 
             if ('200' in str(haresponse)):
-                outputpath = os.path.join(cv.output_dir, myargs + ".zip")
-                open(outputpath, 'wb').write(base64.b64decode(hatext['zipped']))
+                safe_filename = os.path.basename(myargs) + ".zip"
+                outputpath = os.path.join(cv.output_dir, safe_filename)
+                with open(outputpath, 'wb') as f:
+                    f.write(base64.b64decode(hatext['zipped']))
                 if (cv.bkg == 1):
                     print(mycolors.foreground.lightcyan + f"\nSample downloaded to: {outputpath}\n", mycolors.reset)
                 else:
@@ -501,7 +504,7 @@ class MalpediaExtractor():
             requestsession = requests.Session()
             requestsession.headers.update({'Content-Type': 'application/json'})
             requestsession.headers.update({'Authorization': 'apitoken ' + self.MALPEDIAAPI})
-            finalurl = '/'.join([resource, 'get', 'yara', myargs, 'zip'])
+            finalurl = '/'.join([resource, 'get', 'yara', quote(myargs, safe=''), 'zip'])
             haresponse = requestsession.get(url=finalurl)
 
             if (cv.bkg == 1):
@@ -519,12 +522,15 @@ class MalpediaExtractor():
                 exit(1)
 
             if ('200' in str(haresponse)):
-                outputpath = os.path.join(cv.output_dir, myargs + ".zip")
+                safe_filename = os.path.basename(myargs) + ".zip"
+                outputpath = os.path.join(cv.output_dir, safe_filename)
                 if (cv.bkg == 1):
-                    open(outputpath, 'wb').write(haresponse.content)
+                    with open(outputpath, 'wb') as f:
+                        f.write(haresponse.content)
                     print(mycolors.foreground.lightcyan + "\nA zip file named %s.zip containing Yara rules has been SUCCESSFULLY downloaded from Malpedia!\n" % myargs, mycolors.reset)
                 else:
-                    open(outputpath, 'wb').write(haresponse.content)
+                    with open(outputpath, 'wb') as f:
+                        f.write(haresponse.content)
                     print(mycolors.foreground.green + "\nA zip file named %s.zip containing Yara rules has been SUCCESSFULLY downloaded from Malpedia!\n" % myargs, mycolors.reset)
                     exit(0)
         except ValueError as e:

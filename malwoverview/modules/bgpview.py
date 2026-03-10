@@ -1,18 +1,24 @@
 import requests
 import malwoverview.modules.configvars as cv
 from malwoverview.utils.colors import mycolors
+import ipaddress
 
 class BGPViewExtractor:
     urlbgpview = "https://api.bgpview.io/ip/"
 
     def _raw_ip_info(self, ip_address):
+        try:
+            ipaddress.ip_address(ip_address)
+        except ValueError:
+            return {}
+        
         url = f"{BGPViewExtractor.urlbgpview}{ip_address}"
         
         try:
             response = requests.get(url)
             data = response.json()
             return data.get('data', {}) if data.get('status') == 'ok' else {}
-        except:
+        except Exception:
             return {}
 
     def get_ip_details(self, ip_address):

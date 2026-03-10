@@ -5,6 +5,7 @@ from malwoverview.utils.hash import sha256hash
 from malwoverview.utils.peinfo import ftype
 import pefile
 from requests.exceptions import RetryError
+from types import SimpleNamespace
 import re
 import os
 
@@ -107,7 +108,7 @@ class PolyswarmExtractor():
                     try:
                         score = next(polyswarm.search(y.sha256))
                     except Exception:
-                        score.polyscore = "None"
+                        score = SimpleNamespace(polyscore="None")
                         pass
 
                     print(mycolors.reset + "Polyscore: " + mycolors.foreground.yellow + "%20s" % score.polyscore, end=' ')
@@ -126,7 +127,7 @@ class PolyswarmExtractor():
                     try:
                         score = next(polyswarm.search(y.sha256))
                     except Exception:
-                        score.polyscore = "None"
+                        score = SimpleNamespace(polyscore="None")
                         pass
 
                     print(mycolors.reset + "Polyscore: " + mycolors.foreground.red + "%20s" % score.polyscore, end=' ')

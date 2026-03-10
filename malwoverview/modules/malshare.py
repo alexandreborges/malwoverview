@@ -37,10 +37,21 @@ class MalshareExtractor():
 
             malresponse3 = requestsession3.get(
                 url=finalurl3,
-                allow_redirects=True
+                allow_redirects=False,
+                stream=True,
+                timeout=60
             )
+            
+            MAX_DOWNLOAD_SIZE = 500 * 1024 * 1024
+            content = bytearray()
+            for chunk in malresponse3.iter_content(chunk_size=8192):
+                if chunk:
+                    content += chunk
+                    if len(content) > MAX_DOWNLOAD_SIZE:
+                        print(mycolors.foreground.red + "\nError: File too large (>500MB). Download aborted.\n" + mycolors.reset)
+                        exit(1)
 
-            if (b'Sample not found by hash' in malresponse3.content):
+            if (b'Sample not found by hash' in content):
                 if (cv.bkg == 1):
                     print((mycolors.foreground.lightred + "\nSample not found by the provided hash.\n"))
                 else:
@@ -48,8 +59,10 @@ class MalshareExtractor():
                     print(mycolors.reset)
                     exit(1)
             else:
-                outputpath = os.path.join(cv.output_dir, resource)
-                open(outputpath, 'wb').write(malresponse3.content)
+                safe_filename = os.path.basename(resource)
+                outputpath = os.path.join(cv.output_dir, safe_filename)
+                with open(outputpath, 'wb') as f:
+                    f.write(content)
 
                 print("\n")
                 print((mycolors.reset + f"Sample downloaded to: {outputpath}"))
