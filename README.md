@@ -806,8 +806,8 @@ VULNERABILITY OPTIONS:
       # List available VulnCheck indexes (Community/Free tier)
       malwoverview -vc 1
 
-      # Get Known Exploited Vulnerabilities (KEV) - default 50 results
-      malwoverview -vc 2 -VC 50
+      # Get Known Exploited Vulnerabilities (KEV) - 30 results
+      malwoverview -vc 2 -VC 30
 
       # Get Known Exploited Vulnerabilities (KEV) - 100 results
       malwoverview -vc 2 -VC 100
@@ -821,17 +821,17 @@ VULNERABILITY OPTIONS:
       # Get backup download link for VulnCheck KEV dataset
       malwoverview -vc 4
 
-      # List recent CVEs from MITRE database - default 50 results
+      # List recent CVEs from MITRE database
       malwoverview -vc 5
 
-      # List recent CVEs from MITRE database - 100 results
-      malwoverview -vc 5 -VC 100
+      # List recent CVEs from MITRE database - 20 results
+      malwoverview -vc 5 -VC 20
 
-      # List recent CVEs from NIST NVD2 database - default 50 results
+      # List recent CVEs from NIST NVD2 database
       malwoverview -vc 6
 
-      # List recent CVEs from NIST NVD2 database - 100 results
-      malwoverview -vc 6 -VC 100
+      # List recent CVEs from NIST NVD2 database - 50 results
+      malwoverview -vc 6 -VC 50
 
       # Search for specific CVE in MITRE database (official CVE records)
       malwoverview -vc 7 -VC CVE-2024-21412
