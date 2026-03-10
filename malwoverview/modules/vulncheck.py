@@ -952,7 +952,7 @@ class VulnCheckExtractor():
                                             print(mycolors.foreground.lightcyan + f"{'CVSS Vector:':<25}" + mycolors.reset + str(cvss_data['vectorString']))
                     
                     if 'cisaExploitAdd' in vuln and vuln['cisaExploitAdd']:
-                        print(mycolors.foreground.red + f"{'CISA KEV Added:':<25}" + mycolors.reset + str(vuln['cisaExploitAdd']))
+                        print(mycolors.foreground.lightcyan + f"{'CISA KEV Added:':<25}" + mycolors.reset + str(vuln['cisaExploitAdd']))
                         
                         if 'cisaActionDue' in vuln and vuln['cisaActionDue']:
                             print(mycolors.foreground.lightcyan + f"{'CISA Action Due:':<25}" + mycolors.reset + str(vuln['cisaActionDue']))
@@ -1029,7 +1029,7 @@ class VulnCheckExtractor():
                                             print(mycolors.foreground.cyan + f"{'CVSS Vector:':<25}" + mycolors.reset + str(cvss_data['vectorString']))
                     
                     if 'cisaExploitAdd' in vuln and vuln['cisaExploitAdd']:
-                        print(mycolors.foreground.red + f"{'CISA KEV Added:':<25}" + mycolors.reset + str(vuln['cisaExploitAdd']))
+                        print(mycolors.foreground.cyan + f"{'CISA KEV Added:':<25}" + mycolors.reset + str(vuln['cisaExploitAdd']))
                         
                         if 'cisaActionDue' in vuln and vuln['cisaActionDue']:
                             print(mycolors.foreground.cyan + f"{'CISA Action Due:':<25}" + mycolors.reset + str(vuln['cisaActionDue']))
