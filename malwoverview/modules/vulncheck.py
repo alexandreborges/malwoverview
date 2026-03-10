@@ -170,7 +170,7 @@ class VulnCheckExtractor():
                         if 'cve' in vuln:
                             cve_id = vuln['cve'][0] if isinstance(vuln['cve'], list) else str(vuln['cve'])
                             label = f"[{idx}] CVE ID:"
-                            print(mycolors.foreground.red + f"\n{label:<25}" + mycolors.reset + cve_id)
+                            print(mycolors.foreground.yellow + f"\n{label:<25}" + mycolors.reset + cve_id)
                         
                         if 'vendorProject' in vuln and vuln['vendorProject']:
                             vendor = str(vuln['vendorProject']) if not isinstance(vuln['vendorProject'], list) else ', '.join(vuln['vendorProject'])
@@ -313,7 +313,7 @@ class VulnCheckExtractor():
                 if cv.bkg == 1:
                     if 'cve' in vuln:
                         cve_result = vuln['cve'][0] if isinstance(vuln['cve'], list) else str(vuln['cve'])
-                        print(mycolors.foreground.red + f"\n{'CVE ID:':<25}" + mycolors.reset + cve_result)
+                        print(mycolors.foreground.yellow + f"\n{'CVE ID:':<25}" + mycolors.reset + cve_result)
                     
                     if 'vendorProject' in vuln and vuln['vendorProject']:
                         vendor = str(vuln['vendorProject']) if not isinstance(vuln['vendorProject'], list) else ', '.join(vuln['vendorProject'])
@@ -449,6 +449,9 @@ class VulnCheckExtractor():
                 elif 'data' in data and isinstance(data['data'], dict):
                     if 'url' in data['data']:
                         backup_url = data['data']['url']
+                elif 'data' in data and isinstance(data['data'], list) and len(data['data']) > 0:
+                    if isinstance(data['data'][0], dict) and 'url' in data['data'][0]:
+                        backup_url = data['data'][0]['url']
                 elif 'download_url' in data:
                     backup_url = data['download_url']
                 elif 'data' in data and isinstance(data['data'], dict) and 'download_url' in data['data']:
@@ -459,7 +462,11 @@ class VulnCheckExtractor():
                     print(mycolors.foreground.yellow + f"\n{'Backup Download URL:':<25}" + mycolors.reset + backup_url)
                     
                     metadata = data.get('data', data)
+                    if isinstance(metadata, list) and len(metadata) > 0:
+                        metadata = metadata[0]
                     if isinstance(metadata, dict):
+                        if 'date_added' in metadata:
+                            print(mycolors.foreground.lightcyan + f"{'Date Added:':<25}" + mycolors.reset + str(metadata['date_added']))
                         if 'date_modified' in metadata or 'modified' in metadata:
                             mod_date = metadata.get('date_modified', metadata.get('modified'))
                             print(mycolors.foreground.lightcyan + f"{'Last Modified:':<25}" + mycolors.reset + str(mod_date))
@@ -468,11 +475,19 @@ class VulnCheckExtractor():
                         if 'sha256' in metadata or 'checksum' in metadata:
                             checksum = metadata.get('sha256', metadata.get('checksum'))
                             print(mycolors.foreground.lightcyan + f"{'SHA256:':<25}" + mycolors.reset + str(checksum))
+                        if 'filename' in metadata:
+                            print(mycolors.foreground.lightcyan + f"{'Filename:':<25}" + mycolors.reset + str(metadata['filename']))
+                        if 'url_expires' in metadata:
+                            print(mycolors.foreground.lightcyan + f"{'URL Expires:':<25}" + mycolors.reset + str(metadata['url_expires']))
                 else:
                     print(mycolors.foreground.red + f"\n{'Backup Download URL:':<25}" + mycolors.reset + backup_url)
                     
                     metadata = data.get('data', data)
+                    if isinstance(metadata, list) and len(metadata) > 0:
+                        metadata = metadata[0]
                     if isinstance(metadata, dict):
+                        if 'date_added' in metadata:
+                            print(mycolors.foreground.cyan + f"{'Date Added:':<25}" + mycolors.reset + str(metadata['date_added']))
                         if 'date_modified' in metadata or 'modified' in metadata:
                             mod_date = metadata.get('date_modified', metadata.get('modified'))
                             print(mycolors.foreground.cyan + f"{'Last Modified:':<25}" + mycolors.reset + str(mod_date))
@@ -481,6 +496,10 @@ class VulnCheckExtractor():
                         if 'sha256' in metadata or 'checksum' in metadata:
                             checksum = metadata.get('sha256', metadata.get('checksum'))
                             print(mycolors.foreground.cyan + f"{'SHA256:':<25}" + mycolors.reset + str(checksum))
+                        if 'filename' in metadata:
+                            print(mycolors.foreground.cyan + f"{'Filename:':<25}" + mycolors.reset + str(metadata['filename']))
+                        if 'url_expires' in metadata:
+                            print(mycolors.foreground.cyan + f"{'URL Expires:':<25}" + mycolors.reset + str(metadata['url_expires']))
                 
                 print("\n" + mycolors.foreground.green + "Note: Download this URL to get the complete KEV dataset as a JSON file." + mycolors.reset)
             else:
@@ -562,7 +581,7 @@ class VulnCheckExtractor():
                             cve_list = cve_entry['cve']
                             cve_id = ', '.join(cve_list) if isinstance(cve_list, list) else str(cve_list)
                             label = f"[{idx}] CVE ID:"
-                            print(mycolors.foreground.red + f"\n{label:<25}" + mycolors.reset + cve_id)
+                            print(mycolors.foreground.yellow + f"\n{label:<25}" + mycolors.reset + cve_id)
                         
                         if 'title' in cve_entry and cve_entry['title']:
                             wrapped_title = textwrap.fill(self.sanitize_text(str(cve_entry['title'])).strip(), width=90, initial_indent=' ' * 25, subsequent_indent=' ' * 25)
@@ -665,7 +684,7 @@ class VulnCheckExtractor():
                     if cv.bkg == 1:
                         if 'id' in vuln:
                             label = f"[{idx}] CVE ID:"
-                            print(mycolors.foreground.red + f"\n{label:<25}" + mycolors.reset + str(vuln['id']))
+                            print(mycolors.foreground.yellow + f"\n{label:<25}" + mycolors.reset + str(vuln['id']))
                         
                         if 'vulnStatus' in vuln and vuln['vulnStatus']:
                             print(mycolors.foreground.lightcyan + f"{'Status:':<25}" + mycolors.reset + str(vuln['vulnStatus']))
@@ -794,7 +813,7 @@ class VulnCheckExtractor():
                     if 'cve' in vuln:
                         cve_list = vuln['cve']
                         cve_result = ', '.join(cve_list) if isinstance(cve_list, list) else str(cve_list)
-                        print(mycolors.foreground.red + f"\n{'CVE ID:':<25}" + mycolors.reset + cve_result)
+                        print(mycolors.foreground.yellow + f"\n{'CVE ID:':<25}" + mycolors.reset + cve_result)
                     
                     if 'title' in vuln and vuln['title']:
                         wrapped_title = textwrap.fill(self.sanitize_text(str(vuln['title'])).strip(), width=90, initial_indent=' ' * 25, subsequent_indent=' ' * 25)
@@ -914,7 +933,7 @@ class VulnCheckExtractor():
                 
                 if cv.bkg == 1:
                     if 'id' in vuln:
-                        print(mycolors.foreground.red + f"\n{'CVE ID:':<25}" + mycolors.reset + str(vuln['id']))
+                        print(mycolors.foreground.yellow + f"\n{'CVE ID:':<25}" + mycolors.reset + str(vuln['id']))
                     
                     if 'vulnStatus' in vuln and vuln['vulnStatus']:
                         print(mycolors.foreground.lightcyan + f"{'Status:':<25}" + mycolors.reset + str(vuln['vulnStatus']))
