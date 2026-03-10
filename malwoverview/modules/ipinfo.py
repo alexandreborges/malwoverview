@@ -21,7 +21,7 @@ class IPInfoExtractor:
             response = requests.get(url)
             return response.json()
         except Exception as e:
-            return {'error': e}
+            return {'error': str(e)}
 
     def get_ip_details(self, ip_address):
 #        self.requestIPINFOAPI()
@@ -35,7 +35,7 @@ class IPInfoExtractor:
             print("\n" + (100 * '-').center(50))
             
             if 'error' in data:
-                printc(f"\n{data['error']['message']}\n", mycolors.foreground.error(cv.bkg))
+                printc(f"\n{data['error']}\n", mycolors.foreground.error(cv.bkg))
                 return
                 
             fields = ['ip', 'hostname', 'org', 'country', 'region', 'city', 'loc', 'postal', 'timezone']

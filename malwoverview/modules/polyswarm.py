@@ -7,6 +7,7 @@ import pefile
 from requests.exceptions import RetryError
 import re
 import os
+from types import SimpleNamespace
 
 
 class PolyswarmExtractor():
@@ -107,8 +108,7 @@ class PolyswarmExtractor():
                     try:
                         score = next(polyswarm.search(y.sha256))
                     except Exception:
-                        score.polyscore = "None"
-                        pass
+                        score = SimpleNamespace(polyscore="None")
 
                     print(mycolors.reset + "Polyscore: " + mycolors.foreground.yellow + "%20s" % score.polyscore, end=' ')
                     if (str(y.scan.get('detections', {}).get('malicious'))) != 'None':
@@ -126,8 +126,7 @@ class PolyswarmExtractor():
                     try:
                         score = next(polyswarm.search(y.sha256))
                     except Exception:
-                        score.polyscore = "None"
-                        pass
+                        score = SimpleNamespace(polyscore="None")
 
                     print(mycolors.reset + "Polyscore: " + mycolors.foreground.red + "%20s" % score.polyscore, end=' ')
                     if (str(y.scan.get('detections', {}).get('malicious'))) != 'None':

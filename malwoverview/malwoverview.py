@@ -48,6 +48,7 @@ from malwoverview.modules.nist import NISTExtractor
 from malwoverview.modules.vulncheck import VulnCheckExtractor
 from malwoverview.utils.colors import printr
 from malwoverview.utils.hash import calchash
+from malwoverview.utils.cli_validation import should_print_help
 import malwoverview.modules.configvars as cv
 
 __author__ = "Alexandre Borges"
@@ -202,33 +203,7 @@ def main():
     if (os.path.isfile(ffpname)):
         fprovided = 1
 
-    INVALID_ARG_CONDITIONS = [
-        args.haoption not in optval10,
-        args.alienvault not in optval5,
-        args.hausoption not in optval8,
-        args.polyoption not in optval6,
-        args.bazaar not in optval7,
-        args.malpedia not in optval6,
-        args.triage not in optval8,
-        args.backg not in optval,
-        args.malsharelist not in optval8,
-        args.virustotaloption not in optval9,
-        args.vtpubpremium not in optval,
-        args.ipoption not in optval4,
-        args.androidoption not in optval5
-    ]
-
-    MIN_OPTIONS = [
-        virustotaloptionx in range(5, 10) and virustotalargx,
-        virustotalargx, virustotaloptionx, args.direct, fprovided,
-        haargx, mallist, args.malsharehash, args.hausoption, polyoptionx, polyargx,
-        androidoptionx, androidargx, alienx, alienargsx, malpediaargx,
-        malpediax, bazaarx, bazaarargx, triagex, triageargx, ipoptionx, ipargx,
-        nistoption and nistarg,
-        vulncheckoption
-    ]
-
-    if any(INVALID_ARG_CONDITIONS) or not any(MIN_OPTIONS):
+    if should_print_help(args):
         parser.print_help()
         printr()
         exit(0)

@@ -1,0 +1,63 @@
+def should_print_help(args):
+    invalid_arg_conditions = [
+        args.haoption not in range(16),
+        args.alienvault not in range(6),
+        args.hausoption not in range(8),
+        args.polyoption not in range(9),
+        args.bazaar not in range(11),
+        args.malpedia not in range(9),
+        args.triage not in range(8),
+        args.backg not in range(2),
+        args.malsharelist not in range(8),
+        args.virustotaloption not in range(14),
+        args.vtpubpremium not in range(2),
+        args.ipoption not in range(4),
+        args.androidoption not in range(6),
+    ]
+
+    invalid_combinations = [
+        bool(args.virustotalarg) and args.virustotaloption == 0,
+        bool(args.haarg) and args.haoption == 0,
+        bool(args.malsharehash) and args.malsharelist == 0,
+        bool(args.hausarg) and args.hausoption == 0,
+        bool(args.polyarg) and args.polyoption == 0,
+        bool(args.androidarg) and args.androidoption == 0,
+        bool(args.alienvaultargs) and args.alienvault == 0,
+        bool(args.malpediaarg) and args.malpedia == 0,
+        bool(args.bazaararg) and args.bazaar == 0,
+        bool(args.triagearg) and args.triage == 0,
+        bool(args.iparg) and args.ipoption == 0,
+        bool(args.nistarg) and args.nistoption == 0,
+        bool(args.vulncheckarg) and args.vulncheckoption == 0,
+        args.virustotaloption != 0 and not args.virustotalarg,
+        args.haoption != 0 and not args.haarg,
+        args.hausoption in range(1, 6) and not args.hausarg,
+        args.polyoption != 0 and not args.polyarg,
+        args.androidoption in range(4, 6) and not args.androidarg,
+        args.alienvault in range(2, 6) and not args.alienvaultargs,
+        args.malpedia in (4, 6, 7, 8) and not args.malpediaarg,
+        args.bazaar not in (0, 10) and not args.bazaararg,
+        args.triage != 0 and not args.triagearg,
+        args.ipoption != 0 and not args.iparg,
+        args.nistoption != 0 and not args.nistarg,
+        args.vulncheckoption in (3, 7, 8) and not args.vulncheckarg,
+    ]
+
+    active_options = [
+        args.virustotaloption,
+        args.haoption,
+        args.malsharelist,
+        args.hausoption,
+        args.polyoption,
+        args.androidoption,
+        args.alienvault,
+        args.malpedia,
+        args.bazaar,
+        args.triage,
+        args.ipoption,
+        args.nistoption,
+        args.vulncheckoption,
+        bool(args.direct),
+    ]
+
+    return any(invalid_arg_conditions) or any(invalid_combinations) or not any(active_options)
