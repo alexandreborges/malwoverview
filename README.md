@@ -97,7 +97,7 @@ This tool aims to :
 32. Retrieve combined information about a given IP address from multiple services.
 33. Offer extra option to save any downloaded file to a central location.
 34. List and search vulnerabilities from NIST through different criterias.
-35. Query VulnCheck KEV (Known Exploited Vulnerabilities) database - Community/Free tier. 
+35. Query VulnCheck database - Community/Free tier. 
 
 ## CONTRIBUTORS
 
