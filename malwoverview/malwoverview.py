@@ -17,9 +17,9 @@
 # CONTRIBUTORS
 
 # Alexandre Borges (project owner)
+# Artur Marzano (https://github.com/Macmod)
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
-# Artur Marzano (https://github.com/Macmod)
 
 # Malwoverview.py: version 7.1
 
@@ -74,7 +74,7 @@ def main():
         USER_HOME_DIR = str(Path.home()) + '/'
         cv.windows = 0
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is " + __version__, usage="usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> --nist <1-5> --NIST <argument> -O <output directory> -ip <1-3> -IP <IP address> -vc <1-4> -VC <argument>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is " + __version__, usage="usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> --nist <1-5> --NIST <argument> -O <output directory> -ip <1-3> -IP <IP address> -vc <1-8> -VC <argument>")
     
     malware_group = parser.add_argument_group('MALWARE OPTIONS', 'Malware analysis and intelligence query options')
     malware_group.add_argument('-c', '--config', dest='config', type=str, metavar="CONFIG FILE", default=(USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s.')
@@ -116,8 +116,8 @@ def main():
     nist_group.add_argument('--ncves', dest='nistncves', type=int, default=None, metavar="NUM", help='Limit output to first N CVEs')
     
     vulncheck_group = parser.add_argument_group('  VulnCheck Database Query', 'Query options for VulnCheck vulnerability database (Community/Free tier)')
-    vulncheck_group.add_argument('-vc', '--vulncheck', dest='vulncheckoption', type=int, default=0, metavar="VULNCHECK_OPTION", help='Query type: 1=List available indexes, 2=Get KEV (Known Exploited Vulnerabilities), 3=Search specific CVE in KEV, 4=Get KEV backup download link')
-    vulncheck_group.add_argument('-VC', '--VULNCHECK', dest='vulncheckarg', type=str, metavar="VULNCHECK_ARG", help='Search value (CVE ID for option 3, max results for option 2, e.g., 50)')
+    vulncheck_group.add_argument('-vc', '--vulncheck', dest='vulncheckoption', type=int, default=0, metavar="VULNCHECK_OPTION", help='Query type: 1=List available indexes, 2=Get KEV (Known Exploited Vulnerabilities), 3=Search CVE in KEV, 4=Get KEV backup link, 5=List MITRE CVEs, 6=List NIST NVD2 CVEs, 7=Search CVE in MITRE, 8=Search CVE in NIST NVD2')
+    vulncheck_group.add_argument('-VC', '--VULNCHECK', dest='vulncheckarg', type=str, metavar="VULNCHECK_ARG", help='Search value (CVE ID for options 3/7/8, max results for options 2/5/6, e.g., 50)')
 
     args = parser.parse_args()
 
@@ -430,9 +430,13 @@ def main():
             'flag': vulncheckoption,
             'actions': {
                 1: (vulncheck.vulncheck_list_indexes, []),
-                2: (vulncheck.vulncheck_kev, [int(vulncheckarg) if vulncheckarg and vulncheckarg.isdigit() else 50]),
+                2: (vulncheck.vulncheck_kev, [int(vulncheckarg) if vulncheckarg and vulncheckarg.isdigit() else 100]),
                 3: (vulncheck.vulncheck_cve_search, [vulncheckarg]),
-                4: (vulncheck.vulncheck_backup_kev, [])
+                4: (vulncheck.vulncheck_backup_kev, []),
+                5: (vulncheck.vulncheck_mitre_list, [int(vulncheckarg) if vulncheckarg and vulncheckarg.isdigit() else 100]),
+                6: (vulncheck.vulncheck_nist_list, [int(vulncheckarg) if vulncheckarg and vulncheckarg.isdigit() else 100]),
+                7: (vulncheck.vulncheck_mitre_search, [vulncheckarg]),
+                8: (vulncheck.vulncheck_nist_search, [vulncheckarg])
             }
         }
     ]

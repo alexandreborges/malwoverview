@@ -339,7 +339,7 @@ usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1
 -V <argument> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> 
 -J <argument> -p <1-8> -P <argument> -y <1-5> -Y <file name> -n <1-5> 
 -N <argument> -m <1-8> -M <argument> -b <1-10> -B <argument> -x <1-7> -X <argurment> 
--ip <1-3> -IP <argument> -O <directory> --nist <1-5> --NIST <argument> -vc <1-4> 
+-ip <1-3> -IP <argument> -O <directory> --nist <1-5> --NIST <argument> -vc <1-8> 
 -VC <argument>
 
 Malwoverview is a first response tool for threat hunting written by Alexandre Borges. 
@@ -637,10 +637,14 @@ VULNERABILITY OPTIONS:
 
       --vulncheck VULNCHECK_OPTION   Query type: 1=List available indexes, 
                                      2=Get KEV (Known Exploited Vulnerabilities), 
-                                     3=Search specific CVE in KEV, 
-                                     4=Get KEV backup download link
-      --VULNCHECK VULNCHECK_ARG      Search value (CVE ID for option 3, 
-                                     max results for option 2, e.g., 50)
+                                     3=Search CVE in KEV, 
+                                     4=Get KEV backup link,
+                                     5=List MITRE CVEs,
+                                     6=List NIST NVD2 CVEs,
+                                     7=Search CVE in MITRE,
+                                     8=Search CVE in NIST NVD2
+      --VULNCHECK VULNCHECK_ARG      Search value (CVE ID for options 3/7/8, 
+                                     max results for options 2/5/6, e.g., 50)
 
 ## EXAMPLES
 
@@ -800,22 +804,40 @@ VULNERABILITY OPTIONS:
       malwoverview --nist 5 --NIST "CWE-79" --ncves 35
 
       # List available VulnCheck indexes (Community/Free tier)
-      malwoverview --vulncheck 1
+      malwoverview -vc 1
 
       # Get Known Exploited Vulnerabilities (KEV) - default 50 results
-      malwoverview --vulncheck 2 --VULNCHECK 50
+      malwoverview -vc 2 -VC 50
 
       # Get Known Exploited Vulnerabilities (KEV) - 100 results
-      malwoverview --vulncheck 2 --VULNCHECK 100
+      malwoverview -vc 2 -VC 100
 
       # Search for a specific CVE in KEV database
-      malwoverview --vulncheck 3 --VULNCHECK CVE-2021-44228
+      malwoverview -vc 3 -VC CVE-2021-44228
 
       # Search for a specific CVE in KEV database 
-      malwoverview --vulncheck 3 --VULNCHECK CVE-2022-22965
+      malwoverview -vc 3 -VC CVE-2022-22965
 
       # Get backup download link for VulnCheck KEV dataset
-      malwoverview --vulncheck 4
+      malwoverview -vc 4
+
+      # List recent CVEs from MITRE database - default 50 results
+      malwoverview -vc 5
+
+      # List recent CVEs from MITRE database - 100 results
+      malwoverview -vc 5 -VC 100
+
+      # List recent CVEs from NIST NVD2 database - default 50 results
+      malwoverview -vc 6
+
+      # List recent CVEs from NIST NVD2 database - 100 results
+      malwoverview -vc 6 -VC 100
+
+      # Search for specific CVE in MITRE database (official CVE records)
+      malwoverview -vc 7 -VC CVE-2024-21412
+
+      # Search for specific CVE in NIST NVD2 (CVSS scores, CWE, CISA KEV status)
+      malwoverview -vc 8 -VC CVE-2024-21412
 
 ## HISTORY
 
