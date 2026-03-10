@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v7.0) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v7.1) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [<img alt="Downloads/Last Month" src="https://img.shields.io/pypi/dm/malwoverview?color=blue&style=for-the-badge&label=Last%20Month">](https://pypistats.org/packages/malwoverview)
@@ -42,7 +42,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-## Current Version: 7.0
+## Current Version: 7.1
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -94,7 +94,8 @@ This tool aims to :
 31. Retrieve information about a given IP address from BGPView service.
 32. Retrieve combined information about a given IP address from multiple services.
 33. Offer extra option to save any downloaded file to a central location.
-34. List and search vulnerabilities from NIST through different criterias. 
+34. List and search vulnerabilities from NIST through different criterias.
+35. Query VulnCheck KEV (Known Exploited Vulnerabilities) database - Community/Free tier. 
 
 ## CONTRIBUTORS
 
@@ -153,7 +154,7 @@ AFTER having installed Malwoverview:
 It is possible to start using Malwoverview does without inserting all APIs. However, 
 to use all options of Malwoverview, you must insert the respective API of the following services:
 VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm, Alien Vault, Malpedia, Triage, 
-APInfo, Malware Bazaar and ThreatFox into the .malwapi.conf configuration file, which 
+APInfo, Malware Bazaar, ThreatFox and VulnCheck into the .malwapi.conf configuration file, which 
 must be present (or created) in the home directory (/home/[username]
 or /root on Linux, and C:\Users\[username] on Windows. Alternatively, users can create 
 a custom configuration file and indicate it by using the -c option.
@@ -199,6 +200,9 @@ The .malwapi.conf configuration file has the following format:
       [THREATFOX]
       THREATFOXAPI = 
 
+      [VULNCHECK]
+      VULNCHECKAPI =
+
       [URLHAUS]
       URLHAUSAPI =
 
@@ -216,7 +220,8 @@ The APIs can be requested on the respective service websites:
 08. Malware Bazaar: https://bazaar.abuse.ch/api/#auth\_key
 09. ThreatFox: https://threatfox.abuse.ch/api/#auth\_key
 10. Triage: https://tria.ge/signup.
-11. IPInfo: https://ipinfo.io/ 
+11. IPInfo: https://ipinfo.io/
+12. VulnCheck: https://vulncheck.com/signin (Community/Free tier available) 
 12. BGPView: https://bgpview.docs.apiary.io/
 
 
@@ -334,7 +339,8 @@ usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1
 -V <argument> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> 
 -J <argument> -p <1-8> -P <argument> -y <1-5> -Y <file name> -n <1-5> 
 -N <argument> -m <1-8> -M <argument> -b <1-10> -B <argument> -x <1-7> -X <argurment> 
--ip <1-3> -IP <argument> -O <directory> --nist <1-5> --NIST <argument>
+-ip <1-3> -IP <argument> -O <directory> --nist <1-5> --NIST <argument> -vc <1-4> 
+-VC <argument>
 
 Malwoverview is a first response tool for threat hunting written by Alexandre Borges. 
 
@@ -626,6 +632,16 @@ VULNERABILITY OPTIONS:
       --startindex NUM      Pagination start index (default: 0)
       --ncves NUM           Limit output to first N CVEs
 
+      VulnCheck Database Query:
+      Query options for VulnCheck vulnerability database (Community/Free tier)
+
+      --vulncheck VULNCHECK_OPTION   Query type: 1=List available indexes, 
+                                     2=Get KEV (Known Exploited Vulnerabilities), 
+                                     3=Search specific CVE in KEV, 
+                                     4=Get KEV backup download link
+      --VULNCHECK VULNCHECK_ARG      Search value (CVE ID for option 3, 
+                                     max results for option 2, e.g., 50)
+
 ## EXAMPLES
 
 ### MALWARE OPTIONS:
@@ -783,7 +799,32 @@ VULNERABILITY OPTIONS:
       # Search for Cross-Site Scripting vulnerabilities (CWE-79)
       malwoverview --nist 5 --NIST "CWE-79" --ncves 35
 
+      # List available VulnCheck indexes (Community/Free tier)
+      malwoverview --vulncheck 1
+
+      # Get Known Exploited Vulnerabilities (KEV) - default 50 results
+      malwoverview --vulncheck 2 --VULNCHECK 50
+
+      # Get Known Exploited Vulnerabilities (KEV) - 100 results
+      malwoverview --vulncheck 2 --VULNCHECK 100
+
+      # Search for a specific CVE in KEV database
+      malwoverview --vulncheck 3 --VULNCHECK CVE-2021-44228
+
+      # Search for a specific CVE in KEV database 
+      malwoverview --vulncheck 3 --VULNCHECK CVE-2022-22965
+
+      # Get backup download link for VulnCheck KEV dataset
+      malwoverview --vulncheck 4
+
 ## HISTORY
+
+Version 7.1:
+
+      This version:
+
+            * Introduces options to list and search for vulnerabilites
+              on Vulncheck. 
 
 Version 7.0:
 
@@ -807,7 +848,8 @@ Version 6.1.1:
 
       This version:
 
-            * Modifies the code to not require to registers all APIs at the first usage.
+            * Modifies the code to not require to registers all APIs at 
+              the first usage.
             * Add a new section in the README (this file) about required APIs.
 
 Version 6.1.0:

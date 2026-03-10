@@ -21,7 +21,7 @@
 # Christian Clauss (https://github.com/cclauss)
 # Artur Marzano (https://github.com/Macmod)
 
-# Malwoverview.py: version 7.0
+# Malwoverview.py: version 7.1
 
 import os
 import argparse
@@ -45,17 +45,15 @@ from malwoverview.modules.ipinfo import IPInfoExtractor
 from malwoverview.modules.bgpview import BGPViewExtractor
 from malwoverview.modules.multipleip import MultipleIPExtractor
 from malwoverview.modules.nist import NISTExtractor
+from malwoverview.modules.vulncheck import VulnCheckExtractor
 from malwoverview.utils.colors import printr
 from malwoverview.utils.hash import calchash
 import malwoverview.modules.configvars as cv
 
-
-# On Windows systems, it is necessary to install python-magic-bin: pip install python-magic-bin
-
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2026 Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "7.0"
+__version__ = "7.1"
 __email__ = "reverseexploit at proton.me"
 
 def finish_hook(signum, frame):
@@ -76,7 +74,7 @@ def main():
         USER_HOME_DIR = str(Path.home()) + '/'
         cv.windows = 0
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is " + __version__, usage="usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> --nist <1-5> --NIST <argument> -O <output directory> -ip <1-3> -IP <IP address>")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is " + __version__, usage="usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-10> -B <arg> -x <1-7> -X <arg> --nist <1-5> --NIST <argument> -O <output directory> -ip <1-3> -IP <IP address> -vc <1-4> -VC <argument>")
     
     malware_group = parser.add_argument_group('MALWARE OPTIONS', 'Malware analysis and intelligence query options')
     malware_group.add_argument('-c', '--config', dest='config', type=str, metavar="CONFIG FILE", default=(USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s.')
@@ -116,6 +114,10 @@ def main():
     nist_group.add_argument('--rpp', dest='nistrpp', type=int, default=100, metavar="NUM", help='Results per page (default: 100, max: 2000)')
     nist_group.add_argument('--startindex', dest='niststartindex', type=int, default=0, metavar="NUM", help='Pagination start index (default: 0)')
     nist_group.add_argument('--ncves', dest='nistncves', type=int, default=None, metavar="NUM", help='Limit output to first N CVEs')
+    
+    vulncheck_group = parser.add_argument_group('  VulnCheck Database Query', 'Query options for VulnCheck vulnerability database (Community/Free tier)')
+    vulncheck_group.add_argument('-vc', '--vulncheck', dest='vulncheckoption', type=int, default=0, metavar="VULNCHECK_OPTION", help='Query type: 1=List available indexes, 2=Get KEV (Known Exploited Vulnerabilities), 3=Search specific CVE in KEV, 4=Get KEV backup download link')
+    vulncheck_group.add_argument('-VC', '--VULNCHECK', dest='vulncheckarg', type=str, metavar="VULNCHECK_ARG", help='Search value (CVE ID for option 3, max results for option 2, e.g., 50)')
 
     args = parser.parse_args()
 
@@ -140,6 +142,7 @@ def main():
     IPINFOAPI = getoption('IPINFO', 'IPINFOAPI')
     BAZAARAPI = getoption('BAZAAR', 'BAZAARAPI')
     THREATFOXAPI = getoption('THREATFOX', 'THREATFOXAPI')
+    VULNCHECKAPI = getoption('VULNCHECK', 'VULNCHECKAPI')
 
     optval = range(2)
     optval1 = range(3)
@@ -185,6 +188,8 @@ def main():
     nistrpp = args.nistrpp
     niststartindex = args.niststartindex
     nistncves = args.nistncves
+    vulncheckoption = args.vulncheckoption
+    vulncheckarg = args.vulncheckarg
     config = args.config
 
     ffpname = ''
@@ -198,7 +203,6 @@ def main():
         fprovided = 1
 
     INVALID_ARG_CONDITIONS = [
-#        (virustotaloptionx in range(1, 5) or haoptionx in range(1, 6)) and fprovided == 0,
         args.haoption not in optval10,
         args.alienvault not in optval5,
         args.hausoption not in optval8,
@@ -220,18 +224,15 @@ def main():
         haargx, mallist, args.malsharehash, args.hausoption, polyoptionx, polyargx,
         androidoptionx, androidargx, alienx, alienargsx, malpediaargx,
         malpediax, bazaarx, bazaarargx, triagex, triageargx, ipoptionx, ipargx,
-        nistoption and nistarg
+        nistoption and nistarg,
+        vulncheckoption
     ]
 
-    # Show the help message if:
-    # 1 - User uses invalid arg values
-    # 2 - User does not specify any of the minimum options required
     if any(INVALID_ARG_CONDITIONS) or not any(MIN_OPTIONS):
         parser.print_help()
         printr()
         exit(0)
 
-    # Module objects
     polyswarm = PolyswarmExtractor(POLYAPI)
     alien = AlienVaultExtractor(ALIENAPI)
     bazaar = BazaarExtractor(BAZAARAPI)
@@ -252,18 +253,15 @@ def main():
         }
     )
     nist = NISTExtractor()
+    vulncheck = VulnCheckExtractor(VULNCHECKAPI)
 
-    # Special parameters for hybrid analysis module
     query = haargx
     if haoptionx in range(6) and haargx and os.path.isfile(haargx):
         query = calchash(haargx)
 
     def ha_show_and_down(haargx, xx=0):
-#        hybrid.hashow(haargx, xx=xx)
         hybrid.downhash(haargx)
 
-    # Map from flags to actions that they specify
-    # and parameters to be used with each method call
     OPTIONS_MAPS = [
         {
             'flag': polyoptionx,
@@ -427,10 +425,18 @@ def main():
                 5: (lambda: nist.query_cve(5, nistarg, nistrpp, niststartindex, nisttime), [])
             },
             'process_results': True
+        },
+        {
+            'flag': vulncheckoption,
+            'actions': {
+                1: (vulncheck.vulncheck_list_indexes, []),
+                2: (vulncheck.vulncheck_kev, [int(vulncheckarg) if vulncheckarg and vulncheckarg.isdigit() else 50]),
+                3: (vulncheck.vulncheck_cve_search, [vulncheckarg]),
+                4: (vulncheck.vulncheck_backup_kev, [])
+            }
         }
     ]
 
-    # Dispatch the first selected action with the specified parameters
     for option_map in OPTIONS_MAPS:
         flag = option_map['flag']
         actions = option_map['actions']
