@@ -523,7 +523,7 @@ class VulnCheckExtractor():
 
             response = requestsession.get(
                 url=f'{self.base_url}/index/mitre-cvelist-v5',
-                params={'size': max_results, 'limit': max_results},
+                params={'size': max_results, 'limit': max_results, 'sort': 'date_added', 'order': 'desc'},
                 timeout=30
             )
 
