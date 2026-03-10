@@ -21,7 +21,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 7.1
+# Malwoverview.py: version 7.1.1
 
 import os
 import argparse
@@ -53,7 +53,7 @@ import malwoverview.modules.configvars as cv
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2026 Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "7.1"
+__version__ = "7.1.1"
 __email__ = "reverseexploit at proton.me"
 
 def finish_hook(signum, frame):
