@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v7.1.1) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v7.1.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [<img alt="Downloads/Last Month" src="https://img.shields.io/pypi/dm/malwoverview?color=blue&style=for-the-badge&label=Last%20Month">](https://pypistats.org/packages/malwoverview)
@@ -44,7 +44,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-## Current Version: 7.1.1
+## Current Version: 7.1.2
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -843,12 +843,30 @@ VULNERABILITY OPTIONS:
 
 ## HISTORY
 
+Version 7.1.2:
+
+      This version:
+
+            * Fixes resource leak - file handles (5 locations) - files opened 
+              without context managers in hash.py (sha256hash, md5hash), 
+              hybrid.py (file upload), virustotal.py (2 locations), and 
+              triage.py (file upload).
+            * Fixes URL injection/SSRF in alienvault.py (3 locations) - user input 
+              for domain, file, and URL indicators not URL-encoded.
+            * Fixes URL injection/SSRF in malpedia.py (4 locations) - user input 
+              for actor, family, sample, and yara endpoints not URL-encoded.
+            * Improves IP validation in bgpview.py - adds ipaddress.ip_address() 
+              validation to prevent injection attacks.
+            * Fixes bare except clauses (3 locations) - bgpview.py, vulncheck.py, 
+              nist.py now use except Exception: to avoid catching KeyboardInterrupt 
+              and SystemExit.
+
 Version 7.1.1:
 
       This version:
 
             * Fixes path traversal vulnerability (9 locations) - user-controlled 
-              filenames not sanitized.
+              filenames not sanitized in malpedia.py.
             * Fixes URL injection/SSRF in triage.py - user input inserted directly 
               into URLs without encoding.
             * Fixes incomplete URL encoding in triage.py - applies quote() to all 
@@ -857,19 +875,12 @@ Version 7.1.1:
               validated, API token moved to Authorization header.
             * Improves IP validation in ipinfo.py - replaces permissive regex with 
               stdlib ipaddress.ip_address() for proper validation.
-            * Fixes URL injection/SSRF in alienvault.py (3 locations) - user input 
-              for domain, file, and URL indicators not URL-encoded.
-            * Fixes URL injection/SSRF in malpedia.py (4 locations) - user input 
-              for actor, family, sample, and yara endpoints not URL-encoded.
-            * Improves IP validation in bgpview.py - adds ipaddress.ip_address() 
-              validation to prevent injection attacks.
             * Fixes subprocess injection in android.py - unsanitized paths passed 
               to ADB shell commands.
             * Strengthens Android path validation - replaces incomplete metacharacter 
               blocklist with secure allowlist (permits only /a-zA-Z0-9._-).
-            * Fixes resource leak - file handles (14 locations) - files opened 
-              without context managers in hash.py, hybrid.py, virustotal.py (2), 
-              triage.py, and malpedia.py (9 previous).
+            * Fixes resource leak - file handles (9 locations) - files opened 
+              without context managers in malpedia.py.
             * Fixes unsafe HTTP redirects (4 locations) - allow_redirects=True 
               allowed redirect to attacker-controlled URLs.
             * Fixes unbounded response size (4 locations) - no size limits on 
@@ -877,9 +888,6 @@ Version 7.1.1:
             * Optimizes download performance (4 locations) - uses bytearray instead 
               of bytes concatenation to avoid O(n²) complexity.
             * Fixes missing timeout in ipinfo.py - no timeout on HTTP request.
-            * Fixes bare except clauses (3 locations) - bgpview.py, vulncheck.py, 
-              nist.py now use except Exception: to avoid catching KeyboardInterrupt 
-              and SystemExit.
             * Fixes CLI validation bug - accepted argument-only invocations.
             * Fixes Polyswarm crash - NameError when score lookup failed.
             * Fixes IPInfo error handling - wrong error structure returned.
