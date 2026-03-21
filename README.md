@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v7.1.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v8.0) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [<img alt="Downloads/Last Month" src="https://img.shields.io/pypi/dm/malwoverview?color=blue&style=for-the-badge&label=Last%20Month">](https://pypistats.org/packages/malwoverview)
@@ -29,6 +29,10 @@
 ![Alt text](pictures/picture_19.jpg?raw=true "Title")
 ![Alt text](pictures/picture_20.jpg?raw=true "Title")
 ![Alt text](pictures/picture_21.jpg?raw=true "Title")
+![Alt text](pictures/picture_22.jpg?raw=true "Title")
+![Alt text](pictures/picture_23.jpg?raw=true "Title")
+![Alt text](pictures/picture_24.jpg?raw=true "Title")
+![Alt text](pictures/picture_25.jpg?raw=true "Title")
 
       Copyright (C)  2018-2026 Alexandre Borges (https://exploitreversing.com) 
 
@@ -45,7 +49,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-## Current Version: 7.1.2
+## Current Version: 8.0 (Codename: Revolutions)
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -98,7 +102,26 @@ This tool aims to :
 32. Retrieve combined information about a given IP address from multiple services.
 33. Offer extra option to save any downloaded file to a central location.
 34. List and search vulnerabilities from NIST through different criterias.
-35. Query VulnCheck database - Community/Free tier. 
+35. Query VulnCheck database - Community/Free tier.
+36. Gather threat hunting information from Shodan using different criteria.
+37. Check IP reputation from AbuseIPDB.
+38. Check IP classification from GreyNoise (community API).
+39. Perform domain and IP Whois/RDAP lookups.
+40. Cross-service hash correlation across VirusTotal, Hybrid Analysis, Triage, and AlienVault.
+41. Batch hash check against Malware Bazaar from a file containing hashes.
+42. Batch hash check against Hybrid Analysis from a file containing hashes.
+43. Batch hash check against Triage from a file containing hashes.
+44. Directory scan against Malware Bazaar, Hybrid Analysis, and Triage.
+45. Extract IOCs (hashes, IPs, URLs, domains, CVEs) from text files.
+46. Scan files or directories with YARA rules.
+47. Interactive REPL mode for continuous threat hunting sessions.
+48. JSON and CSV structured output formats.
+49. Result caching with configurable TTL (SQLite-based).
+50. HTTP/HTTPS/SOCKS5 proxy support for all API requests.
+51. MITRE ATT&CK technique mapping for behavior reports.
+52. TUI (Text User Interface) dashboard mode with panel-based navigation.
+53. Gather threat hunting information from URLScan.io — submit URLs, retrieve scan results, and search scans.
+54. LLM-powered threat enrichment — AI-generated risk assessment, MITRE ATT&CK mapping, and analyst recommendations appended to any query result. Supports Claude, Gemini, OpenAI, and Ollama (local).
 
 ## CONTRIBUTORS
 
@@ -151,13 +174,22 @@ AFTER having installed Malwoverview:
 
 #### Note: It is recommended to save the .malwapi.conf before any update!
 
+#### Optional Features
+
+Some features require optional dependencies. Install them as needed:
+
+      * YARA scanning:       pip install malwoverview[yara]
+      * PDF report export:   pip install malwoverview[pdf]
+      * TUI dashboard:       pip install malwoverview[tui]
+      * All optional:        pip install malwoverview[all]
+
 
 ## REQUIRED APIs
 
 It is possible to start using Malwoverview does without inserting all APIs. However, 
 to use all options of Malwoverview, you must insert the respective API of the following services:
-VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm, Alien Vault, Malpedia, Triage, 
-APInfo, Malware Bazaar, ThreatFox and VulnCheck into the .malwapi.conf configuration file, which 
+VirusTotal, Hybrid Analysis, URLHaus, Malshare, Polyswarm, Alien Vault, Malpedia, Triage,
+IPInfo, Malware Bazaar, ThreatFox, VulnCheck, Shodan, AbuseIPDB, GreyNoise and URLScan.io into the .malwapi.conf configuration file, which 
 must be present (or created) in the home directory (/home/[username]
 or /root on Linux, and C:\Users\[username] on Windows. Alternatively, users can create 
 a custom configuration file and indicate it by using the -c option.
@@ -209,6 +241,27 @@ The .malwapi.conf configuration file has the following format:
       [URLHAUS]
       URLHAUSAPI =
 
+      [SHODAN]
+      SHODANAPI =
+
+      [ABUSEIPDB]
+      ABUSEIPDBAPI =
+
+      [GREYNOISE]
+      GREYNOISEAPI =
+
+      [URLSCANIO]
+      URLSCANIOAPI =
+
+      [LLM]
+      PROVIDER =
+      CLAUDE_API_KEY =
+      GEMINI_API_KEY =
+      OPENAI_API_KEY =
+      OPENAI_MODEL = gpt-4o-mini
+      OLLAMA_URL = http://localhost:11434
+      OLLAMA_MODEL = llama3.1
+
 The APIs can be requested on the respective service websites:
 
 01. Virus Total (community and paid API): https://www.virustotal.com/gui/join-us
@@ -224,8 +277,146 @@ The APIs can be requested on the respective service websites:
 09. ThreatFox: https://threatfox.abuse.ch/api/#auth\_key
 10. Triage: https://tria.ge/signup.
 11. IPInfo: https://ipinfo.io/
-12. VulnCheck: https://vulncheck.com/signin (Community/Free tier available) 
-12. BGPView: https://bgpview.docs.apiary.io/
+12. VulnCheck: https://vulncheck.com/signin (Community/Free tier available)
+13. BGPView: https://bgpview.docs.apiary.io/
+14. Shodan: https://account.shodan.io/register
+15. AbuseIPDB: https://www.abuseipdb.com/register
+16. GreyNoise: https://viz.greynoise.io/signup
+17. URLScan.io: https://urlscan.io/user/signup
+
+#### LLM Enrichment Providers (optional)
+
+Malwoverview supports LLM-powered threat enrichment via the --enrich flag.
+After any query, an AI-generated threat assessment is appended with risk level,
+malware family identification, MITRE ATT&CK mapping, and analyst recommendations.
+
+Three providers are supported. Configure one in the [LLM] section of .malwapi.conf:
+
+**18. Anthropic Claude (paid, best quality)**
+
+      Best results for threat intelligence analysis. Accurately identifies malware
+      families, maps precise MITRE ATT&CK techniques, and provides actionable
+      recommendations based on real threat knowledge.
+
+      Setup:
+      a) Create an API account at https://console.anthropic.com/ (separate from
+         claude.ai subscription)
+      b) Go to Settings → Billing → Add credit ($5 minimum, pay-per-use)
+      c) Go to Settings → API Keys → Create Key
+      d) Copy the key (starts with sk-ant-api03-...)
+      e) Configure .malwapi.conf:
+
+            [LLM]
+            PROVIDER = claude
+            CLAUDE_API_KEY = sk-ant-api03-your-key-here
+
+      Cost: ~$0.01-0.02 per enrichment call using Sonnet model. $5 credit provides
+      approximately 250-500 enrichment calls.
+
+**19. Google Gemini (requires billing)**
+
+      Good quality results. Requires a Google Cloud billing account.
+
+      Setup:
+      a) Go to https://aistudio.google.com/apikeys
+      b) Sign in with Google account
+      c) Click Create API Key → copy the key
+      d) Enable billing: click the project link next to your key → Google Cloud
+         Console → Billing → Link a billing account
+      e) Configure .malwapi.conf:
+
+            [LLM]
+            PROVIDER = gemini
+            GEMINI_API_KEY = your-gemini-key-here
+            GEMINI_MODEL = gemini-2.0-flash
+
+      Note: The free tier has a low rate limit (2-5 requests per minute). For
+      higher limits, enable pay-per-use billing.
+
+**20. OpenAI (paid)**
+
+      Good quality results using GPT models. Requires an OpenAI account with
+      API credits.
+
+      Setup:
+      a) Create an account at https://platform.openai.com/signup
+      b) Go to https://platform.openai.com/api-keys → Create new secret key
+      c) Add billing at https://platform.openai.com/settings/organization/billing
+      d) Configure .malwapi.conf:
+
+            [LLM]
+            PROVIDER = openai
+            OPENAI_API_KEY = sk-your-key-here
+            OPENAI_MODEL = gpt-4o-mini
+
+      Available models:
+      - gpt-4o-mini  — Cheapest (~$0.002 per enrichment), good quality (default)
+      - gpt-4o       — Better quality (~$0.01 per enrichment)
+
+**21. Ollama (free, local, private)**
+
+      Runs entirely on your machine. No API key needed, no data leaves your
+      system. Good for environments where sending threat data to cloud APIs
+      is not permitted. Quality depends on the model chosen.
+
+      Setup:
+      a) Download and install Ollama from https://ollama.com/download
+         (available for Windows, Linux, and macOS)
+      b) Open a terminal and pull a model:
+
+            ollama pull qwen2.5:14b
+
+         Recommended models:
+         - qwen2.5:14b  — Best quality at reasonable size (9 GB, needs 16 GB RAM)
+         - llama3.1:8b  — Good quality, smaller (5 GB, needs 8 GB RAM)
+         - llama3.1:70b — Excellent quality, large (40 GB, needs 48 GB RAM)
+
+      c) Ollama starts automatically and serves on http://localhost:11434
+      d) Configure .malwapi.conf:
+
+            [LLM]
+            PROVIDER = ollama
+            OLLAMA_URL = http://localhost:11434
+            OLLAMA_MODEL = qwen2.5:14b
+
+      Performance: GPU with 12+ GB VRAM provides fast responses (5-10s).
+      CPU-only is slower (30-60s) but functional. Larger models (14b, 70b)
+      require more VRAM and may timeout on CPU if insufficient memory is
+      available. The llama3.1:8b model is recommended for machines with
+      limited GPU memory (6 GB or less).
+
+Expected response times:
+
+      - Claude API:  3-8 seconds
+      - Gemini API:  3-8 seconds
+      - Ollama (GPU with sufficient VRAM): 5-15 seconds
+      - Ollama (CPU-only, 8b model): 30-60 seconds
+      - Ollama (CPU-only, 14b+ model): 60-300 seconds
+
+Usage examples:
+
+      # CLI: append --enrich to any query
+      malwoverview -v 8 -V <hash> --enrich
+      malwoverview -ip 1 -IP 8.8.8.8 --enrich
+      malwoverview --correlate-hash <hash> --enrich
+
+      # Interactive REPL: toggle enrichment on/off or switch provider
+      malwoverview --interactive
+      malwoverview> set enrich on                    # use provider from config
+      malwoverview> set enrich claude                # switch to Claude
+      malwoverview> set enrich ollama                # switch to Ollama
+      malwoverview> set enrich openai                # switch to OpenAI
+      malwoverview> set enrich off                   # disable enrichment
+      malwoverview> vt hash <hash>                   # malware analysis + enrichment
+      malwoverview> nist cve CVE-2024-3400           # CVE lookup + enrichment
+      malwoverview> vulncheck cve CVE-2024-3400      # VulnCheck + enrichment
+
+      # TUI: click the Enrich button to cycle through providers
+      #   Enrich (OFF) → claude → gemini → openai → ollama → OFF
+      #   Green button  = provider active and configured
+      #   Yellow button = provider selected but API key missing
+      #   Default button = enrichment disabled
+      malwoverview --tui
 
 
 ----------------------------------------------------
@@ -339,11 +530,14 @@ Python 2.7)
 ## HELP
 
 usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13>
--V <argument> -a <1-15> -w <0|1> -A <filename> -l <1-7> -L <hash> -j <1-7> 
--J <argument> -p <1-8> -P <argument> -y <1-5> -Y <file name> -n <1-5> 
--N <argument> -m <1-8> -M <argument> -b <1-10> -B <argument> -x <1-7> -X <argurment> 
--ip <1-3> -IP <argument> -O <directory> --nist <1-5> --NIST <argument> -vc <1-8> 
--VC <argument>
+-V <argument> -a <1-17> -A <filename> -l <1-7> -L <hash> -j <1-7>
+-J <argument> -p <1-8> -P <argument> -y <1-5> -Y <file name> -n <1-5>
+-N <argument> -m <1-8> -M <argument> -b <1-12> -B <argument> -x <1-9> -X <argument>
+-ip <1-7> -IP <argument> -O <directory> --nist <1-5> --NIST <argument> -vc <1-8>
+-VC <argument> -s <1-2> -S <argument> -ab <1> -AB <argument> -gn <1> -GN <argument>
+-wh <1-2> -WH <argument> -u <1-5> -U <arg> --correlate-hash <hash> --extract-iocs <file|url> --yara <rules>
+--yara-target <target> --output-format text|json|csv --proxy <url> --quiet --verbose
+--no-cache --cache-ttl <seconds> --report html|pdf --interactive --attack-map
 
 Malwoverview is a first response tool for threat hunting written by Alexandre Borges. 
 
@@ -392,7 +586,13 @@ MALWARE OPTIONS:
 
 	-V VIRUSTOTAL_ARG, --virustotal_arg VIRUSTOTAL_ARG
 	
-		+ Provides arguments for -v option.
+		+ Provides argument for -v option. If "-v 1" to "-v 4" then -V must be
+		a file path; If "-v 5" then -V must be a URL; If "-v 6" then -V must
+		be an IP address; If "-v 7" then -V must be a domain; If "-v 8" then
+		-V must be a hash (MD5/SHA1/SHA256); If "-v 9" or "-v 13" then -V must
+		be a file path to submit; If "-v 10" or "-v 11" then -V must be a file
+		containing hashes (one per line); If "-v 12" then -V must be a hash for
+		behavior analysis.
 
 	-a HYBRID_ANALYSIS, --hybrid_option HYBRID_ANALYSIS
 	
@@ -415,10 +615,19 @@ MALWARE OPTIONS:
 			+ 13. downloads a sample from a Windows 7 64-bit environment; 
 			+ 14. downloads a sample from an Android environment; 
 			+ 15. downloads a sample from a Linux 64-bit environment.
-			
+			+ 16: batch hash check from a file (one hash per line) against
+			Hybrid Analysis;
+			+ 17: directory scan — computes SHA256 for each file in a directory
+			and checks against Hybrid Analysis.
+
 	-A SUBMIT_HA, --ha_arg SUBMIT_HA
 	
-		+ Provides an argument for -a option from HYBRID ANALYSIS.
+		+ Provides argument for -a option from HYBRID ANALYSIS. If "-a 1" to
+		"-a 5" then -A must be a hash or a file path (auto-detected); If "-a 6"
+		to "-a 10" then -A must be a file path to submit; If "-a 11" to "-a 15"
+		then -A must be a hash to download; If "-a 16" then -A must be a file
+		containing hashes (one per line); If "-a 17" then -A must be a directory
+		path to scan.
 
 	-D VT_PUBLIC_PREMIUM, --vtpubpremium VT_PUBLIC_PREMIUM
 	
@@ -458,7 +667,11 @@ MALWARE OPTIONS:
 
 	-J HAUS_ARG, --haus_arg HAUS_ARG
 	
-		+ Provides argument to -j option from URLHaus.
+		+ Provides argument for -j option from URLHaus. If "-j 1" then -J must
+		be a SHA256 hash to download the sample; If "-j 2" then -J must be a
+		hash (MD5/SHA1/SHA256) to search; If "-j 3" then -J must be a URL to
+		check; If "-j 4" then -J must be a tag (case sensitive); If "-j 5" then
+		-J must be a signature name.
 
 	-p POLY_OPTION, --poly_option POLY_OPTION
 	
@@ -511,7 +724,10 @@ MALWARE OPTIONS:
 
 	-N ALIENVAULT_ARGS, --alienvaultargs ALIENVAULT_ARGS
 	
-		+ Provides argument to ALIENVAULT -n option.
+		+ Provides argument for -n option from ALIENVAULT. If "-n 1" then -N
+		must be the number of subscribed pulses to retrieve; If "-n 2" then -N
+		must be an IP address; If "-n 3" then -N must be a domain; If "-n 4"
+		then -N must be a hash (MD5/SHA256); If "-n 5" then -N must be a URL.
 
 	-m MALPEDIA, --malpedia MALPEDIA
 	
@@ -534,7 +750,11 @@ MALWARE OPTIONS:
 
 	-M MALPEDIAARG, --malpediarg MALPEDIAARG
 	
-		+ This option provides an argument to the -m option, which is related to MALPEDIA.
+		+ Provides argument for -m option from MALPEDIA. If "-m 4" then -M must
+		be an actor name (confirm with -m 2); If "-m 6" then -M must be a
+		family name (confirm with -m 5); If "-m 7" then -M must be a hash to
+		download the sample; If "-m 8" then -M must be a family name to get
+		YARA rules.
 
 	-b BAZAAR, --bazaar BAZAAR
 	
@@ -555,6 +775,10 @@ MALWARE OPTIONS:
 			+ 9: (ThreatFox) Search IOCs according to the specified malware family provided by 
 			option -B; 
 			+ 10. (ThreatFox) List all available malware families.
+			+ 11: (Bazaar) Batch hash check from a file (one hash per line)
+			against Malware Bazaar;
+			+ 12: (Bazaar) Directory scan — computes SHA256 for each file in a
+			directory and checks against Malware Bazaar.
 
 	-B BAZAAR_ARG, --bazaararg BAZAAR_ARG
 	
@@ -599,11 +823,21 @@ MALWARE OPTIONS:
 			+ 5: Download sample specified by the Triage ID; 
 			+ 6: Download pcapng file from sample associated to given Triage ID; 
 			+ 7: Get a dynamic report for the given Triage ID (got from option -x 1);
+			+ 8: Batch hash check from a file (one hash per line) against Triage;
+			+ 9: Directory scan — computes SHA256 for each file in a directory
+			and checks against Triage.
 
 	-X TRIAGE_ARG, --triagearg TRIAGE_ARG
 	
-		+ Provides argument for options especified by -x option. Pay attention: 
-		the format of this argument depends on provided -x value.
+		+ Provides argument for -x option from TRIAGE. If "-x 1" then -X must
+		be a search query (e.g., sha256:<hash>, family:<name>, tag:<tag>,
+		ip:<ip>); If "-x 2" then -X must be a Triage sample ID (obtained from
+		-x 1); If "-x 3" then -X must be a file path to submit; If "-x 4"
+		then -X must be a URL to submit; If "-x 5" or "-x 6" then -X must be
+		a Triage sample ID to download; If "-x 7" then -X must be a Triage
+		sample ID for dynamic report; If "-x 8" then -X must be a file
+		containing hashes (one per line); If "-x 9" then -X must be a directory
+		path to scan.
 
       -O OUTPUTDIR, --output-dir OUTPUTDIR
             
@@ -611,15 +845,168 @@ MALWARE OPTIONS:
       
       -ip IP, --ip IP
 
-      + Get IP information from various sources. The possible values are: 
-            + 1: Get details for an IP address provided with -IP from IPInfo; 
-            + 2: Get details for an IP address provided with -IP from BGPView; 
-            + 3: Get details for an IP address provided with -IP from all 
-            available intel services (VirusTotal/Alienvault).
-      
+      + Get IP information from various sources. The possible values are:
+            + 1: Get details for an IP address provided with -IP from IPInfo;
+            + 2: Get details for an IP address provided with -IP from BGPView;
+            + 3: Get details for an IP address provided with -IP from all
+            available intel services (VirusTotal/Alienvault);
+            + 4: Get details for an IP address from Shodan;
+            + 5: Get details for an IP address from AbuseIPDB;
+            + 6: Get details for an IP address from GreyNoise;
+            + 7: Get details for an IP address from all services (comprehensive).
+
       -IP IPARG, --iparg IPARG
-            
-            + Provides argument for IP lookup operations specified by the -ip option.
+
+            + Provides an IP address (IPv4 or IPv6) for the -ip option. All -ip
+            options (1 through 7) require a valid IP address.
+
+	-s SHODAN, --shodan SHODAN
+
+		+ SHODAN options:
+			+ 1: IP lookup;
+			+ 2: Search query.
+
+	-S SHODAN_ARG, --shodanarg SHODAN_ARG
+
+		+ Provides argument for -s option from SHODAN. If "-s 1" then -S must
+		be an IP address; If "-s 2" then -S must be a search query (e.g.,
+		"apache", "port:22 country:BR").
+
+	-ab ABUSEIPDB, --abuseipdb ABUSEIPDB
+
+		+ ABUSEIPDB options:
+			+ 1: Check IP reputation.
+
+	-AB ABUSEIPDB_ARG, --abuseipdbarg ABUSEIPDB_ARG
+
+		+ Provides an IP address for -ab option from ABUSEIPDB.
+
+	-gn GREYNOISE, --greynoise GREYNOISE
+
+		+ GREYNOISE options:
+			+ 1: Quick IP check (community API).
+
+	-GN GREYNOISE_ARG, --greynoisearg GREYNOISE_ARG
+
+		+ Provides an IP address for -gn option from GREYNOISE.
+
+	-wh WHOIS, --whois WHOIS
+
+		+ WHOIS options:
+			+ 1: Domain whois lookup;
+			+ 2: IP whois/RDAP lookup.
+
+	-WH WHOIS_ARG, --whoisarg WHOIS_ARG
+
+		+ Provides argument for -wh option from WHOIS. If "-wh 1" then -WH must
+		be a domain name; If "-wh 2" then -WH must be an IP address.
+
+	-u URLSCANIO, --urlscanio URLSCANIO
+
+		+ URLSCAN.IO options:
+			+ 1: Submit a URL for scanning;
+			+ 2: Get scan result by UUID;
+			+ 3: Search scans using Elasticsearch query syntax
+			(e.g., "page.server:nginx", "task.tags:phishing");
+			+ 4: Search scans by domain;
+			+ 5: Search scans by IP.
+
+	-U URLSCANIO_ARG, --urlscanioarg URLSCANIO_ARG
+
+		+ Provides argument for -u option from URLSCAN.IO. If "-u 1" then -U
+		must be a URL to submit for scanning; If "-u 2" then -U must be a UUID
+		(obtained from -u 1); If "-u 3" then -U must be an Elasticsearch query
+		(e.g., "page.server:nginx", "task.tags:phishing"); If "-u 4" then -U
+		must be a domain; If "-u 5" then -U must be an IP address.
+
+	--correlate-hash HASH
+
+		+ Cross-service hash correlation: queries a hash across VirusTotal,
+		Hybrid Analysis, Triage, and AlienVault producing a consolidated report.
+
+	--extract-iocs SOURCE
+
+		+ Extract IOCs (hashes, IPs, URLs, domains, emails, CVEs) from a file
+		(.txt, .pdf, .eml) or URL (http/https).
+		PDF extraction requires: pip install malwoverview[pdf]
+
+	--yara RULES_FILE
+
+		+ YARA rules file to use for scanning. Must be used with --yara-target.
+		Requires: pip install malwoverview[yara]
+
+	--yara-target TARGET
+
+		+ File or directory to scan with YARA rules.
+
+	--attack-map
+
+		+ Enable MITRE ATT&CK technique mapping for behavior reports.
+
+GENERAL OPTIONS:
+  Output format, proxy, cache, and verbosity options
+
+	--output-format text|json|csv
+
+		+ Output format: text (default, colored terminal), json, or csv.
+
+	--proxy URL
+
+		+ HTTP/HTTPS/SOCKS5 proxy URL (e.g., socks5://127.0.0.1:9050).
+
+	--quiet
+
+		+ Suppress banner and cosmetic output.
+
+	--verbose
+
+		+ Show debug information (request URLs, timing, etc.).
+
+	--no-cache
+
+		+ Disable result caching.
+
+	--cache-ttl SECONDS
+
+		+ Cache time-to-live in seconds (default: 3600).
+
+	--report html|pdf
+
+		+ Generate a report in the specified format.
+		PDF export requires: pip install malwoverview[pdf]
+
+	--report-file PATH
+
+		+ Output path for the generated report.
+
+	--interactive
+
+		+ Launch interactive REPL mode.
+
+	--tui
+
+		+ Launch TUI (Text User Interface) dashboard mode with service selector,
+		query input, and scrollable results panel. Requires: pip install malwoverview[tui]
+
+	--enrich
+
+		+ Enable LLM enrichment of results. Appends an AI-generated threat assessment
+		after each query result. Works with all query types including malware hash
+		lookups, IP reputation checks, CVE searches (NIST and VulnCheck), and
+		cross-service correlation. Uses the provider configured in .malwapi.conf
+		[LLM] section, or overridden with --llm. Supported providers:
+		  - claude:  Anthropic Claude API (best quality, paid)
+		  - gemini:  Google Gemini API (requires billing)
+		  - openai:  OpenAI API (paid, GPT models)
+		  - ollama:  Local Ollama instance (free, private)
+
+	--llm PROVIDER
+
+		+ Override the LLM provider for enrichment (use with --enrich).
+		  Examples:
+		    malwoverview -v 8 -V <hash> --enrich --llm claude
+		    malwoverview --nist 2 --NIST CVE-2024-3400 --enrich --llm claude
+		    malwoverview -vc 3 -VC CVE-2024-3400 --enrich --llm ollama
 
 VULNERABILITY OPTIONS:
   Vulnerability database query options
@@ -648,6 +1035,56 @@ VULNERABILITY OPTIONS:
                                      8=Search CVE in NIST NVD2
       --VULNCHECK VULNCHECK_ARG      Search value (CVE ID for options 3/7/8, 
                                      max results for options 2/5/6, e.g., 50)
+
+## SUBCOMMANDS
+
+Starting in version 8.0, Malwoverview supports an alternative subcommand syntax
+alongside the traditional flag-based syntax. Both syntaxes are fully supported
+and produce identical results.
+
+Available subcommands:
+
+      vt          VirusTotal operations (file, av, hash, url, ip, domain, submit, behavior, batch)
+      ha          Hybrid Analysis operations (report, submit, download, batch, dir)
+      bazaar      Malware Bazaar operations (hash, tag, download, batch, dir)
+      triage      Triage operations (search, summary, submit, dynamic, batch, dir)
+      urlhaus     URLHaus operations (hash, url, tag, download)
+      ip          IP address lookups (info, bgp, shodan, abuse, greynoise, all)
+      whois       Whois/RDAP lookups (domain, ip)
+      shodan      Shodan operations (ip, search)
+      urlscanio   URLScan.io operations (submit, result, search, domain, ip)
+      correlate   Cross-service correlation (hash)
+      extract     IOC extraction from files or URLs
+      yara        YARA rule scanning
+      nist        NIST CVE database queries
+      vulncheck   VulnCheck database queries
+
+Subcommand examples (equivalent to flag-based syntax):
+
+      # These pairs are equivalent:
+      malwoverview vt hash <sha256>                     # same as: malwoverview -v 8 -V <sha256>
+      malwoverview vt behavior <sha256>                 # same as: malwoverview -v 12 -V <sha256>
+      malwoverview ha report <hash> --env 3             # same as: malwoverview -a 3 -A <hash>
+      malwoverview ha batch <hashfile>                  # same as: malwoverview -a 16 -A <hashfile>
+      malwoverview bazaar hash <sha256>                 # same as: malwoverview -b 1 -B <sha256>
+      malwoverview bazaar batch <hashfile>              # same as: malwoverview -b 11 -B <hashfile>
+      malwoverview bazaar dir <directory>               # same as: malwoverview -b 12 -B <directory>
+      malwoverview triage search sha256:<value>         # same as: malwoverview -x 1 -X sha256:<value>
+      malwoverview triage batch <hashfile>              # same as: malwoverview -x 8 -X <hashfile>
+      malwoverview ip all <ipaddr>                      # same as: malwoverview -ip 7 -IP <ipaddr>
+      malwoverview ip shodan <ipaddr>                   # same as: malwoverview -ip 4 -IP <ipaddr>
+      malwoverview whois domain <domain>                # same as: malwoverview -wh 1 -WH <domain>
+      malwoverview correlate hash <sha256>              # same as: malwoverview --correlate-hash <sha256>
+      malwoverview extract <file|url>                    # same as: malwoverview --extract-iocs <file|url>
+      malwoverview yara <rules> <target>                # same as: malwoverview --yara <rules> --yara-target <target>
+      malwoverview nist 2 CVE-2021-44228               # same as: malwoverview --nist 2 --NIST CVE-2021-44228
+
+Use --help with any subcommand for details:
+
+      malwoverview vt --help
+      malwoverview ip --help
+      malwoverview ha report --help
+
 
 ## EXAMPLES
 
@@ -748,7 +1185,135 @@ VULNERABILITY OPTIONS:
       malwoverview -ip 1 -IP 8.8.8.8
       malwoverview -ip 2 -IP 8.8.8.8
       malwoverview -ip 3 -IP 8.8.8.8
-      malwoverview -b 5 -B <hash> -O <directory> 
+      malwoverview -b 5 -B <hash> -O <directory>
+      malwoverview -b 11 -B /home/remnux/malware/hash_list.txt
+      malwoverview -b 12 -B /home/remnux/malware/samples/
+      malwoverview -a 16 -A /home/remnux/malware/hash_list.txt
+      malwoverview -a 17 -A /home/remnux/malware/samples/
+      malwoverview -x 8 -X /home/remnux/malware/hash_list.txt
+      malwoverview -x 9 -X /home/remnux/malware/samples/
+      malwoverview -ip 4 -IP 8.8.8.8
+      malwoverview -ip 5 -IP 8.8.8.8
+      malwoverview -ip 6 -IP 8.8.8.8
+      malwoverview -ip 7 -IP 8.8.8.8
+      malwoverview -s 1 -S 8.8.8.8
+      malwoverview -s 2 -S "apache"
+      malwoverview -ab 1 -AB 185.220.100.243
+      malwoverview -gn 1 -GN 185.220.100.243
+      malwoverview -wh 1 -WH example.com
+      malwoverview -wh 2 -WH 8.8.8.8
+      malwoverview -u 1 -U https://example.com
+      malwoverview -u 2 -U 019ce889-ab8d-768b-894e-3e5bf5401f8d
+      malwoverview -u 3 -U task.tags:phishing
+      malwoverview -u 4 -U example.com
+      malwoverview -u 5 -U 8.8.8.8
+      malwoverview --correlate-hash ab4d6a82cafc92825a0b88183325855f0c44920da970b42c949d5d5ffdcc0585
+      malwoverview --extract-iocs /home/remnux/malware/report.txt
+      malwoverview --extract-iocs /home/remnux/malware/report.pdf
+      malwoverview --extract-iocs https://example.com/threat-report.html
+      malwoverview --yara /home/remnux/rules/malware.yar --yara-target /home/remnux/malware/samples/
+      malwoverview --interactive
+      malwoverview --tui
+      malwoverview -v 8 -V <hash> --output-format json
+      malwoverview -ip 3 -IP 8.8.8.8 --proxy socks5://127.0.0.1:9050
+      malwoverview -v 12 -V <hash> --attack-map
+
+      # LLM enrichment (append AI threat assessment to any query)
+      malwoverview -v 8 -V <hash> --enrich                    # uses provider from config
+      malwoverview -v 8 -V <hash> --enrich --llm claude       # override: use Claude
+      malwoverview -v 8 -V <hash> --enrich --llm ollama       # override: use Ollama
+      malwoverview -v 8 -V <hash> --enrich --llm openai       # override: use OpenAI
+      malwoverview -ip 1 -IP 8.8.8.8 --enrich
+      malwoverview --correlate-hash <hash> --enrich
+      malwoverview --nist 2 --NIST CVE-2024-3400 --enrich     # CVE enrichment (NIST)
+      malwoverview -vc 3 -VC CVE-2024-3400 --enrich           # CVE enrichment (VulnCheck)
+      malwoverview --nist 4 --NIST palo alto --enrich          # keyword search + enrichment
+
+### SUBCOMMAND SYNTAX (alternative to flags):
+
+      # VirusTotal
+      malwoverview vt hash ab4d6a82cafc92825a0b88183325855f0c44920da970b42c949d5d5ffdcc0585
+      malwoverview vt file 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
+      malwoverview vt av 95a8370c36d81ea596d83892115ce6b90717396c8f657b17696c7eeb2dba1d2e.exe
+      malwoverview vt url http://jamogames.com/templates/JLHk/
+      malwoverview vt ip 185.220.100.243
+      malwoverview vt domain xurl.es
+      malwoverview vt submit cc2d791b16063a302e1ebd35c0e84e6cf6519e90bb710c958ac4e4ddceca68f7.exe
+      malwoverview vt behavior 9d26e19b8fc5819b634397d48183637bacc9e1c62d8b1856b8116141cb8b4000
+      malwoverview vt batch /home/remnux/malware/hash_list_3.txt
+      malwoverview vt batch /home/remnux/malware/hash_list_3.txt --public
+
+      # Hybrid Analysis
+      malwoverview ha report 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8
+      malwoverview ha report 2e1fcadbac81296946930fe3ba580fd0b1aca11bc8ffd7cefa19dea131274ae8 --env 3
+      malwoverview ha submit 47eccaaa672667a9cea23e24fd702f7b3a45cbf8585403586be474585fd80243.exe
+      malwoverview ha download cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
+      malwoverview ha batch /home/remnux/malware/hash_list.txt
+      malwoverview ha dir /home/remnux/malware/samples/
+
+      # Malware Bazaar
+      malwoverview bazaar hash c9d7b5d06cd8ab1a01bf0c5bf41ef2a388e41b4c66b1728494f86ed255a95d48
+      malwoverview bazaar tag Revil | more
+      malwoverview bazaar download bda50ff249b947617d9551c717e78131ed32bf77db9dc5b7591d3e1af6cb2f1a
+      malwoverview bazaar batch /home/remnux/malware/hash_list.txt
+      malwoverview bazaar dir /home/remnux/malware/samples/
+
+      # Triage
+      malwoverview triage search score:10 | more
+      malwoverview triage search sha256:71382e72d8fb3728dc8941798ab1c180493fa978fd7eadc1ab6d21dae0d603e2
+      malwoverview triage summary 220315-qxzrfsadfl
+      malwoverview triage submit cd856b20a5e67a105b220be56c361b21aff65cac00ed666862b6f96dd190775e
+      malwoverview triage dynamic 220315-xmbp7sdbel
+      malwoverview triage batch /home/remnux/malware/hash_list.txt
+      malwoverview triage dir /home/remnux/malware/samples/
+
+      # URLHaus
+      malwoverview urlhaus hash 7c99d644cf39c14208df6d139313eaf95123d569a9206939df996cfded6924a6
+      malwoverview urlhaus url https://unada.us/acme-challenge/3NXwcYNCa/
+      malwoverview urlhaus tag Qakbot
+      malwoverview urlhaus download 7c99d644cf39c14208df6d139313eaf95123d569a9206939df996cfded6924a6
+
+      # IP lookups
+      malwoverview ip info 8.8.8.8
+      malwoverview ip bgp 8.8.8.8
+      malwoverview ip shodan 8.8.8.8
+      malwoverview ip abuse 185.220.100.243
+      malwoverview ip greynoise 185.220.100.243
+      malwoverview ip all 8.8.8.8
+
+      # Shodan (standalone)
+      malwoverview shodan ip 8.8.8.8
+      malwoverview shodan search "apache"
+
+      # Whois
+      malwoverview whois domain example.com
+      malwoverview whois ip 8.8.8.8
+
+      # Cross-service correlation
+      malwoverview correlate hash ab4d6a82cafc92825a0b88183325855f0c44920da970b42c949d5d5ffdcc0585
+
+      # IOC extraction (text, PDF, email, or URL)
+      malwoverview extract /home/remnux/malware/report.txt
+      malwoverview extract /home/remnux/malware/report.pdf
+      malwoverview extract https://example.com/threat-report.html
+
+      # YARA scanning
+      malwoverview yara /home/remnux/rules/malware.yar /home/remnux/malware/samples/
+
+      # NIST CVE queries
+      malwoverview nist 1 "windows" --ncves 50
+      malwoverview nist 2 CVE-2021-44228
+      malwoverview nist 3 CRITICAL --ncves 50
+      malwoverview nist 4 "remote code execution" --ncves 50
+
+      # VulnCheck queries
+      malwoverview vulncheck 2 30
+      malwoverview vulncheck 3 CVE-2021-44228
+
+      # Subcommands combined with global options
+      malwoverview vt hash <sha256> --output-format json
+      malwoverview ip all 8.8.8.8 --proxy socks5://127.0.0.1:9050
+      malwoverview vt behavior <sha256> --attack-map
 
 ### VULNERABILITIES OPTIONS:
 
@@ -843,6 +1408,52 @@ VULNERABILITY OPTIONS:
       malwoverview -vc 8 -VC CVE-2024-21412
 
 ## HISTORY
+
+Version 8.0:
+
+      This version:
+
+            * Introduces LLM-powered threat enrichment (--enrich) with support
+              for Anthropic Claude, Google Gemini, OpenAI, and local Ollama. Provides
+              AI-generated risk assessment, MITRE ATT&CK mapping, and
+              analyst recommendations for any query result.
+            * Introduces URLScan.io integration for URL scanning, result
+              retrieval, and search queries (-u option).
+            * Introduces Shodan integration for IP lookups and search queries
+              (-s option and -ip 4).
+            * Introduces AbuseIPDB integration for IP reputation checks
+              (-ab option and -ip 5).
+            * Introduces GreyNoise integration for IP classification
+              (-gn option and -ip 6).
+            * Introduces Whois/RDAP lookups for domains and IPs (-wh option).
+            * Introduces cross-service hash correlation across VirusTotal,
+              Hybrid Analysis, Triage, and AlienVault (--correlate-hash).
+            * Introduces batch hash check for Malware Bazaar (-b 11),
+              Hybrid Analysis (-a 16), and Triage (-x 8).
+            * Introduces directory scan for Malware Bazaar (-b 12),
+              Hybrid Analysis (-a 17), and Triage (-x 9).
+            * Introduces comprehensive IP lookup across all services (-ip 7).
+            * Introduces IOC extraction from text files, PDFs, emails, and
+              URLs (--extract-iocs).
+            * Introduces YARA rule scanning with error-tolerant compilation
+              and tabular directory output (--yara / --yara-target).
+            * Introduces interactive REPL mode (--interactive).
+            * Introduces JSON and CSV structured output (--output-format).
+            * Introduces result caching with configurable TTL (--no-cache,
+              --cache-ttl).
+            * Introduces HTTP/HTTPS/SOCKS5 proxy support (--proxy).
+            * Introduces MITRE ATT&CK technique mapping (--attack-map).
+            * Introduces quiet and verbose modes (--quiet, --verbose).
+            * Introduces HTML/PDF report generation (--report).
+            * Adds centralized session factory with automatic retry logic
+              and rate-limit handling for all API requests.
+            * Adds progress bars (tqdm) for batch operations.
+            * Adds startup config validation for required API keys.
+            * Adds auto-detection of hash type (MD5/SHA1/SHA256).
+            * Introduces TUI dashboard mode (--tui) with panel-based
+              navigation using the Textual library (optional dependency).
+            * Security hardening: SSRF protection, URL parameter encoding,
+              HTTPS enforcement, rate-limit caps, secure temp files.
 
 Version 7.1.2:
 

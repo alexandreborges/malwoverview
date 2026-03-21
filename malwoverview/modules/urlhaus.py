@@ -8,6 +8,8 @@ from malwoverview.utils.utils import urltoip
 import json
 import sys
 import os
+from malwoverview.utils.session import create_session
+from malwoverview.utils.cache import cached
 
 class URLHausExtractor():
     hauss = 'https://urlhaus.abuse.ch/api/'
@@ -41,7 +43,7 @@ class URLHausExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (126 * '-').center(59))
 
-            requestsession9 = requests.Session()
+            requestsession9 = create_session()
             requestsession9.headers.update({'accept': 'application/json'})
             requestsession9.headers.update({'Auth-Key': self.URLHAUSAPI})
             params = {"signature": payloadtagx}
@@ -191,7 +193,7 @@ class URLHausExtractor():
             print("\n" + (130 * '-').center(59))
 
             params = {"tag": haustag}
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/json'})
             requestsession.headers.update({'Auth-Key': self.URLHAUSAPI})
             hausresponse = requestsession.post(hausurltag, data=params)
@@ -324,7 +326,7 @@ class URLHausExtractor():
 
         try:
             resource = hashx.strip()
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/gzip'})
             requestsession.headers.update({'Auth-Key': self.URLHAUSAPI})
             finalurl = ''.join([haus, resource])
@@ -397,7 +399,7 @@ class URLHausExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (126 * '-').center(59))
 
-            requestsession7 = requests.Session()
+            requestsession7 = create_session()
             requestsession7.headers.update({'accept': 'application/json'})
             requestsession7.headers.update({'Auth-Key': self.URLHAUSAPI})
             hausresponse = requestsession7.get(haus)
@@ -483,7 +485,7 @@ class URLHausExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (136 * '-').center(59))
 
-            requestsession8 = requests.Session()
+            requestsession8 = create_session()
             requestsession8.headers.update({'accept': 'application/json'})
             requestsession8.headers.update({'Auth-Key': self.URLHAUSAPI})
             hausresponse = requestsession8.get(haus)
@@ -552,7 +554,7 @@ class URLHausExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (126 * '-').center(59))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/json'})
             requestsession.headers.update({'Auth-Key': self.URLHAUSAPI})
             params = {"url": urlx}
@@ -760,7 +762,7 @@ class URLHausExtractor():
                                     print(mycolors.foreground.purple + "firstseen:%12s" % i['firstseen'], end = '     ')
                             if ('filename' in i):
                                 if (i['filename'] is not None):
-                                    print(mycolors.foreground.green + "filename: %-30s" % i['filename'].ljust(40), end = ' ' + "")
+                                    print(mycolors.foreground.blue + "filename: %-30s" % i['filename'].ljust(40), end = ' ' + "")
                             if ('file_type' in i):
                                 if (i['file_type'] is not None):
                                     print(mycolors.foreground.red + "filetype: %s" % i['file_type'].ljust(10) + Fore.BLACK, end = '' + "")
@@ -813,7 +815,7 @@ class URLHausExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (126 * '-').center(59))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/json'})
             requestsession.headers.update({'Auth-Key': self.URLHAUSAPI})
             
@@ -1005,3 +1007,92 @@ class URLHausExtractor():
             else:
                 print((mycolors.foreground.lightred + "Error while connecting to URLhaus!\n"))
             printr()
+
+    def hausbatchcheck(self, filename):
+        haus = 'https://urlhaus-api.abuse.ch/v1/payload/'
+
+        self.requestURLHAUSAPI()
+
+        if not os.path.isfile(filename):
+            if (cv.bkg == 1):
+                print(mycolors.foreground.lightred + "\nFile not found: %s\n" % filename)
+            else:
+                print(mycolors.foreground.red + "\nFile not found: %s\n" % filename)
+            printr()
+            return
+
+        try:
+            with open(filename, 'r', encoding='utf-8', errors='ignore') as f:
+                hashes = [line.strip() for line in f.readlines() if line.strip()]
+        except Exception as e:
+            if (cv.bkg == 1):
+                print(mycolors.foreground.lightred + "\nError reading file: %s (%s)\n" % (filename, str(e)))
+            else:
+                print(mycolors.foreground.red + "\nError reading file: %s (%s)\n" % (filename, str(e)))
+            printr()
+            return
+
+        print("\n")
+        print((mycolors.reset + "URLHaus Batch Hash Check".center(126)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (126 * '-').center(50))
+
+        if (cv.bkg == 1):
+            print(mycolors.foreground.lightcyan + "\n%-68s %-14s %s" % ("Hash", "Status", "Signature"))
+            print((100 * '-'))
+        else:
+            print(mycolors.foreground.red + "\n%-68s %-14s %s" % ("Hash", "Status", "Signature"))
+            print((100 * '-'))
+
+        requestsession = create_session()
+        requestsession.headers.update({'Auth-Key': self.URLHAUSAPI})
+
+        for h in hashes:
+            try:
+                if len(h) == 32:
+                    params = {'md5_hash': h}
+                else:
+                    params = {'sha256_hash': h}
+
+                response = requestsession.post(haus, data=params, timeout=60)
+                haustext = json.loads(response.text)
+
+                status = haustext.get('query_status', 'unknown')
+                signature = ''
+                if status == 'ok':
+                    signature = str(haustext.get('signature', '')) if haustext.get('signature') else ''
+
+                if (cv.bkg == 1):
+                    print(mycolors.foreground.yellow + "%-68s " % h, end='')
+                    print(mycolors.foreground.lightcyan + "%-14s " % status, end='')
+                    print(mycolors.foreground.lightred + "%s" % signature)
+                else:
+                    print(mycolors.foreground.cyan + "%-68s " % h, end='')
+                    print(mycolors.foreground.blue + "%-14s " % status, end='')
+                    print(mycolors.foreground.red + "%s" % signature)
+
+            except Exception as e:
+                if (cv.bkg == 1):
+                    print(mycolors.foreground.lightred + "%-68s error: %s" % (h, str(e)))
+                else:
+                    print(mycolors.foreground.red + "%-68s error: %s" % (h, str(e)))
+
+        printr()
+
+    @cached("urlhaus_hash")
+    def _raw_hash_info(self, hash_value):
+        try:
+            haus = 'https://urlhaus-api.abuse.ch/v1/'
+            requestsession = create_session()
+            if len(hash_value) == 32:
+                params = {'md5_hash': hash_value}
+            else:
+                params = {'sha256_hash': hash_value}
+            response = requestsession.post(haus + 'payload/', data=params, timeout=60)
+            if response.status_code == 200:
+                data = response.json()
+                if data.get('query_status') == 'ok':
+                    return data
+        except Exception:
+            pass
+        return None

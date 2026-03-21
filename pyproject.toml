@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "malwoverview"
-version = "7.1.2"
+version = "8.0"
 description = "Malwoverview is a first response tool for threat hunting."
 readme = "README.md"
 authors = [{name = "Alexandre Borges", email = "reverseexploit@proton.me"}]
@@ -26,10 +26,20 @@ dependencies = [
     "python-magic-bin>=0.4.14; platform_system == 'Windows'",
     "simplejson",
     "requests",
+    "urllib3>=2.6.3",
     "validators",
     "geocoder",
     "polyswarm-api",
+    "tqdm>=4.64.0",
+    "python-whois>=0.9.4",
+    "ipwhois>=1.2.0",
 ]
+
+[project.optional-dependencies]
+yara = ["yara-python>=4.2.0"]
+pdf = ["weasyprint>=57.0", "PyPDF2>=3.0.0"]
+tui = ["textual>=0.40.0", "pyperclip>=1.8.0"]
+all = ["yara-python>=4.2.0", "weasyprint>=57.0", "PyPDF2>=3.0.0", "textual>=0.40.0", "pyperclip>=1.8.0"]
 
 [project.urls]
 Homepage = "https://github.com/alexandreborges/malwoverview"

@@ -3,6 +3,7 @@ import requests
 import json
 import textwrap
 from malwoverview.utils.colors import mycolors, printr
+from malwoverview.utils.session import create_session
 
 
 class VulnCheckExtractor():
@@ -58,7 +59,7 @@ class VulnCheckExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Accept': 'application/json'})
             requestsession.headers.update({'Authorization': f'Bearer {self.VULNCHECKAPI}'})
 
@@ -123,7 +124,7 @@ class VulnCheckExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Accept': 'application/json'})
             requestsession.headers.update({'Authorization': f'Bearer {self.VULNCHECKAPI}'})
 
@@ -284,7 +285,7 @@ class VulnCheckExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Accept': 'application/json'})
             requestsession.headers.update({'Authorization': f'Bearer {self.VULNCHECKAPI}'})
 
@@ -419,7 +420,7 @@ class VulnCheckExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Accept': 'application/json'})
             requestsession.headers.update({'Authorization': f'Bearer {self.VULNCHECKAPI}'})
 
@@ -536,7 +537,7 @@ class VulnCheckExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Accept': 'application/json'})
             requestsession.headers.update({'Authorization': f'Bearer {self.VULNCHECKAPI}'})
 
@@ -641,7 +642,7 @@ class VulnCheckExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Accept': 'application/json'})
             requestsession.headers.update({'Authorization': f'Bearer {self.VULNCHECKAPI}'})
 
@@ -783,7 +784,7 @@ class VulnCheckExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Accept': 'application/json'})
             requestsession.headers.update({'Authorization': f'Bearer {self.VULNCHECKAPI}'})
 
@@ -905,7 +906,7 @@ class VulnCheckExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Accept': 'application/json'})
             requestsession.headers.update({'Authorization': f'Bearer {self.VULNCHECKAPI}'})
 

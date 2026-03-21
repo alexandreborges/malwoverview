@@ -4,10 +4,11 @@ import textwrap
 from malwoverview.utils.colors import mycolors, printr
 import json
 from urllib.parse import quote
+from malwoverview.utils.session import create_session
 
 
 class AlienVaultExtractor():
-    urlalien = 'http://otx.alienvault.com/api/v1'
+    urlalien = 'https://otx.alienvault.com/api/v1'
 
     def __init__(self, ALIENAPI):
         self.ALIENAPI = ALIENAPI
@@ -30,7 +31,7 @@ class AlienVaultExtractor():
 
         try:
             resource = url
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Content-Type': 'application/json'})
             finalurl = '/'.join([resource, 'pulses', 'subscribed'])
             haresponse = requestsession.post(url=finalurl, headers=headers, params=search_params)
@@ -170,9 +171,9 @@ class AlienVaultExtractor():
         search_params = {'limit': history}
 
         resource = url
-        requestsession = requests.Session()
+        requestsession = create_session()
         requestsession.headers.update({'Content-Type': 'application/json'})
-        finalurl = '/'.join([resource, 'indicators', 'IPv4', ip])
+        finalurl = '/'.join([resource, 'indicators', 'IPv4', quote(ip, safe='')])
         haresponse = requestsession.post(url=finalurl, headers=headers, params=search_params)
         return haresponse
 
@@ -339,7 +340,7 @@ class AlienVaultExtractor():
         try:
 
             resource = url
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Content-Type': 'application/json'})
             finalurl = '/'.join([resource, 'indicators', 'domain', quote(myargs, safe='')])
             haresponse = requestsession.post(url=finalurl, headers=headers, params=search_params)
@@ -466,7 +467,7 @@ class AlienVaultExtractor():
         try:
 
             resource = url
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Content-Type': 'application/json'})
             finalurl = '/'.join([resource, 'indicators', 'file', quote(myargs, safe='')])
             haresponse = requestsession.post(url=finalurl, headers=headers, params=search_params)
@@ -625,7 +626,7 @@ class AlienVaultExtractor():
         try:
 
             resource = urlx
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Content-Type': 'application/json'})
             finalurl = '/'.join([resource, 'indicators', 'url', quote(myargs, safe=''), 'general'])
             haresponse = requestsession.post(url=finalurl, headers=headers, params=search_params)
@@ -788,3 +789,19 @@ class AlienVaultExtractor():
             else:
                 print((mycolors.foreground.red + "Error while connecting to Alien Vault!\n"))
             printr()
+
+    def _raw_hash_info(self, hash_value):
+        try:
+            self.requestALIENAPI()
+            url = AlienVaultExtractor.urlalien
+            headers = {'X-OTX-API-KEY': self.ALIENAPI}
+            requestsession = create_session()
+            requestsession.headers.update({'Content-Type': 'application/json'})
+            finalurl = '/'.join([url, 'indicators', 'file', quote(hash_value, safe='')])
+            response = requestsession.post(url=finalurl, headers=headers, params={'limit': '10'})
+            data = json.loads(response.text)
+            if 'indicator' in data:
+                return data
+        except Exception:
+            pass
+        return None

@@ -1,3 +1,9 @@
 bkg = 0
 windows = 0
 output_dir = '.'
+proxy = ''
+output_format = 'text'
+verbosity = 0
+cache_enabled = True
+cache_ttl = 3600
+attack_map = False

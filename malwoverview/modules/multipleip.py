@@ -22,12 +22,18 @@ class MultipleIPExtractor:
             elif extractor == "AlienVault":
                 data = extractor_obj._raw_ip_info(ip_address)
                 self._get_info_alienvault(data.json())
-            #elif extractor == "InQuest":
-            #    data = extractor_obj._raw_ip_info(ip_address)
-            #    self._get_info_inquest(data.json())
-            # elif extractor == "PolySwarm":
-            #     data = extractor_obj._raw_ip_info(ip_address)
-            #     self._get_info_polyswarm(data)
+            elif extractor in ("Shodan", "AbuseIPDB", "GreyNoise"):
+                try:
+                    extractor_obj.get_ip_details(ip_address) if hasattr(extractor_obj, 'get_ip_details') else None
+                    if not hasattr(extractor_obj, 'get_ip_details'):
+                        if extractor == "Shodan":
+                            extractor_obj.shodan_ip(ip_address)
+                        elif extractor == "AbuseIPDB":
+                            extractor_obj.check_ip(ip_address)
+                        elif extractor == "GreyNoise":
+                            extractor_obj.quick_check(ip_address)
+                except Exception as e:
+                    printc(f"\n{extractor} error: {str(e)}\n", mycolors.foreground.error(cv.bkg))
 
     def _get_info_virustotal(self, data):
         try:

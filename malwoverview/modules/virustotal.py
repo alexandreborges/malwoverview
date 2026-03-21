@@ -12,6 +12,10 @@ import json
 import time
 import re
 import os
+from urllib.parse import quote
+from malwoverview.utils.session import create_session
+from malwoverview.utils.cache import cached
+from malwoverview.utils.attack import AttackMapper
 
 
 class VirusTotalExtractor():
@@ -87,8 +91,8 @@ class VirusTotalExtractor():
         url = VirusTotalExtractor.urlfilevt3
 
         try:
-            finalurl = ''.join([url, "/", myhash])
-            requestsession = requests.Session()
+            finalurl = ''.join([url, "/", quote(myhash, safe='')])
+            requestsession = create_session()
             requestsession.headers.update({'x-apikey': self.VTAPI})
             requestsession.headers.update({'content-type': 'application/json'})
             response = requestsession.get(finalurl)
@@ -421,8 +425,8 @@ class VirusTotalExtractor():
         url = VirusTotalExtractor.urldomainvt3
 
         try:
-            finalurl = ''.join([url, "/", mydomain])
-            requestsession = requests.Session()
+            finalurl = ''.join([url, "/", quote(mydomain, safe='')])
+            requestsession = create_session()
             requestsession.headers.update({'x-apikey': self.VTAPI})
             requestsession.headers.update({'content-type': 'application/json'})
             response = requestsession.get(finalurl)
@@ -527,8 +531,8 @@ class VirusTotalExtractor():
     def _raw_ip_info(self, myip):
         url = VirusTotalExtractor.urlipvt3
 
-        finalurl = ''.join([url, "/", myip])
-        requestsession = requests.Session()
+        finalurl = ''.join([url, "/", quote(myip, safe='')])
+        requestsession = create_session()
         requestsession.headers.update({'x-apikey': self.VTAPI})
         requestsession.headers.update({'content-type': 'application/json'})
         response = requestsession.get(finalurl)
@@ -669,7 +673,7 @@ class VirusTotalExtractor():
         try:
             urlid = base64.urlsafe_b64encode(myurl.encode()).decode().strip("=")
             finalurl = ''.join([url, "/", urlid])
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'x-apikey': self.VTAPI})
             requestsession.headers.update({'content-type': 'application/json'})
             response = requestsession.get(finalurl)
@@ -796,7 +800,7 @@ class VirusTotalExtractor():
 
         try:
             finalurl = url
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'x-apikey': self.VTAPI})
             with open(file_item, 'rb') as file_handle:
                 files = {'file': (file_item, file_handle)}
@@ -829,8 +833,8 @@ class VirusTotalExtractor():
         url = VirusTotalExtractor.urlfilevt3
 
         try:
-            finalurl = ''.join([url, "/", myhash])
-            requestsession = requests.Session()
+            finalurl = ''.join([url, "/", quote(myhash, safe='')])
+            requestsession = create_session()
             requestsession.headers.update({'x-apikey': self.VTAPI})
             requestsession.headers.update({'content-type': 'application/json'})
             response = requestsession.get(finalurl)
@@ -1142,8 +1146,8 @@ class VirusTotalExtractor():
         url = VirusTotalExtractor.urlfilevt3
 
         try:
-            finalurl = ''.join([url, "/", myhash])
-            requestsession = requests.Session()
+            finalurl = ''.join([url, "/", quote(myhash, safe='')])
+            requestsession = create_session()
             requestsession.headers.update({"x-apikey": self.VTAPI})
             requestsession.headers.update({"accept": "application/json"})
             response = requestsession.get(finalurl)
@@ -1546,7 +1550,7 @@ class VirusTotalExtractor():
 
         try:
             finalurl = ''.join([url, "/upload_url"])
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'x-apikey': self.VTAPI})
             requestsession.headers.update({'content-type': 'application/json'})
             response = requestsession.get(finalurl)
@@ -1582,8 +1586,8 @@ class VirusTotalExtractor():
 
         try:
 
-            finalurl = ''.join([url, "/", myhash.strip()])
-            requestsession = requests.Session()
+            finalurl = ''.join([url, "/", quote(myhash.strip(), safe='')])
+            requestsession = create_session()
             requestsession.headers.update({'x-apikey': self.VTAPI})
             requestsession.headers.update({'content-type': 'application/json'})
             response = requestsession.get(finalurl)
@@ -1663,8 +1667,8 @@ class VirusTotalExtractor():
         url = VirusTotalExtractor.urlfilevt3
 
         try:
-            finalurl = ''.join([url, "/", myhash, "/behaviour_summary"])
-            requestsession = requests.Session()
+            finalurl = ''.join([url, "/", quote(myhash, safe=''), "/behaviour_summary"])
+            requestsession = create_session()
             requestsession.headers.update({'x-apikey': self.VTAPI})
             requestsession.headers.update({'content-type': 'application/json'})
             response = requestsession.get(finalurl)
@@ -1880,6 +1884,24 @@ class VirusTotalExtractor():
                         for windows_hidden in vttext['data']['windows_hidden']:
                             print(mycolors.reset + "".ljust(23) + windows_hidden, end='\n')
 
+                if cv.attack_map:
+                    all_tags = []
+                    if 'verdict_labels' in vttext['data']:
+                        all_tags.extend(vttext['data']['verdict_labels'])
+                    if 'verdicts' in vttext['data']:
+                        all_tags.extend(vttext['data']['verdicts'])
+                    if 'calls_highlighted' in vttext['data']:
+                        all_tags.extend(vttext['data']['calls_highlighted'])
+                    if all_tags:
+                        mapper = AttackMapper()
+                        techniques = mapper.map_tags(all_tags)
+                        if techniques:
+                            if cv.bkg == 1:
+                                print(mycolors.foreground.lightred + "\n\nMITRE ATT&CK Mapping:" + mycolors.reset)
+                            else:
+                                print(mycolors.foreground.red + "\n\nMITRE ATT&CK Mapping:" + mycolors.reset)
+                            mapper.format_techniques(techniques)
+
         except ValueError:
             if (cv.bkg == 1):
                 print((mycolors.foreground.lightred + "Error while connecting to Virus Total!\n"))
@@ -1941,3 +1963,16 @@ class VirusTotalExtractor():
                 print((mycolors.foreground.red + "The provided file doesn't exist!\n"))
             print(mycolors.reset)
             exit(3)
+
+    @cached("vt_hash")
+    def _raw_hash_info(self, hash_value):
+        try:
+            url = 'https://www.virustotal.com/api/v3/files/'
+            requestsession = create_session()
+            requestsession.headers.update({'x-apikey': self.VTAPI})
+            response = requestsession.get(url + hash_value)
+            if response.status_code == 200:
+                return response.json()
+        except Exception:
+            pass
+        return None

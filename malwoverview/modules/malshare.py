@@ -4,6 +4,7 @@ import json
 import requests
 import sys
 import os
+from malwoverview.utils.session import create_session
 
 
 class MalshareExtractor():
@@ -29,7 +30,7 @@ class MalshareExtractor():
 
         try:
             resource = filehash
-            requestsession3 = requests.Session()
+            requestsession3 = create_session()
             finalurl3 = ''.join([
                 urlmalshare, self.MALSHAREAPI,
                 '&action=getfile&hash=', resource
@@ -107,7 +108,7 @@ class MalshareExtractor():
                 print("\n" + (126 * '-').center(59))
                 print((mycolors.reset))
 
-                requestsession = requests.Session()
+                requestsession = create_session()
                 requestsession.headers.update({'accept': 'application/json'})
                 finalurl = ''.join([
                     urlmalshare, self.MALSHAREAPI,
@@ -122,7 +123,7 @@ class MalshareExtractor():
                 print("\n" + (112 * '-').center(56))
                 print((mycolors.reset))
 
-                requestsession = requests.Session( )
+                requestsession = create_session()
                 requestsession.headers.update({'accept': 'application/json'})
                 finalurl = ''.join([urlmalshare, self.MALSHAREAPI, '&action=getlist'])
                 malresponse = requestsession.get(url=finalurl)

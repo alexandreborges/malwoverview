@@ -57,3 +57,17 @@ def printc(text, color, *args, **kwargs):
 
 def printr():
     print(mycolors.reset)
+
+
+def detect_background():
+    import os
+    colorfgbg = os.environ.get('COLORFGBG', '')
+    if colorfgbg:
+        parts = colorfgbg.split(';')
+        if len(parts) >= 2:
+            try:
+                bg = int(parts[-1])
+                return 0 if bg < 8 else 1
+            except ValueError:
+                pass
+    return 1

@@ -8,6 +8,9 @@ import requests
 import json
 import os
 from urllib.parse import quote
+from malwoverview.utils.session import create_session
+from malwoverview.utils.hash import sha256hash
+
 
 
 class TriageExtractor():
@@ -34,7 +37,7 @@ class TriageExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/json', 'Authorization': 'Bearer ' + self.TRIAGEAPI})
             safe_query = quote(triagex, safe='')
             triageresponse = requestsession.get(triage + safe_query)
@@ -218,7 +221,7 @@ class TriageExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/json', 'Authorization': 'Bearer ' + self.TRIAGEAPI})
             triageresponse = requestsession.get(triage + 'samples/' + quote(triagex, safe='') + '/overview.json')
             triagetext = json.loads(triageresponse.text)
@@ -596,7 +599,7 @@ class TriageExtractor():
                 })
 
                 req = Request('POST', triage + 'samples', data=mybody, headers={"Content-Type": content_type, "Authorization": "Bearer " + self.TRIAGEAPI})
-                requestsession = requests.Session()
+                requestsession = create_session()
                 triageres = requestsession.send(req.prepare())
                 triagetext = triageres.json()
 
@@ -659,7 +662,7 @@ class TriageExtractor():
                 'interactive': False,
             }
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({
                 'accept': 'application/json',
                 'Authorization': 'Bearer ' + self.TRIAGEAPI,
@@ -721,7 +724,7 @@ class TriageExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (80 * '-').center(40))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Authorization': 'Bearer ' + self.TRIAGEAPI})
             triageresponse = requestsession.get(triage + 'samples/' + quote(triagex, safe='') + '/sample')
             if (triageresponse.status_code == 404):
@@ -783,7 +786,7 @@ class TriageExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (80 * '-').center(40))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Authorization': 'Bearer ' + self.TRIAGEAPI})
             triageresponse = requestsession.get(triage + 'samples/' + quote(triagex, safe='') + '/behavioral1/dump.pcapng')
             if (triageresponse.status_code == 404):
@@ -845,7 +848,7 @@ class TriageExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/json', 'Authorization': 'Bearer ' + self.TRIAGEAPI})
             triageresponse = requestsession.get(triage + 'samples/' + quote(triagex, safe='') + '/behavioral1/report_triage.json')
             triagetext = json.loads(triageresponse.text)
@@ -1137,3 +1140,265 @@ class TriageExtractor():
             else:
                 print((mycolors.foreground.lightred + "\nError while connecting to Tri.age!\n"))
             printr()
+
+    def _raw_hash_info(self, hash_value):
+        try:
+            self.requestTRIAGEAPI()
+            triage = TriageExtractor.triageurl
+            requestsession = create_session()
+            requestsession.headers.update({
+                'accept': 'application/json',
+                'Authorization': 'Bearer ' + self.TRIAGEAPI
+            })
+            safe_query = quote(hash_value, safe='')
+            response = requestsession.get(triage + 'search?query=' + safe_query)
+            search_data = json.loads(response.text)
+            if 'error' in search_data or not search_data.get('data'):
+                return None
+            sample_id = search_data['data'][0].get('id', '')
+            if not sample_id:
+                return None
+            summary_resp = requestsession.get(
+                triage + 'samples/' + quote(sample_id, safe='') + '/overview.json'
+            )
+            summary_data = json.loads(summary_resp.text)
+            if 'error' in summary_data:
+                return None
+            return summary_data
+        except Exception:
+            return None
+
+    def triage_batchcheck(self, filename):
+        triage = TriageExtractor.triageurl
+
+        self.requestTRIAGEAPI()
+
+        if not os.path.isfile(filename):
+            if (cv.bkg == 1):
+                print(mycolors.foreground.lightred + "\nFile not found: %s\n" % filename)
+            else:
+                print(mycolors.foreground.red + "\nFile not found: %s\n" % filename)
+            printr()
+            return
+
+        try:
+            with open(filename, 'r', encoding='utf-8', errors='ignore') as f:
+                hashes = [line.strip() for line in f.readlines() if line.strip()]
+        except Exception as e:
+            if (cv.bkg == 1):
+                print(mycolors.foreground.lightred + "\nError reading file: %s (%s)\n" % (filename, str(e)))
+            else:
+                print(mycolors.foreground.red + "\nError reading file: %s (%s)\n" % (filename, str(e)))
+            printr()
+            return
+
+        print("\n")
+        print((mycolors.reset + "Triage Batch Hash Check".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100 * '-').center(50))
+
+        print(mycolors.reset + "\n%-68s %-22s %-8s %s" % ("Hash", "Filename", "Score", "Tags"))
+        print((160 * '-'))
+
+        requestsession = create_session()
+        requestsession.headers.update({
+            'accept': 'application/json',
+            'Authorization': 'Bearer ' + self.TRIAGEAPI
+        })
+
+        for h in hashes:
+            try:
+                h = h.strip()
+                safe_query = quote(h, safe='')
+                response = requestsession.get(triage + 'search?query=' + safe_query, timeout=60)
+                search_data = json.loads(response.text)
+
+                filename_val = ''
+                score = ''
+                tags = ''
+
+                if not search_data.get('error') and search_data.get('data'):
+                    sample = search_data['data'][0]
+                    filename_val = str(sample.get('filename', '')) if sample.get('filename') else ''
+
+                    sample_id = sample.get('id', '')
+                    if sample_id:
+                        try:
+                            summary_resp = requestsession.get(
+                                triage + 'samples/' + quote(sample_id, safe='') + '/overview.json',
+                                timeout=60
+                            )
+                            summary_data = json.loads(summary_resp.text)
+                            if 'error' not in summary_data:
+                                sample_info = summary_data.get('sample', {})
+                                score_val = sample_info.get('score')
+                                if score_val is not None:
+                                    score = str(score_val)
+
+                                families = []
+                                for target in summary_data.get('targets', []):
+                                    for fam in target.get('family', []):
+                                        if fam and fam not in families:
+                                            families.append(fam)
+                                if summary_data.get('analysis', {}).get('family', []):
+                                    for fam in summary_data['analysis']['family']:
+                                        if fam and fam not in families:
+                                            families.append(fam)
+                                sample_tags = sample_info.get('tags', [])
+                                if sample_tags:
+                                    for t in sample_tags:
+                                        if t and t not in families:
+                                            families.append(t)
+                                if not families:
+                                    for target in summary_data.get('targets', []):
+                                        for sig in target.get('signatures', []):
+                                            sig_name = sig.get('name', '')
+                                            if sig_name:
+                                                short = sig_name.split(',')[0].split(':')[0].strip()
+                                                if short and short not in families:
+                                                    families.append(short)
+                                                    if len(families) >= 1:
+                                                        break
+                                        if len(families) >= 1:
+                                            break
+                                tags = ', '.join(families[:5])
+                        except Exception:
+                            pass
+
+                if (cv.bkg == 1):
+                    print(mycolors.foreground.yellow + "%-68s " % h, end='')
+                    print(mycolors.foreground.lightcyan + "%-22s " % filename_val[:20], end='')
+                    print(mycolors.foreground.lightred + "%-8s " % score.center(5), end='')
+                    print(mycolors.foreground.lightgreen + "%s" % tags[:65])
+                else:
+                    print(mycolors.foreground.cyan + "%-68s " % h, end='')
+                    print(mycolors.foreground.purple + "%-22s " % filename_val[:20], end='')
+                    print(mycolors.foreground.red + "%-8s " % score.center(5), end='')
+                    print(mycolors.foreground.blue + "%s" % tags[:65])
+
+            except Exception as e:
+                if (cv.bkg == 1):
+                    print(mycolors.foreground.lightred + "%-68s error: %s" % (h, str(e)))
+                else:
+                    print(mycolors.foreground.red + "%-68s error: %s" % (h, str(e)))
+
+        printr()
+
+    def triage_dircheck(self, directory):
+        triage = TriageExtractor.triageurl
+
+        self.requestTRIAGEAPI()
+
+        if not os.path.isabs(directory):
+            directory = os.path.abspath(directory)
+
+        if not os.path.isdir(directory):
+            if (cv.bkg == 1):
+                print(mycolors.foreground.lightred + "\nDirectory not found: %s\n" % directory)
+            else:
+                print(mycolors.foreground.red + "\nDirectory not found: %s\n" % directory)
+            printr()
+            return
+
+        files = []
+        for filen in os.listdir(directory):
+            filepath = os.path.join(directory, filen)
+            if os.path.isfile(filepath):
+                try:
+                    h = sha256hash(filepath)
+                    files.append((filen, h))
+                except Exception:
+                    pass
+
+        if not files:
+            print(mycolors.foreground.error(cv.bkg) + "\nNo files found in directory.\n" + mycolors.reset)
+            printr()
+            return
+
+        print("\n")
+        print((mycolors.reset + "Triage Directory Check".center(100)), end='')
+        print((mycolors.reset + "".center(28)), end='')
+        print("\n" + (100 * '-').center(50))
+
+        print(mycolors.reset + "\n%-44s %-66s %-6s %s" % ("Filename", "Hash", "Score", "Tags"))
+        print((136 * '-'))
+
+        requestsession = create_session()
+        requestsession.headers.update({
+            'accept': 'application/json',
+            'Authorization': 'Bearer ' + self.TRIAGEAPI
+        })
+
+        for fname, h in files:
+            try:
+                safe_query = quote(h, safe='')
+                response = requestsession.get(triage + 'search?query=' + safe_query, timeout=60)
+                search_data = json.loads(response.text)
+
+                score = ''
+                tags = ''
+
+                if not search_data.get('error') and search_data.get('data'):
+                    sample = search_data['data'][0]
+                    sample_id = sample.get('id', '')
+                    if sample_id:
+                        try:
+                            summary_resp = requestsession.get(
+                                triage + 'samples/' + quote(sample_id, safe='') + '/overview.json',
+                                timeout=60
+                            )
+                            summary_data = json.loads(summary_resp.text)
+                            if 'error' not in summary_data:
+                                sample_info = summary_data.get('sample', {})
+                                score_val = sample_info.get('score')
+                                if score_val is not None:
+                                    score = str(score_val)
+
+                                families = []
+                                for target in summary_data.get('targets', []):
+                                    for fam in target.get('family', []):
+                                        if fam and fam not in families:
+                                            families.append(fam)
+                                if summary_data.get('analysis', {}).get('family', []):
+                                    for fam in summary_data['analysis']['family']:
+                                        if fam and fam not in families:
+                                            families.append(fam)
+                                sample_tags = sample_info.get('tags', [])
+                                if sample_tags:
+                                    for t in sample_tags:
+                                        if t and t not in families:
+                                            families.append(t)
+                                if not families:
+                                    for target in summary_data.get('targets', []):
+                                        for sig in target.get('signatures', []):
+                                            sig_name = sig.get('name', '')
+                                            if sig_name:
+                                                short = sig_name.split(',')[0].split(':')[0].strip()
+                                                if short and short not in families:
+                                                    families.append(short)
+                                                    if len(families) >= 1:
+                                                        break
+                                        if len(families) >= 1:
+                                            break
+                                tags = ', '.join(families[:5])
+                        except Exception:
+                            pass
+
+                if (cv.bkg == 1):
+                    print(mycolors.foreground.lightgreen + "%-44s " % fname[:42], end='')
+                    print(mycolors.foreground.yellow + "%-66s " % h, end='')
+                    print(mycolors.foreground.lightred + "%-6s " % score.center(4), end='')
+                    print(mycolors.foreground.lightcyan + "%s" % tags)
+                else:
+                    print(mycolors.foreground.blue + "%-44s " % fname[:42], end='')
+                    print(mycolors.foreground.cyan + "%-66s " % h, end='')
+                    print(mycolors.foreground.red + "%-6s " % score.center(4), end='')
+                    print(mycolors.foreground.purple + "%s" % tags)
+
+            except Exception as e:
+                if (cv.bkg == 1):
+                    print(mycolors.foreground.lightred + "%-44s error: %s" % (fname[:42], str(e)))
+                else:
+                    print(mycolors.foreground.red + "%-44s error: %s" % (fname[:42], str(e)))
+
+        printr()

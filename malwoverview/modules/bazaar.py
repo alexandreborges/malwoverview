@@ -3,6 +3,9 @@ from malwoverview.utils.colors import mycolors, printr
 import requests
 import json
 import os
+from malwoverview.utils.session import create_session
+from malwoverview.utils.hash import sha256hash
+from malwoverview.utils.cache import cached
 
 class BazaarExtractor():
     urlbazaar = 'https://mb-api.abuse.ch/api/v1/'
@@ -29,7 +32,7 @@ class BazaarExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/json'})
             requestsession.headers.update({'Auth-Key': self.BAZAARAPI})
             params = {'query': 'get_taginfo', "tag": bazaarx, "limit": 50}
@@ -218,7 +221,7 @@ class BazaarExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/json'})
             requestsession.headers.update({'Auth-Key': self.BAZAARAPI})
             params = {'query': 'get_imphash', "imphash": bazaarx, "limit": 50}
@@ -408,7 +411,7 @@ class BazaarExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/json'})
             requestsession.headers.update({'Auth-Key': self.BAZAARAPI})
             params = {'query': 'get_recent', "selector": bazaarx}
@@ -592,7 +595,7 @@ class BazaarExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/gzip'})
             requestsession.headers.update({'Auth-Key': self.BAZAARAPI})
             params = {'query': 'get_file', "sha256_hash": bazaarx}
@@ -659,7 +662,7 @@ class BazaarExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/json'})
             requestsession.headers.update({'Auth-Key': self.BAZAARAPI})
             params = {'query': 'get_info', "hash": bazaarx}
@@ -942,3 +945,162 @@ class BazaarExtractor():
             else:
                 print((mycolors.foreground.lightred + "\nError while connecting to Malware Bazaar!\n"))
             printr()
+
+    def bazaar_batchcheck(self, filename):
+        bazaar = 'https://mb-api.abuse.ch/api/v1/'
+
+        self.requestBAZAARAPI()
+
+        if not os.path.isfile(filename):
+            if (cv.bkg == 1):
+                print(mycolors.foreground.lightred + "\nFile not found: %s\n" % filename)
+            else:
+                print(mycolors.foreground.red + "\nFile not found: %s\n" % filename)
+            printr()
+            return
+
+        try:
+            with open(filename, 'r', encoding='utf-8', errors='ignore') as f:
+                hashes = [line.strip() for line in f.readlines() if line.strip()]
+        except Exception as e:
+            if (cv.bkg == 1):
+                print(mycolors.foreground.lightred + "\nError reading file: %s (%s)\n" % (filename, str(e)))
+            else:
+                print(mycolors.foreground.red + "\nError reading file: %s (%s)\n" % (filename, str(e)))
+            printr()
+            return
+
+        print(mycolors.reset + "\n%-66s %-6s %-11s %s" % ("Hash", "Type", "Signature", "Tags"))
+        print((110 * '-'))
+
+        requestsession = create_session()
+        requestsession.headers.update({'accept': 'application/json'})
+        requestsession.headers.update({'Auth-Key': self.BAZAARAPI})
+
+        for h in hashes:
+            try:
+                params = {'query': 'get_info', 'hash': h}
+                response = requestsession.post(bazaar, data=params, timeout=60)
+                bazaartext = json.loads(response.text)
+
+                file_type = ''
+                signature = ''
+                tags = ''
+
+                if bazaartext.get('query_status') == 'ok' and bazaartext.get('data'):
+                    sample = bazaartext['data'][0]
+                    file_type = str(sample.get('file_type', '')) if sample.get('file_type') else ''
+                    signature = str(sample.get('signature', '')) if sample.get('signature') else ''
+                    tags_list = sample.get('tags', [])
+                    tags = ', '.join(tags_list[:4]) if tags_list else ''
+
+                if (cv.bkg == 1):
+                    print(mycolors.foreground.yellow + "%-66s " % h, end='')
+                    print(mycolors.foreground.lightcyan + "%-6s " % file_type, end='')
+                    print(mycolors.foreground.lightred + "%-11s " % signature, end='')
+                    print(mycolors.foreground.pink + "%s" % tags)
+                else:
+                    print(mycolors.foreground.cyan + "%-66s " % h, end='')
+                    print(mycolors.foreground.blue + "%-6s " % file_type, end='')
+                    print(mycolors.foreground.red + "%-11s " % signature, end='')
+                    print(mycolors.foreground.purple + "%s" % tags)
+
+            except Exception as e:
+                if (cv.bkg == 1):
+                    print(mycolors.foreground.lightred + "%-66s error: %s" % (h, str(e)))
+                else:
+                    print(mycolors.foreground.red + "%-66s error: %s" % (h, str(e)))
+
+        printr()
+
+    def bazaar_dircheck(self, directory):
+        bazaar = 'https://mb-api.abuse.ch/api/v1/'
+
+        self.requestBAZAARAPI()
+
+        if not os.path.isabs(directory):
+            directory = os.path.abspath(directory)
+
+        if not os.path.isdir(directory):
+            if (cv.bkg == 1):
+                print(mycolors.foreground.lightred + "\nDirectory not found: %s\n" % directory)
+            else:
+                print(mycolors.foreground.red + "\nDirectory not found: %s\n" % directory)
+            printr()
+            return
+
+        files = []
+        for filen in os.listdir(directory):
+            filepath = os.path.join(directory, filen)
+            if os.path.isfile(filepath):
+                try:
+                    h = sha256hash(filepath)
+                    files.append((filen, h))
+                except Exception:
+                    pass
+
+        if not files:
+            print(mycolors.foreground.error(cv.bkg) + "\nNo files found in directory.\n" + mycolors.reset)
+            printr()
+            return
+
+        print(mycolors.reset + "\n%-42s %-66s %-6s %-11s %s" % ("Filename", "Hash", "Type", "Signature", "Tags"))
+        print((150 * '-'))
+
+        requestsession = create_session()
+        requestsession.headers.update({'accept': 'application/json'})
+        requestsession.headers.update({'Auth-Key': self.BAZAARAPI})
+
+        for fname, h in files:
+            try:
+                params = {'query': 'get_info', 'hash': h}
+                response = requestsession.post(bazaar, data=params, timeout=60)
+                bazaartext = json.loads(response.text)
+
+                file_type = ''
+                signature = ''
+                tags = ''
+
+                if bazaartext.get('query_status') == 'ok' and bazaartext.get('data'):
+                    sample = bazaartext['data'][0]
+                    file_type = str(sample.get('file_type', '')) if sample.get('file_type') else ''
+                    signature = str(sample.get('signature', '')) if sample.get('signature') else ''
+                    tags_list = sample.get('tags', [])
+                    tags = ', '.join(tags_list[:4]) if tags_list else ''
+
+                if (cv.bkg == 1):
+                    print(mycolors.foreground.lightgreen + "%-42s " % fname[:40], end='')
+                    print(mycolors.foreground.yellow + "%-66s " % h, end='')
+                    print(mycolors.foreground.lightcyan + "%-6s " % file_type, end='')
+                    print(mycolors.foreground.lightred + "%-11s " % signature, end='')
+                    print(mycolors.foreground.pink + "%s" % tags)
+                else:
+                    print(mycolors.foreground.blue + "%-42s " % fname[:40], end='')
+                    print(mycolors.foreground.cyan + "%-66s " % h, end='')
+                    print(mycolors.foreground.blue + "%-6s " % file_type, end='')
+                    print(mycolors.foreground.red + "%-11s " % signature, end='')
+                    print(mycolors.foreground.purple + "%s" % tags)
+
+            except Exception as e:
+                if (cv.bkg == 1):
+                    print(mycolors.foreground.lightred + "%-42s error: %s" % (fname[:40], str(e)))
+                else:
+                    print(mycolors.foreground.red + "%-42s error: %s" % (fname[:40], str(e)))
+
+        printr()
+
+    @cached("bazaar_hash")
+    def _raw_hash_info(self, hash_value):
+        try:
+            bazaar = 'https://mb-api.abuse.ch/api/v1/'
+            requestsession = create_session()
+            requestsession.headers.update({'Auth-Key': self.BAZAARAPI})
+            params = {'query': 'get_info', 'hash': hash_value}
+            response = requestsession.post(bazaar, data=params, timeout=60)
+            if response.status_code == 200:
+                data = response.json()
+                if data.get('query_status') == 'ok' and data.get('data'):
+                    return data['data'][0]
+        except Exception:
+            pass
+        return None
