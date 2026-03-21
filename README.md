@@ -31,8 +31,6 @@
 ![Alt text](pictures/picture_21.jpg?raw=true "Title")
 ![Alt text](pictures/picture_22.jpg?raw=true "Title")
 ![Alt text](pictures/picture_23.jpg?raw=true "Title")
-![Alt text](pictures/picture_24.jpg?raw=true "Title")
-![Alt text](pictures/picture_25.jpg?raw=true "Title")
 
       Copyright (C)  2018-2026 Alexandre Borges (https://exploitreversing.com) 
 
