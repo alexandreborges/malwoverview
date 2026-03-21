@@ -4,7 +4,11 @@ python-magic-bin>=0.4.14; platform_system == 'Windows'
 colorama>=0.4.4
 simplejson>=3.17.6
 requests>=2.26.0
+urllib3>=2.6.3
 validators>=0.18.2
 geocoder>=1.38.1
 polyswarm-api>=2.9.2
+tqdm>=4.64.0
+python-whois>=0.9.4
+ipwhois>=1.2.0
 

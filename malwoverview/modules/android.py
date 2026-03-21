@@ -8,8 +8,7 @@ import threading
 import json
 import time
 import os
-
-# threadLimiter = threading.BoundedSemaphore(10)
+from malwoverview.utils.session import create_session
 
 
 class androidVTThread(threading.Thread):
@@ -20,8 +19,6 @@ class androidVTThread(threading.Thread):
         self.extractor = extractor
 
     def run(self):
-#        threadLimiter.acquire()
-#        try:
         key1 = self.key
         package1 = self.package
 
@@ -33,11 +30,9 @@ class androidVTThread(threading.Thread):
             print((mycolors.foreground.lightcyan + "%-32s" % key1), end=' ')
             print((mycolors.reset + mycolors.foreground.lightcyan + "%8s" % vtfinal + mycolors.reset))
         else:
-            print((mycolors.foreground.green + "%-70s" % package1), end=' ')
+            print((mycolors.foreground.blue + "%-70s" % package1), end=' ')
             print((mycolors.foreground.cyan + "%-32s" % key1), end=' ')
             print((mycolors.reset + mycolors.foreground.red + "%8s" % vtfinal + mycolors.reset))
-#        finally:
-#            threadLimiter.release()
 
 
 class quickHAAndroidThread(threading.Thread):
@@ -48,8 +43,6 @@ class quickHAAndroidThread(threading.Thread):
         self.extractor = extractor
 
     def run(self):
-#        threadLimiter.acquire()
-#        try:
         key1 = self.key
         package1 = self.package
 
@@ -82,13 +75,13 @@ class quickHAAndroidThread(threading.Thread):
                 print((mycolors.reset + "%20s" % verdict), end='\n')
         else:
             print((mycolors.foreground.cyan + "%-70s" % package1), end=' ')
-            print((mycolors.foreground.green + "%-34s" % key1), end=' ')
+            print((mycolors.foreground.blue + "%-34s" % key1), end=' ')
             print((mycolors.foreground.cyan + "%9s" % final), end='')
             if (avdetect == 'None'):
                 print((mycolors.foreground.purple + "%7s" % avdetect), end='')
             else:
                 print((mycolors.foreground.purple + "%6s%%" % avdetect), end='')
-            print((mycolors.foreground.green + "%7s" % totalsignatures), end='')
+            print((mycolors.foreground.blue + "%7s" % totalsignatures), end='')
             if (threatscore == 'None'):
                 print((mycolors.foreground.red + "%12s" % threatscore), end='')
             else:
@@ -98,12 +91,10 @@ class quickHAAndroidThread(threading.Thread):
             elif (verdict == "suspicious"):
                 print((mycolors.foreground.cyan + "%20s" % verdict), end='\n')
             elif (verdict == "no specific threat"):
-                print((mycolors.foreground.green + "%20s" % verdict), end='\n')
+                print((mycolors.foreground.blue + "%20s" % verdict), end='\n')
             else:
                 verdict = 'not analyzed yet'
                 print((mycolors.reset + "%20s" % verdict), end='\n')
-#        finally:
-#            threadLimiter.release()
 
 
 class AndroidExtractor():
@@ -128,7 +119,7 @@ class AndroidExtractor():
 
         try:
             resource = filehash
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'user-agent': user_agent})
             requestsession.headers.update({'api-key': self.hybrid.HAAPI})
             requestsession.headers.update({'content-type': 'application/x-www-form-urlencoded'})
@@ -210,7 +201,7 @@ class AndroidExtractor():
             print((mycolors.foreground.lightcyan + "%-32s" % key1), end=' ')
             print((mycolors.foreground.lightred + "%8s" % vtfinal + mycolors.reset))
         else:
-            print((mycolors.foreground.green + "%-70s" % package), end=' ')
+            print((mycolors.foreground.blue + "%-70s" % package), end=' ')
             print((mycolors.foreground.cyan + "%-32s" % key1), end=' ')
             print((mycolors.reset + mycolors.foreground.red + "%8s" % vtfinal + mycolors.reset))
 
@@ -347,6 +338,10 @@ class AndroidExtractor():
         try:
             for j in results2:
                 if (package in j):
+                    if not j.startswith('/data/app/'):
+                        continue
+                    if not all(c in '/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-' for c in j):
+                        continue
                     subprocess.run([adb_comm, "pull", j], capture_output=True)
                     newname = j[10:]
 
@@ -393,6 +388,10 @@ class AndroidExtractor():
         try:
             for j in results2:
                 if (package in j):
+                    if not j.startswith('/data/app/'):
+                        continue
+                    if not all(c in '/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-' for c in j):
+                        continue
                     subprocess.run([adb_comm, "pull", j], capture_output=True)
                     newname = j[10:]
 

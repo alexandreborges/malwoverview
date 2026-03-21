@@ -3,6 +3,8 @@ import json
 import textwrap
 from datetime import datetime, timedelta
 from malwoverview.utils.colors import mycolors, printr
+from malwoverview.utils.session import create_session
+from malwoverview.utils.cache import cached
 import malwoverview.modules.configvars as cv
 
 
@@ -11,9 +13,10 @@ class NISTExtractor():
     base_url = 'https://services.nvd.nist.gov/rest/json/cves/2.0'
     
     def __init__(self):
-        self.session = requests.Session()
+        self.session = create_session()
         self.session.headers.update({'User-Agent': 'MalwoOverview/1.0'})
 
+    @cached("nist_cve")
     def query_cve(self, query_type, query_value, results_per_page=100, start_index=0, last_n_years=None):
         
         if not query_value:

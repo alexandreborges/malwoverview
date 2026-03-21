@@ -6,6 +6,7 @@ import base64
 import json
 import os
 from urllib.parse import quote
+from malwoverview.utils.session import create_session
 
 class MalpediaExtractor():
     malpediaurl = 'https://malpedia.caad.fkie.fraunhofer.de/api'
@@ -29,7 +30,7 @@ class MalpediaExtractor():
         try:
 
             resource = urlx
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Content-Type': 'application/json'})
             requestsession.headers.update({'Authorization': 'apitoken ' + self.MALPEDIAAPI})
             finalurl = '/'.join([resource, 'list', 'actors'])
@@ -83,7 +84,7 @@ class MalpediaExtractor():
         try:
 
             resource = urlx
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Content-Type': 'application/json'})
             requestsession.headers.update({'Authorization': 'apitoken ' + self.MALPEDIAAPI})
             finalurl = '/'.join([resource, 'list', 'samples'])
@@ -147,7 +148,7 @@ class MalpediaExtractor():
 
         try:
             resource = urlx
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Content-Type': 'application/json'})
             requestsession.headers.update({'Authorization': 'apitoken ' + self.MALPEDIAAPI})
             finalurl = '/'.join([resource, 'get', 'actor', quote(myargs, safe='')])
@@ -293,7 +294,7 @@ class MalpediaExtractor():
 
         try:
             resource = urlx
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Content-Type': 'application/json'})
             requestsession.headers.update({'Authorization': 'apitoken ' + self.MALPEDIAAPI})
             finalurl = '/'.join([resource, 'list', 'families'])
@@ -353,7 +354,7 @@ class MalpediaExtractor():
         try:
 
             resource = urlx
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Content-Type': 'application/json'})
             requestsession.headers.update({'Authorization': 'apitoken ' + self.MALPEDIAAPI})
             finalurl = '/'.join([resource, 'get', 'family', quote(myargs, safe='')])
@@ -450,7 +451,7 @@ class MalpediaExtractor():
 
         try:
             resource = urlx
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Content-Type': 'application/json'})
             requestsession.headers.update({'Authorization': 'apitoken ' + self.MALPEDIAAPI})
             finalurl = '/'.join([resource, 'get', 'sample', quote(myargs, safe=''), 'zip'])
@@ -501,7 +502,7 @@ class MalpediaExtractor():
 
         try:
             resource = urlx
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'Content-Type': 'application/json'})
             requestsession.headers.update({'Authorization': 'apitoken ' + self.MALPEDIAAPI})
             finalurl = '/'.join([resource, 'get', 'yara', quote(myargs, safe=''), 'zip'])

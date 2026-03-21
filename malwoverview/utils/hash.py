@@ -1,7 +1,22 @@
 import hashlib
 import os
+import re
 from malwoverview.utils.colors import mycolors, printr
 import malwoverview.modules.configvars as cv
+
+
+def detect_hash_type(value):
+    value = value.strip()
+    if not re.match(r'^[a-fA-F0-9]+$', value):
+        return 'unknown'
+    length = len(value)
+    if length == 32:
+        return 'md5'
+    elif length == 40:
+        return 'sha1'
+    elif length == 64:
+        return 'sha256'
+    return 'unknown'
 
 
 def sha256hash(fname):

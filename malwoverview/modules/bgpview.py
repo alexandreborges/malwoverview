@@ -1,6 +1,6 @@
-import requests
 import malwoverview.modules.configvars as cv
 from malwoverview.utils.colors import mycolors
+from malwoverview.utils.session import create_session
 import ipaddress
 
 class BGPViewExtractor:
@@ -15,7 +15,8 @@ class BGPViewExtractor:
         url = f"{BGPViewExtractor.urlbgpview}{ip_address}"
         
         try:
-            response = requests.get(url)
+            requestsession = create_session()
+            response = requestsession.get(url, timeout=30)
             data = response.json()
             return data.get('data', {}) if data.get('status') == 'ok' else {}
         except Exception:

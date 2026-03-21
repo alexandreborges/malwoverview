@@ -2,6 +2,7 @@ import malwoverview.modules.configvars as cv
 import requests
 import json
 from malwoverview.utils.colors import mycolors, printr
+from malwoverview.utils.session import create_session
 
 
 class ThreatFoxExtractor():
@@ -30,7 +31,7 @@ class ThreatFoxExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/json'})
             requestsession.headers.update({'Auth-Key': self.THREATFOXAPI})
             params = {'query': "get_iocs", 'days': int(bazaarx)}
@@ -212,7 +213,7 @@ class ThreatFoxExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/json'})
             requestsession.headers.update({'Auth-Key': self.THREATFOXAPI})
             params = {'query': "search_ioc", 'search_term': bazaarx}
@@ -406,7 +407,7 @@ class ThreatFoxExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/json'})
             requestsession.headers.update({'Auth-Key': self.THREATFOXAPI})
             params = {'query': "taginfo", 'tag': bazaarx}
@@ -607,7 +608,7 @@ class ThreatFoxExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/json'})
             requestsession.headers.update({'Auth-Key': self.THREATFOXAPI})
             params = {'query': "malwareinfo", 'malware': bazaarx}
@@ -801,7 +802,7 @@ class ThreatFoxExtractor():
             print((mycolors.reset + "".center(28)), end='')
             print("\n" + (100 * '-').center(50))
 
-            requestsession = requests.Session()
+            requestsession = create_session()
             requestsession.headers.update({'accept': 'application/json'})
             requestsession.headers.update({'Auth-Key': self.THREATFOXAPI})
             params = {'query': "malware_list"}

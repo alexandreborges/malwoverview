@@ -1,19 +1,11 @@
 import malwoverview.modules.configvars as cv
 from malwoverview.utils.colors import mycolors, printc
-import requests
+from malwoverview.utils.session import create_session
 import ipaddress
 
 class IPInfoExtractor:
     def __init__(self, IPINFOAPI):
         self.IPINFOAPI = IPINFOAPI
-        
-    """
-    IPInfo API can be used anonymously up to 1000 requests per day
-    def requestIPINFOAPI(self):
-            if self.IPINFOAPI == '':
-                print(mycolors.foreground.red + "\nTo use IPInfo.io services, you must create the .malwapi.conf file under your user home directory (on Linux is $HOME\\.malwapi.conf and on Windows is in C:\\Users\\[username]\\.malwapi.conf) and insert the IPInfo API key according to the format shown on the Github website." + mycolors.reset + "\n")
-                exit(1)
-    """
 
     def _raw_ip_info(self, ip_address):
         try:
@@ -25,9 +17,10 @@ class IPInfoExtractor:
         headers = {}
         if self.IPINFOAPI:
             headers['Authorization'] = f'Bearer {self.IPINFOAPI}'
-        
+
         try:
-            response = requests.get(url, headers=headers, timeout=30)
+            requestsession = create_session(headers)
+            response = requestsession.get(url, timeout=30)
             return response.json()
         except Exception as e:
             return {'error': {'message': str(e)}}
