@@ -46,7 +46,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-## Current Version: 8.0 (Codename: Revolutions)
+## Current Version: 8.0.1 (Codename: Revolutions)
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -1405,6 +1405,24 @@ Use --help with any subcommand for details:
       malwoverview -vc 8 -VC CVE-2024-21412
 
 ## HISTORY
+
+Version 8.0.1:
+
+      This version:
+
+            * Fixes a regression where -v 1, -v 2, -v 3, -v 4 (VirusTotal
+              file submission options) and -v 10, -v 11 (VirusTotal batch
+              hash check) were incorrectly validated as hashes instead of
+              file paths. Now these options accept filenames as they did
+              in 7.1.2.
+            * Fixes a regression where -a 1 through -a 5 (Hybrid Analysis
+              hash/file auto-detect options) were incorrectly validated as
+              hashes only. Adds sanitize_hash_or_path to accept either.
+            * Fixes a regression where -a 6 through -a 10 (Hybrid Analysis
+              file upload options) and -a 16, -a 17 (batch/dir check) were
+              being double-validated as both hash and path, causing failures.
+            * Adds missing CLI input validation for Polyswarm (-p 1 through
+              -p 8) and Malshare (-l 1 with -L <hash>).
 
 Version 8.0:
 
