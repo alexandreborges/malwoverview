@@ -21,7 +21,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 8.0  (codename: Revolutions)
+# Malwoverview.py: version 8.0.1  (codename: Revolutions)
 
 import os
 import sys
@@ -61,14 +61,14 @@ from malwoverview.utils.config import validate_config
 from malwoverview.utils.sanitize import (
     sanitize_hash, sanitize_ip, sanitize_domain, sanitize_url,
     sanitize_cve, sanitize_path, sanitize_tag, sanitize_general,
-    sanitize_uuid,
+    sanitize_uuid, sanitize_hash_or_path,
 )
 import malwoverview.modules.configvars as cv
 
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2026 Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "8.0"
+__version__ = "8.0.1"
 __email__ = "reverseexploit at proton.me"
 
 def finish_hook(signum, frame):
@@ -505,13 +505,21 @@ def main():
     yara_targetx = args.yara_target
 
     _CLI_VALIDATORS = {
-        'vt_hash':   (virustotaloptionx, virustotalargx, [1, 2, 3, 4, 8, 10, 11, 12], sanitize_hash),
+        'vt_hash':   (virustotaloptionx, virustotalargx, [8, 12], sanitize_hash),
         'vt_url':    (virustotaloptionx, virustotalargx, [5], sanitize_url),
         'vt_ip':     (virustotaloptionx, virustotalargx, [6], sanitize_ip),
         'vt_domain': (virustotaloptionx, virustotalargx, [7], sanitize_domain),
-        'vt_path':   (virustotaloptionx, virustotalargx, [9, 13], sanitize_path),
-        'ha_hash':   (haoptionx, haargx, list(range(1, 16)), sanitize_hash),
+        'vt_path':   (virustotaloptionx, virustotalargx, [1, 2, 3, 4, 9, 10, 11, 13], sanitize_path),
+        'ha_hp':     (haoptionx, haargx, [1, 2, 3, 4, 5], sanitize_hash_or_path),
+        'ha_hash':   (haoptionx, haargx, [11, 12, 13, 14, 15], sanitize_hash),
         'ha_path':   (haoptionx, haargx, [6, 7, 8, 9, 10, 16, 17], sanitize_path),
+        'ml_hash':   (mallist, malhash, [1], sanitize_hash),
+        'poly_hash': (polyoptionx, polyargx, [1, 3], sanitize_hash),
+        'poly_path': (polyoptionx, polyargx, [2, 4], sanitize_path),
+        'poly_ip':   (polyoptionx, polyargx, [5], sanitize_ip),
+        'poly_dom':  (polyoptionx, polyargx, [6], sanitize_domain),
+        'poly_url':  (polyoptionx, polyargx, [7], sanitize_url),
+        'poly_gen':  (polyoptionx, polyargx, [8], sanitize_general),
         'bz_hash':   (bazaarx, bazaarargx, [1, 3, 5], sanitize_hash),
         'bz_tag':    (bazaarx, bazaarargx, [2, 8], sanitize_tag),
         'bz_path':   (bazaarx, bazaarargx, [11, 12], sanitize_path),

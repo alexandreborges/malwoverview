@@ -28,6 +28,17 @@ def sanitize_hash(value):
     return value, None
 
 
+def sanitize_hash_or_path(value):
+    """Accept either a valid hex hash or a filesystem path."""
+    value = value.strip()
+    if not value:
+        return None, "Empty value."
+    if len(value) in (32, 40, 64) and _HEX_RE.match(value):
+        return value, None
+    resolved = os.path.abspath(os.path.expanduser(value))
+    return resolved, None
+
+
 def sanitize_ip(value):
     """Validate that *value* is a valid IPv4 or IPv6 address."""
     value = value.strip()
