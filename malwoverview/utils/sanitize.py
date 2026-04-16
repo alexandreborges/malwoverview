@@ -29,13 +29,17 @@ def sanitize_hash(value):
 
 
 def sanitize_hash_or_path(value):
-    """Accept either a valid hex hash or a filesystem path."""
+    """Accept either a valid hex hash or an existing filesystem path."""
     value = value.strip()
     if not value:
         return None, "Empty value."
     if len(value) in (32, 40, 64) and _HEX_RE.match(value):
         return value, None
+    if _DANGEROUS_CHARS_GENERAL_RE.search(value):
+        return None, "Input contains invalid characters."
     resolved = os.path.abspath(os.path.expanduser(value))
+    if not os.path.exists(resolved):
+        return None, f"Not a valid hash and file does not exist: {value}"
     return resolved, None
 
 
