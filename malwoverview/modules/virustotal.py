@@ -660,6 +660,70 @@ class VirusTotalExtractor():
             print(mycolors.reset)
             exit(3)
 
+    def vtipbatchwork(self, myip):
+        try:
+            response = self._raw_ip_info(myip)
+            vttext = response.json()
+
+            if (response.status_code == 404):
+                return (False, 'N/A', 'NOT FOUND', 0, 0)
+
+            attrs = vttext.get('data', {}).get('attributes', {})
+            country = attrs.get('country', 'N/A')
+            as_owner = attrs.get('as_owner', 'N/A')
+            stats = attrs.get('last_analysis_stats', {})
+            malicious = stats.get('malicious', 0)
+            total = sum(stats.values()) if stats else 0
+            return (True, country, as_owner, malicious, total)
+        except (ValueError, requests.exceptions.RequestException):
+            return (False, 'N/A', 'ERROR', 0, 0)
+
+    def vtipbatchcheck(self, filename, apitype):
+        apitype_var = apitype
+
+        try:
+            with open(filename, 'r') as fh:
+                iplines = fh.readlines()
+        except OSError:
+            if (cv.bkg == 1):
+                print((mycolors.foreground.lightred + "\nThe provided file doesn't exist!\n"))
+            else:
+                print((mycolors.foreground.red + "\nThe provided file doesn't exist!\n"))
+            print(mycolors.reset)
+            exit(3)
+
+        ipwidth = max([len("IP Address")] + [len(line.strip()) for line in iplines if line.strip()]) + 2
+
+        print(mycolors.reset)
+        print("IP Address".ljust(ipwidth) + "Country".ljust(12) + "AS Owner".ljust(42) + "Detection".ljust(14))
+        print('-' * (ipwidth + 68), end="\n\n")
+
+        ipnumber = 0
+        for ipitem in iplines:
+            myip = ipitem.strip()
+            if not myip:
+                continue
+            ipnumber = ipnumber + 1
+
+            (found, country, as_owner, malicious, total) = self.vtipbatchwork(myip)
+            as_owner_short = (as_owner[:38] + '...') if len(as_owner) > 38 else as_owner
+
+            if not found:
+                detection = '-'
+            else:
+                detection = str(malicious) + "/" + str(total)
+
+            if (cv.bkg == 1):
+                detcolor = mycolors.foreground.lightred if (found and malicious > 0) else mycolors.foreground.lightgreen
+                print(mycolors.foreground.lightcyan + myip.ljust(ipwidth) + mycolors.foreground.yellow + str(country).ljust(12) + mycolors.reset + as_owner_short.ljust(42) + detcolor + detection.ljust(14) + mycolors.reset)
+            else:
+                detcolor = mycolors.foreground.red if (found and malicious > 0) else mycolors.foreground.green
+                print(mycolors.foreground.purple + myip.ljust(ipwidth) + mycolors.foreground.blue + str(country).ljust(12) + mycolors.reset + as_owner_short.ljust(42) + detcolor + detection.ljust(14) + mycolors.reset)
+
+            if (apitype_var == 1):
+                if ((ipnumber % 4) == 0):
+                    time.sleep(61)
+
     def vturlwork(self, myurl):
         if not myurl or not validators.url(myurl):
             if cv.bkg == 0:

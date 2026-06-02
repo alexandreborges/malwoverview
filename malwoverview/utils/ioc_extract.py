@@ -1,8 +1,9 @@
 import re
 import os
 import ipaddress
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 import socket
+import requests
 
 from malwoverview.utils.colors import mycolors, printr
 import malwoverview.modules.configvars as cv
@@ -61,37 +62,75 @@ class IOCExtractor:
 
     @staticmethod
     def _validate_url_target(url):
-        parsed = urlparse(url)
+        if not isinstance(url, str) or not url:
+            return False, "Invalid URL.", None
+        for ch in url:
+            if ch == '\\' or ch.isspace() or ord(ch) < 0x20 or ord(ch) == 0x7f:
+                return False, "Invalid URL: contains backslash, whitespace, or control characters.", None
+        try:
+            prepared_url = requests.Request('GET', url).prepare().url
+        except Exception:
+            return False, "Invalid URL.", None
+        parsed = urlparse(prepared_url)
         if parsed.scheme not in ('http', 'https'):
-            return False, "Only http/https URLs are allowed."
+            return False, "Only http/https URLs are allowed.", None
         hostname = parsed.hostname
         if not hostname:
-            return False, "Invalid URL: no hostname."
+            return False, "Invalid URL: no hostname.", None
+        if any(c in hostname for c in '\\/@ \t\r\n'):
+            return False, "Invalid hostname.", None
         try:
             resolved = socket.getaddrinfo(hostname, None)
             for _, _, _, _, addr in resolved:
                 ip = ipaddress.ip_address(addr[0])
                 if ip.is_private or ip.is_loopback or ip.is_reserved or ip.is_link_local:
-                    return False, f"URL resolves to private/reserved address ({addr[0]}). Blocked for security."
+                    return False, f"URL resolves to private/reserved address ({addr[0]}). Blocked for security.", None
         except (socket.gaierror, ValueError):
             pass
-        return True, ""
+        return True, "", prepared_url
 
     def extract_from_url(self, url):
         MAX_SIZE = 10 * 1024 * 1024
-
-        safe, reason = self._validate_url_target(url)
-        if not safe:
-            print(
-                mycolors.foreground.error(cv.bkg)
-                + reason
-                + mycolors.reset
-            )
-            return {}
+        MAX_REDIRECTS = 5
+        REDIRECT_STATUS = (301, 302, 303, 307, 308)
 
         try:
             session = create_session()
-            response = session.get(url, timeout=30, stream=True)
+
+            # Follow redirects manually so every hop is re-validated against the
+            # SSRF allowlist. Letting requests auto-follow would let a public
+            # URL redirect to an internal/metadata address after the initial
+            # check has already passed.
+            current_url = url
+            response = None
+            for _ in range(MAX_REDIRECTS + 1):
+                safe, reason, safe_url = self._validate_url_target(current_url)
+                if not safe:
+                    print(
+                        mycolors.foreground.error(cv.bkg)
+                        + reason
+                        + mycolors.reset
+                    )
+                    return {}
+
+                response = session.get(safe_url, timeout=30, stream=True, allow_redirects=False)
+
+                if response.status_code in REDIRECT_STATUS and 'Location' in response.headers:
+                    location = response.headers.get('Location')
+                    response.close()
+                    if not location:
+                        break
+                    current_url = urljoin(safe_url, location)
+                    continue
+                break
+            else:
+                print(
+                    mycolors.foreground.error(cv.bkg)
+                    + f"Too many redirects (max {MAX_REDIRECTS})."
+                    + mycolors.reset
+                )
+                return {}
+
             response.raise_for_status()
 
             content_type = response.headers.get('Content-Type', '')

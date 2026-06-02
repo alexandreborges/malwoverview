@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v8.0.1) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v8.0.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [![Downloads](https://static.pepy.tech/personalized-badge/malwoverview?period=month&units=international_system&left_color=grey&right_color=orange&left_text=Last%2030%20days)](https://pepy.tech/project/malwoverview)
@@ -46,7 +46,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-## Current Version: 8.0.1 (Codename: Revolutions)
+## Current Version: 8.0.2 (Codename: Revolutions)
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -119,6 +119,7 @@ This tool aims to :
 52. TUI (Text User Interface) dashboard mode with panel-based navigation.
 53. Gather threat hunting information from URLScan.io — submit URLs, retrieve scan results, and search scans.
 54. LLM-powered threat enrichment — AI-generated risk assessment, MITRE ATT&CK mapping, and analyst recommendations appended to any query result. Supports Claude, Gemini, OpenAI, and Ollama (local).
+55. Batch IP check against VirusTotal from a file containing IP addresses, showing a summary table (IP Address, Country, AS Owner, Detection).
 
 ## CONTRIBUTORS
 
@@ -530,7 +531,7 @@ usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1
 -V <argument> -a <1-17> -A <filename> -l <1-7> -L <hash> -j <1-7>
 -J <argument> -p <1-8> -P <argument> -y <1-5> -Y <file name> -n <1-5>
 -N <argument> -m <1-8> -M <argument> -b <1-12> -B <argument> -x <1-9> -X <argument>
--ip <1-7> -IP <argument> -O <directory> --nist <1-5> --NIST <argument> -vc <1-8>
+-ip <1-8> -IP <argument> -O <directory> --nist <1-5> --NIST <argument> -vc <1-8>
 -VC <argument> -s <1-2> -S <argument> -ab <1> -AB <argument> -gn <1> -GN <argument>
 -wh <1-2> -WH <argument> -u <1-5> -U <arg> --correlate-hash <hash> --extract-iocs <file|url> --yara <rules>
 --yara-target <target> --output-format text|json|csv --proxy <url> --quiet --verbose
@@ -850,12 +851,17 @@ MALWARE OPTIONS:
             + 4: Get details for an IP address from Shodan;
             + 5: Get details for an IP address from AbuseIPDB;
             + 6: Get details for an IP address from GreyNoise;
-            + 7: Get details for an IP address from all services (comprehensive).
+            + 7: Get details for an IP address from all services (comprehensive);
+            + 8: Batch check IP addresses from a file (one per line) against
+            VirusTotal and show a summary table (IP Address, Country, AS Owner,
+            Detection). Use -D to choose between Public (-D 1) and Premium
+            (-D 0, default) VT API.
 
       -IP IPARG, --iparg IPARG
 
-            + Provides an IP address (IPv4 or IPv6) for the -ip option. All -ip
-            options (1 through 7) require a valid IP address.
+            + Provides an argument for the -ip option. For -ip 1 through 7 it
+            must be a valid IP address (IPv4 or IPv6); for -ip 8 it must be a
+            file containing IP addresses (one per line).
 
 	-s SHODAN, --shodan SHODAN
 
@@ -1070,6 +1076,7 @@ Subcommand examples (equivalent to flag-based syntax):
       malwoverview triage batch <hashfile>              # same as: malwoverview -x 8 -X <hashfile>
       malwoverview ip all <ipaddr>                      # same as: malwoverview -ip 7 -IP <ipaddr>
       malwoverview ip shodan <ipaddr>                   # same as: malwoverview -ip 4 -IP <ipaddr>
+      malwoverview ip batch <ipfile>                    # same as: malwoverview -ip 8 -IP <ipfile>
       malwoverview whois domain <domain>                # same as: malwoverview -wh 1 -WH <domain>
       malwoverview correlate hash <sha256>              # same as: malwoverview --correlate-hash <sha256>
       malwoverview extract <file|url>                    # same as: malwoverview --extract-iocs <file|url>
@@ -1193,6 +1200,8 @@ Use --help with any subcommand for details:
       malwoverview -ip 5 -IP 8.8.8.8
       malwoverview -ip 6 -IP 8.8.8.8
       malwoverview -ip 7 -IP 8.8.8.8
+      malwoverview -ip 8 -IP /home/remnux/malware/ip_list.txt
+      malwoverview -ip 8 -IP /home/remnux/malware/ip_list.txt -D 1
       malwoverview -s 1 -S 8.8.8.8
       malwoverview -s 2 -S "apache"
       malwoverview -ab 1 -AB 185.220.100.243
@@ -1405,6 +1414,56 @@ Use --help with any subcommand for details:
       malwoverview -vc 8 -VC CVE-2024-21412
 
 ## HISTORY
+
+Version 8.0.2:
+
+      This version:
+
+            * Introduces a batch IP check against VirusTotal (-ip 8 / "ip
+              batch" subcommand). Given a file with one IP address per line,
+              it queries VirusTotal for each address and prints a summary
+              table with the IP Address, Country, AS Owner and Detection
+              ratio (e.g. 8/94). Use -D to choose between the Public (-D 1,
+              sleeps 61s every 4 IPs to honour the rate limit) and Premium
+              (-D 0, default) VT API.
+
+            * Fixes the Android device-scan options (-y 1, -y 2 and -y 3),
+              which had stopped working on current Android versions. The
+              package listing is now parsed to support the modern /data/app
+              layout (the '~~' prefix and '==' path segments introduced in
+              Android 10+), and adb's CRLF output is handled so the options
+              also work on Windows. The on-device hashing now uses sha256sum
+              instead of md5sum, so the table shows the SHA256 hash. Clear
+              messages are also printed when adb is not in the PATH or when
+              no third-party packages are found.
+
+            * Fixes a second SSRF bypass in the IOC extraction feature
+              (--extract-iocs <url>). The URL validator only checked the
+              initial address, but the fetch followed HTTP redirects
+              automatically, so a public URL could redirect to an internal or
+              cloud-metadata address (e.g. 169.254.169.254) after the check had
+              already passed. Redirects are now followed manually and every hop
+              is re-validated against the private/reserved-address allowlist,
+              with a maximum redirect limit.
+
+            * Hardens the Android send options (-y 4 and -y 5) against a path
+              traversal triggered by a malicious/compromised connected device.
+              The package name reported by adb is now restricted to valid
+              Android package characters and the output file name is reduced to
+              its base name, so a crafted package listing can no longer cause a
+              file to be written outside the output directory.
+
+            * Fixes an SSRF bypass vulnerability (issue #96) in the IOC
+              extraction URL validator (ioc_extract.py). The previous
+              validation used urlparse() while the actual HTTP request was
+              made by requests, which normalize URLs differently. Crafted
+              inputs such as http://127.0.0.1:6666\@1.1.1.1 could pass the
+              public-hostname check yet still cause requests to connect to
+              an internal address. The validator now rejects URLs containing
+              backslashes, whitespace, or control characters, derives the
+              effective URL via requests.PreparedRequest so the hostname
+              that is actually contacted is the one being validated, and
+              passes that normalized URL to session.get.
 
 Version 8.0.1:
 

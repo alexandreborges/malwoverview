@@ -11,6 +11,17 @@ import os
 from malwoverview.utils.session import create_session
 
 
+PKG_COL_WIDTH = 50
+PKG_COL_WIDTH_HA = 40
+
+
+def truncate_pkg(text, width=PKG_COL_WIDTH):
+    text = str(text)
+    if len(text) > width:
+        return text[:width - 3] + '...'
+    return text
+
+
 class androidVTThread(threading.Thread):
     def __init__(self, key, package, extractor):
         threading.Thread.__init__(self)
@@ -26,12 +37,12 @@ class androidVTThread(threading.Thread):
         vtfinal = self.extractor.virustotal.vtcheck(myhash, 0)
 
         if (cv.bkg == 1):
-            print((mycolors.foreground.yellow + "%-70s" % package1), end=' ')
-            print((mycolors.foreground.lightcyan + "%-32s" % key1), end=' ')
+            print((mycolors.foreground.yellow + "%-50s" % truncate_pkg(package1)), end=' ')
+            print((mycolors.foreground.lightcyan + "%-65s" % key1), end=' ')
             print((mycolors.reset + mycolors.foreground.lightcyan + "%8s" % vtfinal + mycolors.reset))
         else:
-            print((mycolors.foreground.blue + "%-70s" % package1), end=' ')
-            print((mycolors.foreground.cyan + "%-32s" % key1), end=' ')
+            print((mycolors.foreground.blue + "%-50s" % truncate_pkg(package1)), end=' ')
+            print((mycolors.foreground.cyan + "%-65s" % key1), end=' ')
             print((mycolors.reset + mycolors.foreground.red + "%8s" % vtfinal + mycolors.reset))
 
 
@@ -52,8 +63,8 @@ class quickHAAndroidThread(threading.Thread):
         (final, verdict, avdetect, totalsignatures, threatscore, totalprocesses, networkconnections) = result
 
         if (cv.bkg == 1):
-            print((mycolors.foreground.lightcyan + "%-70s" % package1), end=' ')
-            print((mycolors.foreground.yellow + "%-34s" % key1), end=' ')
+            print((mycolors.foreground.lightcyan + "%-40s" % truncate_pkg(package1, PKG_COL_WIDTH_HA)), end=' ')
+            print((mycolors.foreground.yellow + "%-64s" % key1), end=' ')
             print((mycolors.foreground.lightcyan + "%9s" % final), end='')
             if (avdetect == 'None'):
                 print((mycolors.foreground.lightcyan + "%7s" % avdetect), end='')
@@ -74,8 +85,8 @@ class quickHAAndroidThread(threading.Thread):
                 verdict = 'not analyzed yet'
                 print((mycolors.reset + "%20s" % verdict), end='\n')
         else:
-            print((mycolors.foreground.cyan + "%-70s" % package1), end=' ')
-            print((mycolors.foreground.blue + "%-34s" % key1), end=' ')
+            print((mycolors.foreground.cyan + "%-40s" % truncate_pkg(package1, PKG_COL_WIDTH_HA)), end=' ')
+            print((mycolors.foreground.blue + "%-64s" % key1), end=' ')
             print((mycolors.foreground.cyan + "%9s" % final), end='')
             if (avdetect == 'None'):
                 print((mycolors.foreground.purple + "%7s" % avdetect), end='')
@@ -197,12 +208,12 @@ class AndroidExtractor():
         key1 = key
         vtfinal = self.virustotal.vtcheck(key1, 0)
         if (cv.bkg == 1):
-            print((mycolors.foreground.yellow + "%-70s" % package), end=' ')
-            print((mycolors.foreground.lightcyan + "%-32s" % key1), end=' ')
+            print((mycolors.foreground.yellow + "%-50s" % truncate_pkg(package)), end=' ')
+            print((mycolors.foreground.lightcyan + "%-65s" % key1), end=' ')
             print((mycolors.foreground.lightred + "%8s" % vtfinal + mycolors.reset))
         else:
-            print((mycolors.foreground.blue + "%-70s" % package), end=' ')
-            print((mycolors.foreground.cyan + "%-32s" % key1), end=' ')
+            print((mycolors.foreground.blue + "%-50s" % truncate_pkg(package)), end=' ')
+            print((mycolors.foreground.cyan + "%-65s" % key1), end=' ')
             print((mycolors.reset + mycolors.foreground.red + "%8s" % vtfinal + mycolors.reset))
 
     def checkandroidvtx(self, key, package):
@@ -217,191 +228,159 @@ class AndroidExtractor():
             thread = androidVTThread(key, package, self)
             thread.start()
 
+    APK_PATH_ALLOWED = set('/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-~=')
+    PKG_NAME_ALLOWED = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._')
+
+    @staticmethod
+    def _parse_packages(output):
+        packages = {}
+        if not output:
+            return packages
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line.startswith('package:'):
+                continue
+
+            body = line[len('package:'):]
+            apk_path, sep, pkg_name = body.rpartition('=')
+            if not sep or not pkg_name or not apk_path:
+                continue
+            if not apk_path.startswith('/data/app/') or not apk_path.endswith('.apk'):
+                continue
+            if not all(c in AndroidExtractor.APK_PATH_ALLOWED for c in apk_path):
+                continue
+            if not all(c in AndroidExtractor.PKG_NAME_ALLOWED for c in pkg_name):
+                continue
+
+            packages[pkg_name] = apk_path
+
+        return packages
+
+    def _adb_not_found_msg(self):
+        if (cv.bkg == 1):
+            print(mycolors.foreground.lightred + "\nThe 'adb' tool was not found in your PATH. Install Android platform-tools and make sure 'adb' is reachable.\n")
+        else:
+            print(mycolors.foreground.red + "\nThe 'adb' tool was not found in your PATH. Install Android platform-tools and make sure 'adb' is reachable.\n")
+        printr()
+
+    def _no_packages_msg(self):
+        if (cv.bkg == 1):
+            print(mycolors.foreground.lightred + "\nNo third-party packages were found. Is a device connected and authorized? Check with 'adb devices'.\n")
+        else:
+            print(mycolors.foreground.red + "\nNo third-party packages were found. Is a device connected and authorized? Check with 'adb devices'.\n")
+        printr()
+
+    def _list_device_packages(self, adb_comm="adb"):
+        try:
+            myconn = subprocess.run([adb_comm, "shell", "pm", "list", "packages", "-f", "-3"], capture_output=True)
+        except FileNotFoundError:
+            self._adb_not_found_msg()
+            return None
+
+        output = myconn.stdout.decode(errors='ignore')
+        return self._parse_packages(output)
+
     def checkandroid(self, engine):
         adb_comm = "adb"
-        results = list()
-        results2 = list()
-        final1 = list()
-        final2 = list()
 
-        tm1 = 0
+        packages = self._list_device_packages(adb_comm)
+        if packages is None:
+            return
 
-        myconn = subprocess.run([adb_comm, "shell", "pm", "list", "packages", "-f", "-3"], capture_output=True)
-        myconn2 = myconn.stdout.decode()
+        dictAndroid = {}
+        for pkg_name, apk_path in packages.items():
+            myconn3 = subprocess.run([adb_comm, "shell", "sha256sum", apk_path], text=True, capture_output=True)
+            hashout = (myconn3.stdout or '').strip()
+            if not hashout:
+                continue
+            sha256 = hashout.split(" ")[0].strip()
+            if sha256:
+                dictAndroid[pkg_name] = sha256
 
-        try:
-            for i in myconn2.split('\n'):
-                for j in i.split("base.apk"):
-                    if 'package' in j:
-                        key, value = j.split('package:')
-                        _, value2 = value.split('/data/app/')
-                        results.append(value2[:-3])
-                        valuetmp = value + "base.apk"
-                        results2.append(valuetmp)
-        except AttributeError:
-            pass
-
-        try:
-            for h in results2:
-                if not h or not h.startswith('/data/app/'):
-                    continue
-                # Allowlist: only permit valid Android path characters
-                if not all(c in '/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-' for c in h):
-                    continue
-                myconn3 = subprocess.run([adb_comm, "shell", "md5sum", h], text=True, capture_output=True)
-                x = myconn3.stdout.split(" ")[0]
-                final1.append(x)
-
-        except AttributeError:
-            pass
-
-        try:
-            for n in results:
-                final2.append(n)
-        except AttributeError:
-            pass
-
-        zipAndroid = zip(final2, final1)
-        dictAndroid = dict(zipAndroid)
+        if not dictAndroid:
+            self._no_packages_msg()
+            return
 
         if (engine == 1):
             print(mycolors.reset + "\n")
-            print("Package".center(70) + "Hash".center(34) + "Found?".center(12) + "AVdet".center(10) + "Sigs".center(5) + "Score".center(14) + "Verdict".center(14))
-            print((162 * '-').center(81))
+            print("Package".center(40) + "Hash".center(66) + "Found?".center(12) + "AVdet".center(10) + "Sigs".center(5) + "Score".center(14) + "Verdict".center(14))
+            print(161 * '-')
             for key, value in dictAndroid.items():
-                try:
-                    key1a = (key.split("==/", 1)[1])
-                except IndexError:
-                    key1a = key
-                try:
-                    key1b = (key1a.split("-", 1)[0])
-                except IndexError:
-                    key1b = key1a
-
-                self.checkandroidha(value, key1b)
+                self.checkandroidha(value, key)
 
         if (engine == 2):
+            tm1 = 0
             print(mycolors.reset + "\n")
-            print("Package".center(70) + "Hash".center(36) + "Virus Total".center(12))
-            print((118 * '-').center(59))
+            print("Package".center(50) + "Hash".center(66) + "Virus Total".center(12))
+            print(128 * '-')
             for key, value in dictAndroid.items():
-                try:
-                    key1a = (key.split("==/", 1)[1])
-                except IndexError:
-                    key1a = key
-                try:
-                    key1b = (key1a.split("-", 1)[0])
-                except IndexError:
-                    key1b = key1a
                 tm1 = tm1 + 1
                 if tm1 % 4 == 0:
                     time.sleep(61)
-                self.checkandroidvt(value, key1b)
+                self.checkandroidvt(value, key)
 
         if (engine == 3):
             print(mycolors.reset + "\n")
-            print("Package".center(70) + "Hash".center(36) + "Virus Total".center(12))
-            print((118 * '-').center(59))
+            print("Package".center(50) + "Hash".center(66) + "Virus Total".center(12))
+            print(128 * '-')
             for key, value in dictAndroid.items():
-                try:
-                    key1a = (key.split("==/", 1)[1])
-                except IndexError:
-                    key1a = key
-                try:
-                    key1b = (key1a.split("-", 1)[0])
-                except IndexError:
-                    key1b = key1a
-                self.checkandroidvtx(value, key1b)
+                self.checkandroidvtx(value, key)
 
-    def sendandroidha(self, package, xx=3):
-        adb_comm = "adb"
-        results = list()
-        results2 = list()
-        newname = ''
+    def _pull_apk(self, package, adb_comm="adb"):
+        packages = self._list_device_packages(adb_comm)
+        if packages is None:
+            return None
 
-        myconn = subprocess.run([adb_comm, "shell", "pm", "list", "packages", "-f", "-3"], capture_output=True)
-        myconn2 = myconn.stdout.decode()
+        apk_path = None
+        chosen = None
+        for pkg_name, path in packages.items():
+            if package == pkg_name or package in pkg_name or package in path:
+                apk_path = path
+                chosen = pkg_name
+                break
 
-        try:
-            for i in myconn2.split('\n'):
-                for j in i.split('base.apk'):
-                    if 'package' in j:
-                        _, value = j.split('package:')
-                        _, value2 = value.split('/data/app/')
-                        results.append(value2)
-                        valuetmp = value + "base.apk"
-                        results2.append(valuetmp)
-
-        except AttributeError:
-            pass
-
-        try:
-            for j in results2:
-                if (package in j):
-                    if not j.startswith('/data/app/'):
-                        continue
-                    if not all(c in '/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-' for c in j):
-                        continue
-                    subprocess.run([adb_comm, "pull", j], capture_output=True)
-                    newname = j[10:]
-
-        except AttributeError:
-            pass
-
-        try:
-            targetfile1 = newname.split('==/', 1)[1]
-            targetfile = targetfile1.split('-', 1)[0]
-            os.rename('base.apk', targetfile)
-            self.hybrid.hafilecheck(targetfile, xx=xx)
-        except FileNotFoundError:
+        if not apk_path:
             if (cv.bkg == 1):
                 print((mycolors.foreground.lightred + "\nFile not found on device!\n"))
             else:
-                print((mycolors.foreground.lightred + "\nFile not found on device!\n"))
-            exit(1)
+                print((mycolors.foreground.red + "\nFile not found on device!\n"))
+            printr()
+            return None
+
+        subprocess.run([adb_comm, "pull", apk_path], capture_output=True)
+
+        localname = os.path.basename(apk_path)
+        targetfile = os.path.basename(chosen) + ".apk"
+
+        if not os.path.isfile(localname):
+            if (cv.bkg == 1):
+                print((mycolors.foreground.lightred + "\nFailed to pull the APK from the device!\n"))
+            else:
+                print((mycolors.foreground.red + "\nFailed to pull the APK from the device!\n"))
+            printr()
+            return None
+
+        os.replace(localname, targetfile)
+        return targetfile
+
+    def sendandroidha(self, package, xx=3):
+        targetfile = self._pull_apk(package)
+        if not targetfile:
+            return
+
+        try:
+            self.hybrid.hafilecheck(targetfile, xx=xx)
         finally:
-            if (targetfile != ".apk"):
+            if os.path.isfile(targetfile):
                 os.remove(targetfile)
 
     def sendandroidvt(self, package):
-        adb_comm = "adb"
-        results = list()
-        results2 = list()
-        newname = ''
-
-        myconn = subprocess.run([adb_comm, "shell", "pm", "list", "packages", "-f", "-3"], capture_output=True)
-        myconn2 = myconn.stdout.decode()
+        targetfile = self._pull_apk(package)
+        if not targetfile:
+            return
 
         try:
-            for i in myconn2.split('\n'):
-                for j in i.split('base.apk='):
-                    if 'package' in j:
-                        _, value = j.split('package:')
-                        _, value2 = value.split('/data/app/')
-                        results.append(value2)
-                        valuetmp = value + "base.apk"
-                        results2.append(valuetmp)
-
-        except AttributeError:
-            pass
-
-        try:
-            for j in results2:
-                if (package in j):
-                    if not j.startswith('/data/app/'):
-                        continue
-                    if not all(c in '/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-' for c in j):
-                        continue
-                    subprocess.run([adb_comm, "pull", j], capture_output=True)
-                    newname = j[10:]
-
-        except AttributeError:
-            pass
-
-        try:
-            targetfile1 = newname.split('==/', 1)[1]
-            targetfile = targetfile1.split('-', 1)[0]
-            os.rename(r'base.apk', targetfile)
             myhash = sha256hash(targetfile)
             self.virustotal.vtuploadfile(targetfile)
             if (cv.bkg == 1):
@@ -410,15 +389,6 @@ class AndroidExtractor():
                 print(mycolors.foreground.purple + "\tWaiting for 120 seconds...\n")
             time.sleep(120)
             self.virustotal.vthashwork(myhash, 1)
-
-        except FileNotFoundError:
-            if (cv.bkg == 1):
-                print((mycolors.foreground.lightred + "\nFile not found on device!\n"))
-            else:
-                print((mycolors.foreground.lightred + "\nFile not found on device!\n"))
-            printr()
-            exit(1)
-
         finally:
-            if (targetfile != ".apk"):
+            if os.path.isfile(targetfile):
                 os.remove(targetfile)
