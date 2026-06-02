@@ -21,7 +21,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 8.0.1  (codename: Revolutions)
+# Malwoverview.py: version 8.0.2  (codename: Revolutions)
 
 import os
 import sys
@@ -68,7 +68,7 @@ import malwoverview.modules.configvars as cv
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2026 Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "8.0.1"
+__version__ = "8.0.2"
 __email__ = "reverseexploit at proton.me"
 
 def finish_hook(signum, frame):
@@ -109,7 +109,7 @@ def main():
         USER_HOME_DIR = str(Path.home()) + '/'
         cv.windows = 0
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is " + __version__, usage="usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-17> -A <filename> -l <1-7> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-12> -B <arg> -x <1-9> -X <arg> --nist <1-5> --NIST <argument> -O <output directory> -ip <1-7> -IP <IP address> -vc <1-8> -VC <argument> -s <1-2> -S <arg> -ab <1> -AB <arg> -gn <1> -GN <arg> -wh <1-2> -WH <arg> -u <1-5> -U <arg> --correlate-hash <hash> --extract-iocs <file> --yara <rules> --yara-target <target> --output-format text|json|csv --proxy <url> --quiet --verbose --no-cache --interactive --attack-map")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is " + __version__, usage="usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-13> -V <virustotal arg> -a <1-17> -A <filename> -l <1-7> -L <hash> -j <1-7> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-8> -M <argument> -b <1-12> -B <arg> -x <1-9> -X <arg> --nist <1-5> --NIST <argument> -O <output directory> -ip <1-8> -IP <IP address> -vc <1-8> -VC <argument> -s <1-2> -S <arg> -ab <1> -AB <arg> -gn <1> -GN <arg> -wh <1-2> -WH <arg> -u <1-5> -U <arg> --correlate-hash <hash> --extract-iocs <file> --yara <rules> --yara-target <target> --output-format text|json|csv --proxy <url> --quiet --verbose --no-cache --interactive --attack-map")
     
     malware_group = parser.add_argument_group('MALWARE OPTIONS', 'Malware analysis and intelligence query options')
     malware_group.add_argument('-c', '--config', dest='config', type=str, metavar="CONFIG FILE", default=(USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s.')
@@ -137,8 +137,8 @@ def main():
     malware_group.add_argument('-x', '--triage', dest='triage', type=int, default=0, metavar="TRIAGE", help='Provides information from TRIAGE according to the specified value: <1> this option gets sample\'s general information by providing an argument with -X option in the following possible formats: sha256:<value>, sha1:<value>, md5:<value>, family:<value>, score:<value>, tag:<value>, url:<value>, wallet:<value>, ip:<value>; <2> Get a sumary report for a given Triage ID (got from option -x 1) ; <3> Submit a sample for analysis ; <4> Submit a sample through a URL for analysis ; <5> Download sample specified by the Triage ID; <6> Download pcapng file from sample associated to given Triage ID; <7> Get a dynamic report for the given Triage ID (got from option -x 1); <8> Batch hash check from a file (one hash per line); <9> Directory scan - computes SHA256 for each file and checks against Triage.')
     malware_group.add_argument('-X', '--triagearg', dest='triagearg', type=str, default='', metavar="TRIAGE_ARG", help='Provides argument for -x option from TRIAGE. If "-x 1" then -X must be a search query (e.g., sha256:<hash>, family:<name>, tag:<tag>, ip:<ip>); If "-x 2" then -X must be a Triage sample ID (obtained from -x 1); If "-x 3" then -X must be a file path to submit; If "-x 4" then -X must be a URL to submit; If "-x 5" or "-x 6" then -X must be a Triage sample ID to download; If "-x 7" then -X must be a Triage sample ID for dynamic report; If "-x 8" then -X must be a file containing hashes (one per line); If "-x 9" then -X must be a directory path to scan.')
     malware_group.add_argument('-O', '--output-dir', dest='output_dir', type=str, default='.', help='Set output directory for all sample downloads.')
-    malware_group.add_argument('-ip', '--ip', dest='ipoption', type=int, default=0, metavar="IP", help='Get IP information from various sources. The possible values are: 1: Get details for an IP address provided with -IP from IPInfo; 2: Get details for an IP address provided with -IP from BGPView; 3: Get details for an IP address provided with -IP from all available intel services (VirusTotal/Alienvault); 4: Get details from Shodan; 5: Get details from AbuseIPDB; 6: Get details from GreyNoise; 7: Get details from all services (comprehensive).')
-    malware_group.add_argument('-IP', '--iparg', dest='iparg', type=str, metavar="IP_ARG", help='Provides an IP address for the -ip option. All -ip options (1 through 7) require a valid IPv4 or IPv6 address.')
+    malware_group.add_argument('-ip', '--ip', dest='ipoption', type=int, default=0, metavar="IP", help='Get IP information from various sources. The possible values are: 1: Get details for an IP address provided with -IP from IPInfo; 2: Get details for an IP address provided with -IP from BGPView; 3: Get details for an IP address provided with -IP from all available intel services (VirusTotal/Alienvault); 4: Get details from Shodan; 5: Get details from AbuseIPDB; 6: Get details from GreyNoise; 7: Get details from all services (comprehensive); 8: Batch check IP addresses from a file (one per line) against VirusTotal and show a summary table (IP Address, Country, AS Owner, Detection). Use -D to choose between Public (-D 1) and Premium (-D 0, default) VT API.')
+    malware_group.add_argument('-IP', '--iparg', dest='iparg', type=str, metavar="IP_ARG", help='Provides an argument for the -ip option. For -ip 1 through 7 it must be a valid IPv4 or IPv6 address; for -ip 8 it must be a file containing IP addresses (one per line).')
     malware_group.add_argument('-s', '--shodan', dest='shodanoption', type=int, default=0, metavar="SHODAN", help='SHODAN options: 1: IP lookup; 2: Search query.')
     malware_group.add_argument('-S', '--shodanarg', dest='shodanarg', type=str, default='', metavar="SHODAN_ARG", help='Provides argument for -s option from SHODAN. If "-s 1" then -S must be an IP address; If "-s 2" then -S must be a search query (e.g., "apache", "port:22 country:BR").')
     malware_group.add_argument('-ab', '--abuseipdb', dest='abuseipdb', type=int, default=0, metavar="ABUSEIPDB", help='ABUSEIPDB options: 1: Check IP reputation.')
@@ -275,6 +275,8 @@ def main():
     ip_greynoise.add_argument('target', help='IP address')
     ip_all = ip_sub.add_parser('all', help='All services lookup')
     ip_all.add_argument('target', help='IP address')
+    ip_batch = ip_sub.add_parser('batch', help='Batch VirusTotal check from a file (one IP per line)')
+    ip_batch.add_argument('target', help='File containing IP addresses (one per line)')
 
     wh_parser = subparsers.add_parser('whois', help='Whois/RDAP lookups')
     wh_sub = wh_parser.add_subparsers(dest='wh_action')
@@ -352,7 +354,7 @@ def main():
             args.hausoption = uh_map.get(args.uh_action, 0)
             args.hausarg = args.target
     elif args.command == 'ip':
-        ip_map = {'info': 1, 'bgp': 2, 'shodan': 4, 'abuse': 5, 'greynoise': 6, 'all': 7}
+        ip_map = {'info': 1, 'bgp': 2, 'shodan': 4, 'abuse': 5, 'greynoise': 6, 'all': 7, 'batch': 8}
         if args.ip_action:
             args.ipoption = ip_map.get(args.ip_action, 0)
             args.iparg = args.target
@@ -538,6 +540,7 @@ def main():
         'uh_url':    (hausoptionx, hausargx, [3], sanitize_url),
         'uh_tag':    (hausoptionx, hausargx, [4, 5], sanitize_tag),
         'ip_addr':   (ipoptionx, ipargx, [1, 2, 3, 4, 5, 6, 7], sanitize_ip),
+        'ip_batch':  (ipoptionx, ipargx, [8], sanitize_path),
         'sh_ip':     (shodanoptionx, shodanargx, [1], sanitize_ip),
         'sh_gen':    (shodanoptionx, shodanargx, [2], sanitize_general),
         'ab_ip':     (abuseipdbx, abuseipdbargx, [1], sanitize_ip),
@@ -609,7 +612,7 @@ def main():
         args.malsharelist not in optval8,
         args.virustotaloption not in optval9,
         args.vtpubpremium not in optval,
-        args.ipoption not in range(8),
+        args.ipoption not in range(9),
         args.androidoption not in optval5,
         args.shodanoption not in range(3),
         args.abuseipdb not in range(2),
@@ -623,7 +626,7 @@ def main():
         virustotaloptionx and virustotalargx, args.direct, fprovided,
         haoptionx and haargx, mallist, args.malsharehash, args.hausoption,
         polyoptionx and polyargx,
-        androidoptionx and androidargx, alienx and alienargsx,
+        androidoptionx in (1, 2, 3) or (androidoptionx and androidargx), alienx and alienargsx,
         malpediax, bazaarx, triagex and triageargx,
         ipoptionx and ipargx,
         nistoption and nistarg,
@@ -865,7 +868,8 @@ def main():
                 4: (shodan_ext.shodan_ip, [ipargx]),
                 5: (abuseipdb_ext.check_ip, [ipargx]),
                 6: (greynoise_ext.quick_check, [ipargx]),
-                7: (multipleip.get_multiple_ip_details, [ipargx])
+                7: (multipleip.get_multiple_ip_details, [ipargx]),
+                8: (virustotal.vtipbatchcheck, [ipargx, vtpubpremiumx])
             }
         },
         {
