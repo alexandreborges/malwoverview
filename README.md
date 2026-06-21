@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v8.0.2) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v8.0.3) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [![Downloads](https://static.pepy.tech/personalized-badge/malwoverview?period=month&units=international_system&left_color=grey&right_color=orange&left_text=Last%2030%20days)](https://pepy.tech/project/malwoverview)
@@ -46,7 +46,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-## Current Version: 8.0.2 (Codename: Revolutions)
+## Current Version: 8.0.3 (Codename: Revolutions)
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -252,8 +252,9 @@ The .malwapi.conf configuration file has the following format:
       URLSCANIOAPI =
 
       [LLM]
-      PROVIDER =
+      PROVIDER = claude
       CLAUDE_API_KEY =
+      CLAUDE_MODEL = claude-opus-4-8
       GEMINI_API_KEY =
       OPENAI_API_KEY =
       OPENAI_MODEL = gpt-4o-mini
@@ -307,9 +308,15 @@ Three providers are supported. Configure one in the [LLM] section of .malwapi.co
             [LLM]
             PROVIDER = claude
             CLAUDE_API_KEY = sk-ant-api03-your-key-here
+            CLAUDE_MODEL = claude-opus-4-8
 
-      Cost: ~$0.01-0.02 per enrichment call using Sonnet model. $5 credit provides
-      approximately 250-500 enrichment calls.
+      CLAUDE_MODEL is optional and defaults to claude-opus-4-8. Common choices:
+      - claude-opus-4-8    — Best quality (default)
+      - claude-sonnet-4-6  — Strong balance of quality and cost
+      - claude-haiku-4-5   — Fastest and cheapest
+
+      Cost: ~$0.02-0.04 per enrichment call using the default Opus model (less with
+      Sonnet or Haiku). $5 credit provides roughly 125-250 Opus enrichment calls.
 
 **19. Google Gemini (requires billing)**
 
@@ -1414,6 +1421,21 @@ Use --help with any subcommand for details:
       malwoverview -vc 8 -VC CVE-2024-21412
 
 ## HISTORY
+
+Version 8.0.3:
+
+      This version:
+
+            * Fixes Claude (Anthropic) LLM enrichment, which had stopped
+              working because the Claude model was hard-coded to a model that
+              has since been retired, causing every Claude enrichment call to
+              fail. The Claude model is now configurable through the new
+              CLAUDE_MODEL option in the [LLM] section of .malwapi.conf
+              (matching the existing GEMINI_MODEL / OPENAI_MODEL / OLLAMA_MODEL
+              options) and defaults to claude-opus-4-8. Claude is now also the
+              default LLM provider. The fix applies to the CLI (--enrich --llm
+              claude), the interactive REPL ("set enrich claude") and the TUI
+              ("Enrich: claude").
 
 Version 8.0.2:
 

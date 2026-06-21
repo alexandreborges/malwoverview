@@ -1835,6 +1835,7 @@ class MalwoverviewTUI(App):
         from malwoverview.utils.llm import LLMEnricher
         self._llm_config = {
             'claude_key': getoption('LLM', 'CLAUDE_API_KEY'),
+            'claude_model': getoption('LLM', 'CLAUDE_MODEL'),
             'gemini_key': getoption('LLM', 'GEMINI_API_KEY'),
             'ollama_url': getoption('LLM', 'OLLAMA_URL'),
             'ollama_model': getoption('LLM', 'OLLAMA_MODEL'),

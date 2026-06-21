@@ -64,9 +64,10 @@ COLSIZE = 20
 class LLMEnricher:
     """Provider-agnostic LLM client for threat enrichment."""
 
-    def __init__(self, provider, claude_key='', gemini_key='', ollama_url='', ollama_model='', gemini_model='', openai_key='', openai_model=''):
+    def __init__(self, provider, claude_key='', gemini_key='', ollama_url='', ollama_model='', gemini_model='', openai_key='', openai_model='', claude_model=''):
         self.provider = provider.lower().strip() if provider else ''
         self.claude_key = claude_key.strip()
+        self.claude_model = claude_model.strip() or 'claude-opus-4-8'
         self.gemini_key = gemini_key.strip()
         self.gemini_model = gemini_model.strip() or 'gemini-2.0-flash'
         self.openai_key = openai_key.strip()
@@ -121,6 +122,8 @@ class LLMEnricher:
 
     def _call_claude(self, prompt):
         """Call Anthropic Claude API."""
+        if not _MODEL_RE.match(self.claude_model):
+            return "Invalid Claude model name in configuration."
         response = requests.post(
             'https://api.anthropic.com/v1/messages',
             headers={
@@ -129,7 +132,7 @@ class LLMEnricher:
                 'content-type': 'application/json',
             },
             json={
-                'model': 'claude-sonnet-4-20250514',
+                'model': self.claude_model,
                 'max_tokens': 1024,
                 'messages': [{'role': 'user', 'content': prompt}],
             },

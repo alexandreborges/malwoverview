@@ -21,7 +21,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 8.0.2  (codename: Revolutions)
+# Malwoverview.py: version 8.0.3  (codename: Revolutions)
 
 import os
 import sys
@@ -68,7 +68,7 @@ import malwoverview.modules.configvars as cv
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2026 Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "8.0.2"
+__version__ = "8.0.3"
 __email__ = "reverseexploit at proton.me"
 
 def finish_hook(signum, frame):
@@ -438,6 +438,7 @@ def main():
 
     LLM_PROVIDER = getoption('LLM', 'PROVIDER')
     LLM_CLAUDE_KEY = getoption('LLM', 'CLAUDE_API_KEY')
+    LLM_CLAUDE_MODEL = getoption('LLM', 'CLAUDE_MODEL')
     LLM_GEMINI_KEY = getoption('LLM', 'GEMINI_API_KEY')
     LLM_GEMINI_MODEL = getoption('LLM', 'GEMINI_MODEL')
     LLM_OPENAI_KEY = getoption('LLM', 'OPENAI_API_KEY')
@@ -674,7 +675,7 @@ def main():
         llm_enricher = LLMEnricher(
             llm_active_provider, LLM_CLAUDE_KEY, LLM_GEMINI_KEY,
             LLM_OLLAMA_URL, LLM_OLLAMA_MODEL, LLM_GEMINI_MODEL,
-            LLM_OPENAI_KEY, LLM_OPENAI_MODEL,
+            LLM_OPENAI_KEY, LLM_OPENAI_MODEL, LLM_CLAUDE_MODEL,
         )
         if not llm_enricher.is_configured():
             print(f"\nWarning: LLM provider '{llm_active_provider}' is not configured. "

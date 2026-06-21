@@ -105,6 +105,7 @@ class InteractiveSession(cmd.Cmd):
             getoption('LLM', 'GEMINI_MODEL'),
             getoption('LLM', 'OPENAI_API_KEY'),
             getoption('LLM', 'OPENAI_MODEL'),
+            getoption('LLM', 'CLAUDE_MODEL'),
         )
         self._enrich = False
 
@@ -642,6 +643,7 @@ class InteractiveSession(cmd.Cmd):
                         _getoption('LLM', 'GEMINI_MODEL'),
                         _getoption('LLM', 'OPENAI_API_KEY'),
                         _getoption('LLM', 'OPENAI_MODEL'),
+                        _getoption('LLM', 'CLAUDE_MODEL'),
                     )
                     if self._llm.is_configured():
                         self._enrich = True
