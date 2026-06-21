@@ -1972,8 +1972,9 @@ class MalwoverviewTUI(App):
                     try:
                         analysis = self._llm.enrich(self._last_result_text, _ptype)
                         if analysis:
+                            from malwoverview.utils.llm import colorize_enrichment
                             enrich_panel = Panel(
-                                Text(analysis),
+                                Text.from_ansi(colorize_enrichment(analysis, bkg=1)),
                                 title=f"[bold]LLM {_label}[/bold]",
                                 border_style="green",
                                 expand=True,

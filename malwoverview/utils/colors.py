@@ -16,6 +16,7 @@ class mycolors:
         cyan = '\033[36m'
         lightgrey = '\033[37m'
         darkgrey = '\033[90m'
+        nearwhite = '\033[38;5;255m'
         lightred = '\033[91m'
         yellow = '\033[93m'
 

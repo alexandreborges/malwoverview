@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v8.0.3) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v8.0.4) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [![Downloads](https://static.pepy.tech/personalized-badge/malwoverview?period=month&units=international_system&left_color=grey&right_color=orange&left_text=Last%2030%20days)](https://pepy.tech/project/malwoverview)
@@ -46,7 +46,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-## Current Version: 8.0.3 (Codename: Revolutions)
+## Current Version: 8.0.4 (Codename: Revolutions)
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -1421,6 +1421,23 @@ Use --help with any subcommand for details:
       malwoverview -vc 8 -VC CVE-2024-21412
 
 ## HISTORY
+
+Version 8.0.4:
+
+      This version:
+
+            * Improves how the LLM enrichment report reads. The Markdown
+              structure the model returns is now rendered with color instead of
+              raw markers: the title and section headings (# and ##) and the
+              **bold** key terms and verdicts are highlighted, and the markdown
+              symbols themselves are removed, so the report reads as a formatted
+              assessment rather than plain markup. On a dark background the body
+              text is shown in a near-white tone for stronger contrast and
+              easier reading, while headings and labels keep their
+              blue/purple/cyan accents. The same rendering is applied
+              consistently across the CLI, the interactive REPL and the TUI, and
+              the enrichment prompts now ask the model to use that heading and
+              bold structure so the formatting stays consistent.
 
 Version 8.0.3:
 
