@@ -2,6 +2,7 @@ import pefile
 from malwoverview.utils.colors import mycolors, printr
 import malwoverview.modules.configvars as cv
 import magic
+import math
 import os
 
 
@@ -18,6 +19,61 @@ def isoverlay(file_item):
     else:
         ovr = "YES"
     return ovr
+
+
+def rawentropy(file_item):
+    try:
+        with open(file_item, "rb") as f:
+            data = f.read()
+    except Exception:
+        return 0.0
+    if not data:
+        return 0.0
+    occurences = [0] * 256
+    for byte in data:
+        occurences[byte] += 1
+    entropy = 0.0
+    length = len(data)
+    for count in occurences:
+        if count:
+            p = float(count) / length
+            entropy -= p * math.log(p, 2)
+    return entropy
+
+
+def fileentropy(file_item):
+    try:
+        pe = pefile.PE(file_item)
+        sect_entropies = [section.get_entropy() for section in pe.sections]
+        if sect_entropies:
+            return max(sect_entropies)
+    except Exception:
+        pass
+    return rawentropy(file_item)
+
+
+def overlaysize(file_item):
+    try:
+        pe = pefile.PE(file_item)
+        offset = pe.get_overlay_data_start_offset()
+        if offset is None:
+            return 0
+        return os.path.getsize(file_item) - offset
+    except Exception:
+        return 0
+
+
+def humansize(num_bytes):
+    try:
+        num_bytes = float(num_bytes)
+    except (TypeError, ValueError):
+        return str(num_bytes)
+    for unit in ('bytes', 'KB', 'MB', 'GB', 'TB'):
+        if num_bytes < 1024.0 or unit == 'TB':
+            if unit == 'bytes':
+                return "%d bytes" % int(num_bytes)
+            return "%.2f %s" % (num_bytes, unit)
+        num_bytes /= 1024.0
 
 
 def overextract(fname):
