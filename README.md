@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v8.0.4) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v8.0.5) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [![Downloads](https://static.pepy.tech/personalized-badge/malwoverview?period=month&units=international_system&left_color=grey&right_color=orange&left_text=Last%2030%20days)](https://pepy.tech/project/malwoverview)
@@ -46,7 +46,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-## Current Version: 8.0.4 (Codename: Revolutions)
+## Current Version: 8.0.5 (Codename: Revolutions)
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -1421,6 +1421,36 @@ Use --help with any subcommand for details:
       malwoverview -vc 8 -VC CVE-2024-21412
 
 ## HISTORY
+
+Version 8.0.5:
+
+      This version:
+
+            * Improves the directory check against VirusTotal (-d option). The
+              "AV Detection" column is renamed to "AV", the Sample and other
+              columns are narrowed and realigned, and two new local-analysis
+              columns are added for each sample: "Overlay", indicating whether
+              the PE has an overlay (YES/NO, or N/A for non-PE files), and
+              "Ent", showing the file entropy as a value from 0.00 to 8.00. The
+              entropy is the highest per-section entropy of the PE (the best
+              signal for packed or encrypted sections), falling back to the
+              whole-file Shannon entropy for non-PE files.
+
+            * Shows the overlay size in the VirusTotal file report (-v 1/2/3).
+              When a PE has an overlay, an "Overlay Size" field is now printed
+              right below the "Overlay" field, formatted in KB/MB rather than
+              raw bytes.
+
+            * Shows overlay information in the VirusTotal hash report (-v 8).
+              The report by hash now reports whether the sample has an overlay
+              (and its size, in KB/MB) directly from VirusTotal's pe_info data,
+              without downloading the sample.
+
+            * Shows the file entropy in the VirusTotal file report (-v 1/2/3).
+              An "Entropy" field is now printed below the overlay information,
+              using the same value as the -d directory check: the highest
+              per-section entropy of the PE (0.00 to 8.00), falling back to the
+              whole-file Shannon entropy for non-PE files.
 
 Version 8.0.4:
 

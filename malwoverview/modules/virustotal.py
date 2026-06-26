@@ -2,7 +2,7 @@ import malwoverview.modules.configvars as cv
 from datetime import datetime
 from malwoverview.utils.colors import mycolors, printr
 from malwoverview.utils.hash import sha256hash
-from malwoverview.utils.peinfo import ftype, isoverlay, overextract, list_imports_exports
+from malwoverview.utils.peinfo import ftype, isoverlay, overlaysize, humansize, fileentropy, overextract, list_imports_exports
 import geocoder
 import validators
 import requests
@@ -52,8 +52,12 @@ class VirusTotalExtractor():
             mysha256hash = sha256hash(targetfile)
 
             magictype = ftype(targetfile)
+            ovrlsize = ''
             if re.match(r'^PE[0-9]{2}|^MS-DOS', magictype):
                 ret_overlay = isoverlay(targetfile)
+                if (ret_overlay == "YES"):
+                    ovrlsize = humansize(overlaysize(targetfile))
+            fent = "%.2f" % fileentropy(targetfile)
 
             if (showreport == 0):
                 self.vthashwork(mysha256hash, showreport)
@@ -61,18 +65,34 @@ class VirusTotalExtractor():
                 if re.match(r'^PE[0-9]{2}|^MS-DOS', magictype):
                     if (cv.bkg == 1):
                         print(mycolors.foreground.lightred + "Overlay: ".ljust(21) + mycolors.reset + ret_overlay, end='\n')
+                        if (ret_overlay == "YES"):
+                            print(mycolors.foreground.lightred + "Overlay Size: ".ljust(21) + mycolors.reset + ovrlsize, end='\n')
                 if re.match(r'^PE[0-9]{2}|^MS-DOS', magictype):
                     if (cv.bkg == 0):
                         print(mycolors.foreground.red + "Overlay: ".ljust(21) + mycolors.reset + ret_overlay, end='\n')
+                        if (ret_overlay == "YES"):
+                            print(mycolors.foreground.red + "Overlay Size: ".ljust(21) + mycolors.reset + ovrlsize, end='\n')
+                if (cv.bkg == 1):
+                    print(mycolors.foreground.lightred + "Entropy: ".ljust(21) + mycolors.reset + fent, end='\n')
+                if (cv.bkg == 0):
+                    print(mycolors.foreground.red + "Entropy: ".ljust(21) + mycolors.reset + fent, end='\n')
             else:
                 self.vtreportwork(mysha256hash, 1)
 
                 if re.match(r'^PE[0-9]{2}|^MS-DOS', magictype):
                     if (cv.bkg == 1):
                         print(mycolors.foreground.lightred + "Overlay: ".ljust(21) + mycolors.reset + ret_overlay, end='\n')
+                        if (ret_overlay == "YES"):
+                            print(mycolors.foreground.lightred + "Overlay Size: ".ljust(21) + mycolors.reset + ovrlsize, end='\n')
                 if re.match(r'^PE[0-9]{2}|^MS-DOS', magictype):
                     if (cv.bkg == 0):
                         print(mycolors.foreground.red + "Overlay: ".ljust(21) + mycolors.reset + ret_overlay, end='\n')
+                        if (ret_overlay == "YES"):
+                            print(mycolors.foreground.red + "Overlay Size: ".ljust(21) + mycolors.reset + ovrlsize, end='\n')
+                if (cv.bkg == 1):
+                    print(mycolors.foreground.lightred + "Entropy: ".ljust(21) + mycolors.reset + fent, end='\n')
+                if (cv.bkg == 0):
+                    print(mycolors.foreground.red + "Entropy: ".ljust(21) + mycolors.reset + fent, end='\n')
             if (impexp == 1):
                 list_imports_exports(targetfile)
             if (ovrly == 1):
@@ -1284,6 +1304,12 @@ class VirusTotalExtractor():
                         if ('imphash' in attrs['pe_info']):
                             imphash = attrs['pe_info']['imphash']
                             print(mycolors.foreground.yellow + "\n".ljust(22) + "Imphash: ".ljust(15) + mycolors.reset + str(imphash), end='')
+                        if ('overlay' in attrs['pe_info']):
+                            print(mycolors.foreground.yellow + "\n".ljust(22) + "Overlay: ".ljust(15) + mycolors.reset + "YES", end='')
+                            if ('size' in attrs['pe_info']['overlay']):
+                                print(mycolors.foreground.yellow + "\n".ljust(22) + "Overlay Size: ".ljust(15) + mycolors.reset + humansize(attrs['pe_info']['overlay']['size']), end='')
+                        else:
+                            print(mycolors.foreground.yellow + "\n".ljust(22) + "Overlay: ".ljust(15) + mycolors.reset + "NO", end='')
                         if ('import_list' in attrs['pe_info']):
                             print(mycolors.foreground.yellow + "\n".ljust(22) + "Libraries: ".ljust(15), end='')
                             for lib in attrs['pe_info']['import_list']:
@@ -1473,6 +1499,12 @@ class VirusTotalExtractor():
                         if ('imphash' in attrs['pe_info']):
                             imphash = attrs['pe_info']['imphash']
                             print(mycolors.foreground.blue + "\n".ljust(22) + "Imphash: ".ljust(15) + mycolors.reset + str(imphash), end='')
+                        if ('overlay' in attrs['pe_info']):
+                            print(mycolors.foreground.blue + "\n".ljust(22) + "Overlay: ".ljust(15) + mycolors.reset + "YES", end='')
+                            if ('size' in attrs['pe_info']['overlay']):
+                                print(mycolors.foreground.blue + "\n".ljust(22) + "Overlay Size: ".ljust(15) + mycolors.reset + humansize(attrs['pe_info']['overlay']['size']), end='')
+                        else:
+                            print(mycolors.foreground.blue + "\n".ljust(22) + "Overlay: ".ljust(15) + mycolors.reset + "NO", end='')
                         if ('import_list' in attrs['pe_info']):
                             print(mycolors.foreground.blue + "\n".ljust(22) + "Libraries: ".ljust(15), end='')
                             for lib in attrs['pe_info']['import_list']:
@@ -2005,18 +2037,30 @@ class VirusTotalExtractor():
 
             file_hash_dict = dict(list(zip(F, H)))
 
-            print("\nSample".center(10) + "Filename".center(72) + "Description".center(26) + "Threat Label".center(28) + "AV Detection".center(26))
-            print('-' * 154, end="\n\n")
+            print("\n" + "Sample".ljust(9) + "Filename".ljust(72) + "Description".ljust(30) + "Threat Label".ljust(34) + "AV".ljust(4) + "Overlay".center(9) + "Ent")
+            print('-' * 162, end="\n\n")
 
             hashnumber = 0
 
             for key, value in file_hash_dict.items():
                 hashnumber = hashnumber + 1
                 (type_description, threat_label, malicious) = self.vtbatchwork(value)
+                try:
+                    magictype = ftype(key)
+                except Exception:
+                    magictype = ''
+                if re.match(r'^PE[0-9]{2}|^MS-DOS', magictype):
+                    try:
+                        overlay = isoverlay(key)
+                    except Exception:
+                        overlay = "N/A"
+                else:
+                    overlay = "N/A"
+                entropy = "%.2f" % fileentropy(key)
                 if (cv.bkg == 1):
-                    print(mycolors.foreground.lightcyan + "file_" + str(hashnumber) + "\t   " + mycolors.reset + (key.strip()).ljust(71) + mycolors.foreground.yellow + (type_description).ljust(30) + mycolors.foreground.lightcyan + (threat_label).ljust(34) + mycolors.foreground.lightred + str(malicious))
+                    print(mycolors.foreground.lightcyan + ("file_" + str(hashnumber)).ljust(9) + mycolors.reset + (key.strip()).ljust(72) + mycolors.foreground.yellow + (type_description).ljust(30) + mycolors.foreground.lightcyan + (threat_label).ljust(34) + mycolors.foreground.lightred + str(malicious).ljust(4) + mycolors.foreground.yellow + overlay.center(9) + mycolors.foreground.lightcyan + entropy)
                 if (cv.bkg == 0):
-                    print(mycolors.foreground.blue + "file_" + str(hashnumber) + "\t   " + mycolors.reset + (key.strip()).ljust(71) + mycolors.foreground.cyan + (type_description).ljust(30) + mycolors.foreground.blue + (threat_label).ljust(34) + mycolors.foreground.red + str(malicious))
+                    print(mycolors.foreground.blue + ("file_" + str(hashnumber)).ljust(9) + mycolors.reset + (key.strip()).ljust(72) + mycolors.foreground.cyan + (type_description).ljust(30) + mycolors.foreground.blue + (threat_label).ljust(34) + mycolors.foreground.red + str(malicious).ljust(4) + mycolors.foreground.cyan + overlay.center(9) + mycolors.foreground.blue + entropy)
                 if (apitype_var == 1):
                     if ((hashnumber % 4) == 0):
                         time.sleep(61)
