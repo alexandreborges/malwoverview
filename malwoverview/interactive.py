@@ -8,7 +8,9 @@ from malwoverview.utils.sanitize import (
     sanitize_cve, sanitize_path, sanitize_tag, sanitize_general,
     sanitize_selector, sanitize_triage_id, sanitize_uuid,
     sanitize_export_path, sanitize_integer, sanitize_hash_or_path,
+    sanitize_component,
 )
+from malwoverview.modules.nist import MAX_PAGE_SIZE as NIST_PAGE_SIZE
 
 
 class InteractiveSession(cmd.Cmd):
@@ -473,10 +475,10 @@ class InteractiveSession(cmd.Cmd):
             print("Unknown subcommand. Use: domain, ip")
 
     def do_nist(self, line):
-        """NIST CVE: nist cve <CVE-ID> | nist keyword <term>"""
+        """NIST CVE: nist cve <CVE-ID> | nist keyword <term> | nist component <name|file>"""
         parts = line.split(None, 1)
         if len(parts) < 2:
-            print("Usage: nist cve|keyword <value>")
+            print("Usage: nist cve|keyword|component <value>")
             return
         sub, arg = parts
         n = self._modules['nist']
@@ -484,7 +486,7 @@ class InteractiveSession(cmd.Cmd):
             val = self._check(sanitize_cve, arg)
             if val:
                 def _nist_cve():
-                    result = n.query_cve(2, val, 100, 0, None)
+                    result = n.query_cve(2, val, NIST_PAGE_SIZE, 0, None)
                     if result:
                         n.print_results(result, verbose=False, color_scheme=cv.bkg, max_cves=None)
                 self._safe_run(_nist_cve, _prompt_type='cve')
@@ -492,12 +494,18 @@ class InteractiveSession(cmd.Cmd):
             val = self._check(sanitize_general, arg)
             if val:
                 def _nist_keyword():
-                    result = n.query_cve(4, val, 100, 0, None)
+                    result = n.query_cve(4, val, NIST_PAGE_SIZE, 0, None)
                     if result:
                         n.print_results(result, verbose=False, color_scheme=cv.bkg, max_cves=None)
                 self._safe_run(_nist_keyword, _prompt_type='cve')
+        elif sub == 'component':
+            val = self._check(sanitize_component, arg)
+            if val:
+                def _nist_component():
+                    n.component_cve(val, None, None, NIST_PAGE_SIZE)
+                self._safe_run(_nist_component, _prompt_type='cve')
         else:
-            print("Unknown subcommand. Use: cve, keyword")
+            print("Unknown subcommand. Use: cve, keyword, component")
 
     _HYBRID_USAGE = ("Usage: hybrid hash <hash> [env 1-5] | quick|download <hash> | "
                      "file <path> [env 1-5] | batch <file> | dir <directory>")

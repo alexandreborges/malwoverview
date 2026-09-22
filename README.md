@@ -1,6 +1,6 @@
 # Malwoverview
 
-[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v8.1.0) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
+[<img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alexandreborges/malwoverview?color=red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases/tag/v8.2.0) [<img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/alexandreborges/malwoverview?color=Yellow&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub Release Date" src="https://img.shields.io/github/release-date/alexandreborges/malwoverview?label=Release%20Date&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/releases) [<img alt="GitHub" src="https://img.shields.io/github/license/alexandreborges/malwoverview?style=for-the-badge">](https://github.com/alexandreborges/malwoverview/blob/master/LICENSE) 
 [<img alt="GitHub stars" src="https://img.shields.io/github/stars/alexandreborges/malwoverview?logoColor=Red&style=for-the-badge">](https://github.com/alexandreborges/malwoverview/stargazers)
 [<img alt="Twitter Follow" src="https://img.shields.io/twitter/follow/ale_sp_brazil?style=for-the-badge&logo=X&color=blueviolet">](https://twitter.com/ale_sp_brazil)
 [![Downloads](https://static.pepy.tech/personalized-badge/malwoverview?period=month&units=international_system&left_color=grey&right_color=orange&left_text=Last%2030%20days)](https://pepy.tech/project/malwoverview)
@@ -46,7 +46,7 @@
       See GNU Public License on <http://www.gnu.org/licenses/>.
 
 
-## Current Version: 8.1.0 (Codename: Revolutions)
+## Current Version: 8.2.0 (Codename: Revolutions)
 
      Important note:  Malwoverview does NOT submit samples to any endpoint by default, 
      so it respects possible Non-Disclosure Agreements (NDAs). There're specific options
@@ -133,6 +133,7 @@ This tool aims to :
 66. Authenticode signature checking with no API key, reporting whether a binary is signed and whether the signature is still valid, and naming the signer of a tampered file.
 67. Every embedded signature of a multi-signed binary is reported, each with its own digest algorithm, certificate, thumbprint and serial number, so a second signer is never hidden behind the first.
 68. The VirusTotal file check (-v 1) and hash report (-v 8) show the signature block: whether the certificate verified, the signer and counter signer chains, the signing date and every certificate with its status, algorithm, validity dates, serial number and thumbprint.
+69. List the CVEs associated with a component, given either its name or the path to a local binary, whose VERSIONINFO supplies the component description that modern NVD entries are written against.
 
 ## CONTRIBUTORS
 
@@ -559,7 +560,7 @@ usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1
 -V <virustotal arg> -a <1-13> -A <filename> -l <1-8> -L <hash|file type> -j <1-8>
 -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5>
 -N <argument> -m <1-9> -M <argument> -b <1-15> -B <arg> -x <1-9> -X <arg>
--ip <1-8> -IP <IP address> -O <output directory> --nist <1-5> --NIST <argument> -vc <1-8>
+-ip <1-8> -IP <IP address> -O <output directory> --nist <1-6> --NIST <argument> -vc <1-8>
 -VC <argument> -s <1-2> -S <arg> -ab <1> -AB <arg> -gn <1> -GN <arg>
 -wh <1-2> -WH <arg> -ct <1-2> -CT <domain> -u <1-5> -U <arg> --correlate-hash <hash>
 --extract-iocs <file|url> --yara <rules> --yara-target <target>
@@ -1197,19 +1198,26 @@ VULNERABILITY OPTIONS:
       Query options for NIST CVE database (Query type and value are required; other options are optional)
 
       --nist NIST_OPTION,   Query type: 1=CPE/Product Search, 2=CVE ID Search, 
-                            3=CVSS v3 Severity, 4=Keyword Search, 5=CWE ID Search
+                            3=CVSS v3 Severity, 4=Keyword Search, 5=CWE ID Search, 
+                            6=Component Search (name or path to a local binary)
       --NIST NIST_ARG       Search value (format depends on query type)
       --time YEARS          Limit results to last N years
-      --rpp NUM             Results per page (default: 100, max: 2000)
+      --rpp NUM             NVD page size used while paginating (default: 2000, max: 2000)
       --startindex NUM      Pagination start index (default: 0)
-      --ncves NUM           Limit output to first N CVEs
+      --ncves NUM           Limit output to first N CVEs (--nist 6 lists the 25 most 
+                            recent by default; 0 lists all)
+      --sort-by KEY         Order --nist results by cve (the CVE ID year, default) or 
+                            published (the NVD publication date). --time bounds results 
+                            by the same reference
 
       VulnCheck Database Query:
       Query options for VulnCheck vulnerability database (Community/Free tier)
 
 	-vc VULNCHECK_OPTION, --vulncheck VULNCHECK_OPTION
 
-		+ Query type: 1: List available indexes; 
+		+ Query type: 
+    
+    1: List available indexes; 
 		2: Get KEV (Known Exploited Vulnerabilities); 
 		3: Search CVE in KEV; 
 		4: Get KEV backup link; 
@@ -1533,6 +1541,9 @@ Use --help with any subcommand for details:
       malwoverview nist 2 CVE-2021-44228
       malwoverview nist 3 CRITICAL --ncves 50
       malwoverview nist 4 "remote code execution" --ncves 50
+      malwoverview nist 6 "Ancillary Function Driver for WinSock"
+      malwoverview nist 6 ksmbd
+      malwoverview nist 6 iCloud --sort-by published
 
       # VulnCheck queries
       malwoverview vulncheck 2 30
@@ -1661,6 +1672,27 @@ Use --help with any subcommand for details:
       # Search for Cross-Site Scripting vulnerabilities (CWE-79)
       malwoverview --nist 5 --NIST "CWE-79" --ncves 35
 
+      # List the CVEs of a component by reading a local binary, whose VERSIONINFO
+      # supplies both the file name and the component description to search on
+      malwoverview --nist 6 --NIST "C:\Windows\System32\drivers\afd.sys"
+
+      # The same search from the component name alone, when the binary is not at hand
+      malwoverview --nist 6 --NIST "Ancillary Function Driver for WinSock"
+      malwoverview --nist 6 --NIST "Common Log File System Driver" --ncves 40
+
+      # The Linux and Apple equivalents, named the same way
+      malwoverview --nist 6 --NIST ksmbd
+      malwoverview --nist 6 --NIST iCloud
+
+      # Ordered by the NVD publication date instead of the CVE ID year
+      malwoverview --nist 6 --NIST iCloud --sort-by published
+
+      # All CVEs of a product from a partial CPE, with no version
+      malwoverview --nist 1 --NIST "cpe:2.3:a:openbsd:openssh"
+
+      # All CVEs of one exact product version
+      malwoverview --nist 1 --NIST "cpe:2.3:a:openbsd:openssh:9.1:*:*:*:*:*:*:*"
+
       # List available VulnCheck indexes (Community/Free tier)
       malwoverview -vc 1
 
@@ -1696,6 +1728,127 @@ Use --help with any subcommand for details:
 
       # Search for specific CVE in NIST NVD2 (CVSS scores, CWE, CISA KEV status)
       malwoverview -vc 8 -VC CVE-2024-21412
+
+## WHAT IS NEW IN 8.2.0, BY EXAMPLE
+
+Everything this version adds or changes, as commands you can run. The narrative
+version of the same list is the 8.2.0 block under HISTORY, below.
+
+### 1. List the CVEs of a component, on any platform
+
+The argument is the component itself. Name it and the search runs anywhere:
+
+      malwoverview --nist 6 --NIST openssl
+      malwoverview --nist 6 --NIST systemd
+      malwoverview --nist 6 --NIST WebKit
+      malwoverview --nist 6 --NIST Safari
+      malwoverview --nist 6 --NIST "Ancillary Function Driver for WinSock"
+
+A Linux kernel module is named the same way, and ksmbd, the in-kernel SMB
+server, matches 236 CVEs where its Windows counterpart srv2.sys matches 1:
+
+      malwoverview --nist 6 --NIST ksmbd
+      malwoverview --nist 6 --NIST nf_tables
+
+On iOS and macOS, name the component Apple ships rather than a framework file:
+
+      malwoverview --nist 6 --NIST iCloud
+      malwoverview --nist 6 --NIST FaceTime
+
+Name the project or the framework rather than the file it ships as. On Linux the
+library file libssl.so.3 matches 9 CVEs while the project name openssl matches
+658, and the same holds for macOS and iOS frameworks.
+
+### 2. Pointing at a Windows binary instead
+
+A Windows PE records its own component name, so pointing at one searches three
+keys and merges the results: the file name on disk, the internal name and the
+component description:
+
+      malwoverview --nist 6 --NIST "C:\Windows\System32\drivers\afd.sys"
+
+That matters because afd.sys by name matches 7 CVEs, while the driver itself
+matches 74 - modern NVD entries name the component, not the file:
+
+      malwoverview --nist 6 --NIST afd.sys
+
+A file that is not a Windows PE has no such metadata, so only its name is
+searched and the report says so rather than failing.
+
+### 3. Choosing how many CVEs to list
+
+The 25 most recent are listed by default:
+
+      malwoverview --nist 6 --NIST "C:\Windows\System32\win32k.sys"
+
+      # The whole history instead
+      malwoverview --nist 6 --NIST "C:\Windows\System32\win32k.sys" --ncves 0
+
+      # A different number of rows
+      malwoverview --nist 6 --NIST openssl --ncves 50
+
+      # Bounded by year rather than by row count
+      malwoverview --nist 6 --NIST "C:\Windows\System32\drivers\clfs.sys" --time 3
+
+### 4. Choosing how the CVEs are ordered
+
+Rows are listed most recent first, by the year in the CVE ID:
+
+      malwoverview --nist 6 --NIST iCloud
+
+NVD often publishes a record years after the ID was assigned, so the two
+readings of "recent" disagree. Ordering by the publication date instead moves
+those backfilled rows to the top:
+
+      malwoverview --nist 6 --NIST iCloud --sort-by published
+
+The flag applies to every --nist option, and --time bounds the results by the
+same reference, so the order and the filter can no longer disagree:
+
+      malwoverview --nist 6 --NIST iCloud --time 5
+      malwoverview --nist 6 --NIST iCloud --time 5 --sort-by published
+
+### 5. Reading the vendor column
+
+NIST matches the words of a keyword separately, so a component named with common
+words also matches other vendors' products. Only one of these eight rows is
+really vmx86.sys, and the Vendor column says which:
+
+      malwoverview --nist 6 --NIST "C:\Windows\System32\drivers\vmx86.sys"
+
+The same column separates the vendors of a widely reused name:
+
+      malwoverview --nist 6 --NIST Bluetooth
+
+### 6. Searches that used to return almost nothing
+
+A keyword search reported 1 CVE of the 74 that matched:
+
+      malwoverview --nist 4 --NIST "Ancillary Function Driver"
+
+A CPE without a version was silently a keyword search, and now reports the 137
+CVEs of the product:
+
+      malwoverview --nist 1 --NIST "cpe:2.3:a:openbsd:openssh"
+
+A CPE with a concrete version still matches that exact version:
+
+      malwoverview --nist 1 --NIST "cpe:2.3:a:openbsd:openssh:9.1:*:*:*:*:*:*:*"
+
+### 7. The component search in the other surfaces
+
+      # Machine-readable: the records keep the full description and the vendors
+      malwoverview --nist 6 --NIST openssl --output-format json
+
+      # Light background
+      malwoverview -o 0 --nist 6 --NIST "C:\Windows\System32\drivers\http.sys"
+
+      # Interactive mode
+      malwoverview --interactive
+      #   malwoverview> nist component WebKit
+
+      # TUI: pick NIST Component from the service list
+      malwoverview --tui
 
 ## WHAT IS NEW IN 8.1.0, BY EXAMPLE
 
@@ -2016,6 +2169,90 @@ service by service, or through all of them at once:
       malwoverview -v 8 -V <hash>
 
 ## HISTORY
+
+Version 8.2.0:
+
+      This version adds a component vulnerability search, gives every NIST
+      query a chosen ordering reference, and repairs the queries themselves,
+      which returned only a fraction of the CVEs that matched.
+
+      NEW OPTIONS
+
+      1. --nist 6 lists the CVEs associated with a component, given either its
+         name or the path to a local binary. Naming it works on any platform:
+         --nist 6 --NIST openssl, WebKit or Safari. Pointing at a Windows PE
+         searches three keys and merges the results: the file name on disk, the
+         internal name in its VERSIONINFO and its component description, so
+         --nist 6 --NIST afd.sys matches 7 CVEs while passing the driver itself
+         matches 74, because modern NVD entries name the component ("Ancillary
+         Function Driver for WinSock") and not the file. A file that is not a
+         Windows PE carries no such metadata, so only its name is searched and
+         the report says so. Off Windows, name the project rather than the file
+         it ships as: libssl.so.3 matches 9 CVEs where openssl matches 658.
+         Results are a table, most recent first.
+
+      REPAIRED OPTIONS
+
+      2. --nist 1, 3, 4 and 5 returned only the last one percent of the CVEs
+         that matched and discarded everything older than the previous year, so
+         a keyword search for "Ancillary Function Driver" reported 1 CVE of the
+         74 that matched and --time did not recover them. The queries now
+         paginate through the whole result set, and a year filter is applied
+         only when --time asks for one.
+
+      3. --nist 1 sent a CPE to NIST only when the value carried a concrete
+         version; every other value, including a CPE without a version, became
+         a keyword search over the CVE text. A partial CPE is now matched as a
+         CPE, so --nist 1 --NIST "cpe:2.3:a:openbsd:openssh" reports the 137
+         CVEs of the product instead of the descriptions that mention it.
+
+      NEW BEHAVIOUR
+
+      4. All NIST results are ordered most recent first, by the year in the CVE
+         ID. NVD often publishes a record years after its ID was assigned, so
+         --sort-by published orders by the NVD publication date instead. The
+         choice governs --time as well, which used to bound results by the CVE
+         ID year while the table was ordered by publication date: --time 5 on
+         a component listed 17 CVEs when 28 had been published inside that
+         window. Both surfaces now use one reference, and the closing line of
+         the table names which one produced the order.
+
+      5. --nist 6 lists the 25 most recent CVEs, since the whole history of a
+         component is rarely what is wanted. --ncves <number> lists more,
+         --ncves 0 lists all and --time <years> bounds them by year.
+
+      6. NIST matches the words of a keyword separately rather than as a
+         phrase, so a component named with common words also matches other
+         vendors' products: "HTTP Protocol Stack" matches Apache, Envoy and
+         Novell CVEs. A Vendor column and a closing line name the vendors of
+         the affected products, taken from the CPE data of each CVE, and the
+         exported records carry them.
+
+      7. --rpp is the page size used while paginating and defaults to 2000, the
+         NIST maximum. A query that cannot be retrieved completely now says so
+         instead of silently returning its oldest part.
+
+      INTERACTIVE AND GRAPHICAL MODES
+
+      8. The component search is reachable as "nist component <name|file>" in
+         interactive mode and as NIST Component in the TUI.
+
+      REPORTS
+
+      9. Advisory lines are wrapped by terminal cells instead of by characters,
+         so a value holding East Asian characters no longer runs past the rule
+         of its own table. Every report that prints an advisory is affected.
+
+      The changes below are security fixes.
+
+      10. LOW: every value that becomes part of an NIST query is now length
+          capped and stripped of terminal control characters, whether it was
+          typed, taken from a file name or read out of a binary, and the file
+          handle is released when a binary cannot be parsed.
+
+      11. LOW: a negative --ncves printed an empty table instead of the CVEs
+          that matched, and a negative --time discarded all of them. Both now
+          list everything rather than reporting a component as clean.
 
 Version 8.1.0:
 
