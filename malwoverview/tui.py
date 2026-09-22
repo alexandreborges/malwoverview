@@ -29,7 +29,9 @@ from malwoverview.utils.sanitize import (
     sanitize_hash, sanitize_ip, sanitize_domain, sanitize_url,
     sanitize_cve, sanitize_path, sanitize_tag, sanitize_general,
     sanitize_selector, sanitize_triage_id, sanitize_uuid, sanitize_integer,
+    sanitize_component,
 )
+from malwoverview.modules.nist import MAX_PAGE_SIZE as NIST_PAGE_SIZE
 
 
 SELF = '@self'
@@ -164,6 +166,7 @@ SERVICE_TABLE = [
 
     ('nist_cve', 'NIST CVE', 'CVE ID', SELF, '_nist_cve', (), sanitize_cve),
     ('nist_keyword', 'NIST Keyword', 'keyword', SELF, '_nist_keyword', (), sanitize_general),
+    ('nist_component', 'NIST Component', 'component name or file', SELF, '_nist_component', (), sanitize_component),
     ('vulncheck_indexes', 'VulnCheck Indexes', 'no argument', 'vulncheck', 'vulncheck_list_indexes', (), None),
     ('vulncheck_kev', 'VulnCheck KEV', 'no argument', 'vulncheck', 'vulncheck_kev', (100,), None),
     ('vulncheck_cve', 'VulnCheck CVE', 'CVE ID', 'vulncheck', 'vulncheck_cve_search', (), sanitize_cve),
@@ -201,8 +204,8 @@ _SERVICE_SANITIZERS = {
     if sanitizer is not None
 }
 
-_CVE_SERVICES = ('nist_cve', 'nist_keyword', 'vulncheck_kev', 'vulncheck_cve',
-                 'vulncheck_mitre', 'vulncheck_nist', 'vulncheck_indexes')
+_CVE_SERVICES = ('nist_cve', 'nist_keyword', 'nist_component', 'vulncheck_kev',
+                 'vulncheck_cve', 'vulncheck_mitre', 'vulncheck_nist', 'vulncheck_indexes')
 
 
 KEY_LABELS = {
@@ -620,17 +623,20 @@ class MalwoverviewTUI(App):
 
     def _nist_cve(self, value):
         nist = self._modules['nist']
-        result = nist.query_cve(2, value, 100, 0, None)
+        result = nist.query_cve(2, value, NIST_PAGE_SIZE, 0, None)
         if result:
             nist.print_results(result, verbose=False, color_scheme=cv.bkg,
                                max_cves=None)
 
     def _nist_keyword(self, value):
         nist = self._modules['nist']
-        result = nist.query_cve(4, value, 100, 0, None)
+        result = nist.query_cve(4, value, NIST_PAGE_SIZE, 0, None)
         if result:
             nist.print_results(result, verbose=False, color_scheme=cv.bkg,
                                max_cves=None)
+
+    def _nist_component(self, value):
+        self._modules['nist'].component_cve(value, None, None, NIST_PAGE_SIZE)
 
     def _yara_scan(self, value):
         from malwoverview.modules.yara_scan import YaraScanner

@@ -1,5 +1,4 @@
 import re
-import textwrap
 import unicodedata
 import malwoverview.modules.configvars as cv
 
@@ -308,7 +307,7 @@ BULLET_MIN_WIDTH = 40
 def bullet(text, width, color=None):
     body = max(BULLET_MIN_WIDTH, width - len(BULLET))
     color = mycolors.foreground.neutral(cv.bkg) if color is None else color
-    lines = textwrap.wrap(str(text), width=body) or ['']
+    lines = wrap_cells(str(text), body, split_long=True)
     out = []
     for index, line in enumerate(lines):
         prefix = BULLET if index == 0 else ' ' * len(BULLET)

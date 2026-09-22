@@ -21,7 +21,7 @@
 # Corey Forman (https://github.com/digitalsleuth)
 # Christian Clauss (https://github.com/cclauss)
 
-# Malwoverview.py: version 8.1.0  (codename: Revolutions)
+# Malwoverview.py: version 8.2.0  (codename: Revolutions)
 
 import os
 import sys
@@ -64,14 +64,14 @@ from malwoverview.utils.config import validate_config, check_config_permissions
 from malwoverview.utils.sanitize import (
     sanitize_hash, sanitize_ip, sanitize_domain, sanitize_url,
     sanitize_cve, sanitize_path, sanitize_tag, sanitize_general,
-    sanitize_uuid, sanitize_hash_or_path,
+    sanitize_uuid, sanitize_hash_or_path, sanitize_component,
 )
 import malwoverview.modules.configvars as cv
 
 __author__ = "Alexandre Borges"
 __copyright__ = "Copyright 2018-2026 Alexandre Borges"
 __license__ = "GNU General Public License v3.0"
-__version__ = "8.1.0"
+__version__ = "8.2.0"
 __email__ = "reverseexploit at proton.me"
 
 def finish_hook(signum, frame):
@@ -132,7 +132,7 @@ def main():
         USER_HOME_DIR = str(Path.home()) + '/'
         cv.windows = 0
 
-    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is " + __version__, usage="usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-20> -V <virustotal arg> -a <1-13> -A <filename> -l <1-8> -L <hash|file type> -j <1-8> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-9> -M <argument> -b <1-15> -B <arg> -x <1-9> -X <arg> --nist <1-5> --NIST <argument> -O <output directory> -ip <1-8> -IP <IP address> -vc <1-8> -VC <argument> -s <1-2> -S <arg> -ab <1> -AB <arg> -gn <1> -GN <arg> -wh <1-2> -WH <arg> -ct <1-2> -CT <domain> -u <1-5> -U <arg> --correlate-hash <hash> --extract-iocs <file> --yara <rules> --yara-target <target> --peinfo <target> --entropy-threshold <value> --sigcheck <target> --no-signature --sig-verify-mode <mode> --output-format text|json|csv --proxy <url> --quiet --verbose --no-cache --cache-ttl <seconds> --cache-stats --prune-cache --clear-cache --no-resolve --defang --no-ioc-filter --report html|pdf --interactive --tui --attack-map")
+    parser = argparse.ArgumentParser(prog=None, description="Malwoverview is a first response tool for threat hunting written by Alexandre Borges. This version is " + __version__, usage="usage: python malwoverview.py -c <API configuration file> -d <directory> -o <0|1> -v <1-20> -V <virustotal arg> -a <1-13> -A <filename> -l <1-8> -L <hash|file type> -j <1-8> -J <URLhaus argument> -p <1-8> -P <polyswarm argument> -y <1-5> -Y <file name> -n <1-5> -N <argument> -m <1-9> -M <argument> -b <1-15> -B <arg> -x <1-9> -X <arg> --nist <1-6> --NIST <argument> -O <output directory> -ip <1-8> -IP <IP address> -vc <1-8> -VC <argument> -s <1-2> -S <arg> -ab <1> -AB <arg> -gn <1> -GN <arg> -wh <1-2> -WH <arg> -ct <1-2> -CT <domain> -u <1-5> -U <arg> --correlate-hash <hash> --extract-iocs <file> --yara <rules> --yara-target <target> --peinfo <target> --entropy-threshold <value> --sigcheck <target> --no-signature --sig-verify-mode <mode> --output-format text|json|csv --proxy <url> --quiet --verbose --no-cache --cache-ttl <seconds> --cache-stats --prune-cache --clear-cache --no-resolve --defang --no-ioc-filter --report html|pdf --interactive --tui --attack-map")
     
     malware_group = parser.add_argument_group('MALWARE OPTIONS', 'Malware analysis and intelligence query options')
     malware_group.add_argument('-c', '--config', dest='config', type=str, metavar="CONFIG FILE", default=(USER_HOME_DIR + '.malwapi.conf'), help='Use a custom config file to specify API\'s.')
@@ -188,12 +188,13 @@ def main():
     vuln_section = parser.add_argument_group('VULNERABILITY OPTIONS', 'Vulnerability database query options')
     
     nist_group = parser.add_argument_group('  NIST CVE Database Query', 'Query options for NIST CVE database (Query type and value are required; other options are optional)')
-    nist_group.add_argument('--nist', dest='nistoption', type=int, default=0, metavar="NIST_OPTION", help='Query type: 1=CPE/Product Search, 2=CVE ID Search, 3=CVSS v3 Severity, 4=Keyword Search, 5=CWE ID Search')
+    nist_group.add_argument('--nist', dest='nistoption', type=int, default=0, metavar="NIST_OPTION", help='Query type: 1=CPE/Product Search, 2=CVE ID Search, 3=CVSS v3 Severity, 4=Keyword Search, 5=CWE ID Search, 6=Component Search (name or path to a local binary)')
     nist_group.add_argument('--NIST', dest='nistarg', type=str, metavar="NIST_ARG", help='Search value (format depends on query type)')
     nist_group.add_argument('--time', dest='nisttime', type=int, default=None, metavar="YEARS", help='Limit results to last N years')
-    nist_group.add_argument('--rpp', dest='nistrpp', type=int, default=100, metavar="NUM", help='Results per page (default: 100, max: 2000)')
+    nist_group.add_argument('--rpp', dest='nistrpp', type=int, default=2000, metavar="NUM", help='NVD page size used while paginating (default: 2000, max: 2000)')
     nist_group.add_argument('--startindex', dest='niststartindex', type=int, default=0, metavar="NUM", help='Pagination start index (default: 0)')
-    nist_group.add_argument('--ncves', dest='nistncves', type=int, default=None, metavar="NUM", help='Limit output to first N CVEs')
+    nist_group.add_argument('--ncves', dest='nistncves', type=int, default=None, metavar="NUM", help='Limit output to first N CVEs (--nist 6 lists the 25 most recent by default; 0 lists all)')
+    nist_group.add_argument('--sort-by', dest='nistsortby', type=str, default='cve', choices=['cve', 'published'], metavar="KEY", help='Order --nist results by cve (the CVE ID year, default) or published (the NVD publication date). --time bounds results by the same reference')
     
     vulncheck_group = parser.add_argument_group('  VulnCheck Database Query', 'Query options for VulnCheck vulnerability database (Community/Free tier)')
     vulncheck_group.add_argument('-vc', '--vulncheck', dest='vulncheckoption', type=int, default=0, metavar="VULNCHECK_OPTION", help='Query type: 1=List available indexes, 2=Get KEV (Known Exploited Vulnerabilities), 3=Search CVE in KEV, 4=Get KEV backup link, 5=List MITRE CVEs, 6=List NIST NVD2 CVEs, 7=Search CVE in MITRE, 8=Search CVE in NIST NVD2')
@@ -341,9 +342,10 @@ def main():
     sh_search.add_argument('target', help='Search query')
 
     nist_parser = subparsers.add_parser('nist', help='NIST CVE database queries')
-    nist_parser.add_argument('query_type', type=int, choices=[1, 2, 3, 4, 5], help='1=CPE, 2=CVE ID, 3=CVSS Severity, 4=Keyword, 5=CWE ID')
+    nist_parser.add_argument('query_type', type=int, choices=[1, 2, 3, 4, 5, 6], help='1=CPE, 2=CVE ID, 3=CVSS Severity, 4=Keyword, 5=CWE ID, 6=Component')
     nist_parser.add_argument('query', help='Search value')
-    nist_parser.add_argument('--ncves', type=int, default=None, help='Limit output to first N CVEs')
+    nist_parser.add_argument('--ncves', type=int, default=None, help='Limit output to first N CVEs (--nist 6 lists the 25 most recent by default; 0 lists all)')
+    nist_parser.add_argument('--sort-by', dest='sort_by', type=str, default=None, choices=['cve', 'published'], help='Order --nist results by cve (the CVE ID year, default) or published (the NVD publication date). --time bounds results by the same reference')
 
     vck_parser = subparsers.add_parser('vulncheck', help='VulnCheck database queries')
     vck_parser.add_argument('query_type', type=int, choices=[1, 2, 3, 4, 5, 6, 7, 8], help='Query type (1-8)')
@@ -417,6 +419,8 @@ def main():
         args.nistarg = args.query
         if not hasattr(args, 'nistncves') or args.nistncves is None:
             args.nistncves = getattr(args, 'ncves', None)
+        if getattr(args, 'sort_by', None):
+            args.nistsortby = args.sort_by
     elif args.command == 'vulncheck':
         args.vulncheckoption = args.query_type
         args.vulncheckarg = args.query if args.query else None
@@ -557,6 +561,7 @@ def main():
     nistrpp = args.nistrpp
     niststartindex = args.niststartindex
     nistncves = args.nistncves
+    nistsortby = args.nistsortby
     vulncheckoption = args.vulncheckoption
     vulncheckarg = args.vulncheckarg
     config = args.config
@@ -653,6 +658,7 @@ def main():
         'vc_cve':    (vulncheckoption, 'vulncheckarg', [3, 7, 8], sanitize_cve),
         'nist_cve':  (nistoption, 'nistarg', [2], sanitize_cve),
         'nist_gen':  (nistoption, 'nistarg', [1, 3, 4, 5], sanitize_general),
+        'nist_comp': (nistoption, 'nistarg', [6], sanitize_component),
         'bz_sel':    (bazaarx, 'bazaarargx', [4], sanitize_general),
         'bz_days':   (bazaarx, 'bazaarargx', [6], sanitize_general),
     }
@@ -751,7 +757,7 @@ def main():
         args.whois not in range(3),
         args.crtsh not in range(3),
         args.urlscanio not in range(6),
-        args.nistoption not in range(6),
+        args.nistoption not in range(7),
         args.vulncheckoption not in range(9),
     ]
 
@@ -1028,11 +1034,12 @@ def main():
         {
             'flag': nistoption,
             'actions': {
-                1: (lambda: nist.query_cve(1, nistarg, nistrpp, niststartindex, nisttime), []),
-                2: (lambda: nist.query_cve(2, nistarg, nistrpp, niststartindex, nisttime), []),
-                3: (lambda: nist.query_cve(3, nistarg, nistrpp, niststartindex, nisttime), []),
-                4: (lambda: nist.query_cve(4, nistarg, nistrpp, niststartindex, nisttime), []),
-                5: (lambda: nist.query_cve(5, nistarg, nistrpp, niststartindex, nisttime), [])
+                1: (lambda: nist.query_cve(1, nistarg, nistrpp, niststartindex, nisttime, nistsortby), []),
+                2: (lambda: nist.query_cve(2, nistarg, nistrpp, niststartindex, nisttime, nistsortby), []),
+                3: (lambda: nist.query_cve(3, nistarg, nistrpp, niststartindex, nisttime, nistsortby), []),
+                4: (lambda: nist.query_cve(4, nistarg, nistrpp, niststartindex, nisttime, nistsortby), []),
+                5: (lambda: nist.query_cve(5, nistarg, nistrpp, niststartindex, nisttime, nistsortby), []),
+                6: (lambda: nist.component_cve(nistarg, nistncves, nisttime, nistrpp, nistsortby), [])
             },
             'process_results': True
         },
@@ -1220,7 +1227,7 @@ def main():
                 continue
 
             if process_results and result:
-                nist.print_results(result, verbose=False, color_scheme=args.backg, max_cves=nistncves)
+                nist.print_results(result, verbose=False, color_scheme=args.backg, max_cves=nistncves, sort_by=nistsortby)
         except requests.exceptions.RequestException as e:
             result = False
             print(mycolors.foreground.error(cv.bkg) + network_failure_message(e) + mycolors.reset)

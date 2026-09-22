@@ -189,3 +189,22 @@ def sanitize_integer(value, min_val=None, max_val=None):
     if max_val is not None and n > max_val:
         return None, f"Value must be <= {max_val}, got {n}"
     return str(n), None
+
+
+def sanitize_component(value):
+    """Accept a component name or the path of a local binary to read it from."""
+    value = value.strip()
+    if not value or len(value) > 500:
+        return None, "Component empty or too long (max 500 characters)."
+    if _DANGEROUS_CHARS_PATH_RE.search(value):
+        return None, "Component contains invalid characters."
+    separators = [os.sep] + ([os.altsep] if os.altsep else [])
+    looks_like_path = any(sep in value for sep in separators)
+    resolved = os.path.abspath(os.path.expanduser(value))
+    if os.path.isfile(resolved):
+        return resolved, None
+    if looks_like_path:
+        return None, f"File does not exist: {safe_echo(value)}"
+    if _DANGEROUS_CHARS_GENERAL_RE.search(value):
+        return None, "Component contains invalid characters."
+    return value, None
